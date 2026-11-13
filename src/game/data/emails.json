@@ -1,0 +1,62 @@
+[
+  { "id": "e1", "day": 1, "time": 500, "from": "Capital — Political Directorate", "subject": "URGENT: Political situation", "body": "Please report on the political situation by close of business. Also, why is it quiet? Quiet is never good. Neither is noise.",
+    "options": {
+      "reply": { "text": "Cable sent: 'Situation fluid. Monitoring closely.'", "effects": { "confidence": 6, "sanity": -3 } },
+      "delegate": { "text": "Anselm drafts it. A copy somehow reaches the Capital first, signed by him.", "effects": { "confidence": -4, "morale": 2 } },
+      "note": { "text": "Noted. The Capital notes that you noted.", "effects": { "confidence": -6 } }
+    }, "ignore": { "effects": { "confidence": -12 }, "text": "The Capital calls. Then calls again. Then calls the Minister." } },
+  { "id": "e2", "day": 1, "time": 620, "from": "Capital — Instructions Unit", "subject": "URGENT-URGENT: Ignore previous instruction", "body": "Ignore our previous instruction. See attached instruction.\n\n[attachment missing]",
+    "options": {
+      "forward": { "text": "You forward it back. They forward it back. A loop is formed.", "effects": { "sanity": -6, "confidence": 2 } },
+      "reply": { "text": "You politely request the attachment. They politely ignore you.", "effects": { "confidence": 3 } },
+      "note": { "text": "You take note of nothing, which is technically compliant.", "effects": { "sanity": 2 } }
+    }, "ignore": { "effects": { "confidence": -5 }, "text": "The missing instruction was apparently very important." } },
+  { "id": "e3", "day": 1, "time": 760, "from": "Admin — Pavel Oskarsen", "subject": "Generator", "body": "The generator is out of diesel. The diesel is out of budget. I am out of ideas. I still have the keys.",
+    "options": {
+      "reply": { "text": "Approved from the representation allowance. Canapés will be smaller.", "effects": { "budget": -12, "morale": 4 } },
+      "forward": { "text": "The Capital opens a tender for diesel. Expected completion: Q3.", "effects": { "goodwill": -2, "morale": -6 } },
+      "delegate": { "text": "Sola Dewrin quietly arranges diesel from a cousin of a supplier. Cheaper, faster.", "effects": { "budget": -5, "morale": 3 } }
+    }, "ignore": { "effects": { "morale": -10, "sanity": -5 }, "text": "Scheduled power cut. Nobody knew the schedule. The servers sulk." } },
+  { "id": "e4", "day": 1, "time": 900, "from": "Donor Coordination Platform", "subject": "Co-chairing proposal", "body": "We would like to co-chair the coordination of the coordination group. Bellaluxe's leadership would be welcome, provided it costs nothing.",
+    "options": {
+      "reply": { "text": "Bellaluxe agrees to co-chair. You now own four extra meetings a week.", "effects": { "confidence": 5, "sanity": -8 } },
+      "replyall": { "text": "Your reply-all triggers 37 replies-all about reply-all etiquette.", "effects": { "sanity": -10, "goodwill": 2 } },
+      "note": { "text": "Bellaluxe 'takes note with interest' — the strongest form of no.", "effects": { "goodwill": -1 } }
+    }, "ignore": { "effects": { "confidence": -3 }, "text": "The group is now co-chaired by a rival donor. They open a bridge." } },
+  { "id": "e5", "day": 2, "time": 520, "from": "Ministry of Foreign Affairs of Ombrazia", "subject": "Note Verbale No. 0/0/OM", "body": "The Ministry presents its compliments and requests that the Embassy resubmit its request in Format 7-C. (Format 7-C has been discontinued since the Format Reform of last Tuesday.)",
+    "options": {
+      "reply": { "text": "You invent Format 7-C. The Ministry is impressed and adopts it.", "effects": { "goodwill": 8, "sanity": -3 } },
+      "delegate": { "text": "Sola Dewrin knows the stamp order. It works. Nobody asks how.", "effects": { "goodwill": 6, "morale": 2 } },
+      "forward": { "text": "The Capital replies in Format 7-B. Diplomatic silence follows.", "effects": { "goodwill": -6 } }
+    }, "ignore": { "effects": { "goodwill": -10 }, "text": "Your request is filed under 'Day of the Founding Mango'. Indefinitely." } },
+  { "id": "e6", "day": 2, "time": 700, "from": "Ambassador of Valdoria", "subject": "Light lunch?", "body": "Dear colleague, a light lunch tomorrow? Just a few courses and some informal exchange of views. 12:30 until we lose consciousness.",
+    "options": {
+      "reply": { "text": "Six hours. Eleven courses. One genuinely useful rumour.", "effects": { "goodwill": 4, "confidence": 4, "sanity": -6 } },
+      "delegate": { "text": "Colonel Montefiore attends with a tank model. Valdoria is confused.", "effects": { "goodwill": -2, "morale": 3 } },
+      "note": { "text": "You decline graciously. Valdoria seats you near the coat rack forever.", "effects": { "goodwill": -3 } }
+    }, "ignore": { "effects": { "goodwill": -5 }, "text": "Valdoria tells everyone you are 'very busy'. It is not a compliment." } },
+  { "id": "e7", "day": 2, "time": 880, "from": "Staff Committee", "subject": "Re: Re: Re: The cheese", "body": "Colleagues have opinions about the cheese in the kitchen fridge. Some say it is a strategic asset. Some say it is alive. Please advise.",
+    "options": {
+      "reply": { "text": "You declare it part of the Strategic Cheese Reserve. Morale is oddly lifted.", "effects": { "morale": 8 } },
+      "replyall": { "text": "Your reply-all becomes a 90-message thread titled 'Cheesegate'.", "effects": { "morale": -4, "sanity": -6 } },
+      "note": { "text": "Noted. The cheese continues its independent existence.", "effects": { "morale": -2 } }
+    }, "ignore": { "effects": { "morale": -6 }, "text": "Someone throws the cheese away. A strike is called." } },
+  { "id": "e8", "day": 3, "time": 540, "from": "Consular Section — Ines Thibault-Lund", "subject": "The queue", "body": "The queue is now 400 people. My spreadsheet predicts a waiting time of 'yes'. Can I open the second window? It requires a signature from someone who has fled.",
+    "options": {
+      "reply": { "text": "You sign as Chargé d'Affaires. The queue moves. Locals applaud the efficiency.", "effects": { "goodwill": 6, "budget": -4 } },
+      "forward": { "text": "The Capital asks for a study on window demand.", "effects": { "goodwill": -6, "morale": -4 } },
+      "delegate": { "text": "Intern Maxim reads the manual aloud to the queue. It does not help.", "effects": { "goodwill": -2, "morale": 2 } }
+    }, "ignore": { "effects": { "goodwill": -8 }, "text": "The queue forms its own National Dialogue." } },
+  { "id": "e9", "day": 3, "time": 700, "from": "Press Office", "subject": "Tweet (already posted)", "body": "Just to inform you I've tweeted that Bellaluxe 'stands shoulder to shoulder with the people of Ombrazia's volcano'. Checking it now.",
+    "options": {
+      "reply": { "text": "You request deletion. Screenshots already exist. They always do.", "effects": { "goodwill": -2, "confidence": 2 } },
+      "note": { "text": "You let it stand. The volcano's fan account retweets it.", "effects": { "goodwill": 3, "confidence": -3 } },
+      "forward": { "text": "The Capital drafts a clarification of the clarification.", "effects": { "confidence": -2, "sanity": -4 } }
+    }, "ignore": { "effects": { "goodwill": -4 }, "text": "The tweet trends. For the wrong reasons." } },
+  { "id": "e10", "day": 3, "time": 900, "from": "Capital — Protocol", "subject": "Ministerial Visit (Day 15)", "body": "The Minister arrives on Day 15. Please confirm the Ambassador will greet her personally. You will confirm this. The Ambassador is where, exactly?",
+    "options": {
+      "reply": { "text": "'The Ambassador is on consultations.' Technically true. Deniability holds.", "effects": { "confidence": 4, "sanity": -4 } },
+      "delegate": { "text": "Anselm replies. He mentions you 'are coping, considering'.", "effects": { "confidence": -8 } },
+      "note": { "text": "You take note. The Capital takes notice.", "effects": { "confidence": -5 } }
+    }, "ignore": { "effects": { "confidence": -14 }, "text": "The Capital assumes the worst. Correctly." } }
+]

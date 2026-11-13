@@ -1,0 +1,13 @@
+[
+  { "id": "liver", "name": "Functional Alcoholism", "cost": 2, "desc": "Liver drains slower. Morning meetings suffer.", "stats": { "liver": 3, "stamina": -1 } },
+  { "id": "replyall", "name": "Reply-All Reflex", "cost": -2, "desc": "Every reply reaches everyone. Everyone.", "stats": { "deniability": -2 } },
+  { "id": "punctual", "name": "Pathologically Punctual", "cost": 1, "desc": "Arrives before the meeting is scheduled.", "stats": { "stamina": 1 } },
+  { "id": "brussels", "name": "Brussels Brain", "cost": -1, "desc": "Speaks only in acronyms. Nobody understands you.", "stats": { "gravitas": 1, "charm": -2 } },
+  { "id": "demarche", "name": "Compulsive Démarche", "cost": -1, "desc": "Cannot pass a ministry without delivering something.", "stats": { "gravitas": 1, "deniability": -1 } },
+  { "id": "namedrop", "name": "Name-dropper", "cost": 1, "desc": "\"As I told the Commissioner…\"", "stats": { "gravitas": 1 } },
+  { "id": "cuisine", "name": "Allergic to Local Cuisine", "cost": -1, "desc": "But not to canapés.", "stats": { "charm": -1 } },
+  { "id": "novelist", "name": "Secret Novelist", "cost": 1, "desc": "Boosts creativity. Drains focus.", "stats": { "deniability": 1, "stamina": -1 } },
+  { "id": "sideevents", "name": "Cannot Say No to Side Events", "cost": -2, "desc": "Your calendar is a side event.", "stats": { "stamina": -2, "charm": 1 } },
+  { "id": "eyesopen", "name": "Sleeps With Eyes Open", "cost": 2, "desc": "In meetings. Undetected. So far.", "stats": { "stamina": 2 } },
+  { "id": "ngo", "name": "Spouse Runs a Local NGO", "cost": 0, "desc": "Conflict of interest. Sometimes useful.", "stats": { "charm": 1, "deniability": -1 } }
+]

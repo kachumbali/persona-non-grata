@@ -1,23 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { CharacterBuilder } from "@/game/components/CharacterBuilder";
+import { GameScreen } from "@/game/components/GameScreen";
+import { useGame } from "@/game/store";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  ssr: false, // the game reads its save from the browser
+  head: () => ({
+    meta: [
+      { title: "Persona Non Grata — A Satirical Embassy Simulator" },
+      { name: "description", content: "Survive 15 working days as Chargé d'Affaires ad interim before the Foreign Minister arrives." },
+      { property: "og:title", content: "Persona Non Grata — A Satirical Embassy Simulator" },
+      { property: "og:description", content: "Survive 15 working days as Chargé d'Affaires ad interim before the Foreign Minister arrives." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  const hasCharacter = useGame((s) => s.character !== null);
+  return hasCharacter ? <GameScreen /> : <CharacterBuilder />;
 }

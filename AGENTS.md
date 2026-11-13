@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Game content (emails, traits, backgrounds) lives in JSON under src/game/data so it can be extended without code; rules are pure TS in src/game/rules.ts (tested), state in a persisted zustand store.
