@@ -1,4 +1,8 @@
 # Embassy view
+- [x] Replace live clock with scheduled decision rounds and next-round results.
+- [x] Add first playable NPC conversations, delegation, outside locations, social meals and seeded side stories.
+- [x] Update the full game concept with the discussion and split delivery into work packages.
+- [x] Verify the planning-to-resolution flow and save persistence.
 - [x] Add HQ/host goodwill dashboard with outcome history and risk warnings.
 - [x] Track confirmed ministerial arrangements and add replacement, cancellation and PNG endings.
 - [x] Test failure rules, decision tracking, persistence and screens.

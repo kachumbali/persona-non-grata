@@ -109,11 +109,13 @@ export const EmbassyScene = memo(function EmbassyScene() {
   const [zoom, setZoom] = useState(1);
   const [angle, setAngle] = useState(0);
   const character = useGame((s) => s.character);
+  const playerRoom = useGame((s) => s.room);
   useEffect(() => { setPalette(readPalette()); }, []);
   const room = data.rooms.find((r) => r.id === roomId) ?? data.rooms[0];
   const staff = data.staff.find((s) => s.id === staffId);
-  const chooseStaff = (s: Staff) => { setStaffId(s.id); setRoomId(s.room); };
-  const player = useMemo(() => ({ id: "player", name: character?.name ?? "Chargé d’Affaires", role: "Chargé d’Affaires a.i.", room: "reception", face: character?.face ?? 0, x: -1.5, z: 0.65 }), [character]);
+  const chooseStaff = (s: Staff) => { setStaffId(s.id); setRoomId(s.room); useGame.getState().moveRoom(s.room); useGame.getState().selectNpc(s.id); };
+  const chooseRoom = (id: string) => { setRoomId(id); setStaffId(null); useGame.getState().moveRoom(id); };
+  const player = useMemo(() => ({ id: "player", name: character?.name ?? "Chargé d’Affaires", role: "Deputy Head of Mission · acting", room: playerRoom, face: character?.face ?? 0, x: -1.5, z: 0.65 }), [character, playerRoom]);
   if (!room) return null;
 
   return <section className="embassy-window mb-4 overflow-hidden bg-card" aria-label="Embassy floor plan">
@@ -137,7 +139,7 @@ export const EmbassyScene = memo(function EmbassyScene() {
           <Block at={[0, -0.25, 0]} size={[24.5, 0.5, 12.5]} color={p.trim} />
           <Block at={[0, 1.1, -6.2]} size={[24.5, 2.2, 0.2]} color={p.wall} />
           {[-10.5, -7.5, -4.5, -1.5, 1.5, 4.5, 7.5, 10.5].map((x) => <group key={x}><Block at={[x, 1.25, -6.07]} size={[1.6, 1.3, 0.04]} color={p.trim} /><Block at={[x, 1.25, -6.03]} size={[1.35, 1.1, 0.04]} color={p.blue} /><Block at={[x, 1.25, -6]} size={[0.07, 1.1, 0.04]} color={p.paper} /></group>)}
-          {data.rooms.map((r) => <RoomFloor key={r.id} room={r} p={p} selected={r.id === roomId} onSelect={() => { setRoomId(r.id); setStaffId(null); }} />)}
+          {data.rooms.map((r) => <RoomFloor key={r.id} room={r} p={p} selected={r.id === roomId} onSelect={() => chooseRoom(r.id)} />)}
           {data.staff.map((s) => <Person key={s.id} staff={s} p={p} selected={staffId === s.id} onSelect={() => chooseStaff(s)} />)}
           <Person staff={player} p={p} selected={staffId === "player"} onSelect={() => { setStaffId("player"); setRoomId("reception"); }} />
           <Block at={[-12.8, 1.4, 4.5]} size={[0.08, 2.8, 0.08]} color={p.ink} />
@@ -146,7 +148,7 @@ export const EmbassyScene = memo(function EmbassyScene() {
       </Canvas>}
     </div>
     <div className="grid border-t border-border md:grid-cols-[1fr_280px]">
-      <div className="min-w-0 p-4"><h3 className="mb-2 text-sm font-bold">Locations</h3><div className="flex flex-wrap gap-1.5">{data.rooms.map((r) => <Button key={r.id} size="sm" variant={roomId === r.id ? "secondary" : "ghost"} onClick={() => { setRoomId(r.id); setStaffId(null); }}>{r.name}</Button>)}</div></div>
+      <div className="min-w-0 p-4"><h3 className="mb-2 text-sm font-bold">Locations</h3><div className="flex flex-wrap gap-1.5">{data.rooms.map((r) => <Button key={r.id} size="sm" variant={roomId === r.id ? "secondary" : "ghost"} onClick={() => chooseRoom(r.id)}>{r.name}</Button>)}</div></div>
       <div className="border-t border-border p-4 md:border-l md:border-t-0"><p className="font-mono text-xs text-muted-foreground">{staff ? staff.role : staffId === "player" ? player.role : "LOCATION FILE"}</p><h3 className="mt-1 text-sm font-bold">{staff?.name ?? (staffId === "player" ? player.name : room.name)}</h3><p className="mt-2 text-xs leading-relaxed text-muted-foreground">{room.note}</p></div>
     </div>
     <div className="border-t border-border px-4 py-3"><h3 className="mb-2 text-sm font-bold">Personnel</h3><div className="flex flex-wrap gap-1.5">{data.staff.map((s) => <Button key={s.id} variant={staffId === s.id ? "secondary" : "ghost"} size="sm" onClick={() => chooseStaff(s)}>{s.name}</Button>)}</div></div>

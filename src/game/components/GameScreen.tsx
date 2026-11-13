@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ACTION_LABELS, ENDINGS, formatClock, LAST_DAY, MINUTES_PER_SECOND, type Action, type MeterKey } from "../rules";
+import { ACTION_LABELS, BLOCKS, ENDINGS, formatClock, LAST_DAY, type Action, type MeterKey } from "../rules";
 import { inboxFor, useGame } from "../store";
 import { Portrait } from "./Portrait";
 import { EmbassyScene } from "../scene/EmbassyScene";
 import { GoodwillDashboard } from "./GoodwillDashboard";
+import { PlanningDesk } from "./PlanningDesk";
 
 const METERS: { key: MeterKey; label: string }[] = [
   { key: "budget", label: "Budget" }, { key: "confidence", label: "HQ Goodwill" }, { key: "goodwill", label: "Host Goodwill" },
@@ -16,12 +17,6 @@ export function GameScreen() {
   const [openId, setOpenId] = useState<string | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const id = setInterval(() => useGame.getState().tick((MINUTES_PER_SECOND * useGame.getState().speed) / 4), 250);
-    const key = (e: KeyboardEvent) => { if (e.code === "Space" && !(e.target instanceof HTMLInputElement)) { e.preventDefault(); useGame.getState().togglePause(); } };
-    window.addEventListener("keydown", key);
-    return () => { clearInterval(id); window.removeEventListener("keydown", key); };
-  }, []);
   useEffect(() => { logRef.current?.scrollTo({ top: logRef.current.scrollHeight }); }, [g.log.length]);
 
   const minuteBucket = Math.floor(g.minute / 5);
@@ -57,17 +52,14 @@ export function GameScreen() {
           <p className="text-xs text-muted-foreground">Chargé d'Affaires a.i. · Embassy of Bellaluxe, Port Hesperia</p>
         </div>
         <div className="clock text-right font-mono">
-          <div className="text-2xl">{formatClock(g.minute)}</div>
+          <div className="text-2xl">{BLOCKS[g.block]?.name}</div>
           <div className="text-xs text-muted-foreground">Day {g.day} / {LAST_DAY} · Minister in {LAST_DAY - g.day} days</div>
-        </div>
-        <div className="flex gap-1">
-          <Button size="sm" aria-label={g.paused ? "Resume time" : "Pause time"} title={g.paused ? "Resume time" : "Pause time"} variant={g.paused ? "default" : "outline"} onClick={g.togglePause}>{g.paused ? "▶" : "❚❚"}</Button>
-          {([1, 2, 4] as const).map((s) => <Button key={s} size="sm" variant={g.speed === s ? "secondary" : "outline"} onClick={() => g.setSpeed(s)}>{s}×</Button>)}
         </div>
       </header>
 
       <GoodwillDashboard />
-      <EmbassyScene />
+      <PlanningDesk />
+      {g.location === "embassy" && <EmbassyScene />}
       <div className="grid gap-4 lg:grid-cols-[280px_1fr_300px]">
         <section className="paper flex max-h-[70vh] flex-col">
           <h2 className="retro-titlebar">Inbox {unread > 0 && <span className="ml-1 rounded bg-destructive px-1.5 font-mono text-xs text-destructive-foreground">{unread}</span>}</h2>
@@ -95,8 +87,8 @@ export function GameScreen() {
                   <span className="stamp animate-stamp">{open.status === "ignored" ? "Escalated" : ACTION_LABELS[open.status as Action]}</span>
                 ) : (
                   <div className="flex flex-wrap gap-2">
-                    {(Object.keys(open.options) as Action[]).map((a) => <Button key={a} variant="outline" onClick={() => { setOpenId(open.id); g.answer(open.id, a); }}>{ACTION_LABELS[a]}</Button>)}
-                    <span className="self-center text-xs text-muted-foreground">or ignore it (until it escalates)</span>
+                    {(Object.keys(open.options) as Action[]).map((a) => <Button key={a} disabled={g.pending.some((p) => p.emailId === open.id)} variant="outline" onClick={() => { setOpenId(open.id); g.answer(open.id, a); }}>{ACTION_LABELS[a]}</Button>)}
+                    <span className="self-center text-xs text-muted-foreground">{g.pending.some((p) => p.emailId === open.id) ? "Reply scheduled for this round" : "Unanswered instructions resolve at round end"}</span>
                   </div>
                 )}
               </div>

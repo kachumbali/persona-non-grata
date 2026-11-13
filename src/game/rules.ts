@@ -1,5 +1,6 @@
 import emailsData from "./data/emails.json";
 import traitsData from "./data/traits.json";
+import campaignData from "./data/campaign.json";
 
 export type MeterKey = "budget" | "confidence" | "goodwill" | "morale" | "sanity";
 export type StatKey = "gravitas" | "charm" | "stamina" | "deniability" | "liver";
@@ -14,7 +15,7 @@ export const VISIT_TASKS: Record<VisitTask, string> = {
 };
 export interface Outcome { text: string; effects: Partial<Meters>; confirms?: VisitTask }
 export interface GoodwillChange {
-  day: number; time: number; source: string; kind: "Decision" | "Missed instruction";
+  day: number; time: number; source: string; kind: "Decision" | "Missed instruction" | "Outcome";
   text: string; before: Pick<Meters, "confidence" | "goodwill">;
   after: Pick<Meters, "confidence" | "goodwill">;
 }
@@ -96,4 +97,56 @@ export function pickEnding(m: Meters, finalDay: boolean, visit: VisitStatus = {}
   if (!visitReady(visit)) return "cancelled";
   if (m.confidence >= 65 && m.goodwill >= 50) return "promoted";
   return "ambassador";
+}
+
+export const CAMPAIGN = campaignData;
+export const BLOCKS = [
+  { name: "Morning", time: 8 * 60, social: "Coffee break I" },
+  { name: "Midday", time: 12 * 60, social: "Lunch" },
+  { name: "Afternoon", time: 15 * 60, social: "Coffee break II" },
+  { name: "Evening", time: 19 * 60, social: "Dinner" },
+] as const;
+export interface ColleagueState { trust: number; fatigue: number }
+export type Relationships = Record<string, number>;
+export const pairKey = (a: string, b: string) => [a, b].sort().join(":");
+export function initialColleagues(): Record<string, ColleagueState> {
+  return Object.fromEntries(CAMPAIGN.characters.map((c) => [c.id, { trust: 50, fatigue: 0 }]));
+}
+export interface PendingDecision {
+  id: string; source: string; text: string; effects: Partial<Meters>;
+  kind: "work" | "email" | "social" | "dialogue" | "event";
+  worker?: string | undefined; partner?: string | undefined; task?: VisitTask | undefined; trust?: number | undefined; pair?: number | undefined;
+  score?: number | undefined; energy?: number | undefined; composure?: number | undefined; flag?: string | undefined;
+  emailId?: string | undefined; emailAction?: Action | undefined; eventId?: string | undefined; playerSlot?: boolean | undefined;
+}
+export interface StoryChoice {
+  id: string; label: string; next?: string; effects?: Partial<Meters>; result?: string;
+  trust?: number; pair?: number; score?: number; flag?: string; replace?: boolean; worker?: string;
+}
+export type StoryEvent = { id: string; title: string; npc: string; text: string; minDay: number; requires?: string; choices: StoryChoice[] };
+export function dailyEvents(day: number, seed: number, completed: string[]): StoryEvent[] {
+  const available = (CAMPAIGN.events as StoryEvent[]).filter((e) => e.minDay <= day && (!e.requires || completed.includes(e.requires)) && !completed.includes(e.id));
+  // Seeded order stays stable across reloads; continuations take precedence.
+  const hash = (id: string) => [...id].reduce((n, char) => ((n * 31) ^ char.charCodeAt(0)) >>> 0, (seed + day * 7919) >>> 0);
+  available.sort((a, b) => Number(Boolean(b.requires)) - Number(Boolean(a.requires)) || hash(a.id) - hash(b.id));
+  if (!available.length) available.push((CAMPAIGN.events as StoryEvent[])[0] ?? { id: "invitation", title: "Invitation", npc: "protocol", text: "Your presence is requested.", minDay: 1, choices: [] });
+  return available.slice(0, 1 + Math.abs((seed + day) % 3));
+}
+export function hospitalityCost(venueId: string, guestCount: number, block: number): number {
+  const venue = CAMPAIGN.venues.find((v) => v.id === venueId);
+  if (!venue || guestCount === 0) return 0;
+  return Math.ceil(venue.cost * (guestCount + 1) * (block === 0 || block === 2 ? 0.25 : 1));
+}
+export function socialTrust(npc: string, venueId: string, workAtDinner: boolean): number {
+  const c = CAMPAIGN.characters.find((x) => x.id === npc);
+  const venue = CAMPAIGN.venues.find((x) => x.id === venueId);
+  if (!c || !venue) return 0;
+  return (c.likes.includes(venue.setting) ? 6 : c.dislikes.includes(venue.setting) ? -5 : 2) - (workAtDinner ? 10 : 0);
+}
+export function delegationSucceeds(worker: string, task: VisitTask, colleagues: Record<string, ColleagueState>, pairs: Relationships, partner?: string, block = 0): boolean {
+  const c = CAMPAIGN.characters.find((x) => x.id === worker);
+  const state = colleagues[worker];
+  if (!c || !state || block === 3 || c.location !== "embassy" || state.trust < 25 || state.fatigue >= 80) return false;
+  if (partner && ((pairs[pairKey(worker, partner)] ?? 50) < 25 || (colleagues[partner]?.trust ?? 0) < 25)) return false;
+  return c.skills.includes(task);
 }

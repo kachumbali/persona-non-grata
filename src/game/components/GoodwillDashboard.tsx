@@ -23,7 +23,7 @@ export function GoodwillDashboard() {
           {confirmed < 4 && <p className="mt-2 text-sm font-bold text-destructive">Cancellation risk: essential arrangements incomplete.</p>}
         </div>
       </div>
-      <details className="border-t border-border px-3 py-2" open>
+      <details className="border-t border-border px-3 py-2">
         <summary className="cursor-pointer font-bold">Decision & outcome ledger ({goodwillHistory.length})</summary>
         <div className="mt-2 max-h-64 overflow-y-auto">
           {goodwillHistory.length === 0 ? <p className="text-sm text-muted-foreground">No decisions recorded yet. Opening HQ: 55 · Host: 50.</p> : <ol className="divide-y divide-border">{[...goodwillHistory].reverse().map((change, index) => <li key={index} className="py-2 text-sm">

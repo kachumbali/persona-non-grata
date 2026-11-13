@@ -1,0 +1,704 @@
+{
+  "characters": [
+    {
+      "id": "anselm",
+      "name": "Anselm Voss-Rietveld",
+      "role": "Political & Press Officer · first posting",
+      "face": 0,
+      "location": "embassy",
+      "likes": [
+        "bling",
+        "sushi"
+      ],
+      "dislikes": [
+        "local"
+      ],
+      "skills": [
+        "programme"
+      ],
+      "line": "I could brief Capital myself. They remember me from training."
+    },
+    {
+      "id": "pavel",
+      "name": "Pavel Oskarsen",
+      "role": "Veteran Head of Administration",
+      "face": 2,
+      "location": "embassy",
+      "likes": [
+        "classic"
+      ],
+      "dislikes": [
+        "bling",
+        "sushi"
+      ],
+      "skills": [
+        "lounge",
+        "security"
+      ],
+      "line": "I have seen six ambassadors. Five also thought a promise was a reservation."
+    },
+    {
+      "id": "sola",
+      "name": "Sola Dewrin",
+      "role": "Local Staff Chief",
+      "face": 4,
+      "location": "embassy",
+      "likes": [
+        "local"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [
+        "clearance",
+        "programme"
+      ],
+      "line": "I can make the calls. But I am not everybody’s translator and emergency exit."
+    },
+    {
+      "id": "development",
+      "name": "Elise",
+      "role": "Development Counsellor",
+      "face": 3,
+      "location": "embassy",
+      "likes": [
+        "local"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [
+        "programme"
+      ],
+      "line": "The Minister could visit our project. Provided we remember the people, not just the photograph."
+    },
+    {
+      "id": "bianca",
+      "name": "Bianca Montefiore",
+      "role": "Defence Attaché",
+      "face": 1,
+      "location": "embassy",
+      "likes": [
+        "classic",
+        "shady"
+      ],
+      "dislikes": [
+        "sushi"
+      ],
+      "skills": [
+        "security"
+      ],
+      "line": "A convoy needs vehicles, not a beautifully formatted spreadsheet."
+    },
+    {
+      "id": "ines",
+      "name": "Ines Thibault-Lund",
+      "role": "Consul",
+      "face": 5,
+      "location": "embassy",
+      "likes": [
+        "sushi",
+        "local"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [
+        "clearance"
+      ],
+      "line": "Four hundred people in the queue. No, they do not disappear when the Minister arrives."
+    },
+    {
+      "id": "press",
+      "name": "Lucien Falk",
+      "role": "Digital & Public Diplomacy Officer",
+      "face": 7,
+      "location": "embassy",
+      "likes": [
+        "sushi",
+        "bling"
+      ],
+      "dislikes": [
+        "classic"
+      ],
+      "skills": [
+        "programme"
+      ],
+      "line": "A good photograph is worth a thousand words. Legal would prefer zero."
+    },
+    {
+      "id": "maxim",
+      "name": "Maxim",
+      "role": "Intern",
+      "face": 6,
+      "location": "embassy",
+      "likes": [
+        "local",
+        "sushi"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [],
+      "line": "I made a checklist of the checklists. Is that useful?"
+    },
+    {
+      "id": "ketu",
+      "name": "Ketu Marrimba",
+      "role": "Embassy Chef",
+      "face": 5,
+      "location": "embassy",
+      "likes": [
+        "local",
+        "classic"
+      ],
+      "dislikes": [
+        "sushi"
+      ],
+      "skills": [
+        "lounge"
+      ],
+      "line": "I can feed the delegation. I cannot feed its ego."
+    },
+    {
+      "id": "protocol",
+      "name": "Director Ndao",
+      "role": "Local Protocol Director",
+      "face": 4,
+      "location": "ministry",
+      "likes": [
+        "classic"
+      ],
+      "dislikes": [
+        "shady"
+      ],
+      "skills": [
+        "clearance"
+      ],
+      "line": "Permission has three stamps. You have submitted two and a coffee stain."
+    },
+    {
+      "id": "eu",
+      "name": "Celeste Norren",
+      "role": "EU coordination chair",
+      "face": 1,
+      "location": "eu",
+      "likes": [
+        "classic",
+        "sushi"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [
+        "programme"
+      ],
+      "line": "Before you mention 17.6%, yes, we have counted the biscuits."
+    },
+    {
+      "id": "fixer",
+      "name": "Marcel Deux",
+      "role": "Unofficial intermediary",
+      "face": 2,
+      "location": "bar",
+      "likes": [
+        "shady",
+        "bling"
+      ],
+      "dislikes": [
+        "classic"
+      ],
+      "skills": [
+        "lounge"
+      ],
+      "line": "Everything is possible. The question is who owes whom afterwards."
+    },
+    {
+      "id": "journalist",
+      "name": "Ruth Vale",
+      "role": "Press correspondent",
+      "face": 3,
+      "location": "pressclub",
+      "likes": [
+        "local",
+        "shady"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [
+        "programme"
+      ],
+      "line": "Off the record is an agreement, not something you say after the quote."
+    },
+    {
+      "id": "golf",
+      "name": "Minister Bako",
+      "role": "Deputy Foreign Minister",
+      "face": 0,
+      "location": "golf",
+      "likes": [
+        "bling",
+        "classic"
+      ],
+      "dislikes": [
+        "sushi"
+      ],
+      "skills": [
+        "clearance"
+      ],
+      "line": "An appointment? My secretary says I am unavailable. My caddie disagrees."
+    },
+    {
+      "id": "un",
+      "name": "Dr Amara Chen",
+      "role": "UN Resident Coordinator",
+      "face": 6,
+      "location": "un",
+      "likes": [
+        "local",
+        "sushi"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [
+        "programme"
+      ],
+      "line": "We can support the programme. We cannot promise six agencies will agree on one logo."
+    }
+  ],
+  "venues": [
+    {
+      "id": "embassy",
+      "name": "Embassy kitchen",
+      "setting": "local",
+      "cost": 0,
+      "description": "Staff coffee and a lunch assembled by Ketu."
+    },
+    {
+      "id": "classic",
+      "name": "Chez Marcel",
+      "setting": "classic",
+      "cost": 4,
+      "description": "Classic French and Italian dining. Quiet tables, serious cutlery."
+    },
+    {
+      "id": "local",
+      "name": "Auntie’s Courtyard",
+      "setting": "local",
+      "cost": 2,
+      "description": "Local cuisine, open-air tables and conversations that travel."
+    },
+    {
+      "id": "bling",
+      "name": "The Gilded Palm",
+      "setting": "bling",
+      "cost": 10,
+      "description": "Rooftop chandeliers, imported everything, a very visible bill."
+    },
+    {
+      "id": "sushi",
+      "name": "Mizu",
+      "setting": "sushi",
+      "cost": 5,
+      "description": "Sushi, minimalist surroundings and ambitious small plates."
+    },
+    {
+      "id": "shady",
+      "name": "The Quiet Amendment",
+      "setting": "shady",
+      "cost": 3,
+      "description": "A discreet bar with food and excessively well-informed regulars."
+    }
+  ],
+  "locations": [
+    {
+      "id": "embassy",
+      "name": "Embassy",
+      "description": "Your team, your in-tray, your responsibility.",
+      "work": "Prepare visit arrangements",
+      "effects": {},
+      "cost": 0
+    },
+    {
+      "id": "ministry",
+      "name": "Foreign Ministry / Protocol",
+      "description": "Appointments, landing permissions and wounded precedence.",
+      "work": "Negotiate protocol approval",
+      "effects": {
+        "goodwill": 4,
+        "confidence": 2
+      },
+      "cost": 0
+    },
+    {
+      "id": "eu",
+      "name": "EU Delegation",
+      "description": "Coordination, contested clauses and exactly 17.6% of the refreshments.",
+      "work": "Build a coalition",
+      "effects": {
+        "confidence": 3,
+        "goodwill": 1
+      },
+      "cost": 0
+    },
+    {
+      "id": "bar",
+      "name": "The Quiet Amendment",
+      "description": "Rumours and favours that never quite stay unofficial.",
+      "work": "Gather unofficial information",
+      "effects": {
+        "confidence": 1,
+        "goodwill": 2
+      },
+      "cost": 2
+    },
+    {
+      "id": "pressclub",
+      "name": "Press Correspondents Club",
+      "description": "Access, credibility and the dangerous phrase “off the record”.",
+      "work": "Brief the correspondents",
+      "effects": {
+        "confidence": 3,
+        "goodwill": 2
+      },
+      "cost": 1
+    },
+    {
+      "id": "golf",
+      "name": "Precedence Golf Club",
+      "description": "The people who never answer letters are available on the ninth green.",
+      "work": "Seek an informal appointment",
+      "effects": {
+        "goodwill": 4
+      },
+      "cost": 4
+    },
+    {
+      "id": "un",
+      "name": "UN House & multilateral circuit",
+      "description": "Programmes, funding, mandates and competing logos.",
+      "work": "Negotiate a development programme",
+      "effects": {
+        "confidence": 4,
+        "goodwill": 2
+      },
+      "cost": 0
+    }
+  ],
+  "dialogue": {
+    "opening": {
+      "text": "{line} What do you want to discuss?",
+      "choices": [
+        {
+          "id": "listen",
+          "label": "How are things going, really?",
+          "next": "listen"
+        },
+        {
+          "id": "support",
+          "label": "What would help you do your job?",
+          "next": "support"
+        },
+        {
+          "id": "pressure",
+          "label": "Capital expects results. No excuses.",
+          "next": "pressure"
+        }
+      ]
+    },
+    "listen": {
+      "text": "People will work with you if you notice what it costs them. Public credit would be a start.",
+      "choices": [
+        {
+          "id": "credit",
+          "label": "You will get the credit. I’ll back you publicly.",
+          "effects": {
+            "morale": 2
+          },
+          "trust": 6,
+          "pair": 3,
+          "score": 2,
+          "result": "Your promise of public credit makes the team more willing to share information."
+        },
+        {
+          "id": "dismiss",
+          "label": "Let’s keep personal feelings out of this.",
+          "effects": {
+            "morale": -2
+          },
+          "trust": -5,
+          "pair": -3,
+          "score": 0,
+          "result": "The conversation ends politely. Cooperation becomes rather less enthusiastic."
+        }
+      ]
+    },
+    "support": {
+      "text": "A clear brief, realistic time and no surprise overtime. Can you manage that?",
+      "choices": [
+        {
+          "id": "protect",
+          "label": "Agreed. We’ll protect your time.",
+          "effects": {
+            "morale": 3
+          },
+          "trust": 7,
+          "pair": 4,
+          "score": 2,
+          "result": "Clear boundaries earn trust and reduce friction with the rest of the team."
+        },
+        {
+          "id": "deal",
+          "label": "Help now; I’ll owe you a favour.",
+          "effects": {
+            "morale": 1
+          },
+          "trust": 3,
+          "pair": 1,
+          "score": 1,
+          "result": "A favour is accepted. It will not be forgotten."
+        }
+      ]
+    },
+    "pressure": {
+      "text": "You can order compliance. You cannot order enthusiasm. Is that what you want?",
+      "choices": [
+        {
+          "id": "apologise",
+          "label": "Fair point. Let’s agree priorities.",
+          "effects": {
+            "morale": 1
+          },
+          "trust": 2,
+          "pair": 1,
+          "score": 1,
+          "result": "You step back from the threat and agree workable priorities."
+        },
+        {
+          "id": "insist",
+          "label": "Yes. Have it ready, or explain yourself to HQ.",
+          "effects": {
+            "morale": -4
+          },
+          "trust": -9,
+          "pair": -5,
+          "score": 0,
+          "result": "The instruction is accepted. Trust and cooperation suffer."
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "id": "invitation",
+      "title": "Your presence is requested immediately",
+      "npc": "protocol",
+      "text": "The host ministry unveils a plaque in twenty minutes. Your absence would be noticed. Your schedule is not their concern.",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "attend",
+          "label": "Attend personally — replace your planned activity",
+          "replace": true,
+          "effects": {
+            "goodwill": 5
+          },
+          "result": "You attend the ceremony. Your planned work must wait."
+        },
+        {
+          "id": "delegate",
+          "label": "Send Anselm with a strict brief",
+          "worker": "anselm",
+          "effects": {
+            "goodwill": 2
+          },
+          "trust": 2,
+          "result": "Anselm represents the mission. The strict brief limits his promises."
+        },
+        {
+          "id": "decline",
+          "label": "Decline diplomatically",
+          "effects": {
+            "goodwill": -4
+          },
+          "result": "Protocol records your absence with considerable courtesy."
+        }
+      ]
+    },
+    {
+      "id": "rivalry",
+      "title": "Two briefings, no shared facts",
+      "npc": "pavel",
+      "text": "Pavel and Anselm each wrote a briefing and refuse to combine them. The Minister cannot hold two contradictory positions.",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "mediate",
+          "label": "Give Pavel the lead and Anselm visible credit",
+          "pair": 12,
+          "trust": 3,
+          "effects": {
+            "morale": 2
+          },
+          "result": "A clear lead and shared credit begin repairing the Pavel–Anselm feud."
+        },
+        {
+          "id": "order",
+          "label": "Order them to cooperate",
+          "pair": -8,
+          "effects": {
+            "confidence": 1,
+            "morale": -3
+          },
+          "result": "One document appears. They stop speaking to each other."
+        }
+      ]
+    },
+    {
+      "id": "supplier",
+      "title": "The generous supplier · part I",
+      "npc": "sola",
+      "text": "A caterer offers an unusually cheap reception. Sola recognises the surname. Investigate or take the bargain?",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "check",
+          "label": "Ask Sola to check the ownership",
+          "flag": "supplier-check",
+          "trust": 4,
+          "effects": {},
+          "result": "Sola begins tracing the supplier. A follow-up will arrive tomorrow."
+        },
+        {
+          "id": "accept",
+          "label": "Accept the offer without questions",
+          "flag": "supplier-accepted",
+          "effects": {
+            "budget": 3
+          },
+          "result": "The bargain is accepted. Its strings will become apparent later."
+        }
+      ]
+    },
+    {
+      "id": "supplier-followup",
+      "title": "The generous supplier · part II",
+      "npc": "sola",
+      "text": "The company belongs to a protocol official’s cousin. A correspondent has started asking about the reception.",
+      "minDay": 2,
+      "requires": "supplier",
+      "choices": [
+        {
+          "id": "transparent",
+          "label": "Disclose the connection and change supplier",
+          "effects": {
+            "budget": -3,
+            "confidence": 3
+          },
+          "score": 4,
+          "result": "Transparent procurement costs more but prevents a scandal."
+        },
+        {
+          "id": "bury",
+          "label": "Keep the deal quiet",
+          "effects": {
+            "confidence": -5,
+            "goodwill": 2
+          },
+          "result": "The cousin is delighted. Capital is less amused by the eventual questions."
+        }
+      ]
+    },
+    {
+      "id": "elise",
+      "title": "A project, not a photo opportunity",
+      "npc": "development",
+      "text": "Elise wants the Minister to meet project beneficiaries, not merely unveil a donor plaque. UN partners demand their own speaking slots.",
+      "minDay": 2,
+      "choices": [
+        {
+          "id": "useful",
+          "label": "Protect time for beneficiaries",
+          "effects": {
+            "goodwill": 3,
+            "confidence": 2
+          },
+          "trust": 5,
+          "score": 4,
+          "result": "Elise negotiates a useful project segment with the UN partners."
+        },
+        {
+          "id": "photo",
+          "label": "Prioritise the Minister’s photograph",
+          "effects": {
+            "confidence": 3,
+            "morale": -3
+          },
+          "trust": -6,
+          "result": "The photograph is secured. Elise remembers what you valued."
+        }
+      ]
+    },
+    {
+      "id": "cookies",
+      "title": "The 17.6% entitlement",
+      "npc": "eu",
+      "text": "Celeste slides the biscuit plate towards you. “Your national allocation, colleague.” The room braces itself.",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "joke",
+          "label": "“Naturally, 17.6% of the coffee too.”",
+          "effects": {
+            "confidence": 2,
+            "sanity": 2
+          },
+          "trust": 2,
+          "score": 1,
+          "result": "Pained expressions all round. Your self-deprecation briefly softens the coalition."
+        },
+        {
+          "id": "serious",
+          "label": "Save the joke and discuss the clause",
+          "effects": {
+            "confidence": 2
+          },
+          "trust": 1,
+          "score": 2,
+          "result": "The room agrees on the clause. Nobody misses the joke quite enough to admit it."
+        }
+      ]
+    },
+    {
+      "id": "press",
+      "title": "A casual quote",
+      "npc": "journalist",
+      "text": "Ruth asks whether the Minister’s visit is really confirmed. The microphone looks switched off. It is not.",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "honest",
+          "label": "Explain what is confirmed and what is pending",
+          "effects": {
+            "confidence": 2
+          },
+          "trust": 3,
+          "score": 2,
+          "result": "Your careful distinction survives the headline."
+        },
+        {
+          "id": "promise",
+          "label": "Everything is entirely ready",
+          "effects": {
+            "confidence": -4,
+            "goodwill": -2
+          },
+          "trust": -3,
+          "result": "The claim is printed. Somebody checks it."
+        }
+      ]
+    }
+  ]
+}

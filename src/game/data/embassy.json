@@ -13,15 +13,15 @@
     {"id":"motor","name":"Motor Pool","x":6,"z":4,"floor":"stone","kind":"motor","note":"The motorcade is ready. The road is not."}
   ],
   "staff": [
-    {"id":"anselm","name":"Anselm Voss-Rietveld","role":"Deputy Head of Section","room":"chancery","face":0,"x":-1.3,"z":0.5},
+    {"id":"anselm","name":"Anselm Voss-Rietveld","role":"Political & Press Officer · first posting","room":"chancery","face":0,"x":-1.3,"z":0.5},
     {"id":"bianca","name":"Bianca Montefiore","role":"Defence Attaché","room":"motor","face":1,"x":-1.7,"z":0.4},
     {"id":"pavel","name":"Pavel Oskarsen","role":"Head of Admin","room":"generator","face":2,"x":-1.3,"z":0.7},
     {"id":"ines","name":"Ines Thibault-Lund","role":"Consul","room":"consular","face":3,"x":1.4,"z":-0.5},
     {"id":"sola","name":"Sola Dewrin","role":"Local Staff Chief","room":"registry","face":4,"x":0.9,"z":0.5},
     {"id":"ketu","name":"Ketu Marrimba","role":"Chef","room":"kitchen","face":5,"x":-0.8,"z":0.4},
     {"id":"maxim","name":"Maxim","role":"Intern","room":"server","face":6,"x":-1.4,"z":0.5},
-    {"id":"press","name":"Press Officer","role":"Press & Communications","room":"rooftop","face":7,"x":-1.4,"z":0.7},
-    {"id":"development","name":"Development Attaché","role":"Development Cooperation","room":"garden","face":2,"x":0.9,"z":0.3},
+    {"id":"press","name":"Lucien Falk","role":"Digital & Public Diplomacy Officer","room":"rooftop","face":7,"x":-1.4,"z":0.7},
+    {"id":"development","name":"Elise","role":"Development Counsellor","room":"garden","face":3,"x":0.9,"z":0.3},
     {"id":"cat","name":"The Ambassador’s cat","role":"Acting custodian of classified documents","room":"office","face":0,"animal":"cat","x":1.1,"z":0.2},
     {"id":"parrot","name":"Registry parrot","role":"Password administrator","room":"server","face":0,"animal":"parrot","x":1.5,"z":-0.6}
   ]
