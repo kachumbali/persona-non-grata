@@ -97,7 +97,7 @@ function CameraRig({ zoom }: { zoom: number }) {
 
 function Ready({ wrapper }: { wrapper: React.RefObject<HTMLDivElement | null> }) {
   const frames = useRef(0);
-  useFrame(() => { frames.current += 1; if (frames.current === 2 && wrapper.current) wrapper.current.dataset['sceneReady'] = "1"; });
+  useFrame(() => { frames.current += 1; if (frames.current === 1) requestAnimationFrame(() => { if (wrapper.current) wrapper.current.dataset['sceneReady'] = "1"; }); });
   return null;
 }
 
