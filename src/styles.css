@@ -226,3 +226,12 @@
 .cable-reader { background: var(--screen); color: var(--foreground); box-shadow: var(--bevel-sunken); }
 .title-screen { min-height: 100vh; display: flex; align-items: center; padding: 24px 12px; background-size: cover; background-position: center; box-shadow: inset 0 0 0 100vmax oklch(0.18 0.035 185 / 0.55); }
 .interrupt-badge { position: fixed; right: 16px; bottom: 16px; z-index: 40; animation: pin-bob 0.9s steps(2) infinite; }
+.blackberry-dock { position: fixed; right: 16px; bottom: 0; z-index: 30; width: min(380px, calc(100vw - 32px)); background: var(--foreground); border: 4px solid var(--muted-foreground); border-bottom: 0; border-radius: 22px 22px 0 0; padding: 8px 10px 10px; box-shadow: var(--shadow-window); }
+.bb-top { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 8px; color: var(--accent); background: none; border: 0; cursor: pointer; }
+.bb-led { width: 8px; height: 8px; border-radius: 50%; background: var(--muted-foreground); }
+.bb-led[data-on="true"] { background: var(--destructive); animation: pin-bob 0.9s steps(2) infinite; }
+.bb-screen { margin-top: 8px; max-height: 60vh; overflow-y: auto; background: var(--screen); color: var(--foreground); padding: 8px; box-shadow: var(--bevel-sunken); }
+.bb-screen .inbox-list { max-height: 30vh; }
+.bb-keys { margin-top: 8px; }
+.interrupt-badge { bottom: 96px; }
+.retro-game { padding-bottom: 110px; }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Monitor, Printer, Smartphone, DoorOpen } from "lucide-react";
+import { Monitor, Printer, DoorOpen } from "lucide-react";
 import office from "@/assets/scenes/embassy-office.jpg";
 import city from "@/assets/port-hesperia.jpg";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -13,7 +13,7 @@ import { Mailbox } from "./Mailbox";
 import { PlanningDesk } from "./PlanningDesk";
 import { Portrait } from "./Portrait";
 
-type Win = null | "pc" | "fax" | "phone";
+type Win = null | "pc" | "fax";
 const PC_TABS = [["mail", "Outlook 98"], ["tasks", "Staff & diary"], ["watch", "Mission Watch"]] as const;
 
 export function PlaceScene({ onLeave }: { onLeave: () => void }) {
@@ -43,9 +43,8 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
             </button>
           ))}
         </div>
-        {!atEmbassy && <Button className="absolute bottom-3 right-3" onClick={() => setWin("phone")}><Smartphone className="size-4" />BlackBerry</Button>}
       </div>
-      <p className="px-3 py-2 text-sm">{place?.description} {atEmbassy ? "Click your PC, the fax, or a colleague." : "Click someone to talk. Your BlackBerry keeps mail within reach."}</p>
+      <p className="px-3 py-2 text-sm">{place?.description} {atEmbassy ? "Click your PC, the fax, or a colleague." : "Click someone to talk. Your BlackBerry keeps mail within reach (bottom right)."}</p>
       <Conversation />
 
       <Dialog open={win === "pc"} onOpenChange={(o) => !o && setWin(null)}>
@@ -61,13 +60,6 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
         <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto bg-card p-0 text-card-foreground">
           <DialogTitle className="retro-titlebar">SECURE FAX · Capital → Port Hesperia</DialogTitle>
           <Mailbox channel="fax" />
-        </DialogContent>
-      </Dialog>
-      <Dialog open={win === "phone"} onOpenChange={(o) => !o && setWin(null)}>
-        <DialogContent className="blackberry max-h-[90vh] max-w-md overflow-y-auto">
-          <DialogTitle className="font-mono">BlackBerry · Mail</DialogTitle>
-          <Mailbox channel="mail" />
-          <p className="text-xs">Capital's instructions arrive by secure fax. You must be at the embassy to read them.</p>
         </DialogContent>
       </Dialog>
     </section>
