@@ -11,10 +11,10 @@ const rand = (n: number) => Math.floor(Math.random() * n);
 
 export function CharacterBuilder() {
   const start = useGame((s) => s.start);
-  const [title, setTitle] = useState(TITLES[0]);
+  const [title, setTitle] = useState<string>("Mr");
   const [name, setName] = useState("");
   const [face, setFace] = useState(0);
-  const [slots, setSlots] = useState([0, 0, 0]);
+  const [slots, setSlots] = useState<[number, number, number]>([0, 0, 0]);
   const [traits, setTraits] = useState<string[]>([]);
   const left = pointsLeft(traits);
   const stats = computeStats(traits);
@@ -49,7 +49,7 @@ export function CharacterBuilder() {
 
           <h2 className="mb-3 mt-6 text-lg font-bold">2. Background</h2>
           {(["origin", "misstep", "reason"] as const).map((k, i) => (
-            <select key={k} value={slots[i]} onChange={(e) => setSlots((s) => s.map((v, j) => (j === i ? +e.target.value : v)))} className="mb-2 w-full rounded border border-input bg-background px-2 py-2 text-sm">
+            <select key={k} value={slots[i]} onChange={(e) => setSlots((s) => s.map((v, j) => (j === i ? +e.target.value : v)) as [number, number, number])} className="mb-2 w-full rounded border border-input bg-background px-2 py-2 text-sm">
               {bg[k].map((o, j) => <option key={j} value={j}>{o}</option>)}
             </select>
           ))}
