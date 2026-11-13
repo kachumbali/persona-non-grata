@@ -8,7 +8,7 @@ import { playerTime } from "../economy";
 import { TRAVEL_DP, useGame } from "../store";
 
 // Hotspot positions (% of the painting) for each campaign location.
-const SPOTS: Record<string, { x: number; y: number }> = {
+export const SPOTS: Record<string, { x: number; y: number }> = {
   embassy: { x: 16, y: 34 }, ministry: { x: 39, y: 20 }, un: { x: 68, y: 26 }, eu: { x: 89, y: 32 },
   golf: { x: 85, y: 10 }, pressclub: { x: 66, y: 80 }, bar: { x: 92, y: 82 },
 };

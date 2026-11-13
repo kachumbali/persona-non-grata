@@ -39,3 +39,4 @@ use the editor.
 - Keep campaign money and capacity validation in browser-safe pure economy helpers, separate from clamped goodwill/needs; validate complete replacement plans atomically before committing so failed edits cannot discard existing obligations.
 - Legacy JSON budget effects convert to currency at resolution boundaries; new commitments use explicit currency costs and TP, preserving authored outcomes during the staged economy refactor.
 - The town map (CityMap) is the game's home screen; travel goes through the store's move(), which queues a DP-costing decision so the time rules stay in one place.
+- Place screens (PlaceScene) use painted 2D backgrounds with percentage hotspots; the 3D EmbassyScene is no longer mounted. Capital mail is routed to the secure fax (embassy only) by sender, other mail to the PC/BlackBerry.

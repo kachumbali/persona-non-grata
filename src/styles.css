@@ -211,3 +211,16 @@
 .map-pin { color: var(--destructive); fill: var(--accent); filter: drop-shadow(2px 2px 0 var(--foreground)); animation: pin-bob 0.9s steps(2) infinite; }
 @keyframes pin-bob { 50% { transform: translateY(-6px); } }
 @media (prefers-reduced-motion: reduce) { .map-pin { animation: none; } }
+.place-scene { position: relative; overflow: hidden; }
+.scene-hotspot { position: absolute; display: flex; align-items: flex-start; justify-content: center; background: transparent; border: 2px dashed transparent; cursor: pointer; }
+.scene-hotspot:hover, .scene-hotspot:focus-visible { border-color: var(--accent); }
+.scene-hotspot:hover .map-label { background: var(--accent); }
+.scene-people { position: absolute; left: 22%; right: 12%; bottom: 3%; display: flex; justify-content: space-around; align-items: flex-end; pointer-events: none; }
+.scene-person { pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: 0; cursor: pointer; filter: drop-shadow(3px 3px 0 var(--foreground)); }
+.scene-person:hover, .scene-person[data-active="true"] { transform: translateY(-4px); }
+.dialogue-box { display: flex; gap: 12px; margin: 0 12px 12px; padding: 12px; background: var(--screen); border: 2px solid var(--bevel-dark); box-shadow: var(--bevel-raised), var(--shadow-window); }
+.xp-window { border: 3px solid var(--secondary); border-radius: 8px 8px 0 0; background: var(--card); }
+.xp-titlebar { background: linear-gradient(180deg, var(--secondary), var(--primary)); color: var(--primary-foreground); font-family: var(--font-sans); font-size: 15px; font-weight: bold; padding: 6px 10px; border-radius: 5px 5px 0 0; }
+.blackberry { background: var(--foreground); color: var(--accent); border: 6px solid var(--muted-foreground); border-radius: 24px; }
+.blackberry .cable-reader, .blackberry .inbox-list { color: var(--foreground); }
+.cable-reader { background: var(--screen); color: var(--foreground); box-shadow: var(--bevel-sunken); }

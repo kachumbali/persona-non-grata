@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, MapPin, MessageSquare, Plus, Trash2, Users } from "lucide-react";
+import { ArrowRight, MapPin, Plus, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BLOCKS, CAMPAIGN, hospitalityCost, pairKey, socialTrust, VISIT_TASKS, type StoryChoice, type VisitTask } from "../rules";
 import { useGame } from "../store";
 import { ResourceDesk } from "./ResourceDesk";
 import { availableFunds, decisionCash, money, playerTime } from "../economy";
-import { Portrait } from "./Portrait";
 
 export function PlanningDesk() {
   const g = useGame();
@@ -15,16 +14,12 @@ export function PlanningDesk() {
   const [venue, setVenue] = useState("embassy");
   const [guest, setGuest] = useState("");
   const [workDinner, setWorkDinner] = useState(false);
-  const [node, setNode] = useState("opening");
   const [overload, setOverload] = useState(false);
   const [service, setService] = useState<"none" | "express" | "driver">("none");
   const [notice, setNotice] = useState("");
-  useEffect(() => { setNode("opening"); setNotice(""); }, [g.selectedNpc, g.block, g.day]);
+  useEffect(() => { setNotice(""); }, [g.block, g.day]);
   const block = BLOCKS[g.block] ?? BLOCKS[0];
   const location = CAMPAIGN.locations.find((l) => l.id === g.location) ?? CAMPAIGN.locations[0];
-  const people = CAMPAIGN.characters.filter((c) => c.location === g.location);
-  const npc = CAMPAIGN.characters.find((c) => c.id === g.selectedNpc);
-  const dialogue = (CAMPAIGN.dialogue as Record<string, { text: string; choices: StoryChoice[] }>)[node];
   const event = g.events[g.block];
   const usedTime = g.pending.reduce((n, p) => n + playerTime(p), 0);
   const scheduledWork = usedTime >= 2;
@@ -47,12 +42,6 @@ export function PlanningDesk() {
       effects: { confidence: 3 }, cashCost: (task === "lounge" ? 500 : task === "security" ? 400 : 0) + (self ? serviceCost : 0), timeCost: self ? workTime : 0, overload, score: 2, trust: 1 });
     setNotice(ok ? "Assignment scheduled. Results arrive next round." : useGame.getState().planError);
   };
-  const chooseDialogue = (choice: StoryChoice) => {
-    if (choice.next) { setNode(choice.next); return; }
-    if (!npc) return;
-    const ok = g.queue({ id: "conversation", kind: "dialogue", timeCost: 1, overload, source: `Conversation with ${npc.name}`, text: choice.result ?? "Conversation completed.", effects: choice.effects ?? {}, worker: npc.id, trust: choice.trust, pair: choice.pair, score: choice.score, composure: 3 });
-    setNotice(ok ? "Conversation recorded for the next round." : useGame.getState().planError);
-  };
   const chooseEvent = (choice: StoryChoice) => {
     if (!event) return;
     const ok = useGame.getState().queue({ id: `event-${event.id}`, kind: "event", source: event.title, text: choice.result ?? "Event resolved.", effects: choice.effects ?? {},
@@ -69,8 +58,6 @@ export function PlanningDesk() {
       <div className="min-w-0 border-b border-border lg:border-b-0 lg:border-r">
         <div className="p-3"><h3 className="flex items-center gap-2 text-xl"><MapPin className="size-4" />{location?.name}</h3>
           <p className="my-3 text-sm">{location?.description}</p>
-          <div className="flex flex-wrap gap-2">{people.map((c) => <Button key={c.id} variant={g.selectedNpc === c.id ? "secondary" : "outline"} className="h-auto justify-start gap-2 whitespace-normal p-2 text-left" onClick={() => g.selectNpc(c.id)}><Portrait face={c.face} size={32} /><span>{c.name}<span className="block text-xs">Trust {g.colleagues[c.id]?.trust ?? 50} · Fatigue {g.colleagues[c.id]?.fatigue ?? 0}</span></span></Button>)}</div>
-          {npc && dialogue && <div className="mt-3 border-t border-border pt-3" aria-label="NPC conversation"><h3 className="flex items-center gap-2 text-xl"><MessageSquare className="size-4" />{npc.name}</h3><p className="text-xs text-muted-foreground">{npc.role}</p><p className="my-3">“{dialogue.text.replace("{line}", npc.line)}”</p><div className="flex flex-col gap-2">{dialogue.choices.map((choice) => <Button key={choice.id} variant="outline" className="h-auto justify-start whitespace-normal py-2 text-left" disabled={g.pending.some((p) => p.id === "conversation")} onClick={() => chooseDialogue(choice)}>{choice.label}{choice.next ? "" : " · 1 DP"}</Button>)}</div></div>}
         </div>
       </div>
       <div className="min-w-0 p-3">
