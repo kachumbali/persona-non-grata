@@ -45,19 +45,19 @@ export function GameScreen() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-4">
+    <main className="mx-auto max-w-7xl retro-game px-3 py-4 sm:px-5">
       <header className="paper mb-4 flex flex-wrap items-center gap-4 px-4 py-3">
         <Portrait face={c.face} size={48} />
-        <div className="mr-auto">
+        <div className="mr-auto min-w-0 flex-1">
           <h1 className="text-lg font-bold leading-tight">{c.title} {c.name}</h1>
           <p className="text-xs text-muted-foreground">Chargé d'Affaires a.i. · Embassy of Bellaluxe, Port Hesperia</p>
         </div>
-        <div className="text-right font-mono">
+        <div className="clock text-right font-mono">
           <div className="text-2xl">{formatClock(g.minute)}</div>
           <div className="text-xs text-muted-foreground">Day {g.day} / {LAST_DAY} · Minister in {LAST_DAY - g.day} days</div>
         </div>
         <div className="flex gap-1">
-          <Button size="sm" variant={g.paused ? "default" : "outline"} onClick={g.togglePause}>{g.paused ? "▶" : "❚❚"}</Button>
+          <Button size="sm" aria-label={g.paused ? "Resume time" : "Pause time"} title={g.paused ? "Resume time" : "Pause time"} variant={g.paused ? "default" : "outline"} onClick={g.togglePause}>{g.paused ? "▶" : "❚❚"}</Button>
           {([1, 2, 4] as const).map((s) => <Button key={s} size="sm" variant={g.speed === s ? "secondary" : "outline"} onClick={() => g.setSpeed(s)}>{s}×</Button>)}
         </div>
       </header>
@@ -65,21 +65,21 @@ export function GameScreen() {
       <EmbassyScene />
       <div className="grid gap-4 lg:grid-cols-[280px_1fr_300px]">
         <section className="paper flex max-h-[70vh] flex-col">
-          <h2 className="border-b border-border px-4 py-2 font-bold">Inbox {unread > 0 && <span className="ml-1 rounded bg-destructive px-1.5 font-mono text-xs text-destructive-foreground">{unread}</span>}</h2>
-          <ul className="overflow-y-auto">
+          <h2 className="retro-titlebar">Inbox {unread > 0 && <span className="ml-1 rounded bg-destructive px-1.5 font-mono text-xs text-destructive-foreground">{unread}</span>}</h2>
+          <ul className="inbox-list overflow-y-auto">
             {inbox.length === 0 && <li className="p-4 text-sm italic text-muted-foreground">Suspiciously quiet.</li>}
             {inbox.map((e) => (
               <li key={e.id}>
-                <button onClick={() => setOpenId(e.id)} className={`w-full border-b border-border px-4 py-2 text-left text-sm hover:bg-muted ${open?.id === e.id ? "bg-muted" : ""}`}>
+                <Button variant="ghost" onClick={() => setOpenId(e.id)} className={`w-full border-b border-border px-4 py-2 text-left text-sm hover:bg-muted ${open?.id === e.id ? "bg-muted" : ""}`}>
                   <div className={`truncate ${e.status ? "text-muted-foreground" : "font-semibold"}`}>{e.subject}</div>
                   <div className="truncate text-xs text-muted-foreground">{e.from}</div>
-                </button>
+                </Button>
               </li>
             ))}
           </ul>
         </section>
 
-        <section className="paper min-h-[50vh] p-6">
+        <section className="paper cable-reader min-h-[50vh] p-4 sm:p-6">
           {open ? (
             <article>
               <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">From: {open.from} · Day {open.day}, {formatClock(open.time)}</p>
@@ -101,24 +101,24 @@ export function GameScreen() {
 
         <aside className="space-y-4">
           <section className="paper p-4">
-            <h2 className="mb-3 font-bold">Situation Overview</h2>
+            <h2 className="retro-titlebar mb-3">Situation Overview</h2>
             {METERS.map(({ key, label }) => (
               <div key={key} className="mb-2">
                 <div className="flex justify-between text-xs"><span>{label}</span><span className="font-mono">{Math.round(g.meters[key])}</span></div>
-                <div className="h-2 rounded bg-muted"><div className={`h-2 rounded transition-all ${g.meters[key] < 25 ? "bg-destructive" : "bg-primary"}`} style={{ width: `${g.meters[key]}%` }} /></div>
+                <div className="meter-track bg-muted"><div className={`meter-fill transition-all ${g.meters[key] < 25 ? "bg-destructive" : "bg-primary"}`} style={{ width: `${g.meters[key]}%` }} /></div>
               </div>
             ))}
           </section>
           <section className="paper p-4">
-            <h2 className="mb-2 font-bold">Daily Log</h2>
-            <div ref={logRef} className="max-h-64 space-y-2 overflow-y-auto font-mono text-xs">
+            <h2 className="retro-titlebar mb-2">Daily Log</h2>
+            <div ref={logRef} className="daily-log max-h-64 space-y-2 overflow-y-auto font-mono text-xs">
               {g.log.map((l, i) => <p key={i}><span className="text-muted-foreground">D{l.day} {formatClock(l.time)}</span> {l.text}</p>)}
             </div>
           </section>
-          <button onClick={() => confirm("Abandon post and start over?") && g.reset()} className="text-xs text-muted-foreground underline">Abandon post</button>
+          <Button variant="link" onClick={() => confirm("Abandon post and start over?") && g.reset()} className="text-xs text-muted-foreground underline">Abandon post</Button>
         </aside>
       </div>
-      <p className="mt-3 text-center text-xs text-muted-foreground">Spacebar pauses · Progress saves automatically</p>
+
     </main>
   );
 }

@@ -72,32 +72,40 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-stamp: var(--stamp);
   --color-skin-1: var(--skin-1); --color-skin-2: var(--skin-2); --color-skin-3: var(--skin-3); --color-skin-4: var(--skin-4);
-  --font-serif: "Libre Baskerville", Georgia, serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-serif: "Pixelify Sans", "Courier New", monospace;
+  --font-mono: "VT323", "Courier New", monospace;
+  --font-sans: "Tahoma", "Arial", sans-serif;
 }
 
 :root {
-  --radius: 0.25rem;
-  --background: oklch(0.95 0.025 88);
-  --foreground: oklch(0.27 0.03 75);
-  --card: oklch(0.975 0.018 90);
-  --card-foreground: oklch(0.27 0.03 75);
-  --popover: oklch(0.975 0.018 90);
-  --popover-foreground: oklch(0.27 0.03 75);
-  --primary: oklch(0.47 0.07 120);
-  --primary-foreground: oklch(0.97 0.02 90);
-  --secondary: oklch(0.62 0.05 245);
-  --secondary-foreground: oklch(0.98 0.01 90);
-  --muted: oklch(0.9 0.025 88);
-  --muted-foreground: oklch(0.48 0.03 75);
-  --accent: oklch(0.8 0.13 85);
-  --accent-foreground: oklch(0.27 0.03 75);
+  --radius: 0rem;
+  --bevel-light: oklch(0.98 0.005 210);
+  --bevel-dark: oklch(0.36 0.02 230);
+  --window-title: oklch(0.35 0.065 190);
+  --screen: oklch(0.96 0.012 110);
+  --desktop-grid: oklch(0.39 0.045 185);
+  --shadow-window: 5px 5px 0 oklch(0.18 0.035 185 / 0.5);
+  --bevel-raised: inset 1px 1px 0 var(--bevel-light), inset -1px -1px 0 var(--bevel-dark);
+  --bevel-sunken: inset 2px 2px 0 var(--bevel-dark), inset -2px -2px 0 var(--bevel-light);
+  --background: oklch(0.32 0.055 185);
+  --foreground: oklch(0.22 0.025 230);
+  --card: oklch(0.84 0.018 210);
+  --card-foreground: oklch(0.22 0.025 230);
+  --popover: oklch(0.93 0.008 210);
+  --popover-foreground: oklch(0.22 0.025 230);
+  --primary: oklch(0.39 0.1 190);
+  --primary-foreground: oklch(0.98 0.01 95);
+  --secondary: oklch(0.43 0.09 280);
+  --secondary-foreground: oklch(0.98 0.01 95);
+  --muted: oklch(0.77 0.02 210);
+  --muted-foreground: oklch(0.40 0.025 230);
+  --accent: oklch(0.84 0.16 95);
+  --accent-foreground: oklch(0.22 0.025 230);
   --destructive: oklch(0.52 0.17 28);
   --destructive-foreground: oklch(0.97 0.02 90);
-  --border: oklch(0.78 0.04 85);
-  --input: oklch(0.78 0.04 85);
-  --ring: oklch(0.47 0.07 120);
+  --border: oklch(0.46 0.018 230);
+  --input: oklch(0.46 0.018 230);
+  --ring: oklch(0.54 0.12 185);
   --stamp: oklch(0.52 0.17 28);
   --skin-1: oklch(0.85 0.06 65); --skin-2: oklch(0.72 0.08 55); --skin-3: oklch(0.55 0.08 50); --skin-4: oklch(0.4 0.06 45);
   --chart-1: oklch(0.47 0.07 120); --chart-2: oklch(0.62 0.05 245); --chart-3: oklch(0.8 0.13 85); --chart-4: oklch(0.52 0.17 28); --chart-5: oklch(0.55 0.05 60);
@@ -135,10 +143,10 @@
 }
 
 @layer base {
-  body { font-family: var(--font-sans); background-image: var(--paper-lines); }
+  body { font-family: var(--font-sans); background-image: repeating-linear-gradient(0deg, transparent 0 3px, var(--desktop-grid) 3px 4px); letter-spacing: 0; }
   h1, h2, h3 { font-family: var(--font-serif); }
 }
-@utility paper { background-color: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-paper); }
+@utility paper { background-color: var(--card); border: 2px solid var(--border); box-shadow: var(--bevel-raised); }
 @utility stamp {
   font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.15em; color: var(--stamp);
   border: 2px solid var(--stamp); border-radius: 3px; padding: 0.1rem 0.5rem; transform: rotate(-4deg); display: inline-block; opacity: 0.85;
@@ -148,3 +156,51 @@
 
 .embassy-canvas canvas { image-rendering: pixelated; }
 @media (prefers-reduced-motion: reduce) { .animate-stamp { animation: none; } }
+
+/* Desktop-management palette and physical, bevelled controls. */
+.retro-button { border: 2px solid; border-color: var(--bevel-light) var(--bevel-dark) var(--bevel-dark) var(--bevel-light); border-radius: 0; box-shadow: var(--bevel-raised); }
+.retro-button:active, .retro-button[aria-pressed="true"] { border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark); box-shadow: var(--bevel-sunken); }
+.pixel-portrait { image-rendering: pixelated; display: block; object-fit: cover; flex-shrink: 0; background: var(--primary); }
+.retro-titlebar { background: var(--window-title); color: var(--primary-foreground); font-family: var(--font-serif); font-size: 20px; line-height: 1.2; padding: 8px 12px; border-bottom: 2px solid var(--bevel-dark); display: flex; align-items: center; gap: 8px; }
+.retro-titlebar::after { content: ""; flex: 1; min-width: 16px; height: 12px; background: repeating-linear-gradient(0deg, var(--bevel-light) 0 1px, transparent 1px 3px); opacity: .35; margin-left: 12px; }
+.retro-desktop { max-width: 1200px; }
+.game-logo { font-family: var(--font-serif); color: var(--accent); text-shadow: 3px 3px 0 var(--foreground); font-size: 56px; font-weight: 700; line-height: 1; }
+.retro-builder { box-shadow: var(--shadow-window); border: 2px solid var(--bevel-dark); background: var(--card); }
+.retro-builder-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; }
+.retro-builder-body > section { border: none; box-shadow: none; background: transparent; }
+.retro-builder-body > section + section { border-left: 2px solid var(--border); }
+.retro-section-heading { font-family: var(--font-serif); font-size: 22px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+.portrait-choice { height: auto; padding: 3px; width: 100%; background: var(--muted); }
+.portrait-choice .pixel-portrait { width: 100%; height: auto; aspect-ratio: 3 / 4; }
+.portrait-choice[aria-pressed="true"] { background: var(--accent); outline: 2px solid var(--primary); outline-offset: -3px; }
+.retro-trait { white-space: normal; height: auto; min-height: 38px; justify-content: start; align-items: start; text-align: left; font-weight: normal; }
+.retro-trait[aria-pressed="true"] { background: var(--screen); }
+.retro-builder input, .retro-builder select { border-radius: 0; box-shadow: var(--bevel-sunken); background: var(--screen); min-width: 0; }
+.retro-builder input { width: 100%; }
+.retro-builder select { max-width: 100%; }
+.retro-builder .identity-fields { display: grid; grid-template-columns: minmax(100px, .8fr) minmax(0, 1fr); }
+.retro-builder .stats-grid { grid-template-columns: 1fr; font-size: 19px; }
+.retro-status { background: var(--muted); border-top: 2px solid var(--bevel-dark); padding: 12px 16px; }
+.retro-game > header { border: 2px solid var(--bevel-dark); box-shadow: var(--bevel-raised), var(--shadow-window); }
+.retro-game > header h1 { font-family: var(--font-serif); font-size: 24px; }
+.retro-game > header h1 { overflow-wrap: anywhere; }
+.retro-game .clock { background: var(--foreground); color: var(--accent); padding: 6px 12px; box-shadow: var(--bevel-sunken); }
+.retro-game .clock > div:first-child { font-size: 34px; line-height: 1; }
+.retro-game .clock > div:last-child { color: var(--primary-foreground); }
+.embassy-window { border: 2px solid var(--bevel-dark); box-shadow: var(--bevel-raised), var(--shadow-window); }
+.embassy-canvas { border: 4px solid var(--muted); box-shadow: var(--bevel-sunken); }
+.retro-game .inbox-list button { border-radius: 0; height: auto; white-space: normal; justify-content: start; display: block; box-shadow: none; border-width: 0 0 1px; }
+.retro-game .cable-reader { background: var(--screen); box-shadow: var(--bevel-sunken); }
+.retro-game .meter-track { border: 1px solid var(--bevel-dark); height: 14px; border-radius: 0; box-shadow: var(--bevel-sunken); }
+.retro-game .meter-fill { height: 12px; border-radius: 0; background-image: repeating-linear-gradient(90deg, transparent 0 7px, var(--card) 7px 9px); }
+.retro-game pre { overflow-wrap: anywhere; }
+.retro-game .font-mono { font-size: 18px; }
+.retro-game .daily-log { font-size: 17px; }
+@media (max-width: 640px) {
+  .game-logo { font-size: 38px; }
+  .retro-builder-body { grid-template-columns: minmax(0, 1fr); }
+  .retro-builder-body > section + section { border-left: 0; border-top: 2px solid var(--border); }
+  .retro-builder-body > section { padding: 16px; }
+  .retro-game > header { gap: 12px; }
+  .retro-game .clock { text-align: left; }
+}

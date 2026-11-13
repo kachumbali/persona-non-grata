@@ -32,3 +32,5 @@ use the editor.
 - Game content (emails, traits, backgrounds) lives in JSON under src/game/data so it can be extended without code; rules are pure TS in src/game/rules.ts (tested), state in a persisted zustand store.
 - Embassy locations and personnel live in data/embassy.json; scene modules render a voxel diorama and nearest-filtered pixel sprites without changing gameplay rules.
 - Embassy rendering uses CSS semantic palette tokens, a demand-rendered orthographic Canvas, and data-scene-ready on its wrapper so visual checks can wait for a drawn frame.
+
+- Player portraits use bundled low-resolution raster assets with nearest-neighbour display; the retro interface is themed centrally through semantic CSS tokens and shared button bevels so gameplay rules remain separate from presentation.

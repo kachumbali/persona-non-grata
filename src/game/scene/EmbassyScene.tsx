@@ -116,19 +116,19 @@ export const EmbassyScene = memo(function EmbassyScene() {
   const player = useMemo(() => ({ id: "player", name: character?.name ?? "Chargé d’Affaires", role: "Chargé d’Affaires a.i.", room: "reception", face: character?.face ?? 0, x: -1.5, z: 0.65 }), [character]);
   if (!room) return null;
 
-  return <section className="mb-4 overflow-hidden border border-border bg-card" aria-label="Embassy floor plan">
-    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-3">
-      <div className="flex items-center gap-2"><Building2 className="size-4 text-primary" /><h2 className="font-bold">Embassy of Bellaluxe</h2><span className="hidden font-mono text-xs text-muted-foreground sm:inline">PORT HESPERIA</span></div>
+  return <section className="embassy-window mb-4 overflow-hidden bg-card" aria-label="Embassy floor plan">
+    <div className="retro-titlebar flex-wrap justify-between">
+      <div className="flex items-center gap-2"><Building2 className="size-4 text-accent" /><h2 className="font-bold">Embassy of Bellaluxe</h2><span className="hidden font-mono text-xs text-primary-foreground sm:inline">PORT HESPERIA</span></div>
       <div className="flex gap-1">
-        <Button variant="ghost" size="icon" title="Rotate left" aria-label="Rotate left" onClick={() => setAngle((v) => v - Math.PI / 2)}><ChevronLeft /></Button>
-        <Button variant="ghost" size="icon" title="Rotate right" aria-label="Rotate right" onClick={() => setAngle((v) => v + Math.PI / 2)}><ChevronRight /></Button>
-        <Button variant="ghost" size="icon" title="Zoom out" aria-label="Zoom out" disabled={zoom <= 0.8} onClick={() => setZoom((v) => Math.max(0.8, v - 0.2))}><Minus /></Button>
-        <Button variant="ghost" size="icon" title="Zoom in" aria-label="Zoom in" disabled={zoom >= 1.6} onClick={() => setZoom((v) => Math.min(1.6, v + 0.2))}><Plus /></Button>
-        <Button variant="ghost" size="icon" title="Reset view" aria-label="Reset view" onClick={() => { setZoom(1); setAngle(0); }}><RotateCcw /></Button>
+        <Button variant="outline" size="icon" title="Rotate left" aria-label="Rotate left" onClick={() => setAngle((v) => v - Math.PI / 2)}><ChevronLeft /></Button>
+        <Button variant="outline" size="icon" title="Rotate right" aria-label="Rotate right" onClick={() => setAngle((v) => v + Math.PI / 2)}><ChevronRight /></Button>
+        <Button variant="outline" size="icon" title="Zoom out" aria-label="Zoom out" disabled={zoom <= 0.8} onClick={() => setZoom((v) => Math.max(0.8, v - 0.2))}><Minus /></Button>
+        <Button variant="outline" size="icon" title="Zoom in" aria-label="Zoom in" disabled={zoom >= 1.6} onClick={() => setZoom((v) => Math.min(1.6, v + 0.2))}><Plus /></Button>
+        <Button variant="outline" size="icon" title="Reset view" aria-label="Reset view" onClick={() => { setZoom(1); setAngle(0); }}><RotateCcw /></Button>
       </div>
     </div>
     <div ref={wrapper} className="embassy-canvas relative h-[420px] w-full sm:h-[510px] lg:h-[570px]">
-      {p && <Canvas orthographic flat dpr={0.8} frameloop="demand" camera={{ position: [22, 26, 28], near: 0.1, far: 150 }} gl={{ antialias: false, alpha: false }}>
+      {p && <Canvas orthographic flat dpr={0.55} frameloop="demand" camera={{ position: [22, 26, 28], near: 0.1, far: 150 }} gl={{ antialias: false, alpha: false }}>
         <color attach="background" args={[p.ground]} />
         <ambientLight intensity={0.8} /><directionalLight position={[-10, 20, 8]} intensity={2.2} />
         <Environment resolution={64}><Lightformer intensity={1} position={[0, 10, 0]} scale={[30, 30, 1]} /><Lightformer color={p.blue} intensity={0.5} position={[-10, 3, 0]} rotation-y={Math.PI / 2} scale={[20, 10, 1]} /></Environment>
