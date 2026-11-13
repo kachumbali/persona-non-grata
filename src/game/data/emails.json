@@ -47,12 +47,12 @@
       "forward": { "text": "The Capital asks for a study on window demand.", "effects": { "goodwill": -6, "morale": -4 } },
       "delegate": { "text": "Intern Maxim reads the manual aloud to the queue. It does not help.", "effects": { "goodwill": -2, "morale": 2 } }
     }, "ignore": { "effects": { "goodwill": -8 }, "text": "The queue forms its own National Dialogue." } },
-  { "id": "e9", "day": 3, "time": 700, "from": "Press Office", "subject": "Tweet (already posted)", "body": "Just to inform you I've tweeted that Bellaluxe 'stands shoulder to shoulder with the people of Ombrazia's volcano'. Checking it now.",
+  { "id": "e9", "day": 3, "time": 700, "from": "Press Office", "subject": "Chirp (already posted)", "body": "Just to inform you I've chirped on Chirper that Bellaluxe 'stands shoulder to shoulder with the people of Ombrazia's volcano'. Checking it now.",
     "options": {
       "reply": { "text": "You request deletion. Screenshots already exist. They always do.", "effects": { "goodwill": -2, "confidence": 2 } },
-      "note": { "text": "You let it stand. The volcano's fan account retweets it.", "effects": { "goodwill": 3, "confidence": -3 } },
+      "note": { "text": "You let it stand. The volcano's fan account rechirps it.", "effects": { "goodwill": 3, "confidence": -3 } },
       "forward": { "text": "The Capital drafts a clarification of the clarification.", "effects": { "confidence": -2, "sanity": -4 } }
-    }, "ignore": { "effects": { "goodwill": -4 }, "text": "The tweet trends. For the wrong reasons." } },
+    }, "ignore": { "effects": { "goodwill": -4 }, "text": "The chirp trends. For the wrong reasons." } },
   { "id": "e10", "day": 3, "time": 900, "from": "Capital — Protocol", "subject": "Ministerial Visit (Day 15)", "body": "The Minister arrives on Day 15. Please confirm the Ambassador will greet her personally. You will confirm this. The Ambassador is where, exactly?",
     "options": {
       "reply": { "text": "'The Ambassador is on consultations.' Technically true. Deniability holds.", "effects": { "confidence": 4, "sanity": -4 } },

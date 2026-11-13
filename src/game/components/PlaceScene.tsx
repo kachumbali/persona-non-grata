@@ -14,7 +14,7 @@ import { PlanningDesk } from "./PlanningDesk";
 import { Portrait } from "./Portrait";
 
 type Win = null | "pc" | "fax";
-const PC_TABS = [["mail", "Outlook 98"], ["tasks", "Staff & diary"], ["watch", "Mission Watch"]] as const;
+const PC_TABS = [["mail", "Courrielleur 98"], ["tasks", "Staff & diary"], ["watch", "Mission Watch"]] as const;
 
 export function PlaceScene({ onLeave }: { onLeave: () => void }) {
   const g = useGame();
@@ -44,12 +44,12 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
           ))}
         </div>
       </div>
-      <p className="px-3 py-2 text-sm">{place?.description} {atEmbassy ? "Click your PC, the fax, or a colleague." : "Click someone to talk. Your BlackBerry keeps mail within reach (bottom right)."}</p>
+      <p className="px-3 py-2 text-sm">{place?.description} {atEmbassy ? "Click your PC, the fax, or a colleague." : "Click someone to talk. Your BlockBerry keeps mail within reach (bottom right)."}</p>
       <Conversation />
 
       <Dialog open={win === "pc"} onOpenChange={(o) => !o && setWin(null)}>
         <DialogContent className="xp-window text-card-foreground max-h-[92vh] max-w-6xl overflow-y-auto p-0">
-          <DialogTitle className="xp-titlebar">Bellaluxe Diplomatic Workstation — Windows XP</DialogTitle>
+          <DialogTitle className="xp-titlebar">Bellaluxe Diplomatic Workstation — Fenêtre 2000</DialogTitle>
           <div className="flex gap-1 border-b border-border bg-muted px-2 pt-2">{PC_TABS.map(([id, label]) => <Button key={id} size="sm" variant={tab === id ? "secondary" : "ghost"} aria-pressed={tab === id} className="retro-button" onClick={() => setTab(id)}>{label}</Button>)}</div>
           {tab === "mail" && <Mailbox channel="mail" />}
           {tab === "tasks" && <PlanningDesk />}

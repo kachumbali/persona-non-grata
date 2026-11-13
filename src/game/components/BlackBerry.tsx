@@ -15,7 +15,7 @@ export function BlackBerry() {
   const block = BLOCKS[g.block] ?? BLOCKS[0];
   const away = g.location !== "embassy";
   return (
-    <aside className="blackberry-dock" data-up={up} aria-label="BlackBerry">
+    <aside className="blackberry-dock" data-up={up} aria-label="BlockBerry">
       <button type="button" className="bb-top" onClick={() => setUp(!up)} aria-expanded={up}>
         <span className="bb-led" data-on={g.report.length > 0 || !!g.planError} />
         <span className="font-mono">{block.name} · DP {2 - used}/2 · {money(availableFunds(g.economy, g.pending))}</span>

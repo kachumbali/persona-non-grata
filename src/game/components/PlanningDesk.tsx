@@ -75,7 +75,7 @@ export function PlanningDesk() {
     </div>
     <div className="border-t-2 border-border p-3"><h3 className="text-xl">Committed this round</h3>{g.pending.length === 0 && <p className="my-2 text-sm text-muted-foreground">No commitments. An empty block becomes unallocated time.</p>}<ul className="my-2 space-y-2">{g.pending.map((p) => <li key={p.id} className="flex items-center justify-between gap-2 border-b border-border pb-1 text-sm"><span>{p.source} · {playerTime(p)} your DP · {money(decisionCash(p))}{p.worker ? ` · ${p.worker}` : ""}</span><Button variant="ghost" size="icon" aria-label={`Remove ${p.source}`} title="Remove commitment" onClick={() => g.removeDecision(p.id)}><Trash2 className="size-4" /></Button></li>)}</ul>
       {notice && <p role="status" className="mb-2 text-sm text-primary">{notice}</p>}
-      <div className="flex flex-wrap items-center justify-between gap-3"><span className="font-mono">Energy {g.energy} · Composure {g.composure} · {g.events.length} story episodes today</span><span className="text-xs">End the block from your BlackBerry.</span></div>
+      <div className="flex flex-wrap items-center justify-between gap-3"><span className="font-mono">Energy {g.energy} · Composure {g.composure} · {g.events.length} story episodes today</span><span className="text-xs">End the block from your BlockBerry.</span></div>
     </div>
   </section>;
 }
