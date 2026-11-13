@@ -18,4 +18,5 @@
 - [x] Verify the view on desktop and mobile and preserve inbox play.
 - [x] Write a design script for colleague conversations and challenges at the EU Delegation, Foreign Ministry, shady bar, Press Correspondents Club, and golf course; defer engine decisions.
 - [x] Include Sims-like needs and relationships, ministerial visit preparation and delegation tactics, colleague backstories including an idealistic development counsellor, and the UN/obscure multilateral circuit in the script.
-- [x] Add comical agenda management: host invitations with twenty minutes' notice, attendance or colleague representation, and offence if unrepresented.
+- [x] Add comical agenda management: host invitations with twenty minutes' notice, attendance or colleague representation, and offence if unrepresented.- [x] Start screen with New game and Load game.
+- [ ] Boss key (Leisure Suit Larry style fake work screen) — later, as requested.

@@ -7,7 +7,7 @@ import { CityMap } from "./CityMap";
 import { PlaceScene } from "./PlaceScene";
 import { TurnBar } from "./TurnBar";
 
-export function GameScreen() {
+export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const g = useGame();
   const [view, setView] = useState<"city" | "place">("city");
   const c = g.character;
@@ -39,6 +39,7 @@ export function GameScreen() {
           <p className="text-sm">{c.title} {c.name} · Acting Head of Mission</p>
           <p className="text-xs text-muted-foreground">Chargé d'Affaires a.i. · Embassy of Bellaluxe, Port Hesperia</p>
         </div>
+        {onMenu && <Button variant="outline" className="retro-button" onClick={onMenu}>Menu</Button>}
         <div className="clock text-right font-mono">
           <div className="text-2xl">{BLOCKS[g.block]?.name}</div>
           <div className="text-xs text-muted-foreground">Day {g.day} / {LAST_DAY} · Minister in {LAST_DAY - g.day} days</div>
