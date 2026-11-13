@@ -104,6 +104,23 @@
   --sidebar: oklch(0.92 0.025 88); --sidebar-foreground: oklch(0.27 0.03 75); --sidebar-primary: oklch(0.47 0.07 120); --sidebar-primary-foreground: oklch(0.97 0.02 90); --sidebar-accent: oklch(0.9 0.025 88); --sidebar-accent-foreground: oklch(0.27 0.03 75); --sidebar-border: oklch(0.78 0.04 85); --sidebar-ring: oklch(0.47 0.07 120);
   --paper-lines: repeating-linear-gradient(0deg, transparent 0 27px, oklch(0.62 0.05 245 / 0.12) 27px 28px);
   --shadow-paper: 2px 3px 0 oklch(0.27 0.03 75 / 0.15);
+  --embassy-ground: oklch(0.88 0.035 160);
+  --embassy-wall: oklch(0.92 0.025 95);
+  --embassy-trim: oklch(0.52 0.035 165);
+  --embassy-wood: oklch(0.66 0.07 75);
+  --embassy-tile: oklch(0.86 0.025 210);
+  --embassy-stone: oklch(0.74 0.015 230);
+  --embassy-grass: oklch(0.75 0.1 140);
+  --embassy-leaf: oklch(0.48 0.09 145);
+  --embassy-ink: oklch(0.28 0.025 210);
+  --embassy-paper: oklch(0.97 0.01 95);
+  --embassy-blue: oklch(0.58 0.08 235);
+  --embassy-red: oklch(0.56 0.14 30);
+  --embassy-gold: oklch(0.8 0.13 85);
+  --embassy-skin1: var(--skin-1);
+  --embassy-skin2: var(--skin-2);
+  --embassy-skin3: var(--skin-3);
+  --embassy-skin4: var(--skin-4);
 }
 
 @layer base {
@@ -128,3 +145,6 @@
 }
 @keyframes stamp-in { from { transform: scale(2) rotate(-4deg); opacity: 0; } to { transform: scale(1) rotate(-4deg); opacity: 0.85; } }
 @utility animate-stamp { animation: stamp-in 0.25s ease-out; }
+
+.embassy-canvas canvas { image-rendering: pixelated; }
+@media (prefers-reduced-motion: reduce) { .animate-stamp { animation: none; } }

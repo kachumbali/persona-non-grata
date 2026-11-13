@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ACTION_LABELS, ENDINGS, formatClock, LAST_DAY, MINUTES_PER_SECOND, type Action, type MeterKey } from "../rules";
 import { inboxFor, useGame } from "../store";
 import { Portrait } from "./Portrait";
+import { EmbassyScene } from "../scene/EmbassyScene";
 
 const METERS: { key: MeterKey; label: string }[] = [
   { key: "budget", label: "Budget" }, { key: "confidence", label: "Capital's Confidence" }, { key: "goodwill", label: "Host Goodwill" },
@@ -26,7 +27,8 @@ export function GameScreen() {
   const inbox = useMemo(() => inboxFor(g.day, g.minute, g.handled).reverse(), [g.day, minuteBucket, g.handled]); // eslint-disable-line react-hooks/exhaustive-deps
   const open = inbox.find((e) => e.id === openId) ?? inbox.find((e) => !e.status);
   const unread = inbox.filter((e) => !e.status).length;
-  const c = g.character!;
+  const c = g.character;
+  if (!c) return null;
 
   if (g.ending) {
     const end = ENDINGS[g.ending];
@@ -60,6 +62,7 @@ export function GameScreen() {
         </div>
       </header>
 
+      <EmbassyScene />
       <div className="grid gap-4 lg:grid-cols-[280px_1fr_300px]">
         <section className="paper flex max-h-[70vh] flex-col">
           <h2 className="border-b border-border px-4 py-2 font-bold">Inbox {unread > 0 && <span className="ml-1 rounded bg-destructive px-1.5 font-mono text-xs text-destructive-foreground">{unread}</span>}</h2>
