@@ -6,7 +6,27 @@ export type StatKey = "gravitas" | "charm" | "stamina" | "deniability" | "liver"
 export type Action = "reply" | "delegate" | "forward" | "note" | "replyall";
 export type Meters = Record<MeterKey, number>;
 
-export interface Outcome { text: string; effects: Partial<Meters> }
+export type VisitTask = "clearance" | "lounge" | "programme" | "security";
+export type VisitStatus = Partial<Record<VisitTask, boolean>>;
+export const VISIT_TASKS: Record<VisitTask, string> = {
+  clearance: "Plane landing clearance", lounge: "VIP lounge reservation",
+  programme: "Confirmed visit programme", security: "Security and transport",
+};
+export interface Outcome { text: string; effects: Partial<Meters>; confirms?: VisitTask }
+export interface GoodwillChange {
+  day: number; time: number; source: string; kind: "Decision" | "Missed instruction";
+  text: string; before: Pick<Meters, "confidence" | "goodwill">;
+  after: Pick<Meters, "confidence" | "goodwill">;
+}
+export function recordGoodwillChange(before: Meters, after: Meters, details: Omit<GoodwillChange, "before" | "after">): GoodwillChange {
+  return { ...details, before: { confidence: before.confidence, goodwill: before.goodwill }, after: { confidence: after.confidence, goodwill: after.goodwill } };
+}
+export function visitReady(visit: VisitStatus): boolean {
+  return (Object.keys(VISIT_TASKS) as VisitTask[]).every((key) => visit[key] === true);
+}
+export function goodwillRisk(value: number): "critical" | "warning" | "stable" {
+  return value <= 10 ? "critical" : value <= 25 ? "warning" : "stable";
+}
 export interface Email {
   id: string; day: number; time: number; from: string; subject: string; body: string;
   options: Partial<Record<Action, Outcome>>; ignore: Outcome;
@@ -57,21 +77,23 @@ export function formatClock(minute: number) {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
-export type Ending = "png" | "retired" | "ambassador" | "promoted";
+export type Ending = "png" | "replaced" | "cancelled" | "retired" | "ambassador" | "promoted";
 export const ENDINGS: Record<Ending, { title: string; text: string }> = {
   png: { title: "Persona Non Grata", text: "Ombrazia declares you unwelcome, with compliments. Your farewell is a stamped form in an order nobody can document." },
+  replaced: { title: "Replaced by Capital", text: "HQ goodwill has reached zero. Capital recalls you and appoints a replacement. Please leave the office keys; your successor will need the same drawer of unsolved problems." },
+  cancelled: { title: "Ministerial Visit Cancelled", text: "Arrival day has come, but essential arrangements are still unconfirmed. The Minister cancels the visit. Capital describes this as a scheduling adjustment. Your career receives one too." },
   retired: { title: "Quietly Retired to Brussels", text: "The Capital has lost confidence. You are given a window office overlooking another window." },
   ambassador: { title: "The Ambassador Returns and Takes Credit", text: "Everything worked. The Ambassador reappears tanned, shakes the Minister's hand and thanks 'the team'." },
   promoted: { title: "Promoted Sideways", text: "The Minister notices nothing, which is the highest compliment. You are promoted to a post with a longer title and the same desk." },
 };
 
 /** Game over early if a meter hits zero; otherwise judged at the end of Day 15. */
-export function pickEnding(m: Meters, finalDay: boolean): Ending | null {
+export function pickEnding(m: Meters, finalDay: boolean, visit: VisitStatus = {}): Ending | null {
   if (m.goodwill <= 0) return "png";
-  if (m.confidence <= 0 || m.sanity <= 0) return "retired";
+  if (m.confidence <= 0) return "replaced";
+  if (m.sanity <= 0) return "retired";
   if (!finalDay) return null;
-  if (m.goodwill < 25) return "png";
-  if (m.confidence < 35) return "retired";
+  if (!visitReady(visit)) return "cancelled";
   if (m.confidence >= 65 && m.goodwill >= 50) return "promoted";
   return "ambassador";
 }

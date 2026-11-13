@@ -4,9 +4,10 @@ import { ACTION_LABELS, ENDINGS, formatClock, LAST_DAY, MINUTES_PER_SECOND, type
 import { inboxFor, useGame } from "../store";
 import { Portrait } from "./Portrait";
 import { EmbassyScene } from "../scene/EmbassyScene";
+import { GoodwillDashboard } from "./GoodwillDashboard";
 
 const METERS: { key: MeterKey; label: string }[] = [
-  { key: "budget", label: "Budget" }, { key: "confidence", label: "Capital's Confidence" }, { key: "goodwill", label: "Host Goodwill" },
+  { key: "budget", label: "Budget" }, { key: "confidence", label: "HQ Goodwill" }, { key: "goodwill", label: "Host Goodwill" },
   { key: "morale", label: "Team Morale" }, { key: "sanity", label: "Sanity" },
 ];
 
@@ -36,8 +37,11 @@ export function GameScreen() {
       <main className="mx-auto max-w-xl px-4 py-16 text-center">
         <div className="paper p-8">
           <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Final cable · Day {g.day}</p>
-          <span className="stamp animate-stamp mt-6 text-lg">{end.title}</span>
+          <Portrait face={c.face} size={96} />
+          <h1 className="mt-6 text-3xl text-destructive">{end.title}</h1>
           <p className="mt-6 font-serif">{c.title} {c.name}: {end.text}</p>
+          <p className="mt-4 font-mono">HQ goodwill: {g.meters.confidence} · Host goodwill: {g.meters.goodwill}</p>
+          {g.goodwillHistory.at(-1) && <p className="mt-3 text-sm">Last outcome: {g.goodwillHistory.at(-1)?.text}</p>}
           <Button className="mt-8" onClick={g.reset}>Request a new posting</Button>
         </div>
       </main>
@@ -62,6 +66,7 @@ export function GameScreen() {
         </div>
       </header>
 
+      <GoodwillDashboard />
       <EmbassyScene />
       <div className="grid gap-4 lg:grid-cols-[280px_1fr_300px]">
         <section className="paper flex max-h-[70vh] flex-col">

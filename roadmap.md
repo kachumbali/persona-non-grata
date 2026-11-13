@@ -1,4 +1,7 @@
 # Embassy view
+- [x] Add HQ/host goodwill dashboard with outcome history and risk warnings.
+- [x] Track confirmed ministerial arrangements and add replacement, cancellation and PNG endings.
+- [x] Test failure rules, decision tracking, persistence and screens.
 - [x] Replace player portraits with comic pixel art.
 - [x] Overhaul character creation and embassy interface with retro management-game styling; preserve gameplay.
 - [x] Verify character creation and embassy play at desktop and mobile sizes.

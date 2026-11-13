@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
   absTime, applyEffects, DAY_END, DAY_START, EMAILS, ESCALATE_AFTER, LAST_DAY, pickEnding, START_METERS,
+  recordGoodwillChange, type GoodwillChange, type VisitStatus,
   type Action, type Ending, type Meters,
 } from "./rules";
 
@@ -14,6 +15,8 @@ interface GameState {
   meters: Meters;
   handled: Record<string, string>; // emailId -> action or "ignored"
   log: LogEntry[];
+  goodwillHistory: GoodwillChange[];
+  visit: VisitStatus;
   ending: Ending | null;
   start: (c: Character) => void;
   tick: (gameMinutes: number) => void;
@@ -23,7 +26,7 @@ interface GameState {
   reset: () => void;
 }
 
-const initial = { character: null, day: 1, minute: DAY_START, speed: 1 as const, paused: false, meters: START_METERS, handled: {}, log: [], ending: null };
+const initial = { character: null, day: 1, minute: DAY_START, speed: 1 as const, paused: false, meters: START_METERS, handled: {}, log: [], goodwillHistory: [], visit: {}, ending: null };
 
 export const useGame = create<GameState>()(
   persist(
@@ -36,9 +39,11 @@ export const useGame = create<GameState>()(
         const s = get();
         const e = EMAILS.find((x) => x.id === id);
         const o = e?.options[action];
-        if (!e || !o || s.handled[id]) return;
+        if (!e || !o || s.handled[id] || s.ending || !s.character || absTime(s.day, s.minute) < absTime(e.day, e.time)) return;
         const meters = applyEffects(s.meters, o.effects);
-        set({ meters, handled: { ...s.handled, [id]: action }, log: [...s.log, { day: s.day, time: s.minute, text: o.text }], ending: pickEnding(meters, false) });
+        const visit = o.confirms ? { ...s.visit, [o.confirms]: true } : s.visit;
+        const change = recordGoodwillChange(s.meters, meters, { day: s.day, time: s.minute, source: e.subject, kind: "Decision", text: o.text });
+        set({ meters, visit, goodwillHistory: [...s.goodwillHistory, change], handled: { ...s.handled, [id]: action }, log: [...s.log, { day: s.day, time: s.minute, text: o.text }], ending: pickEnding(meters, false, visit) });
       },
       tick: (dm) => {
         const s = get();
@@ -46,12 +51,14 @@ export const useGame = create<GameState>()(
         let { day, minute, meters } = s;
         const handled = { ...s.handled };
         const log = [...s.log];
+        const goodwillHistory = [...s.goodwillHistory];
         minute += dm;
         let finished = false;
         if (minute >= DAY_END) {
           if (day >= LAST_DAY) { finished = true; minute = DAY_END; }
           else { day += 1; minute = DAY_START; log.push({ day, time: DAY_START, text: `Day ${day}. ${LAST_DAY - day} working days until the Minister lands.` }); }
         }
+        finished = finished || day >= LAST_DAY;
         const now = absTime(day, minute);
         for (const e of EMAILS) {
           if (handled[e.id]) continue;
@@ -59,11 +66,14 @@ export const useGame = create<GameState>()(
           // escalate after ESCALATE_AFTER minutes, or overnight
           if (now >= arrived + ESCALATE_AFTER || (day > e.day && minute >= DAY_START + 30)) {
             handled[e.id] = "ignored";
-            meters = applyEffects(meters, e.ignore.effects);
+            const before = meters;
+            meters = applyEffects(before, e.ignore.effects);
+            goodwillHistory.push(recordGoodwillChange(before, meters, { day, time: minute, source: e.subject, kind: "Missed instruction", text: e.ignore.text }));
             log.push({ day, time: minute, text: `Ignored "${e.subject}": ${e.ignore.text}` });
+            if (pickEnding(meters, false, s.visit)) break;
           }
         }
-        set({ day, minute, meters, handled, log, ending: pickEnding(meters, finished) });
+        set({ day, minute, meters, handled, log, goodwillHistory, ending: pickEnding(meters, finished, s.visit) });
       },
       reset: () => set({ ...initial }),
     }),

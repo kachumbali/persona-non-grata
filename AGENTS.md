@@ -34,3 +34,4 @@ use the editor.
 - Embassy rendering uses CSS semantic palette tokens, a demand-rendered orthographic Canvas, and data-scene-ready on its wrapper so visual checks can wait for a drawn frame.
 
 - Player portraits use bundled low-resolution raster assets with nearest-neighbour display; the retro interface is themed centrally through semantic CSS tokens and shared button bevels so gameplay rules remain separate from presentation.
+- Record actual before/after goodwill values for every resolved decision or missed instruction; confirmed visit requirements come from JSON outcomes so the dashboard and endings share one source of truth.

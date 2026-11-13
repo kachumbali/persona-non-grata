@@ -58,5 +58,29 @@
       "reply": { "text": "'The Ambassador is on consultations.' Technically true. Deniability holds.", "effects": { "confidence": 4, "sanity": -4 } },
       "delegate": { "text": "Anselm replies. He mentions you 'are coping, considering'.", "effects": { "confidence": -8 } },
       "note": { "text": "You take note. The Capital takes notice.", "effects": { "confidence": -5 } }
-    }, "ignore": { "effects": { "confidence": -14 }, "text": "The Capital assumes the worst. Correctly." } }
+    }, "ignore": { "effects": { "confidence": -14 }, "text": "The Capital assumes the worst. Correctly." } },
+  { "id": "visit-clearance", "day": 4, "time": 500, "from": "Ombrazia — Local Protocol", "subject": "Ministerial aircraft: landing permission", "body": "Submit the aircraft details and the correct diplomatic form. Permission is not granted merely because you have requested permission.",
+    "options": {
+      "reply": { "text": "Protocol approves the aircraft clearance after your corrected submission. Written approval received.", "effects": { "confidence": 3, "goodwill": 3, "sanity": -3 }, "confirms": "clearance" },
+      "delegate": { "text": "Sola obtains the signed landing permission. The stamp is finally the right stamp.", "effects": { "confidence": 2, "morale": 2 }, "confirms": "clearance" },
+      "note": { "text": "The request remains on your desk. No clearance has been granted.", "effects": { "confidence": -3 } }
+    }, "ignore": { "text": "The landing request expires unanswered. The Minister's aircraft still has no permission.", "effects": { "confidence": -8, "goodwill": -4 } } },
+  { "id": "visit-lounge", "day": 6, "time": 500, "from": "Airport — VIP Services", "subject": "VIP lounge: confirm reservation", "body": "The lounge can be reserved for the Minister. Payment and guest details are required before we issue confirmation.",
+    "options": {
+      "reply": { "text": "You approve the lounge payment. The airport sends a confirmed reservation.", "effects": { "budget": -8, "confidence": 3 }, "confirms": "lounge" },
+      "delegate": { "text": "Pavel negotiates the official rate and secures written lounge confirmation.", "effects": { "budget": -5, "confidence": 2 }, "confirms": "lounge" },
+      "note": { "text": "Noted is not reserved. The airport releases its provisional hold.", "effects": { "confidence": -3 } }
+    }, "ignore": { "text": "The lounge reservation lapses. Nobody has confirmed the Minister's reception.", "effects": { "confidence": -7 } } },
+  { "id": "visit-security", "day": 8, "time": 500, "from": "Security and Transport Desk", "subject": "Ministerial convoy and security approval", "body": "The route, vehicles and security liaison require approval. Please settle the transport allocation today.",
+    "options": {
+      "reply": { "text": "Vehicles are booked and the security liaison signs off the route.", "effects": { "budget": -6, "confidence": 3, "goodwill": 2 }, "confirms": "security" },
+      "delegate": { "text": "The security team coordinates the convoy and returns the signed route approval.", "effects": { "budget": -4, "confidence": 2, "morale": -2 }, "confirms": "security" },
+      "note": { "text": "The convoy plan remains unapproved.", "effects": { "confidence": -3 } }
+    }, "ignore": { "text": "No approved route or convoy is available for the visit.", "effects": { "confidence": -8, "goodwill": -3 } } },
+  { "id": "visit-programme", "day": 10, "time": 500, "from": "Capital — Ministerial Office", "subject": "Final visit programme: approval required", "body": "The host ministry has offered meeting times and a project stop. Approve the attached programme to obtain written confirmation from both sides. A draft is not a programme.",
+    "options": {
+      "reply": { "text": "You reconcile the meeting times. Capital and the host ministry confirm the final programme in writing.", "effects": { "confidence": 6, "goodwill": 3, "sanity": -4 }, "confirms": "programme" },
+      "delegate": { "text": "Pavel checks the timings with Sola. Both ministries issue written confirmation of the programme.", "effects": { "confidence": 4, "morale": 2 }, "confirms": "programme" },
+      "note": { "text": "The draft is filed without approval. The visit still has no confirmed programme.", "effects": { "confidence": -6 } }
+    }, "ignore": { "text": "The programme approval deadline passes. The Ministerial Office records a missed instruction.", "effects": { "confidence": -12 } } }
 ]
