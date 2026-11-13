@@ -20,3 +20,5 @@
 - [x] Include Sims-like needs and relationships, ministerial visit preparation and delegation tactics, colleague backstories including an idealistic development counsellor, and the UN/obscure multilateral circuit in the script.
 - [x] Add comical agenda management: host invitations with twenty minutes' notice, attendance or colleague representation, and offence if unrepresented.- [x] Start screen with New game and Load game.
 - [ ] Boss key (Leisure Suit Larry style fake work screen) — later, as requested.
+
+- [ ] Character-specific, varied, funny dialogues for every NPC (no shared identical lines)

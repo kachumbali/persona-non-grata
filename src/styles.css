@@ -235,3 +235,23 @@
 .bb-keys { margin-top: 8px; }
 .interrupt-badge { bottom: 96px; }
 .retro-game { padding-bottom: 110px; }
+/* Diablo-style bottom resource bar */
+.blackberry-dock { display: none; }
+.hud-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; padding: 6px 12px; background: repeating-linear-gradient(90deg, var(--muted-foreground) 0 8px, var(--foreground) 8px 16px); border-top: 4px solid var(--bevel-dark); box-shadow: var(--bevel-raised); image-rendering: pixelated; }
+.hud-center { flex: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
+.hud-slot { display: flex; align-items: center; gap: 6px; padding: 4px 10px; background: var(--screen); color: var(--foreground); box-shadow: var(--bevel-sunken); }
+.hud-label { font-family: var(--font-display, var(--font-sans)); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+.hud-slot .hud-label { color: var(--muted-foreground); }
+.hud-gem { width: 14px; height: 14px; transform: rotate(45deg); background: var(--muted); border: 2px solid var(--bevel-dark); }
+.hud-gem[data-on="true"] { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+.hud-orb-wrap { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.hud-orb { position: relative; width: 58px; height: 58px; border-radius: 50%; overflow: hidden; background: var(--foreground); border: 3px solid var(--bevel-dark); box-shadow: var(--bevel-raised); }
+.hud-orb-fill { position: absolute; left: 0; right: 0; bottom: 0; background: var(--secondary); transition: height .3s steps(6); }
+.hud-orb[data-kind="host"] .hud-orb-fill { background: var(--destructive); }
+.hud-orb[data-low="true"] { animation: pin-bob 0.9s steps(2) infinite; }
+.hud-orb-value { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-mono); font-size: 20px; color: var(--primary-foreground); text-shadow: 2px 2px 0 var(--foreground); }
+.hud-phone { position: relative; display: grid; place-items: center; width: 36px; height: 40px; background: var(--foreground); color: var(--accent); border: 3px solid var(--muted-foreground); border-radius: 8px; cursor: pointer; }
+.hud-phone .bb-led { position: absolute; top: 3px; right: 3px; }
+.bb-popup { position: fixed; right: 16px; bottom: 92px; z-index: 31; width: min(380px, calc(100vw - 32px)); background: var(--foreground); border: 5px solid var(--muted-foreground); border-radius: 22px; padding: 10px; box-shadow: var(--shadow-window); }
+.retro-game { padding-bottom: 100px; }
+.interrupt-badge { bottom: 96px; }
