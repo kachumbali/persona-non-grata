@@ -7,6 +7,7 @@ import { Portrait } from "./Portrait";
 import { EmbassyScene } from "../scene/EmbassyScene";
 import { GoodwillDashboard } from "./GoodwillDashboard";
 import { PlanningDesk } from "./PlanningDesk";
+import { CityMap } from "./CityMap";
 
 const METERS: { key: MeterKey; label: string }[] = [
   { key: "confidence", label: "HQ Goodwill" }, { key: "goodwill", label: "Host Goodwill" },
@@ -16,6 +17,7 @@ const METERS: { key: MeterKey; label: string }[] = [
 export function GameScreen() {
   const g = useGame();
   const [openId, setOpenId] = useState<string | null>(null);
+  const [view, setView] = useState<"city" | "place">("city");
   const logRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { logRef.current?.scrollTo({ top: logRef.current.scrollHeight }); }, [g.log.length]);
@@ -59,6 +61,8 @@ export function GameScreen() {
         </div>
       </header>
 
+      {view === "city" ? <CityMap onEnter={() => setView("place")} /> : <>
+      <Button variant="outline" className="mb-3" onClick={() => setView("city")}>← Back to town map</Button>
       <GoodwillDashboard />
       <PlanningDesk />
       {g.location === "embassy" && <EmbassyScene />}
@@ -89,7 +93,7 @@ export function GameScreen() {
                   <span className="stamp animate-stamp">{open.status === "ignored" ? "Escalated" : ACTION_LABELS[open.status as Action]}</span>
                 ) : (
                   <div className="flex flex-wrap gap-2">
-                    {(Object.keys(open.options) as Action[]).map((a) => <Button key={a} disabled={g.pending.some((p) => p.emailId === open.id)} variant="outline" onClick={() => { setOpenId(open.id); g.answer(open.id, a); }}>{ACTION_LABELS[a]} · 1 TP</Button>)}
+                    {(Object.keys(open.options) as Action[]).map((a) => <Button key={a} disabled={g.pending.some((p) => p.emailId === open.id)} variant="outline" onClick={() => { setOpenId(open.id); g.answer(open.id, a); }}>{ACTION_LABELS[a]} · 1 DP</Button>)}
                     <span className="self-center text-xs text-muted-foreground">{g.pending.some((p) => p.emailId === open.id) ? "Reply scheduled for this round" : "Unanswered instructions resolve at round end"}</span>
                   </div>
                 )}
@@ -118,7 +122,7 @@ export function GameScreen() {
           <Button variant="link" onClick={() => confirm("Abandon post and start over?") && g.reset()} className="text-xs text-muted-foreground underline">Abandon post</Button>
         </aside>
       </div>
-
+      </>}
     </main>
   );
 }

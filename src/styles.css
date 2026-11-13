@@ -204,3 +204,10 @@
   .retro-game > header { gap: 12px; }
   .retro-game .clock { text-align: left; }
 }
+.map-spot { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; cursor: pointer; background: none; border: 0; }
+.map-label { font-family: var(--font-mono); font-size: 16px; background: var(--card); color: var(--card-foreground); border: 2px solid var(--bevel-dark); box-shadow: var(--bevel-raised); padding: 0 6px; white-space: nowrap; }
+.map-spot:hover .map-label, .map-spot:focus-visible .map-label { background: var(--accent); }
+.map-spot[data-here="true"] .map-label { background: var(--accent); color: var(--accent-foreground); }
+.map-pin { color: var(--destructive); fill: var(--accent); filter: drop-shadow(2px 2px 0 var(--foreground)); animation: pin-bob 0.9s steps(2) infinite; }
+@keyframes pin-bob { 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .map-pin { animation: none; } }

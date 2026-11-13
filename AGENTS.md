@@ -38,3 +38,4 @@ use the editor.
 - Scheduled blocks replace the live clock: queue decisions in the persisted store and resolve once on advance; NPCs, venues, dialogue and story episodes are authored in campaign JSON, with pure scheduling/social rules in rules.ts.
 - Keep campaign money and capacity validation in browser-safe pure economy helpers, separate from clamped goodwill/needs; validate complete replacement plans atomically before committing so failed edits cannot discard existing obligations.
 - Legacy JSON budget effects convert to currency at resolution boundaries; new commitments use explicit currency costs and TP, preserving authored outcomes during the staged economy refactor.
+- The town map (CityMap) is the game's home screen; travel goes through the store's move(), which queues a DP-costing decision so the time rules stay in one place.

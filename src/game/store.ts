@@ -22,7 +22,7 @@ interface GameState {
   repeatYesterday: () => void; requestSupplement: () => void; raidReserve: () => void;
   seed: number; events: StoryEvent[]; completedEvents: string[]; storyFlags: string[];
   start: (c: Character) => void; reset: () => void;
-  move: (location: string) => void; moveRoom: (room: string) => void;
+  move: (location: string) => boolean; moveRoom: (room: string) => void;
   selectNpc: (id: string | null) => void;
   queue: (decision: PendingDecision, replacePlayer?: boolean) => boolean; removeDecision: (id: string) => void;
   answer: (id: string, action: Action) => void; advance: () => void;
@@ -36,14 +36,21 @@ const initial = {
   colleagues: initialColleagues(), relationships: { [pairKey("anselm", "pavel")]: 20, [pairKey("sola", "development")]: 35 },
   pending: [], report: [], score: 0, energy: 80, composure: 75, seed, events: dailyEvents(1, seed, []), completedEvents: [], storyFlags: [],
 };
+/** Diplo-Points spent on every trip across town. */
+export const TRAVEL_DP = 1;
+
 export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>((set, get) => ({
   ...initial,
   start: (character) => set({ ...initial, character, log: [{ day: 1, time: 480, text: "The Ambassador is absent. You are the Deputy, now acting head of mission. Plan your first morning." }] }),
   reset: () => set({ ...initial }),
   move: (location) => {
     const s = get();
-    if (s.ending || s.pending.some((p) => p.location && playerTime(p) > 0) || !CAMPAIGN.locations.some((l) => l.id === location)) return;
-    set({ location, selectedNpc: null });
+    const place = CAMPAIGN.locations.find((l) => l.id === location);
+    if (s.ending || !place || location === s.location) return false;
+    if (s.pending.some((p) => p.location && playerTime(p) > 0)) { set({ planError: "You have an appointment here this block. Cancel it before travelling." }); return false; }
+    const ok = get().queue({ id: `travel-${s.pending.length}-${location}`, kind: "work", timeCost: TRAVEL_DP, source: `Travel to ${place.name}`, text: `You travelled to ${place.name}.`, effects: {}, energy: -3 });
+    if (ok) set({ location, selectedNpc: null });
+    return ok;
   },
   moveRoom: (room) => set({ room }),
   selectNpc: (selectedNpc) => set({ selectedNpc }),
@@ -74,7 +81,7 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     const text = "Released ƒ500 from visit reserves. Arrival procurement is underfunded; HQ goodwill −5.";
     set({ economy: { ...s.economy, ringFence: s.economy.ringFence - 500 }, meters, ending: pickEnding(meters, false, s.visit), goodwillHistory: [...s.goodwillHistory, recordGoodwillChange(s.meters, meters, { day: s.day, time: s.minute, source: "Visit reserve release", text, kind: "Decision" })], log: [...s.log, { day: s.day, time: s.minute, text }] });
   },
-  removeDecision: (id) => set((s) => s.pending.some((p) => p.id === id && p.remainingBlocks === 1) ? { planError: "Finish the second half of your golf round first." } : { pending: s.pending.filter((p) => p.id !== id), planError: "" }),
+  removeDecision: (id) => set((s) => id.startsWith("travel-") ? { planError: "The journey has already been made." } : s.pending.some((p) => p.id === id && p.remainingBlocks === 1) ? { planError: "Finish the second half of your golf round first." } : { pending: s.pending.filter((p) => p.id !== id), planError: "" }),
   answer: (id, action) => {
     const s = get(); const e = EMAILS.find((x) => x.id === id); const o = e?.options[action];
     const cutoff = BLOCKS[s.block + 1]?.time ?? 24 * 60;
@@ -99,7 +106,7 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
       if (row.displaced > 0 && row.id !== "self") {
         const c = colleagues[row.id];
         if (c) c.fatigue = clamp(c.fatigue + row.displaced * 10);
-        record("Baseline duties", `${row.id}: ${row.displaced} TP of routine duties displaced. Backlog grows; fatigue rises.`, { morale: -row.displaced, confidence: -row.displaced });
+        record("Baseline duties", `${row.id}: ${row.displaced} DP of routine duties displaced. Backlog grows; fatigue rises.`, { morale: -row.displaced, confidence: -row.displaced });
       }
     }
     for (const p of s.pending) {

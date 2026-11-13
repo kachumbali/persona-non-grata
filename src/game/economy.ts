@@ -29,7 +29,7 @@ export function participantTime(p: PendingDecision, id: string, block: number): 
   if (p.kind === "dialogue") return 1;
   return 2;
 }
-// Four baseline TP daily, with two free TP distributed across office blocks.
+// Four baseline DP daily, with two free DP distributed across office blocks.
 export function baselineTime(id: string, block: number): number {
   const index = CAMPAIGN.characters.filter((c) => c.location === "embassy").findIndex((c) => c.id === id);
   if (index < 0 || block === 3) return 0;
@@ -49,7 +49,7 @@ export function validatePlan(plan: PendingDecision[], block: number, economy: Ec
   if (plan.some((p) => !Number.isInteger(playerTime(p)) || playerTime(p) < 0 || decisionCash(p) < 0 || !Number.isFinite(decisionCash(p)))) return "Invalid activity cost.";
   if (availableFunds(economy, plan) < 0) return "Insufficient discretionary funds; visit costs remain ring-fenced.";
   for (const row of capacityLedger(plan, block)) {
-    if (row.used > 2) return `${row.id === "self" ? "You have" : row.id + " has"} only 2 TP this block.`;
+    if (row.used > 2) return `${row.id === "self" ? "You have" : row.id + " has"} only 2 DP this block.`;
     if (row.id === "self") continue;
     const colleague = CAMPAIGN.characters.find((c) => c.id === row.id)?.location === "embassy";
     if (colleague && block === 3 && row.used > 0) return "Colleagues are off duty; dinner is social, not an extra work shift.";

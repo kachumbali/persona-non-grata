@@ -14,20 +14,28 @@ describe("Chapter 1 time and money", () => {
     expect(initialEconomy().ringFence).toBe(5500);
     expect(availableFunds(initialEconomy(), [])).toBe(4500);
   });
-  it("allows two 1-TP actions but rejects a third", () => {
+  it("travelling across town costs 1 DP and stops when DP run out", () => {
+    const g = () => useGame.getState();
+    expect(g().move("ministry")).toBe(true);
+    expect(g().location).toBe("ministry");
+    expect(g().move("eu")).toBe(true);
+    expect(g().move("bar")).toBe(false);
+    expect(g().location).toBe("eu");
+  });
+  it("allows two 1-DP actions but rejects a third", () => {
     const q = useGame.getState().queue;
     expect(q(action("a"))).toBe(true);
     expect(q(action("b", { kind: "email" }))).toBe(true);
     expect(q(action("c", { kind: "social" }))).toBe(false);
     expect(useGame.getState().block).toBe(0);
   });
-  it("charges colleague coffee and lunch one TP, dinner zero official TP", () => {
+  it("charges colleague coffee and lunch one DP, dinner zero official DP", () => {
     const social = action("meal", { kind: "social", worker: "pavel" });
     expect(participantTime(social, "pavel", 0)).toBe(1);
     expect(participantTime(social, "pavel", 1)).toBe(1);
     expect(participantTime(social, "pavel", 3)).toBe(0);
   });
-  it("reserves four daily baseline TP for each colleague", () => {
+  it("reserves four daily baseline DP for each colleague", () => {
     expect([0, 1, 2].reduce((n, b) => n + baselineTime("pavel", b), 0)).toBe(4);
     expect(baselineTime("pavel", 3)).toBe(0);
   });
@@ -39,8 +47,8 @@ describe("Chapter 1 time and money", () => {
     expect(useGame.getState().colleagues["pavel"]?.fatigue).toBe(28);
     expect(useGame.getState().meters.confidence).toBe(54);
   });
-  it("caps each colleague at 2 TP even with displacement", () => {
-    expect(validatePlan([action("a", { worker: "pavel", timeCost: 0, overload: true }), action("b", { kind: "dialogue", worker: "pavel", overload: true })], 0, initialEconomy())).toContain("only 2 TP");
+  it("caps each colleague at 2 DP even with displacement", () => {
+    expect(validatePlan([action("a", { worker: "pavel", timeCost: 0, overload: true }), action("b", { kind: "dialogue", worker: "pavel", overload: true })], 0, initialEconomy())).toContain("only 2 DP");
   });
   it("retains the old plan when an atomic replacement is unaffordable", () => {
     useGame.getState().queue(action("original"));
