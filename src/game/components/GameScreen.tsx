@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ACTION_LABELS, BLOCKS, ENDINGS, formatClock, LAST_DAY, type Action, type MeterKey } from "../rules";
+import { money } from "../economy";
 import { inboxFor, useGame } from "../store";
 import { Portrait } from "./Portrait";
 import { EmbassyScene } from "../scene/EmbassyScene";
@@ -8,7 +9,7 @@ import { GoodwillDashboard } from "./GoodwillDashboard";
 import { PlanningDesk } from "./PlanningDesk";
 
 const METERS: { key: MeterKey; label: string }[] = [
-  { key: "budget", label: "Budget" }, { key: "confidence", label: "HQ Goodwill" }, { key: "goodwill", label: "Host Goodwill" },
+  { key: "confidence", label: "HQ Goodwill" }, { key: "goodwill", label: "Host Goodwill" },
   { key: "morale", label: "Team Morale" }, { key: "sanity", label: "Sanity" },
 ];
 
@@ -31,7 +32,7 @@ export function GameScreen() {
     return (
       <main className="mx-auto max-w-xl px-4 py-16 text-center">
         <div className="paper p-8">
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Final cable · Day {g.day}</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Persona Non Grata — Chapter 1 · Final cable · Day {g.day}</p>
           <Portrait face={c.face} size={96} />
           <h1 className="mt-6 text-3xl text-destructive">{end.title}</h1>
           <p className="mt-6 font-serif">{c.title} {c.name}: {end.text}</p>
@@ -47,8 +48,9 @@ export function GameScreen() {
     <main className="mx-auto max-w-7xl retro-game px-3 py-4 sm:px-5">
       <header className="paper mb-4 flex flex-wrap items-center gap-4 px-4 py-3">
         <Portrait face={c.face} size={48} />
-        <div className="mr-auto min-w-0 flex-1">
-          <h1 className="text-lg font-bold leading-tight">{c.title} {c.name}</h1>
+        <div className="mr-auto min-w-0 flex-1 basis-[240px]">
+          <h1 className="text-xl font-bold leading-tight">Persona Non Grata — Chapter 1</h1>
+          <p className="text-sm">{c.title} {c.name} · Acting Head of Mission</p>
           <p className="text-xs text-muted-foreground">Chargé d'Affaires a.i. · Embassy of Bellaluxe, Port Hesperia</p>
         </div>
         <div className="clock text-right font-mono">
@@ -87,7 +89,7 @@ export function GameScreen() {
                   <span className="stamp animate-stamp">{open.status === "ignored" ? "Escalated" : ACTION_LABELS[open.status as Action]}</span>
                 ) : (
                   <div className="flex flex-wrap gap-2">
-                    {(Object.keys(open.options) as Action[]).map((a) => <Button key={a} disabled={g.pending.some((p) => p.emailId === open.id)} variant="outline" onClick={() => { setOpenId(open.id); g.answer(open.id, a); }}>{ACTION_LABELS[a]}</Button>)}
+                    {(Object.keys(open.options) as Action[]).map((a) => <Button key={a} disabled={g.pending.some((p) => p.emailId === open.id)} variant="outline" onClick={() => { setOpenId(open.id); g.answer(open.id, a); }}>{ACTION_LABELS[a]} · 1 TP</Button>)}
                     <span className="self-center text-xs text-muted-foreground">{g.pending.some((p) => p.emailId === open.id) ? "Reply scheduled for this round" : "Unanswered instructions resolve at round end"}</span>
                   </div>
                 )}
@@ -99,6 +101,7 @@ export function GameScreen() {
         <aside className="space-y-4">
           <section className="paper p-4">
             <h2 className="retro-titlebar mb-3">Situation Overview</h2>
+            <p className="mb-3 font-mono">Representation funds {money(g.economy.funds)}</p>
             {METERS.map(({ key, label }) => (
               <div key={key} className="mb-2">
                 <div className="flex justify-between text-xs"><span>{label}</span><span className="font-mono">{Math.round(g.meters[key])}</span></div>

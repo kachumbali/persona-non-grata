@@ -5,7 +5,7 @@ const ready = { clearance: true, lounge: true, programme: true, security: true }
 
 describe("game rules", () => {
   it("meters stay between 0 and 100", () => {
-    expect(applyEffects(START_METERS, { budget: -500 }).budget).toBe(0);
+    expect(applyEffects(START_METERS, { confidence: -500 }).confidence).toBe(0);
     expect(applyEffects(START_METERS, { sanity: 500 }).sanity).toBe(100);
   });
   it("zero host goodwill ends the game as persona non grata", () => {
@@ -51,10 +51,13 @@ describe("game rules", () => {
     expect(BLOCKS.filter((b) => b.social === "Lunch").length).toBe(1);
     expect(BLOCKS.filter((b) => b.social === "Dinner").length).toBe(1);
   });
-  it("invited hospitality costs embassy funds but solo meals do not", () => {
-    expect(hospitalityCost("bling", 1, 1)).toBe(20);
-    expect(hospitalityCost("local", 1, 1)).toBe(4);
-    expect(hospitalityCost("bling", 0, 1)).toBe(0);
+  it("charges actual restaurant prices for host and guest, including solo meals", () => {
+    expect(hospitalityCost("bling", 1, 1)).toBe(900);
+    expect(hospitalityCost("local", 1, 1)).toBe(80);
+    expect(hospitalityCost("classic", 1, 3)).toBe(280);
+    expect(hospitalityCost("bling", 0, 1)).toBe(450);
+    expect(hospitalityCost("embassy", 0, 0)).toBe(5);
+    expect(hospitalityCost("local", 1, 2)).toBe(30);
   });
   it("venue likes and dislikes affect relationships", () => {
     expect(socialTrust("development", "local", false)).toBe(6);

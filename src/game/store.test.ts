@@ -25,8 +25,8 @@ describe("scheduled game rounds", () => {
   });
   it("does not permit overspending reserved hospitality money", () => {
     const queue = useGame.getState().queue;
-    expect(queue({ id: "a", source: "Dinner", text: "Dinner", effects: { budget: -50 }, kind: "social" })).toBe(true);
-    expect(queue({ id: "b", source: "Convoy", text: "Convoy", effects: { budget: -11 }, kind: "work" })).toBe(false);
+    expect(queue({ id: "a", source: "Dinner", text: "Dinner", effects: {}, cashCost: 4000, timeCost: 1, kind: "social" })).toBe(true);
+    expect(queue({ id: "b", source: "Convoy", text: "Convoy", effects: {}, cashCost: 501, timeCost: 1, kind: "work" })).toBe(false);
   });
   it("colleagues do not take evening work assignments", () => {
     useGame.setState({ block: 3 });
@@ -34,13 +34,13 @@ describe("scheduled game rounds", () => {
   });
   it("hostile colleagues fail a joint assignment", () => {
     useGame.setState({ handled: { e1: "reply" } });
-    useGame.getState().queue({ id: "joint", source: "Programme", text: "Done", effects: {}, kind: "work", worker: "anselm", partner: "pavel", task: "programme" });
+    useGame.getState().queue({ id: "joint", source: "Programme", text: "Done", effects: {}, kind: "work", worker: "anselm", partner: "pavel", task: "programme", overload: true });
     useGame.getState().advance();
     expect(useGame.getState().visit.programme).toBeUndefined();
     expect(useGame.getState().report.some((r) => r.text.includes("work stalled"))).toBe(true);
   });
   it("competent independent delegation confirms a visit requirement", () => {
-    useGame.getState().queue({ id: "lounge", source: "Lounge", text: "Lounge booked", effects: { budget: -5 }, kind: "work", worker: "pavel", task: "lounge" });
+    useGame.getState().queue({ id: "lounge", source: "Lounge", text: "Lounge booked", effects: { budget: -5 }, kind: "work", worker: "pavel", task: "lounge", overload: true });
     useGame.getState().advance();
     expect(useGame.getState().visit.lounge).toBe(true);
     expect(useGame.getState().score).toBe(10);

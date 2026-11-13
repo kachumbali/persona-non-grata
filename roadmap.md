@@ -1,4 +1,8 @@
 # Embassy view
+- [x] Chapter 1 / WP1b: enforce per-person time costs, baseline duties and atomic plan changes.
+- [x] Chapter 1 / WP1b: replace budget meter with campaign funds, ring-fence, reservations and delayed supplement.
+- [x] Chapter 1 / WP1b: show prices/capacity, add express options and validated repeat-yesterday plans.
+- [x] Verify Chapter 1 planning, resolution, save migration and resource rules.
 - [x] Replace live clock with scheduled decision rounds and next-round results.
 - [x] Add first playable NPC conversations, delegation, outside locations, social meals and seeded side stories.
 - [x] Update the full game concept with the discussion and split delivery into work packages.

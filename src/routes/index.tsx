@@ -7,10 +7,10 @@ export const Route = createFileRoute("/")({
   ssr: false, // the game reads its save from the browser
   head: () => ({
     meta: [
-      { title: "Persona Non Grata — A Satirical Embassy Simulator" },
-      { name: "description", content: "Survive 15 working days as Chargé d'Affaires ad interim before the Foreign Minister arrives." },
-      { property: "og:title", content: "Persona Non Grata — A Satirical Embassy Simulator" },
-      { property: "og:description", content: "Survive 15 working days as Chargé d'Affaires ad interim before the Foreign Minister arrives." },
+      { title: "Persona Non Grata — Chapter 1" },
+      { name: "description", content: "Chapter 1: The Minister’s Visit. Manage limited time, embassy funds and diplomatic relationships as acting head of mission." },
+      { property: "og:title", content: "Persona Non Grata — Chapter 1" },
+      { property: "og:description", content: "Chapter 1: The Minister’s Visit. Manage limited time, embassy funds and diplomatic relationships as acting head of mission." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

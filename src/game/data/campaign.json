@@ -273,42 +273,42 @@
       "id": "embassy",
       "name": "Embassy kitchen",
       "setting": "local",
-      "cost": 0,
+      "cost": 20,
       "description": "Staff coffee and a lunch assembled by Ketu."
     },
     {
       "id": "classic",
       "name": "Chez Marcel",
       "setting": "classic",
-      "cost": 4,
+      "cost": 140,
       "description": "Classic French and Italian dining. Quiet tables, serious cutlery."
     },
     {
       "id": "local",
       "name": "Auntie’s Courtyard",
       "setting": "local",
-      "cost": 2,
+      "cost": 40,
       "description": "Local cuisine, open-air tables and conversations that travel."
     },
     {
       "id": "bling",
       "name": "The Gilded Palm",
       "setting": "bling",
-      "cost": 10,
+      "cost": 450,
       "description": "Rooftop chandeliers, imported everything, a very visible bill."
     },
     {
       "id": "sushi",
       "name": "Mizu",
       "setting": "sushi",
-      "cost": 5,
+      "cost": 150,
       "description": "Sushi, minimalist surroundings and ambitious small plates."
     },
     {
       "id": "shady",
       "name": "The Quiet Amendment",
       "setting": "shady",
-      "cost": 3,
+      "cost": 80,
       "description": "A discreet bar with food and excessively well-informed regulars."
     }
   ],
@@ -352,7 +352,7 @@
         "confidence": 1,
         "goodwill": 2
       },
-      "cost": 2
+      "cost": 200
     },
     {
       "id": "pressclub",
@@ -363,7 +363,7 @@
         "confidence": 3,
         "goodwill": 2
       },
-      "cost": 1
+      "cost": 100
     },
     {
       "id": "golf",
@@ -373,7 +373,7 @@
       "effects": {
         "goodwill": 4
       },
-      "cost": 4
+      "cost": 400
     },
     {
       "id": "un",

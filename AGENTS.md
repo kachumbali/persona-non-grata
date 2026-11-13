@@ -36,3 +36,5 @@ use the editor.
 - Player portraits use bundled low-resolution raster assets with nearest-neighbour display; the retro interface is themed centrally through semantic CSS tokens and shared button bevels so gameplay rules remain separate from presentation.
 - Record actual before/after goodwill values for every resolved decision or missed instruction; confirmed visit requirements come from JSON outcomes so the dashboard and endings share one source of truth.
 - Scheduled blocks replace the live clock: queue decisions in the persisted store and resolve once on advance; NPCs, venues, dialogue and story episodes are authored in campaign JSON, with pure scheduling/social rules in rules.ts.
+- Keep campaign money and capacity validation in browser-safe pure economy helpers, separate from clamped goodwill/needs; validate complete replacement plans atomically before committing so failed edits cannot discard existing obligations.
+- Legacy JSON budget effects convert to currency at resolution boundaries; new commitments use explicit currency costs and TP, preserving authored outcomes during the staged economy refactor.

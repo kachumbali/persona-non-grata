@@ -27,6 +27,7 @@ export function CharacterBuilder() {
       <header className="mb-5 text-center">
         <p className="font-mono text-lg uppercase text-primary-foreground">Republic of Bellaluxe · Ministry of Foreign Affairs · Form PNG-1</p>
         <h1 className="game-logo mt-1">Persona Non Grata</h1>
+        <p className="mt-1 font-mono text-2xl text-primary-foreground">Chapter 1 · The Minister’s Visit</p>
         <p className="mt-2 text-sm text-primary-foreground">Personnel file of the incoming Chargé d'Affaires <i>ad interim</i>, Embassy in Port Hesperia</p>
       </header>
 

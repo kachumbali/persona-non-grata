@@ -2,7 +2,7 @@ import emailsData from "./data/emails.json";
 import traitsData from "./data/traits.json";
 import campaignData from "./data/campaign.json";
 
-export type MeterKey = "budget" | "confidence" | "goodwill" | "morale" | "sanity";
+export type MeterKey = "confidence" | "goodwill" | "morale" | "sanity";
 export type StatKey = "gravitas" | "charm" | "stamina" | "deniability" | "liver";
 export type Action = "reply" | "delegate" | "forward" | "note" | "replyall";
 export type Meters = Record<MeterKey, number>;
@@ -13,7 +13,8 @@ export const VISIT_TASKS: Record<VisitTask, string> = {
   clearance: "Plane landing clearance", lounge: "VIP lounge reservation",
   programme: "Confirmed visit programme", security: "Security and transport",
 };
-export interface Outcome { text: string; effects: Partial<Meters>; confirms?: VisitTask }
+export type Effects = Partial<Meters> & { budget?: number };
+export interface Outcome { text: string; effects: Effects; confirms?: VisitTask }
 export interface GoodwillChange {
   day: number; time: number; source: string; kind: "Decision" | "Missed instruction" | "Outcome";
   text: string; before: Pick<Meters, "confidence" | "goodwill">;
@@ -43,7 +44,7 @@ export const LAST_DAY = 15;
 export const TRAIT_POINTS = 3;
 export const ESCALATE_AFTER = 150; // game minutes before an unanswered email escalates
 export const MINUTES_PER_SECOND = 6.5; // at 1x
-export const START_METERS: Meters = { budget: 60, confidence: 55, goodwill: 50, morale: 50, sanity: 70 };
+export const START_METERS: Meters = { confidence: 55, goodwill: 50, morale: 50, sanity: 70 };
 
 export const ACTION_LABELS: Record<Action, string> = {
   reply: "Reply", delegate: "Delegate", forward: "Forward to Capital", note: "Take Note", replyall: "Reply All",
@@ -53,7 +54,7 @@ export const clamp = (n: number) => Math.max(0, Math.min(100, n));
 
 export function applyEffects(m: Meters, e: Partial<Meters>): Meters {
   const out = { ...m };
-  for (const k of Object.keys(e) as MeterKey[]) out[k] = clamp(out[k] + (e[k] ?? 0));
+  for (const k of Object.keys(m) as MeterKey[]) out[k] = clamp(out[k] + (e[k] ?? 0));
   return out;
 }
 
@@ -113,14 +114,17 @@ export function initialColleagues(): Record<string, ColleagueState> {
   return Object.fromEntries(CAMPAIGN.characters.map((c) => [c.id, { trust: 50, fatigue: 0 }]));
 }
 export interface PendingDecision {
-  id: string; source: string; text: string; effects: Partial<Meters>;
+  id: string; source: string; text: string; effects: Effects;
   kind: "work" | "email" | "social" | "dialogue" | "event";
   worker?: string | undefined; partner?: string | undefined; task?: VisitTask | undefined; trust?: number | undefined; pair?: number | undefined;
   score?: number | undefined; energy?: number | undefined; composure?: number | undefined; flag?: string | undefined;
+  timeCost?: number | undefined; cashCost?: number | undefined; guestTime?: number | undefined;
+  overload?: boolean | undefined; service?: "express" | "driver" | undefined; location?: string | undefined;
+  venue?: string | undefined; remainingBlocks?: number | undefined; special?: "supplement" | undefined;
   emailId?: string | undefined; emailAction?: Action | undefined; eventId?: string | undefined; playerSlot?: boolean | undefined;
 }
 export interface StoryChoice {
-  id: string; label: string; next?: string; effects?: Partial<Meters>; result?: string;
+  id: string; label: string; next?: string; effects?: Effects; result?: string;
   trust?: number; pair?: number; score?: number; flag?: string; replace?: boolean; worker?: string;
 }
 export type StoryEvent = { id: string; title: string; npc: string; text: string; minDay: number; requires?: string; choices: StoryChoice[] };
@@ -134,8 +138,10 @@ export function dailyEvents(day: number, seed: number, completed: string[]): Sto
 }
 export function hospitalityCost(venueId: string, guestCount: number, block: number): number {
   const venue = CAMPAIGN.venues.find((v) => v.id === venueId);
-  if (!venue || guestCount === 0) return 0;
-  return Math.ceil(venue.cost * (guestCount + 1) * (block === 0 || block === 2 ? 0.25 : 1));
+  if (!venue) return 0;
+  const coffee = block === 0 || block === 2;
+  const price = coffee ? (venueId === "embassy" ? 5 : 15) : venue.cost;
+  return price * (guestCount + 1);
 }
 export function socialTrust(npc: string, venueId: string, workAtDinner: boolean): number {
   const c = CAMPAIGN.characters.find((x) => x.id === npc);
