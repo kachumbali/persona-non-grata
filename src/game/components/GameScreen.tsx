@@ -6,6 +6,7 @@ import { Portrait } from "./Portrait";
 import { CityMap } from "./CityMap";
 import { PlaceScene } from "./PlaceScene";
 import { TurnBar } from "./TurnBar";
+import { Interruption } from "./Interruption";
 
 export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const g = useGame();
@@ -48,6 +49,7 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
 
       {view === "city" ? <CityMap onEnter={() => setView("place")} /> : <PlaceScene onLeave={() => setView("city")} />}
       <TurnBar />
+      <Interruption />
     </main>
   );
 }

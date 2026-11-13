@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, MapPin, Plus, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BLOCKS, CAMPAIGN, hospitalityCost, pairKey, socialTrust, VISIT_TASKS, type StoryChoice, type VisitTask } from "../rules";
+import { BLOCKS, CAMPAIGN, hospitalityCost, pairKey, socialTrust, VISIT_TASKS, type VisitTask } from "../rules";
 import { useGame } from "../store";
 import { ResourceDesk } from "./ResourceDesk";
 import { availableFunds, decisionCash, money, playerTime } from "../economy";
@@ -20,7 +20,6 @@ export function PlanningDesk() {
   useEffect(() => { setNotice(""); }, [g.block, g.day]);
   const block = BLOCKS[g.block] ?? BLOCKS[0];
   const location = CAMPAIGN.locations.find((l) => l.id === g.location) ?? CAMPAIGN.locations[0];
-  const event = g.events[g.block];
   const usedTime = g.pending.reduce((n, p) => n + playerTime(p), 0);
   const scheduledWork = usedTime >= 2;
 
@@ -41,13 +40,6 @@ export function PlanningDesk() {
       source: `${name} · ${VISIT_TASKS[task]}`, text: `${name} secured written confirmation: ${VISIT_TASKS[task]}.`,
       effects: { confidence: 3 }, cashCost: (task === "lounge" ? 500 : task === "security" ? 400 : 0) + (self ? serviceCost : 0), timeCost: self ? workTime : 0, overload, score: 2, trust: 1 });
     setNotice(ok ? "Assignment scheduled. Results arrive next round." : useGame.getState().planError);
-  };
-  const chooseEvent = (choice: StoryChoice) => {
-    if (!event) return;
-    const ok = useGame.getState().queue({ id: `event-${event.id}`, kind: "event", source: event.title, text: choice.result ?? "Event resolved.", effects: choice.effects ?? {},
-      eventId: event.id, worker: choice.worker ?? (event.id === "invitation" ? undefined : event.npc), partner: event.id === "rivalry" ? "anselm" : undefined, trust: choice.trust, pair: choice.pair,
-      flag: choice.flag, score: choice.score, playerSlot: choice.replace, overload, timeCost: choice.replace || event.id === "rivalry" ? 2 : choice.worker ? 0 : event.id === "invitation" && choice.id === "decline" ? 0 : 1 }, choice.replace);
-    setNotice(ok ? "Response scheduled." : useGame.getState().planError);
   };
   return <section aria-label="Daily planning" className="mb-4 border-y-2 border-border bg-card">
     <div className="retro-titlebar flex-wrap justify-between"><h2>Daily Diary · {block.name}</h2><span className="font-mono">Mission Standing {g.score} · Available {money(availableFunds(g.economy, g.pending))}</span></div>
@@ -79,7 +71,6 @@ export function PlanningDesk() {
           {g.block === 3 && <label className="my-2 flex gap-2 text-sm"><input type="checkbox" checked={workDinner} onChange={(e) => setWorkDinner(e.target.checked)} />Discuss work at dinner (colleagues resent overtime)</label>}
           <Button className="mt-2 h-auto whitespace-normal py-2" variant="outline" onClick={() => { const trust = socialTrust(guest, venue, workDinner && g.block === 3); const name = CAMPAIGN.characters.find((c) => c.id === guest)?.name; const ok = g.queue({ id: "social", kind: "social", source: block.social, text: guest ? `${block.social} with ${name} at ${CAMPAIGN.venues.find((v) => v.id === venue)?.name}: ${trust > 0 ? "a warmer relationship" : "an uncomfortable outing"}. Hospitality cost ${money(cost)}.` : `${block.social} alone. Some welcome quiet.`, effects: {}, cashCost: cost, timeCost: socialTime, venue, overload, worker: guest || undefined, trust, energy: g.block === 1 || g.block === 3 ? 12 : 5, composure: guest ? 2 : 8 }); setNotice(ok ? "Social occasion scheduled." : useGame.getState().planError); }}><Users className="size-4" />{guest ? `Invite · ${socialTime} DP · ${money(cost)}` : `Eat / drink alone · ${socialTime} DP · ${money(cost)}`}</Button>
         </div>
-        {event && <div className="mt-4 border-t-2 border-destructive pt-3" aria-label="Daily story"><h3 className="text-xl text-destructive">Interruption · {event.title}</h3><p className="my-2 text-sm">{event.text}</p><div className="flex flex-col gap-2">{event.choices.map((choice) => <Button key={choice.id} variant="outline" className="h-auto justify-start whitespace-normal py-2 text-left" disabled={g.pending.some((p) => p.eventId === event.id)} onClick={() => chooseEvent(choice)}>{choice.label}{` · ${choice.replace || event.id === "rivalry" ? 2 : choice.worker ? 0 : event.id === "invitation" && choice.id === "decline" ? 0 : 1} your DP${choice.worker ? " · 2 colleague DP" : ""}`}</Button>)}</div></div>}
       </div>
     </div>
     <div className="border-t-2 border-border p-3"><h3 className="text-xl">Committed this round</h3>{g.pending.length === 0 && <p className="my-2 text-sm text-muted-foreground">No commitments. An empty block becomes unallocated time.</p>}<ul className="my-2 space-y-2">{g.pending.map((p) => <li key={p.id} className="flex items-center justify-between gap-2 border-b border-border pb-1 text-sm"><span>{p.source} · {playerTime(p)} your DP · {money(decisionCash(p))}{p.worker ? ` · ${p.worker}` : ""}</span><Button variant="ghost" size="icon" aria-label={`Remove ${p.source}`} title="Remove commitment" onClick={() => g.removeDecision(p.id)}><Trash2 className="size-4" /></Button></li>)}</ul>

@@ -225,3 +225,4 @@
 .blackberry .cable-reader, .blackberry .inbox-list { color: var(--foreground); }
 .cable-reader { background: var(--screen); color: var(--foreground); box-shadow: var(--bevel-sunken); }
 .title-screen { min-height: 100vh; display: flex; align-items: center; padding: 24px 12px; background-size: cover; background-position: center; box-shadow: inset 0 0 0 100vmax oklch(0.18 0.035 185 / 0.55); }
+.interrupt-badge { position: fixed; right: 16px; bottom: 16px; z-index: 40; animation: pin-bob 0.9s steps(2) infinite; }
