@@ -40,7 +40,7 @@ export function Conversation() {
           <Button size="sm" variant="ghost" onClick={() => g.selectNpc(null)}>Leave ✕</Button></div>
         <p className="my-2 font-serif">“{text}”</p>
         {notice ? <p role="status" className="mt-2 text-sm">{notice}</p> :
-        <div className="flex flex-col gap-1">{current.choices.map((c, i) => <Button key={i} variant="outline" className="h-auto justify-start whitespace-normal py-1.5 text-left" disabled={g.pending.some((p) => p.id === "conversation")} onClick={() => choose(c)}>▸ {c.label}{c.next ? "" : ` · 1 DP${c.effects?.money ? ` · ƒ${-c.effects.money}` : ""}`}</Button>)}</div>}
+        <div className="flex flex-col gap-1">{(current.choices as TalkChoice[]).map((c, i) => <Button key={i} variant="outline" className="h-auto justify-start whitespace-normal py-1.5 text-left" disabled={g.pending.some((p) => p.id === "conversation")} onClick={() => choose(c as TalkChoice)}>▸ {c.label}{c.next ? "" : ` · 1 DP${c.effects?.money ? ` · ƒ${-c.effects.money}` : ""}`}</Button>)}</div>}
       </div>
     </div>
   );
