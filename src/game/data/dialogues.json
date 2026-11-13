@@ -1,0 +1,1467 @@
+{
+ "anselm": [
+  {
+   "id": "ghostwriter",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "I drafted the Minister's speech. Eleven pages. I quoted myself twice — as 'a promising young voice'.",
+     "choices": [
+      {
+       "label": "Who is the promising young voice?",
+       "next": "b"
+      },
+      {
+       "label": "Cut it to one page. Ministers read like toddlers.",
+       "result": "Anselm sulks, then produces a crisp single page. It is annoyingly good.",
+       "trust": -2,
+       "pair": 0,
+       "score": 3,
+       "effects": {}
+      },
+      {
+       "label": "Brilliant. Send it straight to Capital under your name.",
+       "result": "Capital receives eleven pages from a junior. Someone in HQ laughs out loud.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": -4
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "…A colleague. Anonymous. Very talented. Also, me.",
+     "choices": [
+      {
+       "label": "Keep one quote. Delete your name. Growth.",
+       "result": "Anselm accepts the edit like a man surrendering a kidney.",
+       "trust": 2,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "I'll quote you at the reception. Promise.",
+       "result": "Anselm glows. He will remember this promise. Forever.",
+       "trust": 7,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 1
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "networking",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "I've been invited to the yacht of a man who 'does imports'. Good for networking, right?",
+     "choices": [
+      {
+       "label": "Absolutely not. Ask Marcel what 'imports' means.",
+       "result": "Anselm stays ashore and looks the yacht up on Chercheur. He goes pale.",
+       "trust": -1,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "Go, but take Ruth Vale as a witness.",
+       "result": "Ruth gets a scoop about canapés. Nothing illegal. Officially.",
+       "trust": 4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Bring me a cocktail umbrella.",
+       "result": "You approved a yacht party. HQ will love the photos.",
+       "trust": 5,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": -3
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "pavel": [
+  {
+   "id": "stapler",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Someone has taken my stapler. The red one. It was issued in 1994.",
+     "choices": [
+      {
+       "label": "Have you asked Maxim?",
+       "next": "b"
+      },
+      {
+       "label": "I'll order you a new one. Today.",
+       "result": "A procurement form is born. It needs three signatures. Pavel is visibly touched.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 1
+       }
+      },
+      {
+       "label": "Pavel, the Minister lands in days.",
+       "result": "'Ministers come and go,' says Pavel. 'The stapler was permanent.'",
+       "trust": -5,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    },
+    "b": {
+     "text": "Maxim made a checklist about the stapler. The stapler is on it. Its location is not.",
+     "choices": [
+      {
+       "label": "Let's declare it a security incident. Formally.",
+       "result": "Pavel files the incident report with deep satisfaction. Morale soars in Administration.",
+       "trust": 8,
+       "pair": 0,
+       "score": 1,
+       "effects": {
+        "morale": 2
+       }
+      },
+      {
+       "label": "Let it go. Like the six ambassadors.",
+       "result": "Pavel stares at you for exactly as long as an ambassador's term.",
+       "trust": -3,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "ambassadors",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Ambassador number three also wanted the VIP lounge 'sorted by Tuesday'. It was a Sunday.",
+     "choices": [
+      {
+       "label": "What did ambassador three do wrong?",
+       "result": "He believed the travel agent. Pavel shares a binder of lessons. Useful, if laminated.",
+       "trust": 5,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "I'm not like the others.",
+       "result": "'They all said that,' Pavel notes. He writes it in a small book.",
+       "trust": -2,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      },
+      {
+       "label": "Help me, and you'll be the one in the memoirs.",
+       "result": "Pavel pretends not to care. He re-orders his binders by importance.",
+       "trust": 4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 1
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "sola": [
+  {
+   "id": "translator",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Three colleagues asked me to 'just translate quickly'. One was a novel. One was a menu. One was a love letter.",
+     "choices": [
+      {
+       "label": "Whose love letter?",
+       "next": "b"
+      },
+      {
+       "label": "From now on, translations go through me, in writing.",
+       "result": "The queue at Sola's desk shrinks to almost bearable.",
+       "trust": 7,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 2
+       }
+      },
+      {
+       "label": "You're local staff. It's in your job description.",
+       "result": "Sola reads you the job description. It is two lines and neither mentions novels.",
+       "trust": -7,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": -2
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "Professional secrecy. But it rhymes 'Bianca' with 'convoy'. Badly.",
+     "choices": [
+      {
+       "label": "I didn't hear that. Take the afternoon off.",
+       "result": "Sola gets an afternoon. The embassy gets a little gossip. Everyone wins.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 1
+       }
+      },
+      {
+       "label": "Translate it beautifully. For morale.",
+       "result": "Sola does a wonderful job. Somewhere, a convoy is very confused.",
+       "trust": 2,
+       "pair": -2,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "cousin",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "My cousin works in the Protocol Office. He could fast-track the landing permit. He wants a visa for his band.",
+     "choices": [
+      {
+       "label": "No favours. We do it by the book.",
+       "result": "Sola nods with genuine respect. The permit will take the scenic route.",
+       "trust": 4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": 2
+       }
+      },
+      {
+       "label": "What kind of band?",
+       "result": "'Ska-fusion with nose flute.' You ask Ines to look at the application. Gently.",
+       "trust": 3,
+       "pair": 0,
+       "score": 2,
+       "effects": {
+        "goodwill": 2
+       }
+      },
+      {
+       "label": "Done. Give him two visas.",
+       "result": "The permit lands overnight. So does an audit question from Capital.",
+       "trust": 6,
+       "pair": 0,
+       "score": 3,
+       "effects": {
+        "confidence": -6
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "development": [
+  {
+   "id": "wells",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "I need the Minister to stand next to a well. Not to pose. To understand.",
+     "choices": [
+      {
+       "label": "What is there to understand about a well?",
+       "next": "b"
+      },
+      {
+       "label": "Fine, but one photo. Lucien will choose the angle.",
+       "result": "Elise agrees through her teeth. Lucien already has a mood board.",
+       "trust": -1,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "The Minister is allergic to dust and nuance.",
+       "result": "Elise drafts a strongly-worded memo to herself.",
+       "trust": -6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": -1
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "That the pump was donated in 2009, broke in 2010, and has been photographed 47 times since.",
+     "choices": [
+      {
+       "label": "Then we repair it before the visit. Quietly.",
+       "result": "A real repair. No banner. Elise almost cries. Your budget almost cries too.",
+       "trust": 9,
+       "pair": 0,
+       "score": 3,
+       "effects": {
+        "goodwill": 2
+       }
+      },
+      {
+       "label": "Then he'll be photograph 48. With a sad face.",
+       "result": "Elise laughs despite herself. Then she stops laughing.",
+       "trust": 1,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sola",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Sola won't speak to me since the 'cultural sensitivity workshop'. In my defence, I organised it for her.",
+     "choices": [
+      {
+       "label": "Did you ask her before you organised it?",
+       "result": "Silence. Elise goes to apologise. It goes better than expected.",
+       "trust": 3,
+       "pair": 6,
+       "score": 1,
+       "effects": {}
+      },
+      {
+       "label": "I'll mediate over lunch at Auntie's.",
+       "result": "Two people who like local food finally share one. Tense, but delicious.",
+       "trust": 4,
+       "pair": 4,
+       "score": 0,
+       "effects": {}
+      },
+      {
+       "label": "Stay out of her way until the visit.",
+       "result": "The feud is frozen, not solved. Like the embassy freezer.",
+       "trust": -1,
+       "pair": -2,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "bianca": [
+  {
+   "id": "convoy",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Convoy plan. Seven cars. Two decoys. One goat, for local credibility.",
+     "choices": [
+      {
+       "label": "Why a goat?",
+       "next": "b"
+      },
+      {
+       "label": "No goat. No decoys. Three cars.",
+       "result": "Bianca salutes with the enthusiasm of a demoted general.",
+       "trust": -4,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "Approved. All of it.",
+       "result": "Seven cars are ordered. The goat is negotiating its own fee.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": -2
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "Rural roadblocks wave through anything with a goat. Field-tested in 2011. Do not ask about 2012.",
+     "choices": [
+      {
+       "label": "Keep the goat. Lose the decoys.",
+       "result": "A sensible compromise. The goat is named 'Attaché'.",
+       "trust": 5,
+       "pair": 0,
+       "score": 2,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "What happened in 2012?",
+       "result": "'Classified,' says Bianca. Her eye twitches. You drop it.",
+       "trust": 2,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "spreadsheets",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Lucien sent me a 'visually optimised' convoy spreadsheet. It has a sunset gradient.",
+     "choices": [
+      {
+       "label": "Tell him I love it. Then use yours.",
+       "result": "Diplomacy at its finest. Both of them think they won.",
+       "trust": 3,
+       "pair": 2,
+       "score": 0,
+       "effects": {}
+      },
+      {
+       "label": "Work together. Bring the gradient AND the logistics.",
+       "result": "Bianca and Lucien produce the first armoured pastel convoy plan in history.",
+       "trust": -1,
+       "pair": 5,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "I'll ban gradients embassy-wide.",
+       "result": "Bianca has never respected you more. Lucien files a grievance.",
+       "trust": 7,
+       "pair": -4,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "ines": [
+  {
+   "id": "queue",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "There is a man in the visa queue who claims to be the Minister's cousin. He has a photo. It's a painting.",
+     "choices": [
+      {
+       "label": "A painting of what?",
+       "next": "b"
+      },
+      {
+       "label": "Fast-track him. Just in case.",
+       "result": "He was not the cousin. He was very grateful though. He tells everyone.",
+       "trust": -3,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": -3
+       }
+      },
+      {
+       "label": "Same queue as everyone. Like democracy.",
+       "result": "Ines quietly updates your file to 'possibly decent'.",
+       "trust": 6,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      }
+     ]
+    },
+    "b": {
+     "text": "The Minister, on a horse, fighting a dragon. Signed 'with love, cousin'.",
+     "choices": [
+      {
+       "label": "Hang it in the lobby. Morale.",
+       "result": "The dragon painting becomes the embassy mascot. Ines denies involvement.",
+       "trust": 4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 3
+       }
+      },
+      {
+       "label": "Refer him to the art attaché. We have none.",
+       "result": "He leaves to find one. The queue moves one place. Celebrations.",
+       "trust": 3,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "consular",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Four hundred people in the queue and Capital wants me at the airport to 'wave'.",
+     "choices": [
+      {
+       "label": "You stay. I'll wave double.",
+       "result": "Ines looks at you like you rescued a kitten from a printer.",
+       "trust": 8,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 1
+       }
+      },
+      {
+       "label": "Waving is diplomacy, Ines.",
+       "result": "Ines waves at you. It is not friendly waving.",
+       "trust": -6,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      },
+      {
+       "label": "Send Maxim to wave. He loves it.",
+       "result": "Maxim waves with such joy it makes the evening news.",
+       "trust": 4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 1
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "press": [
+  {
+   "id": "hashtag",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Hashtag for the visit: #BellaLuxeMoment. Or #MinisterialVibes. Legal hates both.",
+     "choices": [
+      {
+       "label": "What does legal like?",
+       "next": "b"
+      },
+      {
+       "label": "No hashtags. We are a state, not a smoothie.",
+       "result": "Lucien mourns. The legal department sends you flowers.",
+       "trust": -4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": 2
+       }
+      },
+      {
+       "label": "#MinisterialVibes. Go.",
+       "result": "It trends in Ombrazia. Mostly as a joke. Still counts.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 2,
+        "confidence": -2
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "'#OfficialStatementPending'. It has eleven followers. Ten are lawyers.",
+     "choices": [
+      {
+       "label": "Compromise: #BellaluxeListens.",
+       "result": "Even Ruth Vale admits it's decent. Ruth never admits anything.",
+       "trust": 4,
+       "pair": 0,
+       "score": 2,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Let the parrot pick one.",
+       "result": "The parrot picks a word we cannot print. Lucien loves it anyway.",
+       "trust": 3,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 2
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "selfie",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "The Deputy Foreign Minister wants a selfie with the cat. I need your approval. And the cat's.",
+     "choices": [
+      {
+       "label": "The cat is not available for press.",
+       "result": "The cat agrees with you. It always does.",
+       "trust": -2,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      },
+      {
+       "label": "Approved. Brush the cat first.",
+       "result": "The selfie goes viral. Minister Bako is delighted. The cat is unimpressed.",
+       "trust": 5,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 4
+       }
+      },
+      {
+       "label": "Only if the cat gets a diplomatic passport.",
+       "result": "Ines refuses. The cat does not care. Morale skyrockets anyway.",
+       "trust": 3,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 3
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "maxim": [
+  {
+   "id": "checklist",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "I made a checklist of the checklists. Then I lost it. Should I make a checklist to find it?",
+     "choices": [
+      {
+       "label": "What is on the master checklist?",
+       "next": "b"
+      },
+      {
+       "label": "Maxim, breathe. Pick the three that matter.",
+       "result": "Maxim picks three. One is 'lunch'. Fair enough.",
+       "trust": 5,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      },
+      {
+       "label": "Yes. Laminate it.",
+       "result": "Maxim laminates everything, including Pavel's sandwich.",
+       "trust": 4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 1
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "1. Find checklist. 2. Do checklist. 3. Celebrate. 4. Ask Pavel why he is sighing.",
+     "choices": [
+      {
+       "label": "Add: 5. Book the VIP lounge.",
+       "result": "Maxim calls the airport immediately. Inexplicably, it works.",
+       "trust": 4,
+       "pair": 0,
+       "score": 3,
+       "effects": {}
+      },
+      {
+       "label": "Perfect. Don't change a thing.",
+       "result": "Maxim beams. Pavel sighs in a slightly higher key.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "future",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Do you think I'll be an ambassador one day? I already practise waving.",
+     "choices": [
+      {
+       "label": "If you survive this week, you can survive anything.",
+       "result": "Maxim writes this on a post-it and sticks it to his forehead.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 2
+       }
+      },
+      {
+       "label": "Show me your wave.",
+       "result": "It is a magnificent wave. Ministerial, even.",
+       "trust": 4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 1
+       }
+      },
+      {
+       "label": "Ambassadors don't ask. They assume.",
+       "result": "Maxim begins assuming. Things get weird by lunchtime.",
+       "trust": 1,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "ketu": [
+  {
+   "id": "menu",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "The Minister's office sent dietary requirements: 'no garlic, no gluten, no foreign words on the menu'.",
+     "choices": [
+      {
+       "label": "No foreign words?",
+       "next": "b"
+      },
+      {
+       "label": "Cook what you like. I'll handle the office.",
+       "result": "Ketu nods slowly. Somewhere, garlic is being prepared defiantly.",
+       "trust": 7,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": -1
+       }
+      },
+      {
+       "label": "Follow the list exactly.",
+       "result": "The menu says 'Food (hot)'. Ketu has quietly died inside.",
+       "trust": -5,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      }
+     ]
+    },
+    "b": {
+     "text": "So 'bouillabaisse' is out. I suggested 'fish soup with ambition'.",
+     "choices": [
+      {
+       "label": "Perfect. Print it in gold.",
+       "result": "The menu becomes a collector's item. Capital asks for a copy.",
+       "trust": 5,
+       "pair": 0,
+       "score": 1,
+       "effects": {
+        "confidence": 2
+       }
+      },
+      {
+       "label": "Call it 'Soup diplomatique'.",
+       "result": "Ketu points out that is a foreign word. You lose an argument to a chef.",
+       "trust": 2,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "cookies",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "EU coffee morning: you ate exactly 17.6% of the cookies again. Celeste asked me for your recipe for shamelessness.",
+     "choices": [
+      {
+       "label": "It's not shameless, it's budget proportional.",
+       "result": "Ketu bakes a cookie shaped like a pie chart. It's 17.6% chocolate.",
+       "trust": 4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 2
+       }
+      },
+      {
+       "label": "Bake for the next meeting. Win them over.",
+       "result": "Ketu's cookies end the cookie war. For now.",
+       "trust": 3,
+       "pair": 0,
+       "score": 1,
+       "effects": {
+        "goodwill": 2
+       }
+      },
+      {
+       "label": "Make them slightly worse. Strategic.",
+       "result": "Ketu refuses on artistic grounds. You respect that. Kind of.",
+       "trust": -3,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "protocol": [
+  {
+   "id": "stamps",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Your landing permit has two stamps and a coffee ring. The coffee ring is not an official stamp. Yet.",
+     "choices": [
+      {
+       "label": "What would make it official?",
+       "next": "b"
+      },
+      {
+       "label": "I'll redo the form tonight. Personally.",
+       "result": "Ndao inclines his head by exactly two degrees. A historic thaw.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 3,
+        "energy": -5
+       }
+      },
+      {
+       "label": "Surely the Minister's plane can land anyway?",
+       "result": "'Planes can land,' says Ndao. 'Whether they can leave is another form.'",
+       "trust": -6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": -3
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "A committee. Meeting quarterly. Next quarter.",
+     "choices": [
+      {
+       "label": "Then let's honour the coffee as tradition.",
+       "result": "Ndao almost smiles. Almost. The coffee ring is accepted 'exceptionally'.",
+       "trust": 5,
+       "pair": 0,
+       "score": 2,
+       "effects": {
+        "goodwill": 4
+       }
+      },
+      {
+       "label": "Could a gift basket speed things up?",
+       "result": "Ndao looks at you like you suggested a duel. Points lost.",
+       "trust": -8,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": -4
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "seating",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Seating plan for the dinner. Your Minister is next to the Minister of Fisheries. Is that acceptable?",
+     "choices": [
+      {
+       "label": "Is Fisheries an important ministry?",
+       "result": "'In a port city?' says Ndao. You have learned something.",
+       "trust": 4,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "We demand the President's left hand.",
+       "result": "Ndao notes your demand. The President's left hand is apparently already 'politically spoken for'.",
+       "trust": -4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": -2
+       }
+      },
+      {
+       "label": "Perfectly acceptable. Delightful even.",
+       "result": "Ndao records your flexibility. Future favours become slightly more possible.",
+       "trust": 5,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 3
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "eu": [
+  {
+   "id": "cookies",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Before you say it: yes, 17.6%. We counted. Please do not bring a calculator again.",
+     "choices": [
+      {
+       "label": "I would never bring a calculator.",
+       "next": "b"
+      },
+      {
+       "label": "I'll skip the cookies today. As a gesture.",
+       "result": "The room stares. Someone checks if you are ill. EU relations improve.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 2
+       }
+      },
+      {
+       "label": "17.6%, Celeste. It's in the treaties.",
+       "result": "Pained expressions all round. A Nordic colleague sighs in three languages.",
+       "trust": -3,
+       "pair": 0,
+       "score": 1,
+       "effects": {
+        "morale": 1
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "You brought an abacus. That is worse.",
+     "choices": [
+      {
+       "label": "It's a vintage abacus. Cultural heritage.",
+       "result": "Celeste laughs for the first time this year. Minutes record 'levity'.",
+       "trust": 5,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      },
+      {
+       "label": "Fine. I'll take 17%. Rounded down, for unity.",
+       "result": "A historic compromise. Someone proposes a press release.",
+       "trust": 7,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 1
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "statement",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "We need a joint EU statement on the volcano. Twenty-seven drafts. One volcano.",
+     "choices": [
+      {
+       "label": "Use the word 'concerned'. Everyone loves 'concerned'.",
+       "result": "Twenty-six nod. One wants 'deeply concerned'. Progress.",
+       "trust": 4,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "Let Bellaluxe draft. We have a lighthouse.",
+       "result": "Celeste is unsure how lighthouses relate. She lets you try.",
+       "trust": 2,
+       "pair": 0,
+       "score": 3,
+       "effects": {
+        "confidence": 2
+       }
+      },
+      {
+       "label": "Skip it. The volcano won't read it.",
+       "result": "Technically true. Diplomatically catastrophic.",
+       "trust": -6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": -2
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "fixer": [
+  {
+   "id": "lounge",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "The VIP lounge? Fully booked. For you, a 'cancellation' could occur. Unprompted. Mostly.",
+     "choices": [
+      {
+       "label": "What does 'mostly' cost?",
+       "next": "b"
+      },
+      {
+       "label": "No thank you. We'll wait for a real cancellation.",
+       "result": "Marcel shrugs. 'Real' is such an old-fashioned word.",
+       "trust": -2,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": 2
+       }
+      },
+      {
+       "label": "Make it happen.",
+       "result": "A cancellation happens. A sports team is stranded in Lounge B. They chirp about it.",
+       "trust": 6,
+       "pair": 0,
+       "score": 3,
+       "effects": {
+        "confidence": -4,
+        "goodwill": -2
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "A dinner. With a man. Who would like a photo. With your flag.",
+     "choices": [
+      {
+       "label": "Only if it's a very small flag.",
+       "result": "Marcel admires your style. A tiny flag is procured.",
+       "trust": 4,
+       "pair": 0,
+       "score": 2,
+       "effects": {
+        "confidence": -2
+       }
+      },
+      {
+       "label": "No photos. I'll pay the dinner.",
+       "result": "Marcel chooses the Gilded Palm. Your budget weeps into a gold napkin.",
+       "trust": 3,
+       "pair": 0,
+       "score": 2,
+       "effects": {
+        "money": -400
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "rumour",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Rumour says your Minister snores in meetings. I could… adjust that rumour.",
+     "choices": [
+      {
+       "label": "Adjust it how?",
+       "result": "He suggests 'meditates actively'. Lucien wants to trademark it.",
+       "trust": 3,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      },
+      {
+       "label": "Leave rumours alone.",
+       "result": "Marcel looks disappointed in you. Like a dad at a school play.",
+       "trust": -2,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      },
+      {
+       "label": "Start a better rumour about Ombrazia's minister.",
+       "result": "A rumour spreads. It spreads back. Host goodwill dips.",
+       "trust": 5,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": -4
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "journalist": [
+  {
+   "id": "offrecord",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Off the record: is it true your embassy owns a parrot that knows the server password?",
+     "choices": [
+      {
+       "label": "Is that a real question?",
+       "next": "b"
+      },
+      {
+       "label": "No comment. On the record.",
+       "result": "Ruth writes 'no comment' and underlines it twice. Never good.",
+       "trust": -2,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      },
+      {
+       "label": "Off the record: yes. And it's 'Cracker123'.",
+       "result": "Ruth laughs and promises not to print it. You change the password anyway.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 1
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "Ruth: 'Everything is a real question in this bar.'",
+     "choices": [
+      {
+       "label": "Then the real answer is: ask the cat.",
+       "result": "The cat ignores Ruth. Ruth respects the cat. You gain a friend.",
+       "trust": 5,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      },
+      {
+       "label": "I'll trade you a better story.",
+       "result": "You hint at the 17.6% cookie scandal. Ruth is delighted.",
+       "trust": 4,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 1,
+        "confidence": -1
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "drinks",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "You're buying, right? Correspondents' rules: the diplomat pays, the journalist remembers.",
+     "choices": [
+      {
+       "label": "Of course. Something local.",
+       "result": "Ruth approves of your choice. She'll remember it fondly. Mostly.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "money": -60
+       }
+      },
+      {
+       "label": "Let's split. Like an EU budget.",
+       "result": "Ruth calculates 17.6% of the bill. She has heard of you.",
+       "trust": 2,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      },
+      {
+       "label": "Diplomats never pay. We submit claims.",
+       "result": "Ruth writes that down. It will be paragraph three.",
+       "trust": -5,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": -2
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "golf": [
+  {
+   "id": "caddie",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "My caddie says your Minister needs a meeting. My caddie also says I'm a scratch golfer. Both are lies.",
+     "choices": [
+      {
+       "label": "How bad is your handicap, Minister?",
+       "next": "b"
+      },
+      {
+       "label": "Let me carry your bag. Diplomatically.",
+       "result": "Bako hands you the bag. It weighs as much as a protocol file.",
+       "trust": 6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 3,
+        "energy": -8
+       }
+      },
+      {
+       "label": "Thirty minutes, Minister. Tuesday?",
+       "result": "Bako chuckles. 'Nobody has Tuesday. Have a Thursday.'",
+       "trust": 2,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      }
+     ]
+    },
+    "b": {
+     "text": "'Handicap is a colonial concept,' says Bako. 'I count only good shots.'",
+     "choices": [
+      {
+       "label": "Then you're unbeaten. Like our friendship.",
+       "result": "Bako roars with laughter and agrees to a working breakfast.",
+       "trust": 7,
+       "pair": 0,
+       "score": 2,
+       "effects": {
+        "goodwill": 4
+       }
+      },
+      {
+       "label": "Thirty-six, then.",
+       "result": "Accurate. Painfully. Bako forgets your name for the next nine holes.",
+       "trust": -6,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": -3
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "bet",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "A friendly bet: if I sink this putt, your Minister visits my constituency. If I miss, you buy dinner.",
+     "choices": [
+      {
+       "label": "Deal.",
+       "result": "He sinks it. Somehow the green tilted. The Minister's programme gains a fish market.",
+       "trust": 5,
+       "pair": 0,
+       "score": 1,
+       "effects": {
+        "goodwill": 4
+       }
+      },
+      {
+       "label": "I'd rather lose on purpose.",
+       "result": "Bako is insulted you'd fake it. And delighted you'd try.",
+       "trust": 3,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "goodwill": 2,
+        "money": -150
+       }
+      },
+      {
+       "label": "I don't gamble with programmes.",
+       "result": "Bako calls you 'refreshingly boring'. It is not a compliment.",
+       "trust": -3,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "confidence": 2
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "un": [
+  {
+   "id": "logo",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Six agencies. One programme. Each wants its logo bigger than the others.",
+     "choices": [
+      {
+       "label": "How big are we talking?",
+       "next": "b"
+      },
+      {
+       "label": "Put them in a circle. Nobody's on top.",
+       "result": "The logos form a circle. It looks like a pizza. Everyone is equally unhappy. Success.",
+       "trust": 6,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "Bellaluxe's logo goes in the middle. We pay.",
+       "result": "Dr Chen notes your generosity and your ego in the same memo.",
+       "trust": -3,
+       "pair": 0,
+       "score": 1,
+       "effects": {
+        "confidence": 2
+       }
+      }
+     ]
+    },
+    "b": {
+     "text": "One agency's logo is now larger than the project itself.",
+     "choices": [
+      {
+       "label": "Then let's build a bigger project.",
+       "result": "Dr Chen laughs. Then writes it down. Then thinks about it seriously.",
+       "trust": 7,
+       "pair": 0,
+       "score": 3,
+       "effects": {}
+      },
+      {
+       "label": "Make the logos fridge magnets.",
+       "result": "The fridge magnets are a hit. The programme still needs funding.",
+       "trust": 3,
+       "pair": 0,
+       "score": 0,
+       "effects": {
+        "morale": 1
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "acronyms",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Your Minister's office asked what 'UNDAF-PPCC-WGSD' stands for. Honestly, so do I.",
+     "choices": [
+      {
+       "label": "Let's make up a new acronym. Shorter.",
+       "result": "You invent 'HELP'. Three agencies already claim it.",
+       "trust": 4,
+       "pair": 0,
+       "score": 1,
+       "effects": {}
+      },
+      {
+       "label": "Translate it into normal words for him.",
+       "result": "'Some people meeting about other meetings.' Dr Chen approves.",
+       "trust": 5,
+       "pair": 0,
+       "score": 2,
+       "effects": {}
+      },
+      {
+       "label": "Tell him it's classified.",
+       "result": "It is not. Dr Chen is unimpressed.",
+       "trust": -3,
+       "pair": 0,
+       "score": 0,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
+ ]
+}
