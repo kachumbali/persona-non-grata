@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Monitor, Printer, DoorOpen } from "lucide-react";
 import office from "@/assets/scenes/embassy-office.jpg";
 import bar from "@/assets/scenes/quiet-amendment.png";
@@ -19,6 +19,7 @@ import { GoodwillDashboard } from "./GoodwillDashboard";
 import { Mailbox } from "./Mailbox";
 import { PlanningDesk } from "./PlanningDesk";
 import { Portrait } from "./Portrait";
+import euRepresentation from "../data/eu-representation.json";
 
 type Win = null | "pc" | "fax" | "appointment";
 const PC_TABS = [["mail", "Courrielleur 98"], ["tasks", "Staff & diary"], ["watch", "Mission Watch"]] as const;
@@ -26,9 +27,12 @@ const PC_TABS = [["mail", "Courrielleur 98"], ["tasks", "Staff & diary"], ["watc
 export function PlaceScene({ onLeave }: { onLeave: () => void }) {
   const g = useGame();
   const [win, setWin] = useState<Win>(null);
+  const rosterRef = useRef<HTMLElement>(null);
   const [tab, setTab] = useState<typeof PC_TABS[number][0]>("mail");
   const place = CAMPAIGN.locations.find((l) => l.id === g.location) ?? CAMPAIGN.locations[0];
   const atEmbassy = g.location === "embassy";
+  const atEu = g.location === "eu";
+  const representation = euRepresentation as Record<string, string>;
   const people = CAMPAIGN.characters.filter((c) => c.location === g.location);
   const spot = SPOTS[g.location] ?? { x: 50, y: 50 };
   return (
@@ -49,16 +53,24 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
           <button type="button" className="scene-hotspot" style={{ left: "69%", top: "38%", width: "10%", height: "16%" }} onClick={() => setWin("fax")} aria-label="Read the secure fax"><span className="map-label"><Printer className="inline size-4" /> Secure fax</span></button>
         </>}
         {!atEmbassy && <button type="button" className="scene-hotspot scene-appointment" style={{ left: "2%", top: "5%", width: "13%", height: "12%" }} onClick={() => setWin("appointment")} aria-label={`Plan an appointment: ${place?.work}`}><span className="map-label">Appointments</span></button>}
-        {(g.location === "bar" || g.location === "ministry" || g.location === "pressclub" || g.location === "un" || g.location === "eu") && <LocationLead />}
+        {atEu && <button type="button" className="scene-hotspot" style={{ left: "2%", top: "24%", width: "16%", height: "12%" }} onClick={() => rosterRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })} aria-label="Show EU representatives"><span className="map-label">People ({people.length})</span></button>}
+        {(g.location === "embassy" || g.location === "bar" || g.location === "ministry" || g.location === "pressclub" || g.location === "un" || g.location === "eu") && <LocationLead />}
         <button type="button" className="scene-hotspot scene-town" style={{ right: "1%", top: "8%", width: "8%", height: "60%" }} onClick={onLeave} aria-label="Leave to the town map"><span className="map-label"><DoorOpen className="inline size-4" /> Town</span></button>
-        <div className="scene-people">
+        {!atEu && <div className="scene-people">
           {people.map((c) => (
             <button key={c.id} type="button" className="scene-person" data-active={g.selectedNpc === c.id} onClick={() => g.selectNpc(c.id)} aria-label={`Talk to ${c.name}`}>
               <Portrait face={c.face} size={56} /><span className="map-label">{c.name.split(" ")[0]}</span>
             </button>
           ))}
-        </div>
+        </div>}
       </div>
+      {atEu && <section ref={rosterRef} className="border-b border-border p-3" aria-label="EU representatives present">
+        <h3 className="font-bold">At the EU Delegation</h3>
+        <p className="mb-2 text-xs text-muted-foreground">Not every EU mission is resident here. Representation of an absent mission applies only where explicitly stated.</p>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{people.map((person) => <button key={person.id} type="button" className="flex items-center gap-2 border border-border bg-muted p-2 text-left hover:bg-accent focus-visible:outline-2 focus-visible:outline-accent" aria-pressed={g.selectedNpc === person.id} onClick={() => g.selectNpc(person.id)}>
+          <Portrait face={person.face} size={40} /><span><strong className="block text-sm">{person.name}</strong><span className="block text-xs">{representation[person.id] ?? person.role}</span></span>
+        </button>)}</div>
+      </section>}
       <p className="px-3 py-2 text-sm">{place?.description} {atEmbassy ? "Click your PC, the fax, or a colleague." : "Click someone to talk, or follow a lead if one is available. Your BlockBerry keeps mail within reach (bottom right)."}</p>
       <Conversation />
 

@@ -29,7 +29,7 @@ export function Conversation() {
   const choose = (choice: TalkChoice) => {
     if (choice.next) { setNode(choice.next); return; }
     const { meters, energy, cash } = splitEffects(choice.effects);
-    const ok = g.queue({ id: `conversation-${npc.id}-${topic?.id ?? "general"}`, kind: "dialogue", timeCost: 1, cashCost: cash || undefined, source: `Conversation with ${npc.name}${topic ? ` · ${topic.id}` : ""}`, text: choice.result ?? "Conversation completed.", effects: meters, worker: npc.id, overload, dialogueTopic: topic ? `${npc.id}:${topic.id}` : undefined, flag: choice.flag, trust: choice.trust, pair: choice.pair, score: choice.score, composure: 3, energy: energy || undefined });
+    const ok = g.queue({ id: `conversation-${npc.id}-${topic?.id ?? "general"}`, kind: "dialogue", timeCost: 1, cashCost: cash || undefined, source: `Conversation with ${npc.name}${topic ? ` · ${topic.id}` : ""}`, text: choice.result ?? "Conversation completed.", effects: meters, worker: npc.id, overload, dialogueTopic: topic ? `${npc.id}:${topic.id}` : undefined, flag: choice.flag, trust: choice.trust, pair: choice.pair, pairTarget: choice.pairTarget, score: choice.score, composure: 3, energy: energy || undefined });
     setNotice(ok ? `${choice.result ?? "Agreed."} (Takes effect at the end of this block.)` : useGame.getState().planError);
   };
   return (

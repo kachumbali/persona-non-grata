@@ -1,6 +1,6 @@
 import DIALOGUES from "./data/dialogues.json";
 
-export interface TalkChoice { label: string; next?: string; result?: string; trust?: number; pair?: number; score?: number; flag?: string; effects?: Record<string, number> }
+export interface TalkChoice { label: string; next?: string; result?: string; trust?: number; pair?: number; pairTarget?: string; score?: number; flag?: string; effects?: Record<string, number> }
 export interface TalkNode { text: string; choices: TalkChoice[] }
 export interface Topic { id: string; start: string; nodes: Record<string, TalkNode> }
 

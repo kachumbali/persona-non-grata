@@ -10,7 +10,7 @@ Extend the JSON-authored campaign with openings, meaningful choices, choice-depe
 
 ## Diplomatic calendar
 
-Include other countries' national-day receptions, EU27 coordination meetings, UN and other multilateral meetings, and invitations from diplomats at other missions. Distinguish the host, venue, timing, purpose and likely commitment. Where appropriate, offer attendance, representation by a colleague or a diplomatic decline; show time and money costs and the colleague's existing commitments. Outcomes can affect trust, goodwill, access, information, follow-up invitations and the visit. Not every meeting needs to become a major quest.
+Include other countries' national-day receptions, EU coordination meetings, UN and other multilateral meetings, and invitations from diplomats at other missions. Distinguish the host, venue, timing, purpose and likely commitment. Where appropriate, offer attendance, representation by a colleague or a diplomatic decline; show time and money costs and the colleague's existing commitments. Outcomes can affect trust, goodwill, access, information, follow-up invitations and the visit. Not every meeting needs to become a major quest.
 
 ## Initial story candidates
 
@@ -18,14 +18,14 @@ Include other countries' national-day receptions, EU27 coordination meetings, UN
 2. **The protocol incident** — Foreign Ministry: a seating dispute becomes a question of national dignity, putting host goodwill and Capital's expectations at odds.
 3. **Off the record** — Press Correspondents Club: a journalist offers information in exchange for a briefing; what the player shares shapes later coverage.
 4. **The development project** — Embassy and UN House: Elise wants the Minister to visit a project, while partners disagree over credit.
-5. **Diplomatic calendar** — National-day receptions and EU27, UN and other multilateral meetings introduce other missions and create recurring diplomatic relationships; a declined or delegated event can still lead to a follow-up.
+5. **Diplomatic calendar** — National-day receptions and EU, UN and other multilateral meetings introduce other missions and create recurring diplomatic relationships; a declined or delegated event can still lead to a follow-up.
 
 Begin with two- or three-scene stories and at least two distinct outcomes. Keep the chapter finishable when side stories are ignored, missed or failed.
 
 ## Location roles
 
 - **Foreign Ministry:** protocol, host-country relationships and visit arrangements. Add a protocol desk and an actionable lead.
-- **EU Delegation:** EU27 coordination, coalitions and other missions' priorities. Add a coordination board and meeting opportunities.
+- **EU Delegation:** EU coordination, coalitions and other missions' priorities. Add a coordination board and meeting opportunities.
 - **Quiet Amendment:** informal contacts, rumours and risky shortcuts. Add a bar or private table connected to the supplier story.
 - **Press Correspondents Club:** information, briefings and media consequences. Add a press board and journalist encounters.
 - **Precedence Golf Club:** informal access to hard-to-reach contacts. Show the two-block commitment and likely purpose before booking.

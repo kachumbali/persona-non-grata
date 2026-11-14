@@ -12,6 +12,7 @@ import { PlaceScene } from "./PlaceScene";
 import { BlackBerry } from "./BlackBerry";
 import { Interruption } from "./Interruption";
 import { DiplomaticRecord } from "./DiplomaticRecord";
+import { StoryRecord } from "./StoryRecord";
 
 export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const g = useGame();
@@ -33,6 +34,7 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
           {g.goodwillHistory.filter((entry) => payoffSources.has(entry.source)).map((entry, i) => <p key={i} className="mt-4 font-serif">{entry.text}</p>)}
           {g.goodwillHistory.at(-1) && !payoffSources.has(g.goodwillHistory.at(-1)!.source) && <p className="mt-3 text-sm">Last outcome: {g.goodwillHistory.at(-1)?.text}</p>}
           <DiplomaticRecord outcomes={g.storyOutcomes} />
+          <StoryRecord outcomes={g.storyOutcomes} completed={g.completedEvents} day={g.day} />
           <Button className="mt-8" onClick={g.reset}>Request a new posting</Button>
         </div>
       </main>

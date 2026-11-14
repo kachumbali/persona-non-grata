@@ -78,6 +78,14 @@ describe("Chapter 1 time and money", () => {
   it("caps each colleague at 2 DP even with displacement", () => {
     expect(validatePlan([action("a", { worker: "pavel", timeCost: 0, overload: true }), action("b", { kind: "dialogue", worker: "pavel", overload: true })], 0, initialEconomy())).toContain("only 2 DP");
   });
+  it("keeps an already completed journey when a replacement activity is proposed", () => {
+    expect(useGame.getState().move("ministry")).toBe(true);
+    const travel = useGame.getState().pending[0]!;
+    expect(useGame.getState().queue(action("too-long", { timeCost: 4 }), true)).toBe(false);
+    expect(useGame.getState().pending).toEqual([travel]);
+    expect(useGame.getState().queue(action("fits", { timeCost: 3 }), true)).toBe(true);
+    expect(useGame.getState().pending.map((p) => p.id)).toEqual([travel.id, "fits"]);
+  });
   it("retains the old plan when an atomic replacement is unaffordable", () => {
     useGame.getState().queue(action("original"));
     expect(useGame.getState().queue(action("replacement", { cashCost: 4501, timeCost: 2 }), true)).toBe(false);

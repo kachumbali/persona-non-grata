@@ -74,6 +74,23 @@ describe("diplomatic invitations", () => {
     const fresh = useGame.persist.getOptions().merge!(undefined, current);
     expect(fresh.colleagues["amb-valdoria"]?.trust).toBe(50);
   });
+  it("restores a queued invitation and resolves it once after reloading the save", async () => {
+    const choice = invitation.choices.attend;
+    expect(useGame.getState().queue({ id: `invitation-${invitation.id}`, kind: "event", source: invitation.title, text: choice.text,
+      effects: choice.effects, timeCost: choice.timeCost, cashCost: choice.cashCost, eventId: invitation.id, eventChoice: "attend",
+      contact: invitation.contact, contactTrust: choice.contactTrust })).toBe(true);
+    const saved = localStorage.getItem("persona-non-grata-save");
+    expect(saved).not.toBeNull();
+    useGame.getState().start({ title: "Dr", name: "Other", face: 1, bio: "", traits: [] });
+    localStorage.setItem("persona-non-grata-save", saved!);
+    await useGame.persist.rehydrate();
+    expect(useGame.getState().character?.name).toBe("Tester");
+    expect(useGame.getState().pending.some((item) => item.eventId === invitation.id)).toBe(true);
+    useGame.getState().advance();
+    expect(useGame.getState().storyOutcomes[invitation.id]).toEqual({ status: "chosen", choice: "attend" });
+    expect(useGame.getState().report.filter((entry) => entry.text === choice.text)).toHaveLength(1);
+    expect(useGame.getState().report.some((entry) => entry.text === invitation.onMiss.text)).toBe(false);
+  });
   it("rejects a conflicting colleague assignment without replacing the existing plan", () => {
     const s = useGame.getState();
     const task = { id: "work", kind: "work" as const, source: "Existing assignment", text: "Done", effects: {}, worker: "pavel", timeCost: 0, overload: true };

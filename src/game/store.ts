@@ -60,7 +60,7 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     const s = get();
     if (!s.character || s.ending) return false;
     if (replacePlayer && s.pending.some((p) => p.remainingBlocks === 1)) { set({ planError: "The second half of your golf round is already committed." }); return false; }
-    const old = s.pending.filter((p) => !(decision.kind === "social" && p.kind === "social") && !(replacePlayer && playerTime(p) > 0));
+    const old = s.pending.filter((p) => !(decision.kind === "social" && p.kind === "social") && !(replacePlayer && playerTime(p) > 0 && !p.id.startsWith("travel-")));
     const plan = [...old, decision];
     const error = decision.special === "supplement" && s.economy.supplementUsed ? "Capital has already granted your supplement." : validatePlan(plan, s.block, s.economy, playerCapacity(s.character, s.energy, s.composure, s.alcohol).total);
     if (error) { set({ planError: error }); return false; }
@@ -138,6 +138,10 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
         if (c) { c.trust = clamp(c.trust + (socialRepeat && (p.trust ?? 0) > 0 ? 1 : p.trust ?? 0)); c.fatigue = clamp(c.fatigue + (p.kind === "work" ? 18 : p.kind === "social" ? -12 : 0)); }
         if (p.kind === "social") storyFlags.push(`social:${p.worker}`);
       }
+      if (p.kind === "work" && p.task && p.partner && p.partner !== p.worker) {
+        const teammate = colleagues[p.partner];
+        if (teammate) teammate.fatigue = clamp(teammate.fatigue + 18);
+      }
       if (p.contact && colleagues[p.contact]) {
         const contact = colleagues[p.contact];
         if (contact) {
@@ -151,8 +155,9 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
         }
       }
       if (p.pair && p.worker) {
-        const other = p.partner ?? (p.worker === "pavel" ? "anselm" : "sola");
-        relationships[pairKey(p.worker, other)] = clamp((relationships[pairKey(p.worker, other)] ?? 50) + p.pair);
+        const legacyTargets: Record<string, string> = { "sola:translator": "bianca", "development:sola": "sola", "bianca:spreadsheets": "press" };
+        const other = p.pairTarget ?? (p.dialogueTopic ? legacyTargets[p.dialogueTopic] : p.partner);
+        if (other && other !== p.worker && colleagues[other]) relationships[pairKey(p.worker, other)] = clamp((relationships[pairKey(p.worker, other)] ?? 50) + p.pair);
       }
       if (p.emailId) handled[p.emailId] = p.emailAction ?? "reply";
       if (p.eventId && !completedEvents.includes(p.eventId)) {
@@ -241,12 +246,16 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
       events: s.block === 3 ? dailyEvents(day, s.seed, completedEvents, storyOutcomes) : s.events, selectedNpc: null });
   },
 }), {
-  name: "persona-non-grata-save", version: 4,
+  name: "persona-non-grata-save", version: 5,
   migrate: (saved) => {
     const old = saved as Partial<SavedGame>;
     const economy = old.economy ?? { ...initialEconomy(), funds: Math.max(START_RING_FENCE, Math.round(((old.meters as (Meters & { budget?: number }) | undefined)?.budget ?? 60) / 60 * 10000)) };
     const block = old.block ?? 0;
-    const pending = old.pending ?? [];
+    // Keep stable IDs and the exact obligations; only refresh the former fictional EU name in pending text.
+    const pending = (old.pending ?? []).map((item) => item.eventId?.startsWith("asteria-") ? {
+      ...item, source: item.source.replaceAll("Asterian", "Danish").replaceAll("Asteria", "Denmark"),
+      text: item.text.replaceAll("Asterian", "Danish").replaceAll("Asteria", "Denmark"),
+    } : item);
     const storyOutcomes = { ...old.storyOutcomes };
     if (!storyOutcomes["supplier"] && old.completedEvents?.includes("supplier")) {
       if (old.storyFlags?.includes("supplier-check")) storyOutcomes["supplier"] = { status: "chosen", choice: "check" };

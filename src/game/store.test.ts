@@ -60,7 +60,7 @@ describe("scheduled game rounds", () => {
       eventId: event.id, eventChoice: selected.id, flag: selected.flag, timeCost: 1, location: event.location })).toBe(true);
     g.advance();
     expect(useGame.getState().storyFlags).toContain(flag);
-    expect(locationStories(2, useGame.getState().completedEvents, useGame.getState().storyOutcomes)).toEqual([]);
+    expect(locationStories(2, useGame.getState().completedEvents, useGame.getState().storyOutcomes).some((event) => event.id === lead)).toBe(false);
     useGame.setState({ day: 14, block: 3, minute: BLOCKS[3].time, events: [], visit: { clearance: true, lounge: true, programme: true, security: true } });
     useGame.getState().advance();
     expect(useGame.getState().goodwillHistory.some((entry) => entry.source === "Reception procurement")).toBe(true);

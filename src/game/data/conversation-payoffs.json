@@ -143,7 +143,7 @@
   {
     "flag": "asteria-compromise",
     "source": "EU coordination",
-    "text": "At the Minister's visit, the EU27 statement includes the compromise you and Niko drafted. The footnote survives in a separate annex.",
+    "text": "At the Minister's visit, the EU statement includes the compromise you and Niko drafted. The footnote survives in a separate annex.",
     "effects": {
       "confidence": 2,
       "goodwill": 1
@@ -152,7 +152,7 @@
   {
     "flag": "asteria-credit",
     "source": "EU coordination",
-    "text": "The EU27 statement credits several missions. Niko ensures Bellaluxe's contribution is acknowledged, immediately after a footnote about collective authorship.",
+    "text": "The EU statement credits several missions. Niko ensures Bellaluxe's contribution is acknowledged, immediately after a footnote about collective authorship.",
     "effects": {
       "confidence": -1,
       "goodwill": -1

@@ -1,0 +1,17 @@
+# EU cast and meeting: implementation review
+
+## Findings and decisions
+
+- **Setting:** The game is roughly 2006, with period technology and the explicitly requested satirical use of "EU Delegation", "Team Europe" and the Multiannual Financial Framework. Player-facing text says "EU". Bellaluxe is a fictional EU member; no exhaustive membership count or specific real-world replacement is asserted in the game. This keeps the initial local cast coherent without deciding the final full roster.
+- **Delegation head:** Develop existing Celeste Norren into the head rather than replacing her with a new person. Her stable ID `eu` preserves relationship and story history; Elena's useful mix of coordination skills, credit-seeking and frustration informs future writing.
+- **Existing fictional EU representative:** Niko is now Denmark's ambassador, not an ambassador of fictional Asteria at an EU meeting. Existing `amb-asteria` and `asteria-*` identifiers remain stable for saves. Version-4 pending invitation text is updated during migration without changing its costs, time, outcomes or contact; historical log entries remain historical records.
+- **Absent-state representation:** Malta's Tanya has explicit permission to present the positions of Cyprus and Luxembourg at the budget-share meeting only. The roster must not imply a general right to speak for either mission elsewhere.
+- **Crowded locations:** EU characters use a selectable roster with roles and representation notes, rather than overlapping portraits. Other locations are unchanged for now.
+- **Story scheduling:** EU coordination is a local venue lead, not a summit or a mandatory chapter objective. Three mutually exclusive initial choices produce recorded effects and distinct follow-ups available from the following day; scheduling may delay an episode. The lead selector must expose other active EU leads instead of letting the new meeting hide them.
+- **Remaining scope:** The first slice does not yet implement the clean-port credit dispute, the wider host-country invitation hierarchy, or additional casts at every location. A full human playthrough is still needed to assess humour and pacing.
+
+## Clean-port implementation and city cast
+
+The optional clean-port lead is available at the EU Delegation from day 2. Celeste asks for member-state labour and funding while the announcement gives the Delegation prominence. Bellaluxe can accept, insist on national branding, negotiate shared credit, or decline. The three contributions commit Elise for two staff DP and respectively ƒ200, ƒ100 or ƒ150 of discretionary funds; all choices take one player DP. The player must explicitly authorise any displacement of her development and partner-coordination duties, and existing capacity and ring-fence checks apply. The decline option commits no staff or funds. Outcomes affect Celeste and, where appropriate, Ombrazian port officer Mira Sene; each choice unlocks its own optional ministry follow-up from day 3. Timing and existing story priorities may affect when the player encounters it.
+
+Mira is a new ministry contact with an operational interest in port crews and collection. Sofia da Costa, a Portuguese maritime liaison, is at the bar; Idra Venn, a UN logistics officer, is at UN House. Each has two authored conversations. These are the first additional city contacts, not a complete expansion of every location. The chapter mission remains independent of the clean-port side story; a full human playthrough should assess pacing and humour.

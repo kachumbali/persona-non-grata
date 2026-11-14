@@ -116,7 +116,7 @@ export function initialColleagues(): Record<string, ColleagueState> {
 export interface PendingDecision {
   id: string; source: string; text: string; effects: Effects;
   kind: "work" | "email" | "social" | "dialogue" | "event";
-  worker?: string | undefined; partner?: string | undefined; task?: VisitTask | undefined; trust?: number | undefined; pair?: number | undefined;
+  worker?: string | undefined; partner?: string | undefined; pairTarget?: string | undefined; task?: VisitTask | undefined; trust?: number | undefined; pair?: number | undefined;
   dialogueTopic?: string | undefined; drinks?: boolean | undefined; contact?: string | undefined; contactTrust?: number | undefined; score?: number | undefined; energy?: number | undefined; composure?: number | undefined; flag?: string | undefined;
   timeCost?: number | undefined; cashCost?: number | undefined; guestTime?: number | undefined;
   overload?: boolean | undefined; service?: "express" | "driver" | undefined; location?: string | undefined;
@@ -125,7 +125,8 @@ export interface PendingDecision {
 }
 export interface StoryChoice {
   id: string; label: string; next?: string; effects?: Effects; result?: string;
-  trust?: number; pair?: number; score?: number; flag?: string; replace?: boolean; worker?: string;
+  trust?: number; pair?: number; pairTarget?: string; score?: number; flag?: string; replace?: boolean; worker?: string; contact?: string; contactTrust?: number;
+  staff?: string; cashCost?: number;
 }
 export type StoryOutcome = { status: "chosen" | "missed"; choice?: string };
 export type StoryEvent = {
@@ -172,6 +173,9 @@ export function delegationSucceeds(worker: string, task: VisitTask, colleagues: 
   const c = CAMPAIGN.characters.find((x) => x.id === worker);
   const state = colleagues[worker];
   if (!c || !state || block === 3 || c.location !== "embassy" || state.trust < 25 || state.fatigue >= 80) return false;
-  if (partner && ((pairs[pairKey(worker, partner)] ?? 50) < 25 || (colleagues[partner]?.trust ?? 0) < 25)) return false;
-  return c.skills.includes(task);
+  if (!partner) return c.skills.includes(task);
+  const teammate = CAMPAIGN.characters.find((person) => person.id === partner && person.location === "embassy");
+  const teammateState = colleagues[partner];
+  if (partner === worker || !teammate || !teammateState || teammateState.trust < 25 || teammateState.fatigue >= 80 || (pairs[pairKey(worker, partner)] ?? 50) < 25) return false;
+  return c.skills.includes(task) || teammate.skills.includes(task);
 }

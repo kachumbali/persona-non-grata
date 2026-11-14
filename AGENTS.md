@@ -41,3 +41,4 @@ use the editor.
 - The town map (CityMap) is the game's home screen; travel goes through the store's move(), which queues a DP-costing decision so the time rules stay in one place.
 - Place screens (PlaceScene) use painted 2D backgrounds with percentage hotspots; the 3D EmbassyScene is no longer mounted. Capital mail goes to the secure fax (embassy only) by sender; other mail to the PC or the always-docked BlackBerry, which also owns round status and End block.
 - Every posting has two concurrent story arcs: a chapter-long mission and daily side stories or side quests. Preserve both when extending the game; see GAME_DESIGN.md for the design rule.
+- The diplomatic setting is around 2006: call the group the EU, use real country names only for EU member states, and keep the host and other third countries fictional and non-obvious. Preserve the user's deliberately anachronistic "Team Europe" satire; see GAME_DESIGN.md and EU_DIPLOMATIC_CAST_PLAN.md.

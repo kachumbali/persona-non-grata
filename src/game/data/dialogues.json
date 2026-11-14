@@ -240,6 +240,7 @@
       },
       {
        "label": "Translate it beautifully. For morale.",
+       "pairTarget": "bianca",
        "result": "Sola does a wonderful job. Somewhere, a convoy is very confused.",
        "trust": 2,
        "pair": -2,
@@ -358,6 +359,7 @@
      "choices": [
       {
        "label": "Did you ask her before you organised it?",
+       "pairTarget": "sola",
        "result": "Silence. Elise goes to apologise. It goes better than expected.",
        "trust": 3,
        "pair": 6,
@@ -366,6 +368,7 @@
       },
       {
        "label": "I'll mediate over lunch at Auntie's.",
+       "pairTarget": "sola",
        "result": "Two people who like local food finally share one. Tense, but delicious.",
        "trust": 4,
        "pair": 4,
@@ -374,6 +377,7 @@
       },
       {
        "label": "Stay out of her way until the visit.",
+       "pairTarget": "sola",
        "result": "The feud is frozen, not solved. Like the embassy freezer.",
        "trust": -1,
        "pair": -2,
@@ -451,6 +455,7 @@
      "choices": [
       {
        "label": "Tell him I love it. Then use yours.",
+       "pairTarget": "press",
        "result": "Diplomacy at its finest. Both of them think they won.",
        "trust": 3,
        "pair": 2,
@@ -459,6 +464,7 @@
       },
       {
        "label": "Work together. Bring the gradient AND the logistics.",
+       "pairTarget": "press",
        "result": "Bianca and Lucien produce the first armoured pastel convoy plan in history.",
        "trust": -1,
        "pair": 5,
@@ -467,6 +473,7 @@
       },
       {
        "label": "I'll ban gradients embassy-wide.",
+       "pairTarget": "press",
        "result": "Bianca has never respected you more. Lucien files a grievance.",
        "trust": 7,
        "pair": -4,
@@ -838,7 +845,7 @@
    "start": "a",
    "nodes": {
     "a": {
-     "text": "EU coffee morning: you ate exactly 17.6% of the cookies again. Celeste asked me for your recipe for shamelessness.",
+     "text": "At the EU coffee morning, you ate exactly 17.6% of the cookies again. Yes, Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework. Celeste says that doesn't make it a biscuit entitlement.",
      "choices": [
       {
        "label": "It's not shameless, it's budget proportional.",
@@ -981,7 +988,7 @@
    "start": "a",
    "nodes": {
     "a": {
-     "text": "Before you say it: yes, 17.6%. We counted. Please do not bring a calculator again.",
+     "text": "Yes, Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework. That does not entitle you to 17.6% of the biscuits, speaking time and meeting chairs. Please do not bring a calculator again.",
      "choices": [
       {
        "label": "I would never bring a calculator.",
@@ -998,7 +1005,7 @@
        }
       },
       {
-       "label": "17.6%, Celeste. It's in the treaties.",
+       "label": "17.6%, Celeste. We contribute that share of the EU budget.",
        "result": "Pained expressions all round. A Nordic colleague sighs in three languages.",
        "trust": -3,
        "pair": 0,
@@ -1039,11 +1046,11 @@
    "start": "a",
    "nodes": {
     "a": {
-     "text": "We need a joint EU statement on the volcano. Twenty-seven drafts. One volcano.",
+     "text": "We need a joint EU statement on the volcano. Six drafts. One volcano.",
      "choices": [
       {
        "label": "Use the word 'concerned'. Everyone loves 'concerned'.",
-       "result": "Twenty-six nod. One wants 'deeply concerned'. Progress.",
+       "result": "Four nod. One wants 'deeply concerned'. Progress.",
        "trust": 4,
        "pair": 0,
        "score": 2,
@@ -1069,6 +1076,18 @@
         "goodwill": -2
        }
       }
+     ]
+    }
+   }
+  },
+  {
+   "id": "team-europe", "start": "a", "nodes": {
+    "a": {
+     "text": "I have a Team Europe idea for the port. Member states can provide the staff and funding; the Delegation will provide the logo and a very persuasive press release.",
+     "choices": [
+      { "label": "Propose shared credit before anyone commits resources.", "result": "Celeste agrees to discuss the credits before asking for staff. She calls the discussion a Team Europe success.", "trust": 3, "effects": { "confidence": 1 } },
+      { "label": "Ask how the host wants the project to work.", "result": "Celeste pauses, then adds the host's planning office to the proposed consultation list.", "trust": 2, "effects": { "goodwill": 1 } },
+      { "label": "Demand 17.6% of the press release for Bellaluxe.", "result": "Celeste measures the margins and offers you 17.6% of the footnotes.", "trust": -2, "effects": { "confidence": 1 } }
      ]
     }
    }
@@ -1219,7 +1238,7 @@
       },
       {
        "label": "I'll trade you a better story.",
-       "result": "You hint at the 17.6% cookie scandal. Ruth is delighted.",
+       "result": "You tell Ruth how Bellaluxe's 17.6% contribution to the EU's Multiannual Financial Framework became a claim on 17.6% of the biscuits. She is delighted.",
        "trust": 4,
        "pair": 0,
        "score": 0,
@@ -1251,7 +1270,7 @@
       },
       {
        "label": "Let's split. Like an EU budget.",
-       "result": "Ruth calculates 17.6% of the bill. She has heard of you.",
+       "result": "Ruth calculates 17.6% of the bill: Bellaluxe's contribution to the EU's Multiannual Financial Framework. She has heard of you.",
        "trust": 2,
        "pair": 0,
        "score": 1,
@@ -1479,13 +1498,56 @@
   ] } } }
  ],
  "amb-asteria": [
-  { "id": "consensus", "start": "a", "nodes": { "a": { "text": "Asteria has agreed to the EU27 consensus, subject to a footnote longer than the consensus.", "choices": [
+  { "id": "consensus", "start": "a", "nodes": { "a": { "text": "Denmark has agreed to the EU consensus, subject to a footnote longer than the consensus.", "choices": [
     { "label": "Help shorten the footnote together.", "result": "Niko removes two semicolons and calls the result historic.", "trust": 4, "effects": { "confidence": 1 } },
     { "label": "Propose a footnote to the footnote.", "result": "Niko reaches for a second page. Nobody gets lunch.", "trust": -2, "effects": { "sanity": -1 } }
   ] } } },
-  { "id": "coffee", "start": "a", "nodes": { "a": { "text": "At the last EU27 meeting, Niko counted the coffee cups to establish whether everyone had been consulted.", "choices": [
+  { "id": "coffee", "start": "a", "nodes": { "a": { "text": "At the last EU meeting, Niko counted the coffee cups to establish whether everyone had been consulted.", "choices": [
     { "label": "Offer to bring an extra pot next time.", "result": "Niko records your offer under practical cooperation.", "trust": 3, "effects": { "morale": 1 } },
     { "label": "Demand an audit of the teaspoons.", "result": "Niko opens a spreadsheet and the room falls silent.", "trust": -1, "effects": { "sanity": -1 } }
   ] } } }
- ]
+ ],
+ "eu-germany": [
+  { "id": "annex", "start": "a", "nodes": { "a": { "text": "I have reduced the meeting agenda to one page. The annex explaining the reduction is twelve pages.", "choices": [
+    { "label": "Read the annex and help trim it.", "result": "Klaus removes three repeated definitions and asks if this is considered radical.", "trust": 4, "effects": { "confidence": 1 } },
+    { "label": "Request an annex about the annex.", "result": "Klaus produces a fresh binder. Lunch is postponed indefinitely.", "trust": -2, "effects": { "sanity": -1 } }
+  ] } } },
+  { "id": "novel", "start": "a", "nodes": { "a": { "text": "Klaus closes a document marked 'Annex IV'. A sentence about a windswept duke remains visible.", "choices": [
+    { "label": "Offer to read the manuscript.", "result": "Klaus asks for honest notes and a strict embargo until publication.", "trust": 3, "effects": { "morale": 1 } },
+    { "label": "Request a synopsis for Capital.", "result": "Klaus insists the duke is not authorised to be quoted.", "trust": -1, "effects": {} }
+  ] } } }
+ ],
+ "eu-france": [
+  { "id": "translation", "start": "a", "nodes": { "a": { "text": "The French draft calls the meeting cordial. Henri says the English version has made it sound affectionate.", "choices": [
+    { "label": "Help find wording both versions can live with.", "result": "Henri accepts 'constructive' in both languages and checks the punctuation twice.", "trust": 3, "effects": { "goodwill": 1 } },
+    { "label": "Keep affectionate. It might improve the atmosphere.", "result": "Henri promises to correct the atmosphere in the next translation.", "trust": -2, "effects": {} }
+  ] } } },
+  { "id": "printer", "start": "a", "nodes": { "a": { "text": "Henri is holding a screwdriver beside a printer that has refused three perfectly diplomatic requests.", "choices": [
+    { "label": "Hold the paper tray while he repairs it.", "result": "The printer works. Henri asks you not to mention his technical skills to the whole delegation.", "trust": 4, "effects": { "morale": 1 } },
+    { "label": "Issue the printer a formal protest.", "result": "Henri files the protest under 'mechanical correspondence'.", "trust": 1, "effects": {} }
+  ] } } }
+ ],
+ "eu-malta": [
+  { "id": "two-briefs", "start": "a", "nodes": { "a": { "text": "Malta's brief is in the blue folder. Cyprus and Luxembourg authorised me to present their positions at the budget-share meeting; their briefs are in green and yellow.", "choices": [
+    { "label": "Ask what each mission actually wants.", "result": "Tanya explains all three positions separately and thanks you for not calling them a single brief.", "trust": 4, "effects": { "goodwill": 1 } },
+    { "label": "Suggest combining the folders to save time.", "result": "Tanya hands you a third folder labelled 'permission'. It is empty.", "trust": -2, "effects": {} }
+  ] } } },
+  { "id": "drums", "start": "a", "nodes": { "a": { "text": "Tanya taps an intricate rhythm on the meeting table. It is the most decisive thing the table has heard all morning.", "choices": [
+    { "label": "Ask about the rhythm.", "result": "Tanya describes her old band and offers to make the next reception considerably louder.", "trust": 3, "effects": { "morale": 1 } },
+    { "label": "Ask if the rhythm can shorten the speeches.", "result": "Tanya suggests a drum solo after the first seven minutes of each intervention.", "trust": 2, "effects": {} }
+  ] } } }
+ ],
+ "eu-sweden": [
+  { "id": "agenda", "start": "a", "nodes": { "a": { "text": "Lars has marked every absent mission on the agenda. There are more pencil notes than agenda items.", "choices": [
+    { "label": "Check who authorised a representative.", "result": "Lars marks the authorised proxies and leaves the others blank until they respond.", "trust": 4, "effects": { "goodwill": 1 } },
+    { "label": "Declare everyone present by consensus.", "result": "Lars asks whether the empty chairs agreed to that wording.", "trust": -2, "effects": {} }
+  ] } } },
+  { "id": "cards", "start": "a", "nodes": { "a": { "text": "Lars says the evening card game is strictly informal. The seating chart suggests otherwise.", "choices": [
+    { "label": "Ask to join without bringing briefing notes.", "result": "Lars approves, then produces a very formal deck of cards.", "trust": 3, "effects": { "sanity": 1 } },
+    { "label": "Ask whether the cards use qualified majority voting.", "result": "Lars deals you a rulebook and the oldest deck in the building.", "trust": 2, "effects": {} }
+  ] } } }
+ ],
+ "port-officer": [{"id": "routes", "start": "a", "nodes": {"a": {"text": "Mira unfolds a port map marked with collection routes. Donors keep asking where to stand for the photograph.", "choices": [{"label": "Ask which route needs attention.", "result": "Mira identifies a blocked collection point and thanks you for asking.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Ask where the logo will be visible.", "result": "Mira points to the bin currently blocking the route.", "trust": -1, "effects": {}}]}}}, {"id": "crews", "start": "a", "nodes": {"a": {"text": "Mira says port crews have practical ideas but rarely appear in project announcements.", "choices": [{"label": "Ask to hear the crews’ suggestions.", "result": "Mira offers to arrange a practical briefing.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Suggest a larger ceremonial ribbon.", "result": "Mira measures the ribbon against the blocked drain.", "trust": -1, "effects": {}}]}}}],
+ "bar-insurer": [{"id": "insurance", "start": "a", "nodes": {"a": {"text": "Sofia knows which insurers will cover port cargo, but needs reliable collection records before recommending a contract.", "choices": [{"label": "Ask what records would help.", "result": "Sofia outlines a useful manifest and introduces you to a port contact.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Promise perfect records without checking.", "result": "Sofia asks whether your promise is insured.", "trust": -1, "effects": {}}]}}}, {"id": "music", "start": "a", "nodes": {"a": {"text": "Sofia organises a Portuguese reception and is deciding between a maritime insurer and a musician for the last seat.", "choices": [{"label": "Suggest inviting both for different parts of the evening.", "result": "Sofia finds room in the programme for a conversation and a song.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Reserve the seat for your own delegation.", "result": "Sofia notes your request in a very small notebook.", "trust": -1, "effects": {}}]}}}],
+ "un-coordinator": [{"id": "customs", "start": "a", "nodes": {"a": {"text": "Idra is tracking donated bins stuck in customs. Each agency has produced a separate spreadsheet.", "choices": [{"label": "Compare the shipment numbers together.", "result": "Idra spots a duplicate entry and finds the correct customs file.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Suggest another inter-agency spreadsheet.", "result": "Idra adds your suggestion to the spreadsheet of spreadsheets.", "trust": -1, "effects": {}}]}}}, {"id": "handover", "start": "a", "nodes": {"a": {"text": "Idra wants local crews involved before donors announce another programme.", "choices": [{"label": "Ask who will maintain the equipment.", "result": "Idra shares the maintenance plan and makes a note to include the crews.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Ask when the launch photograph is.", "result": "Idra checks the camera budget, then points to the empty maintenance line.", "trust": -1, "effects": {}}]}}}]
 }

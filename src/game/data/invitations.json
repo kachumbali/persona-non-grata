@@ -1,13 +1,13 @@
 [
   {
     "id": "eu27-coordination",
-    "title": "EU27 coordination meeting",
+    "title": "EU coordination meeting",
     "host": "EU Delegation · Celeste Norren",
     "location": "eu",
     "announceDay": 1,
     "day": 3,
     "block": 1,
-    "description": "The EU27 are seeking a common position on the Minister's visit. The biscuits are divided according to a methodology nobody will explain.",
+    "description": "The EU are seeking a common position on the Minister's visit. The biscuits are divided according to a methodology nobody will explain.",
     "choices": {
       "attend": {
         "label": "Attend and argue Bellaluxe's case",
@@ -31,7 +31,7 @@
       },
       "decline": {
         "label": "Decline with apologies",
-        "text": "The EU27 proceed without you. Someone reallocates the biscuits.",
+        "text": "The EU proceed without you. Someone reallocates the biscuits.",
         "effects": {
           "confidence": -2
         },
@@ -40,7 +40,7 @@
       }
     },
     "onMiss": {
-      "text": "Nobody from Bellaluxe attends the EU27 meeting. The delegation notices.",
+      "text": "Nobody from Bellaluxe attends the EU meeting. The delegation notices.",
       "effects": {
         "confidence": -3
       }
@@ -150,8 +150,8 @@
   },
   {
     "id": "asteria-coffee",
-    "title": "Asterian coordination coffee",
-    "host": "Ambassador Niko Arden · Asteria",
+    "title": "Danish coordination coffee",
+    "host": "Ambassador Niko Arden · Denmark",
     "contact": "amb-asteria",
     "location": "eu",
     "announceDay": 5,
@@ -191,7 +191,7 @@
       }
     },
     "onMiss": {
-      "text": "Niko notices that Bellaluxe neither attends nor replies to the Asterian coffee invitation.",
+      "text": "Niko notices that Bellaluxe neither attends nor replies to the Danish coffee invitation.",
       "effects": {
         "confidence": -2
       },
@@ -251,17 +251,17 @@
   },
   {
     "id": "asteria-national-day",
-    "title": "Asterian national-day reception",
-    "host": "Ambassador Niko Arden · Asteria",
+    "title": "Danish national-day reception",
+    "host": "Ambassador Niko Arden · Denmark",
     "contact": "amb-asteria",
     "location": "eu",
     "announceDay": 10,
     "day": 12,
     "block": 2,
-    "description": "Niko welcomes the diplomatic corps for Asteria's national day. The reception is being held at the EU Delegation while the Asterian residence is repainted.",
+    "description": "Niko welcomes the diplomatic corps for Denmark's national day. The reception is being held at the EU Delegation while the Danish residence is repainted.",
     "choices": {
       "attend": {
-        "label": "Attend and congratulate Asteria",
+        "label": "Attend and congratulate Denmark",
         "text": "You congratulate Niko, who insists the paint samples are not part of the national colours.",
         "effects": {
           "goodwill": 2,

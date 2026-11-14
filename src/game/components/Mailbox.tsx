@@ -46,6 +46,7 @@ export function Mailbox({ channel }: { channel: "mail" | "fax" }) {
                   <span className="self-center text-xs text-muted-foreground">{scheduled(open.id) ? "Reply scheduled for this round" : "Unanswered instructions resolve at round end"}</span>
                 </div>
               )}
+              {g.planError && <p role="alert" className="mt-2 text-sm text-destructive">{g.planError}</p>}
             </div>
           </article>
         ) : <p className="italic text-muted-foreground">Nothing to read.</p>}
