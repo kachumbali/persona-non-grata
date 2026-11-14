@@ -263,5 +263,12 @@
 .hud-phone { position: relative; display: grid; place-items: center; width: 36px; height: 40px; background: var(--foreground); color: var(--accent); border: 3px solid var(--muted-foreground); border-radius: 8px; cursor: pointer; }
 .hud-phone .bb-led { position: absolute; top: 3px; right: 3px; }
 .bb-popup { position: fixed; right: 16px; bottom: 92px; z-index: 31; width: min(380px, calc(100vw - 32px)); background: var(--foreground); border: 5px solid var(--muted-foreground); border-radius: 22px; padding: 10px; box-shadow: var(--shadow-window); }
+.bb-popup[data-mail="true"] { width: min(640px, calc(100vw - 32px)); }
+.bb-popup[data-mail="true"] .bb-screen { height: min(560px, calc(100dvh - 190px)); max-height: none; padding: 12px; }
+.phone-mailbox { min-width: 0; }
+.bb-screen .phone-mailbox .inbox-list { max-height: none; }
+.phone-mail-reader { box-shadow: none; padding: 16px 4px; }
+.phone-mail-reader pre { font-family: var(--font-sans); font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.phone-mail-reader h3 { overflow-wrap: anywhere; }
 .retro-game { padding-bottom: 100px; }
 .interrupt-badge { bottom: 96px; }
