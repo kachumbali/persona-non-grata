@@ -569,7 +569,7 @@
           "flag": "supplier-check",
           "trust": 4,
           "effects": {},
-          "result": "Sola begins tracing the supplier. A follow-up will arrive tomorrow."
+          "result": "Sola traces the supplier. Marcel at the Quiet Amendment can explain the connection starting Day 2."
         },
         {
           "id": "accept",
@@ -578,21 +578,23 @@
           "effects": {
             "budget": 3
           },
-          "result": "The bargain is accepted. Its strings will become apparent later."
+          "result": "The bargain is accepted. Marcel at the Quiet Amendment has questions about its strings starting Day 2."
         }
       ]
     },
     {
       "id": "supplier-followup",
       "title": "The generous supplier · part II",
-      "npc": "sola",
-      "text": "The company belongs to a protocol official’s cousin. A correspondent has started asking about the reception.",
+      "npc": "fixer",
+      "location": "bar",
+      "text": "Marcel slides Sola's findings across the table. The supplier belongs to a protocol official’s cousin. A correspondent is asking about the reception. 'I know a different caterer,' he adds. 'And, regrettably, the cousin.'",
       "minDay": 2,
       "requires": "supplier",
       "requiresChoice": { "eventId": "supplier", "choiceId": "check" },
       "choices": [
         {
           "id": "transparent",
+          "flag": "supplier-transparent",
           "label": "Disclose the connection and change supplier",
           "effects": {
             "budget": -3,
@@ -603,6 +605,7 @@
         },
         {
           "id": "bury",
+          "flag": "supplier-bury",
           "label": "Keep the deal quiet",
           "effects": {
             "confidence": -5,
@@ -615,13 +618,51 @@
     {
       "id": "supplier-accepted-followup",
       "title": "The generous supplier · invoice enclosed",
-      "npc": "sola",
+      "npc": "fixer",
+      "location": "bar",
       "text": "The caterer's generous price was for plates. The invoice charges separately for food, chairs and the privilege of sitting on them. A protocol official's cousin owns the company.",
       "minDay": 2,
       "requiresChoice": { "eventId": "supplier", "choiceId": "accept" },
       "choices": [
-        { "id": "disclose", "label": "Tell Capital and renegotiate in public", "effects": { "confidence": 1, "budget": -2 }, "trust": 2, "result": "Capital admires your transparency after asking why the chairs cost extra." },
-        { "id": "pay", "label": "Pay quietly and keep the reception", "effects": { "budget": -4, "confidence": -3 }, "result": "The chairs arrive. So does an invoice for sitting on them twice." }
+        { "id": "disclose", "flag": "supplier-renegotiate", "label": "Tell Capital and renegotiate in public", "effects": { "confidence": 1, "budget": -2 }, "trust": 2, "result": "Capital admires your transparency after asking why the chairs cost extra." },
+        { "id": "pay", "flag": "supplier-pay", "label": "Pay quietly and keep the reception", "effects": { "budget": -4, "confidence": -3 }, "result": "The chairs arrive. So does an invoice for sitting on them twice." }
+      ]
+    },
+    {
+      "id": "seating-complaint",
+      "title": "A chair of national importance",
+      "npc": "protocol",
+      "text": "Director Ndao calls: the draft visit plan seats Ombrazia's Deputy Minister behind a decorative fern. The fern is not accredited. How will you respond?",
+      "minDay": 3,
+      "choices": [
+        { "id": "apologise", "label": "Apologise and ask Protocol to help revise the plan", "effects": { "goodwill": 2 }, "trust": 2, "result": "Ndao accepts the apology and invites you to review the seating plan at the Foreign Ministry from Day 4." },
+        { "id": "capital", "label": "Defend Capital's seating instructions", "effects": { "confidence": 2, "goodwill": -2 }, "trust": -2, "result": "Ndao requests your presence at the Foreign Ministry from Day 4, with the seating plan and a larger fern." }
+      ]
+    },
+    {
+      "id": "seating-apology-followup",
+      "title": "The seating plan · a delicate compromise",
+      "npc": "protocol",
+      "location": "ministry",
+      "text": "Ndao lays out two cards and the disputed fern. A compromise would move the Deputy Minister forward, though Capital's delegation would lose its preferred photograph.",
+      "minDay": 4,
+      "requiresChoice": { "eventId": "seating-complaint", "choiceId": "apologise" },
+      "choices": [
+        { "id": "compromise", "flag": "protocol-compromise", "label": "Move the Deputy Minister forward and explain to Capital", "effects": { "goodwill": 4, "confidence": -1 }, "trust": 3, "result": "Ndao approves the revised seating plan. Capital asks whether the fern can be photoshopped back in." },
+        { "id": "unchanged", "flag": "protocol-unchanged", "label": "Keep Capital's original plan", "effects": { "goodwill": -3, "confidence": 2 }, "trust": -3, "result": "Ndao restores the original plan, carefully placing the fern where it can witness the consequences." }
+      ]
+    },
+    {
+      "id": "seating-capital-followup",
+      "title": "The seating plan · instructions versus chairs",
+      "npc": "protocol",
+      "location": "ministry",
+      "text": "Ndao has compared Capital's seating instructions with the host's protocol rules. The documents disagree on precedence, furniture and the definition of a doorway.",
+      "minDay": 4,
+      "requiresChoice": { "eventId": "seating-complaint", "choiceId": "capital" },
+      "choices": [
+        { "id": "compromise", "flag": "protocol-compromise", "label": "Accept Ndao's compromise and brief Capital", "effects": { "goodwill": 3, "confidence": -1 }, "trust": 2, "result": "A compromise emerges. Both ministries describe it as their original idea." },
+        { "id": "unchanged", "flag": "protocol-unchanged", "label": "Insist on Capital's instructions", "effects": { "goodwill": -4, "confidence": 2 }, "trust": -3, "result": "Ndao signs the plan with a pen that seems to be under considerable pressure." }
       ]
     },
     {

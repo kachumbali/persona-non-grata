@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Monitor, Printer, DoorOpen } from "lucide-react";
 import office from "@/assets/scenes/embassy-office.jpg";
+import bar from "@/assets/scenes/quiet-amendment.png";
+import ministry from "@/assets/scenes/foreign-ministry.png";
 import city from "@/assets/port-hesperia.jpg";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -8,6 +10,7 @@ import { CAMPAIGN } from "../rules";
 import { useGame } from "../store";
 import { SPOTS } from "./CityMap";
 import { Conversation } from "./Conversation";
+import { LocationLead } from "./LocationLead";
 import { GoodwillDashboard } from "./GoodwillDashboard";
 import { Mailbox } from "./Mailbox";
 import { PlanningDesk } from "./PlanningDesk";
@@ -30,11 +33,14 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
       <div className="place-scene">
         {atEmbassy
           ? <img src={office} width={1536} height={768} alt="Painted embassy office" className="block aspect-[2/1] w-full object-cover" />
+          : g.location === "bar" ? <img src={bar} width={1536} height={768} alt="The Quiet Amendment, a discreet port-city bar" className="block aspect-[2/1] w-full object-cover" />
+          : g.location === "ministry" ? <img src={ministry} width={1536} height={768} alt="The Foreign Ministry's protocol office" className="block aspect-[2/1] w-full object-cover" />
           : <div role="img" aria-label={`Painted view of ${place?.name}`} className="aspect-[2/1] w-full" style={{ backgroundImage: `url(${city})`, backgroundSize: "300%", backgroundPosition: `${spot.x}% ${spot.y}%` }} />}
         {atEmbassy && <>
           <button type="button" className="scene-hotspot" style={{ left: "3%", top: "42%", width: "12%", height: "22%" }} onClick={() => setWin("pc")} aria-label="Use your PC"><span className="map-label"><Monitor className="inline size-4" /> PC</span></button>
           <button type="button" className="scene-hotspot" style={{ left: "69%", top: "38%", width: "10%", height: "16%" }} onClick={() => setWin("fax")} aria-label="Read the secure fax"><span className="map-label"><Printer className="inline size-4" /> Secure fax</span></button>
         </>}
+        {(g.location === "bar" || g.location === "ministry") && <LocationLead />}
         <button type="button" className="scene-hotspot" style={{ right: "1%", top: "8%", width: "8%", height: "60%" }} onClick={onLeave} aria-label="Leave to the town map"><span className="map-label"><DoorOpen className="inline size-4" /> Town</span></button>
         <div className="scene-people">
           {people.map((c) => (
@@ -44,7 +50,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
           ))}
         </div>
       </div>
-      <p className="px-3 py-2 text-sm">{place?.description} {atEmbassy ? "Click your PC, the fax, or a colleague." : "Click someone to talk. Your BlockBerry keeps mail within reach (bottom right)."}</p>
+      <p className="px-3 py-2 text-sm">{place?.description} {atEmbassy ? "Click your PC, the fax, or a colleague." : "Click someone to talk, or follow a lead if one is available. Your BlockBerry keeps mail within reach (bottom right)."}</p>
       <Conversation />
 
       <Dialog open={win === "pc"} onOpenChange={(o) => !o && setWin(null)}>

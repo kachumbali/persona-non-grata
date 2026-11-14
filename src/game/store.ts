@@ -156,7 +156,9 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     }
     // Unaddressed episodes expire at the end of their scheduled block.
     if (!ending) {
-      const event = s.events[s.block];
+      const scheduled = s.events[s.block];
+      // Older saves may still contain a follow-up that is now a location lead.
+      const event = scheduled && !(CAMPAIGN.events as StoryEvent[]).find((entry) => entry.id === scheduled.id)?.location ? scheduled : undefined;
       if (event && !s.pending.some((p) => p.eventId === event.id)) {
         completedEvents.push(event.id);
         storyOutcomes[event.id] = { status: "missed" };

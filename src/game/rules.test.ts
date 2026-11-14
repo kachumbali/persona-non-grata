@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyEffects, BLOCKS, CAMPAIGN, dailyEvents, expiredStories, goodwillRisk, hospitalityCost, pickEnding, pointsLeft, recordGoodwillChange, socialTrust, START_METERS, visitReady } from "./rules";
+import { applyEffects, BLOCKS, CAMPAIGN, dailyEvents, expiredStories, goodwillRisk, locationStories, hospitalityCost, pickEnding, pointsLeft, recordGoodwillChange, socialTrust, START_METERS, visitReady } from "./rules";
 
 const ready = { clearance: true, lounge: true, programme: true, security: true };
 
@@ -81,10 +81,11 @@ describe("game rules", () => {
   });
   it("selects the supplier follow-up for the actual choice, not a missed event", () => {
     const completed = ["supplier"];
-    const checked = dailyEvents(2, 23, completed, { supplier: { status: "chosen", choice: "check" } });
-    const accepted = dailyEvents(2, 23, completed, { supplier: { status: "chosen", choice: "accept" } });
-    const missed = dailyEvents(2, 23, completed, { supplier: { status: "missed" } });
-    expect(checked.some((e) => e.id === "supplier-followup")).toBe(true);
+    const checked = locationStories(2, completed, { supplier: { status: "chosen", choice: "check" } });
+    const accepted = locationStories(2, completed, { supplier: { status: "chosen", choice: "accept" } });
+    const missed = locationStories(2, completed, { supplier: { status: "missed" } });
+    expect(checked.some((e) => e.id === "supplier-followup" && e.location === "bar")).toBe(true);
+    expect(dailyEvents(2, 23, completed, { supplier: { status: "chosen", choice: "check" } }).some((e) => e.id === "supplier-followup")).toBe(false);
     expect(accepted.some((e) => e.id === "supplier-accepted-followup")).toBe(true);
     expect(missed.some((e) => e.id.startsWith("supplier-"))).toBe(false);
   });

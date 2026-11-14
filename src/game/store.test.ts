@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { BLOCKS, CAMPAIGN, EMAILS, START_METERS } from "./rules";
+import { BLOCKS, CAMPAIGN, EMAILS, locationStories, START_METERS } from "./rules";
 import { inboxFor, useGame } from "./store";
 const character = { title: "Mr", name: "Test", face: 0, bio: "", traits: [] };
 beforeEach(() => useGame.getState().start(character));
@@ -44,6 +44,53 @@ describe("scheduled game rounds", () => {
     expect(migrated.storyOutcomes["supplier"]).toEqual({ status: "chosen", choice: "accept" });
     expect(migrated.events).toEqual(current.events);
     expect(migrated.day).toBe(3);
+  });
+  it.each([
+    { initial: "check", lead: "supplier-followup", choice: "transparent", flag: "supplier-transparent" },
+    { initial: "accept", lead: "supplier-accepted-followup", choice: "pay", flag: "supplier-pay" },
+  ])("resolves the supplier $initial branch at the bar and pays it off at the visit", ({ initial, lead, choice, flag }) => {
+    const allMail = Object.fromEntries(EMAILS.map((email) => [email.id, "reply"]));
+    useGame.setState({ day: 2, block: 0, minute: BLOCKS[0].time, events: [], handled: allMail,
+      completedEvents: ["supplier"], storyOutcomes: { supplier: { status: "chosen", choice: initial } } });
+    expect(useGame.getState().move("bar")).toBe(true);
+    const g = useGame.getState();
+    const event = locationStories(g.day, g.completedEvents, g.storyOutcomes).find((item) => item.id === lead)!;
+    const selected = event.choices.find((item) => item.id === choice)!;
+    expect(g.queue({ id: `event-${event.id}`, kind: "event", source: event.title, text: selected.result!, effects: selected.effects ?? {},
+      eventId: event.id, eventChoice: selected.id, flag: selected.flag, timeCost: 1, location: event.location })).toBe(true);
+    g.advance();
+    expect(useGame.getState().storyFlags).toContain(flag);
+    expect(locationStories(2, useGame.getState().completedEvents, useGame.getState().storyOutcomes)).toEqual([]);
+    useGame.setState({ day: 14, block: 3, minute: BLOCKS[3].time, events: [], visit: { clearance: true, lounge: true, programme: true, security: true } });
+    useGame.getState().advance();
+    expect(useGame.getState().goodwillHistory.some((entry) => entry.source === "Reception procurement")).toBe(true);
+  });
+  it.each([
+    { initial: "apologise", lead: "seating-apology-followup", choice: "compromise", flag: "protocol-compromise", delta: 2 },
+    { initial: "capital", lead: "seating-capital-followup", choice: "unchanged", flag: "protocol-unchanged", delta: -3 },
+  ])("makes the $initial protocol choice matter at the ministry and visit", ({ initial, lead, choice, flag, delta }) => {
+    useGame.setState({ day: 4, block: 0, minute: BLOCKS[0].time, events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      completedEvents: ["seating-complaint"], storyOutcomes: { "seating-complaint": { status: "chosen", choice: initial } } });
+    expect(useGame.getState().move("ministry")).toBe(true);
+    const g = useGame.getState();
+    const event = locationStories(g.day, g.completedEvents, g.storyOutcomes).find((item) => item.id === lead)!;
+    const selected = event.choices.find((item) => item.id === choice)!;
+    expect(g.queue({ id: `event-${lead}`, kind: "event", source: event.title, text: selected.result!, effects: selected.effects ?? {},
+      eventId: event.id, eventChoice: selected.id, flag: selected.flag, timeCost: 1, location: event.location })).toBe(true);
+    g.advance();
+    expect(useGame.getState().storyFlags).toContain(flag);
+    useGame.setState({ day: 14, block: 3, minute: BLOCKS[3].time, events: [], visit: { clearance: true, lounge: true, programme: true, security: true } });
+    useGame.getState().advance();
+    const payoff = useGame.getState().goodwillHistory.find((entry) => entry.source === "Protocol seating");
+    expect(payoff!.after.goodwill - payoff!.before.goodwill).toBe(delta);
+  });
+  it("does not auto-expire a location lead still present in a pre-update day's schedule", () => {
+    const lead = CAMPAIGN.events.find((event) => event.id === "supplier-followup")!;
+    useGame.setState({ events: [lead], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      completedEvents: ["supplier"], storyOutcomes: { supplier: { status: "chosen", choice: "check" } } });
+    useGame.getState().advance();
+    expect(useGame.getState().storyOutcomes[lead.id]).toBeUndefined();
+    expect(useGame.getState().completedEvents).not.toContain(lead.id);
   });
   it("records conversation completion only when resolved and pays off the menu at the visit", () => {
     useGame.setState({ events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });

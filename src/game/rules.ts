@@ -129,7 +129,7 @@ export interface StoryChoice {
 }
 export type StoryOutcome = { status: "chosen" | "missed"; choice?: string };
 export type StoryEvent = {
-  id: string; title: string; npc: string; text: string; minDay: number; expiresDay?: number;
+  id: string; title: string; npc: string; text: string; minDay: number; expiresDay?: number; location?: string;
   requires?: string; requiresChoice?: { eventId: string; choiceId: string }; onMiss?: { text: string; effects: Effects }; choices: StoryChoice[];
 };
 /** A prerequisite must have succeeded; missed episodes cannot unlock continuations. */
@@ -141,10 +141,14 @@ export function storyPrerequisitesMet(event: StoryEvent, completed: string[], ou
 export function expiredStories(events: StoryEvent[], day: number, completed: string[], outcomes: Record<string, StoryOutcome>): StoryEvent[] {
   return events.filter((event) => event.expiresDay !== undefined && event.expiresDay < day && !completed.includes(event.id) && storyPrerequisitesMet(event, completed, outcomes));
 }
+/** Location leads remain available until resolved or expired. */
+export function locationStories(day: number, completed: string[], outcomes: Record<string, StoryOutcome>, events: StoryEvent[] = CAMPAIGN.events as StoryEvent[]): StoryEvent[] {
+  return events.filter((event) => !!event.location && event.minDay <= day && (event.expiresDay === undefined || day <= event.expiresDay) && !completed.includes(event.id) && storyPrerequisitesMet(event, completed, outcomes));
+}
 /** Select one to three available events; a day can be quiet when all stories are complete. */
 export function dailyEvents(day: number, seed: number, completed: string[], outcomes: Record<string, StoryOutcome> = {}): StoryEvent[] {
   const available = (CAMPAIGN.events as StoryEvent[]).filter((event) =>
-    event.minDay <= day && (event.expiresDay === undefined || day <= event.expiresDay) &&
+    !event.location && event.minDay <= day && (event.expiresDay === undefined || day <= event.expiresDay) &&
     storyPrerequisitesMet(event, completed, outcomes) && !completed.includes(event.id),
   );
   const hash = (id: string) => [...id].reduce((n, char) => ((n * 31) ^ char.charCodeAt(0)) >>> 0, (seed + day * 7919) >>> 0);

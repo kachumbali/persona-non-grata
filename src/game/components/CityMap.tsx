@@ -3,7 +3,7 @@ import { MapPin } from "lucide-react";
 import city from "@/assets/port-hesperia.jpg";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { BLOCKS, CAMPAIGN } from "../rules";
+import { BLOCKS, CAMPAIGN, locationStories } from "../rules";
 import { playerTime, playerCapacity } from "../economy";
 import { visibleInvitations } from "../calendar";
 import { TRAVEL_DP, useGame } from "../store";
@@ -20,6 +20,7 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
   const [error, setError] = useState("");
   const left = playerCapacity(g.character, g.energy, g.composure, g.alcohol).total - g.pending.reduce((n, p) => n + playerTime(p), 0);
   const invitations = visibleInvitations(g.day, g.block, g.storyOutcomes);
+  const leads = locationStories(g.day, g.completedEvents, g.storyOutcomes);
   const dest = CAMPAIGN.locations.find((l) => l.id === target);
   const travel = () => {
     if (!target) return;
@@ -33,12 +34,13 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
         {CAMPAIGN.locations.map((l) => {
           const spot = SPOTS[l.id]; if (!spot) return null;
           const here = g.location === l.id;
+          const lead = leads.find((item) => item.location === l.id);
           const invitation = invitations.find((item) => item.location === l.id);
           return (
             <button key={l.id} type="button" onClick={() => (here ? onEnter() : (setError(""), setTarget(l.id)))}
-              className="map-spot" data-here={here} style={{ left: `${spot.x}%`, top: `${spot.y}%` }} aria-label={`${here ? `Enter ${l.name} (you are here)` : `Travel to ${l.name}`}${invitation ? ` · invitation Day ${invitation.day} ${BLOCKS[invitation.block]?.name}` : ""}`}>
+              className="map-spot" data-here={here} style={{ left: `${spot.x}%`, top: `${spot.y}%` }} aria-label={`${here ? `Enter ${l.name} (you are here)` : `Travel to ${l.name}`}${invitation ? ` · invitation Day ${invitation.day} ${BLOCKS[invitation.block]?.name}` : ""}${lead ? ` · story lead: ${lead.title}` : ""}`}>
               {here && <MapPin className="map-pin size-9" aria-hidden />}
-              <span className="map-label">{l.name}{here ? " · YOU ARE HERE" : ""}{invitation ? ` · invitation D${invitation.day}` : ""}</span>
+              <span className="map-label">{l.name}{here ? " · YOU ARE HERE" : ""}{invitation ? ` · invitation D${invitation.day}` : ""}{lead ? " · lead" : ""}</span>
             </button>
           );
         })}

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { INVITATIONS, visibleInvitations, type Invitation, type InvitationResponse } from "../calendar";
 import { capacityLedger, money, playerCapacity, staffDuty } from "../economy";
-import { BLOCKS, CAMPAIGN } from "../rules";
+import { BLOCKS, CAMPAIGN, locationStories, type StoryEvent } from "../rules";
 import { useGame } from "../store";
 
 export function DiplomaticCalendar() {
@@ -10,7 +10,9 @@ export function DiplomaticCalendar() {
   const [worker, setWorker] = useState("");
   const [overload, setOverload] = useState(false);
   const [notice, setNotice] = useState("");
-  const currentStory = g.events[g.block];
+  const scheduled = g.events[g.block];
+  const currentStory = scheduled && !(CAMPAIGN.events as StoryEvent[]).find((event) => event.id === scheduled.id)?.location ? scheduled : undefined;
+  const leads = locationStories(g.day, g.completedEvents, g.storyOutcomes);
   const invitations = visibleInvitations(g.day, g.block, g.storyOutcomes);
   const colleague = capacityLedger(g.pending, g.block, playerCapacity(g.character, g.energy, g.composure, g.alcohol).total).find((row) => row.id === worker);
   const choose = (invitation: Invitation, response: InvitationResponse) => {
@@ -29,6 +31,7 @@ export function DiplomaticCalendar() {
   };
   return <div className="space-y-3 text-sm" aria-label="Diplomatic calendar">
     {currentStory && !g.completedEvents.includes(currentStory.id) && <section className="border border-border p-2" aria-label="Current side story"><h3 className="font-bold">Current side story</h3><p>{currentStory.title}{g.pending.some((p) => p.eventId === currentStory.id) ? " · response scheduled" : " · respond before block end"}</p><p className="text-xs">Use the on-screen call or its reminder to respond.</p></section>}
+    {leads.length > 0 && <section className="border border-border p-2" aria-label="Active story leads"><h3 className="font-bold">Story leads</h3>{leads.map((lead) => <p key={lead.id}>{lead.title} · {CAMPAIGN.locations.find((place) => place.id === lead.location)?.name ?? lead.location}{g.pending.some((p) => p.eventId === lead.id) ? " · response scheduled" : " · visit to follow up"}</p>)}</section>}
     <p>Invitations arrive ahead of time. Respond during the scheduled block; unattended invitations receive no reply. Travel to the venue before attending.</p>
     {invitations.length === 0 && <p className="text-muted-foreground">No upcoming invitations. A suspiciously empty diary.</p>}
     {invitations.map((invitation) => {

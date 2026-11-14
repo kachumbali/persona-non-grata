@@ -26,8 +26,8 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
           <h1 className="mt-6 text-3xl text-destructive">{end.title}</h1>
           <p className="mt-6 font-serif">{c.title} {c.name}: {end.text}</p>
           <p className="mt-4 font-mono">HQ goodwill: {g.meters.confidence} · Host goodwill: {g.meters.goodwill}</p>
-          {g.goodwillHistory.filter((entry) => entry.source === "The Minister’s menu").map((entry, i) => <p key={i} className="mt-4 font-serif">{entry.text}</p>)}
-          {g.goodwillHistory.at(-1) && g.goodwillHistory.at(-1)?.source !== "The Minister’s menu" && <p className="mt-3 text-sm">Last outcome: {g.goodwillHistory.at(-1)?.text}</p>}
+          {g.goodwillHistory.filter((entry) => (entry.source === "The Minister’s menu" || entry.source === "Reception procurement" || entry.source === "Protocol seating")).map((entry, i) => <p key={i} className="mt-4 font-serif">{entry.text}</p>)}
+          {g.goodwillHistory.at(-1) && g.goodwillHistory.at(-1)?.source !== "The Minister’s menu" && g.goodwillHistory.at(-1)?.source !== "Reception procurement" && g.goodwillHistory.at(-1)?.source !== "Protocol seating" && <p className="mt-3 text-sm">Last outcome: {g.goodwillHistory.at(-1)?.text}</p>}
           <Button className="mt-8" onClick={g.reset}>Request a new posting</Button>
         </div>
       </main>

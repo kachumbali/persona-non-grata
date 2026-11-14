@@ -1,6 +1,90 @@
 [
-  { "flag": "menu-garlic", "source": "The Minister’s menu", "text": "The Minister detects garlic. Ketu calls it an aromatic diplomatic misunderstanding; Capital calls it an incident. The host delegation asks for seconds.", "effects": { "confidence": -5, "goodwill": 3 } },
-  { "flag": "menu-strict", "source": "The Minister’s menu", "text": "The Minister praises the impeccably compliant 'Food (hot)'. The host delegation quietly asks where the flavour went.", "effects": { "confidence": 3, "goodwill": -2 } },
-  { "flag": "menu-gold", "source": "The Minister’s menu", "text": "The gold-lettered menu is admired by both delegations. 'Fish soup with ambition' becomes the visit’s unlikely diplomatic triumph.", "effects": { "confidence": 2, "goodwill": 2 } },
-  { "flag": "menu-soup", "source": "The Minister’s menu", "text": "The Minister notices 'diplomatique' on the menu. Ketu insists it is a typo; the host delegation decides it is a joke.", "effects": { "confidence": -2, "goodwill": 1 } }
+  {
+    "flag": "menu-garlic",
+    "source": "The Minister’s menu",
+    "text": "The Minister detects garlic. Ketu calls it an aromatic diplomatic misunderstanding; Capital calls it an incident. The host delegation asks for seconds.",
+    "effects": {
+      "confidence": -5,
+      "goodwill": 3
+    }
+  },
+  {
+    "flag": "menu-strict",
+    "source": "The Minister’s menu",
+    "text": "The Minister praises the impeccably compliant 'Food (hot)'. The host delegation quietly asks where the flavour went.",
+    "effects": {
+      "confidence": 3,
+      "goodwill": -2
+    }
+  },
+  {
+    "flag": "menu-gold",
+    "source": "The Minister’s menu",
+    "text": "The gold-lettered menu is admired by both delegations. 'Fish soup with ambition' becomes the visit’s unlikely diplomatic triumph.",
+    "effects": {
+      "confidence": 2,
+      "goodwill": 2
+    }
+  },
+  {
+    "flag": "menu-soup",
+    "source": "The Minister’s menu",
+    "text": "The Minister notices 'diplomatique' on the menu. Ketu insists it is a typo; the host delegation decides it is a joke.",
+    "effects": {
+      "confidence": -2,
+      "goodwill": 1
+    }
+  },
+  {
+    "flag": "supplier-transparent",
+    "source": "Reception procurement",
+    "text": "At the Minister's reception, the independent caterer provides a straightforward invoice. Capital notes the transparent procurement; the protocol official's cousin does not attend.",
+    "effects": {
+      "confidence": 2,
+      "goodwill": -1
+    }
+  },
+  {
+    "flag": "supplier-bury",
+    "source": "Reception procurement",
+    "text": "A correspondent reveals the caterer's family connection during the reception. Capital asks who approved the contract; the cousin compliments your discretion.",
+    "effects": {
+      "confidence": -5,
+      "goodwill": 1
+    }
+  },
+  {
+    "flag": "supplier-renegotiate",
+    "source": "Reception procurement",
+    "text": "The renegotiated contract survives a question at the Minister's reception. Capital is relieved that the invoice now includes sitting on the chairs.",
+    "effects": {
+      "confidence": 2
+    }
+  },
+  {
+    "flag": "supplier-pay",
+    "source": "Reception procurement",
+    "text": "The caterer's family connection becomes the reception's most popular rumour. Capital discovers that the bargain required a remarkably expensive sequel.",
+    "effects": {
+      "confidence": -4,
+      "goodwill": 1
+    }
+  },
+  {
+    "flag": "protocol-compromise",
+    "source": "Protocol seating",
+    "text": "At the Minister's visit, the Deputy Minister finds a prominent seat. The fern is reassigned to a position of quiet influence.",
+    "effects": {
+      "goodwill": 2
+    }
+  },
+  {
+    "flag": "protocol-unchanged",
+    "source": "Protocol seating",
+    "text": "The original seating plan survives. The Deputy Minister delivers remarks from behind the fern, which receives several diplomatic introductions.",
+    "effects": {
+      "confidence": 1,
+      "goodwill": -3
+    }
+  }
 ]
