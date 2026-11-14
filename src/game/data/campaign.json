@@ -266,6 +266,16 @@
         "programme"
       ],
       "line": "We can support the programme. We cannot promise six agencies will agree on one logo."
+    },
+    {
+      "id": "amb-valdoria", "name": "Ambassador Mara Velen", "role": "Ambassador of Valdoria", "face": 1, "location": "golf",
+      "likes": ["classic", "local"], "dislikes": ["shady"], "skills": [],
+      "line": "My national-day speech was eight minutes. The applause was longer because the exit was locked."
+    },
+    {
+      "id": "amb-asteria", "name": "Ambassador Niko Arden", "role": "Ambassador of Asteria", "face": 2, "location": "eu",
+      "likes": ["local", "sushi"], "dislikes": ["bling"], "skills": [],
+      "line": "Asteria supports consensus, provided someone else writes the first draft."
     }
   ],
   "venues": [
@@ -681,7 +691,7 @@
           },
           "trust": 5,
           "score": 4,
-          "result": "Elise negotiates a useful project segment with the UN partners."
+          "result": "Elise asks the UN partners to reserve time for beneficiaries. From Day 3, Amara can discuss the programme at UN House."
         },
         {
           "id": "photo",
@@ -691,8 +701,34 @@
             "morale": -3
           },
           "trust": -6,
-          "result": "The photograph is secured. Elise remembers what you valued."
+          "result": "The photograph is secured provisionally. From Day 3, Amara wants to discuss what the visit will actually include at UN House."
         }
+      ]
+    },
+    {
+      "id": "development-beneficiaries-followup",
+      "title": "The project visit · whose voices?",
+      "npc": "un",
+      "location": "un",
+      "text": "Amara has reserved a project visit with people who use its services. One partner wants to fill the discussion with speeches; the community asks for time to speak for itself.",
+      "minDay": 3,
+      "requiresChoice": { "eventId": "elise", "choiceId": "useful" },
+      "choices": [
+        { "id": "voices", "flag": "development-voices", "label": "Protect time for the community's questions", "effects": { "goodwill": 3, "confidence": -1 }, "trust": 3, "result": "Amara revises the programme so the community can speak. The speeches are shortened under protest." },
+        { "id": "speeches", "flag": "development-speeches", "label": "Give the partners their speaking slots", "effects": { "confidence": 2, "goodwill": -2 }, "trust": -2, "result": "Every partner receives a speaking slot. The community is allotted a photograph." }
+      ]
+    },
+    {
+      "id": "development-photo-followup",
+      "title": "The project visit · a perfect photograph",
+      "npc": "un",
+      "location": "un",
+      "text": "Amara shows you the proposed photo stop. The camera position is immaculate, but the project team has been given no time to explain what it actually does.",
+      "minDay": 3,
+      "requiresChoice": { "eventId": "elise", "choiceId": "photo" },
+      "choices": [
+        { "id": "voices", "flag": "development-voices", "label": "Add time for the project team and community", "effects": { "goodwill": 3, "confidence": -1 }, "trust": 3, "result": "Amara makes space for a real discussion. Capital asks if the camera can listen as well." },
+        { "id": "speeches", "flag": "development-speeches", "label": "Keep the photograph and official speeches", "effects": { "confidence": 2, "goodwill": -2 }, "trust": -2, "result": "The photograph is perfectly framed. The project team waits politely just outside it." }
       ]
     },
     {
@@ -726,6 +762,58 @@
       ]
     },
     {
+      "id": "asteria-coffee-followup",
+      "title": "The coffee clause · an Asterian proposal",
+      "npc": "amb-asteria",
+      "location": "eu",
+      "text": "After your conversation over coffee, Ambassador Arden offers Bellaluxe a chance to shape the EU27's joint statement. The draft is short; the footnotes are not.",
+      "minDay": 9,
+      "requiresChoice": { "eventId": "asteria-coffee", "choiceId": "attend" },
+      "choices": [
+        { "id": "compromise", "flag": "asteria-compromise", "label": "Help Niko find a practical compromise", "effects": { "confidence": 2, "goodwill": 1 }, "trust": 4, "result": "Niko includes your amendment. The footnote shrinks by a historic three lines." },
+        { "id": "credit", "flag": "asteria-credit", "label": "Claim the proposal as Bellaluxe's initiative", "effects": { "confidence": 2, "goodwill": -1 }, "trust": -4, "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags." }
+      ]
+    },
+    {
+      "id": "asteria-coffee-delegated-followup",
+      "title": "The coffee clause · a colleague's introduction",
+      "npc": "amb-asteria",
+      "location": "eu",
+      "text": "The colleague you sent made a good impression. Ambassador Arden now offers Bellaluxe a chance to shape the EU27's joint statement in person.",
+      "minDay": 9,
+      "requiresChoice": { "eventId": "asteria-coffee", "choiceId": "delegate" },
+      "choices": [
+        { "id": "compromise", "flag": "asteria-compromise", "label": "Help Niko find a practical compromise", "effects": { "confidence": 2, "goodwill": 1 }, "trust": 4, "result": "Niko includes your amendment. The footnote shrinks by a historic three lines." },
+        { "id": "credit", "flag": "asteria-credit", "label": "Claim the proposal as Bellaluxe's initiative", "effects": { "confidence": 2, "goodwill": -1 }, "trust": -4, "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags." }
+      ]
+    },
+    {
+      "id": "press-honest-followup",
+      "title": "Off the record · a careful briefing",
+      "npc": "journalist",
+      "location": "pressclub",
+      "text": "Ruth kept your distinction between confirmed and pending arrangements. Now she wants background on the visit. 'You can say no,' she says, which makes you more suspicious.",
+      "minDay": 2,
+      "requiresChoice": { "eventId": "press", "choiceId": "honest" },
+      "choices": [
+        { "id": "background", "flag": "press-background", "label": "Offer context without naming sources", "effects": { "confidence": 1, "goodwill": 2 }, "trust": 4, "result": "Ruth checks her notes. The background may make a better story than the rumour." },
+        { "id": "reserved", "flag": "press-reserved", "label": "Stick to the public line", "effects": { "confidence": 2 }, "trust": -1, "result": "Ruth writes down your public line and draws a small question mark beside it." }
+      ]
+    },
+    {
+      "id": "press-promise-followup",
+      "title": "Off the record · the printed promise",
+      "npc": "journalist",
+      "location": "pressclub",
+      "text": "Ruth places your promise that everything is ready beside a list of arrangements that are not. The microphone is conspicuously switched on this time.",
+      "minDay": 2,
+      "requiresChoice": { "eventId": "press", "choiceId": "promise" },
+      "choices": [
+        { "id": "correct", "flag": "press-correction", "label": "Correct the claim and explain the work ahead", "effects": { "confidence": -1, "goodwill": 1 }, "trust": 3, "result": "The correction is less glamorous than the promise. It is also considerably more accurate." },
+        { "id": "double-down", "flag": "press-doubledown", "label": "Insist the arrangements are entirely under control", "effects": { "confidence": -2, "goodwill": -1 }, "trust": -3, "result": "Ruth underlines 'entirely'. The second underline is audible." }
+      ]
+    },
+    {
       "id": "press",
       "title": "A casual quote",
       "npc": "journalist",
@@ -740,7 +828,7 @@
           },
           "trust": 3,
           "score": 2,
-          "result": "Your careful distinction survives the headline."
+          "result": "Your careful distinction survives the headline. From Day 2, Ruth offers a longer conversation at the Press Correspondents Club."
         },
         {
           "id": "promise",
@@ -750,7 +838,7 @@
             "goodwill": -2
           },
           "trust": -3,
-          "result": "The claim is printed. Somebody checks it."
+          "result": "The claim is printed. From Day 2, Ruth wants an explanation at the Press Correspondents Club."
         }
       ]
     }

@@ -3,6 +3,10 @@ import { Monitor, Printer, DoorOpen } from "lucide-react";
 import office from "@/assets/scenes/embassy-office.jpg";
 import bar from "@/assets/scenes/quiet-amendment.png";
 import ministry from "@/assets/scenes/foreign-ministry.png";
+import pressclub from "@/assets/scenes/press-club.png";
+import unHouse from "@/assets/scenes/un-house.png";
+import eu from "@/assets/scenes/eu-delegation.png";
+import golf from "@/assets/scenes/golf-club.png";
 import city from "@/assets/port-hesperia.jpg";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -16,7 +20,7 @@ import { Mailbox } from "./Mailbox";
 import { PlanningDesk } from "./PlanningDesk";
 import { Portrait } from "./Portrait";
 
-type Win = null | "pc" | "fax";
+type Win = null | "pc" | "fax" | "appointment";
 const PC_TABS = [["mail", "Courrielleur 98"], ["tasks", "Staff & diary"], ["watch", "Mission Watch"]] as const;
 
 export function PlaceScene({ onLeave }: { onLeave: () => void }) {
@@ -35,13 +39,18 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
           ? <img src={office} width={1536} height={768} alt="Painted embassy office" className="block aspect-[2/1] w-full object-cover" />
           : g.location === "bar" ? <img src={bar} width={1536} height={768} alt="The Quiet Amendment, a discreet port-city bar" className="block aspect-[2/1] w-full object-cover" />
           : g.location === "ministry" ? <img src={ministry} width={1536} height={768} alt="The Foreign Ministry's protocol office" className="block aspect-[2/1] w-full object-cover" />
+          : g.location === "pressclub" ? <img src={pressclub} width={1536} height={768} alt="The Press Correspondents Club, with its news board and interview table" className="block aspect-[2/1] w-full object-cover" />
+          : g.location === "un" ? <img src={unHouse} width={1536} height={768} alt="UN House development coordination room" className="block aspect-[2/1] w-full object-cover" />
+          : g.location === "eu" ? <img src={eu} width={1536} height={768} alt="EU Delegation coordination meeting room" className="block aspect-[2/1] w-full object-cover" />
+          : g.location === "golf" ? <img src={golf} width={1536} height={768} alt="The Precedence Golf Club terrace" className="block aspect-[2/1] w-full object-cover" />
           : <div role="img" aria-label={`Painted view of ${place?.name}`} className="aspect-[2/1] w-full" style={{ backgroundImage: `url(${city})`, backgroundSize: "300%", backgroundPosition: `${spot.x}% ${spot.y}%` }} />}
         {atEmbassy && <>
           <button type="button" className="scene-hotspot" style={{ left: "3%", top: "42%", width: "12%", height: "22%" }} onClick={() => setWin("pc")} aria-label="Use your PC"><span className="map-label"><Monitor className="inline size-4" /> PC</span></button>
           <button type="button" className="scene-hotspot" style={{ left: "69%", top: "38%", width: "10%", height: "16%" }} onClick={() => setWin("fax")} aria-label="Read the secure fax"><span className="map-label"><Printer className="inline size-4" /> Secure fax</span></button>
         </>}
-        {(g.location === "bar" || g.location === "ministry") && <LocationLead />}
-        <button type="button" className="scene-hotspot" style={{ right: "1%", top: "8%", width: "8%", height: "60%" }} onClick={onLeave} aria-label="Leave to the town map"><span className="map-label"><DoorOpen className="inline size-4" /> Town</span></button>
+        {!atEmbassy && <button type="button" className="scene-hotspot scene-appointment" style={{ left: "2%", top: "5%", width: "13%", height: "12%" }} onClick={() => setWin("appointment")} aria-label={`Plan an appointment: ${place?.work}`}><span className="map-label">Appointments</span></button>}
+        {(g.location === "bar" || g.location === "ministry" || g.location === "pressclub" || g.location === "un" || g.location === "eu") && <LocationLead />}
+        <button type="button" className="scene-hotspot scene-town" style={{ right: "1%", top: "8%", width: "8%", height: "60%" }} onClick={onLeave} aria-label="Leave to the town map"><span className="map-label"><DoorOpen className="inline size-4" /> Town</span></button>
         <div className="scene-people">
           {people.map((c) => (
             <button key={c.id} type="button" className="scene-person" data-active={g.selectedNpc === c.id} onClick={() => g.selectNpc(c.id)} aria-label={`Talk to ${c.name}`}>
@@ -60,6 +69,12 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
           {tab === "mail" && <Mailbox channel="mail" />}
           {tab === "tasks" && <PlanningDesk />}
           {tab === "watch" && <GoodwillDashboard />}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={win === "appointment"} onOpenChange={(o) => !o && setWin(null)}>
+        <DialogContent className="xp-window text-card-foreground max-h-[92vh] max-w-6xl overflow-y-auto p-0">
+          <DialogTitle className="xp-titlebar">Appointments · {place?.name}</DialogTitle>
+          <PlanningDesk />
         </DialogContent>
       </Dialog>
       <Dialog open={win === "fax"} onOpenChange={(o) => !o && setWin(null)}>

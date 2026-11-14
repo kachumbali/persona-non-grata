@@ -205,6 +205,11 @@
   .retro-game .clock { text-align: left; }
 }
 .map-spot { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; cursor: pointer; background: none; border: 0; }
+.map-destinations { display: none; }
+@media (max-width: 640px) {
+  .map-spot { display: none; }
+  .map-destinations { display: grid; gap: 6px; padding: 10px; }
+}
 .map-label { font-family: var(--font-mono); font-size: 16px; background: var(--card); color: var(--card-foreground); border: 2px solid var(--bevel-dark); box-shadow: var(--bevel-raised); padding: 0 6px; white-space: nowrap; }
 .map-spot:hover .map-label, .map-spot:focus-visible .map-label { background: var(--accent); }
 .map-spot[data-here="true"] .map-label { background: var(--accent); color: var(--accent-foreground); }
@@ -214,6 +219,11 @@
 .place-scene { position: relative; overflow: hidden; }
 .scene-hotspot { position: absolute; display: flex; align-items: flex-start; justify-content: center; background: transparent; border: 2px dashed transparent; cursor: pointer; }
 .scene-hotspot:hover, .scene-hotspot:focus-visible { border-color: var(--accent); }
+@media (max-width: 640px) {
+  .scene-hotspot .map-label { font-size: 12px; }
+  .scene-appointment { left: 1% !important; width: 30% !important; }
+  .scene-town { right: 1% !important; width: 20% !important; }
+}
 .scene-hotspot:hover .map-label { background: var(--accent); }
 .scene-people { position: absolute; left: 22%; right: 12%; bottom: 3%; display: flex; justify-content: space-around; align-items: flex-end; pointer-events: none; }
 .scene-person { pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: 0; cursor: pointer; filter: drop-shadow(3px 3px 0 var(--foreground)); }

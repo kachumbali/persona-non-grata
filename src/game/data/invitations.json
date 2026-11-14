@@ -1,32 +1,350 @@
 [
   {
-    "id": "eu27-coordination", "title": "EU27 coordination meeting", "host": "EU Delegation · Celeste Norren", "location": "eu", "announceDay": 1, "day": 3, "block": 1,
+    "id": "eu27-coordination",
+    "title": "EU27 coordination meeting",
+    "host": "EU Delegation · Celeste Norren",
+    "location": "eu",
+    "announceDay": 1,
+    "day": 3,
+    "block": 1,
     "description": "The EU27 are seeking a common position on the Minister's visit. The biscuits are divided according to a methodology nobody will explain.",
     "choices": {
-      "attend": { "label": "Attend and argue Bellaluxe's case", "text": "You secure a speaking slot and an unusually generous biscuit allocation.", "effects": { "confidence": 3, "goodwill": 1 }, "timeCost": 1, "cashCost": 0 },
-      "delegate": { "label": "Send a colleague with a brief", "text": "Your colleague represents the mission. The joint position is less alarming than expected.", "effects": { "confidence": 1 }, "timeCost": 0, "cashCost": 0 },
-      "decline": { "label": "Decline with apologies", "text": "The EU27 proceed without you. Someone reallocates the biscuits.", "effects": { "confidence": -2 }, "timeCost": 0, "cashCost": 0 }
+      "attend": {
+        "label": "Attend and argue Bellaluxe's case",
+        "text": "You secure a speaking slot and an unusually generous biscuit allocation.",
+        "effects": {
+          "confidence": 3,
+          "goodwill": 1
+        },
+        "timeCost": 1,
+        "cashCost": 0,
+        "contactTrust": 2
+      },
+      "delegate": {
+        "label": "Send a colleague with a brief",
+        "text": "Your colleague represents the mission. The joint position is less alarming than expected.",
+        "effects": {
+          "confidence": 1
+        },
+        "timeCost": 0,
+        "cashCost": 0
+      },
+      "decline": {
+        "label": "Decline with apologies",
+        "text": "The EU27 proceed without you. Someone reallocates the biscuits.",
+        "effects": {
+          "confidence": -2
+        },
+        "timeCost": 0,
+        "cashCost": 0
+      }
     },
-    "onMiss": { "text": "Nobody from Bellaluxe attends the EU27 meeting. The delegation notices.", "effects": { "confidence": -3 } }
+    "onMiss": {
+      "text": "Nobody from Bellaluxe attends the EU27 meeting. The delegation notices.",
+      "effects": {
+        "confidence": -3
+      }
+    },
+    "contact": "eu"
   },
   {
-    "id": "valdoria-national-day", "title": "Valdorian national-day reception", "host": "Embassy of Valdoria", "location": "golf", "announceDay": 2, "day": 4, "block": 2,
+    "id": "valdoria-national-day",
+    "title": "Valdorian national-day reception",
+    "host": "Ambassador Mara Velen · Valdoria",
+    "location": "golf",
+    "announceDay": 2,
+    "day": 4,
+    "block": 2,
     "description": "Valdoria invites the diplomatic corps to a reception at the golf club. The invitation says 'brief remarks'; staff are arranging extra seating.",
     "choices": {
-      "attend": { "label": "Attend the reception", "text": "You congratulate Valdoria and meet half the diplomatic corps before the anthem reaches its third verse.", "effects": { "goodwill": 3, "confidence": 1 }, "timeCost": 1, "cashCost": 100 },
-      "delegate": { "label": "Send a colleague", "text": "Your colleague conveys Bellaluxe's congratulations and returns with three invitations and a tiny flag.", "effects": { "goodwill": 1 }, "timeCost": 0, "cashCost": 50 },
-      "decline": { "label": "Send diplomatic regrets", "text": "Valdoria accepts your regrets and sends the programme anyway.", "effects": { "goodwill": -1 }, "timeCost": 0, "cashCost": 0 }
+      "attend": {
+        "label": "Attend the reception",
+        "text": "You congratulate Valdoria and meet half the diplomatic corps before the anthem reaches its third verse.",
+        "effects": {
+          "goodwill": 3,
+          "confidence": 1
+        },
+        "timeCost": 1,
+        "cashCost": 100,
+        "contactTrust": 4
+      },
+      "delegate": {
+        "label": "Send a colleague",
+        "text": "Your colleague conveys Bellaluxe's congratulations and returns with three invitations and a tiny flag.",
+        "effects": {
+          "goodwill": 1
+        },
+        "timeCost": 0,
+        "cashCost": 50,
+        "contactTrust": 2
+      },
+      "decline": {
+        "label": "Send diplomatic regrets",
+        "text": "Valdoria accepts your regrets and sends the programme anyway.",
+        "effects": {
+          "goodwill": -1
+        },
+        "timeCost": 0,
+        "cashCost": 0,
+        "contactTrust": -1
+      }
     },
-    "onMiss": { "text": "Valdoria notices the empty Bellaluxe place card at its national-day reception.", "effects": { "goodwill": -3 } }
+    "onMiss": {
+      "text": "Valdoria notices the empty Bellaluxe place card at its national-day reception.",
+      "effects": {
+        "goodwill": -3
+      },
+      "contactTrust": -3
+    },
+    "contact": "amb-valdoria"
   },
   {
-    "id": "un-development-roundtable", "title": "UN development roundtable", "host": "UN House · Dr Amara Chen", "location": "un", "announceDay": 4, "day": 6, "block": 1,
+    "id": "un-development-roundtable",
+    "title": "UN development roundtable",
+    "host": "UN House · Dr Amara Chen",
+    "location": "un",
+    "announceDay": 4,
+    "day": 6,
+    "block": 1,
     "description": "UN partners are discussing a project the Minister may visit. All participating organisations request their logos above the title.",
     "choices": {
-      "attend": { "label": "Attend the roundtable", "text": "You keep the project discussion on the agenda and the logos on a second page.", "effects": { "goodwill": 2, "confidence": 2 }, "timeCost": 1, "cashCost": 0 },
-      "delegate": { "label": "Send a colleague", "text": "Your representative brings the project partners' priorities back to the mission.", "effects": { "goodwill": 1, "confidence": 1 }, "timeCost": 0, "cashCost": 0 },
-      "decline": { "label": "Decline the meeting", "text": "The roundtable continues without Bellaluxe; the project partners take note.", "effects": { "goodwill": -1 }, "timeCost": 0, "cashCost": 0 }
+      "attend": {
+        "label": "Attend the roundtable",
+        "text": "You keep the project discussion on the agenda and the logos on a second page.",
+        "effects": {
+          "goodwill": 2,
+          "confidence": 2
+        },
+        "timeCost": 1,
+        "cashCost": 0,
+        "contactTrust": 2
+      },
+      "delegate": {
+        "label": "Send a colleague",
+        "text": "Your representative brings the project partners' priorities back to the mission.",
+        "effects": {
+          "goodwill": 1,
+          "confidence": 1
+        },
+        "timeCost": 0,
+        "cashCost": 0
+      },
+      "decline": {
+        "label": "Decline the meeting",
+        "text": "The roundtable continues without Bellaluxe; the project partners take note.",
+        "effects": {
+          "goodwill": -1
+        },
+        "timeCost": 0,
+        "cashCost": 0
+      }
     },
-    "onMiss": { "text": "The UN roundtable goes ahead without a Bellaluxe representative or reply.", "effects": { "goodwill": -2, "confidence": -1 } }
+    "onMiss": {
+      "text": "The UN roundtable goes ahead without a Bellaluxe representative or reply.",
+      "effects": {
+        "goodwill": -2,
+        "confidence": -1
+      }
+    },
+    "contact": "un"
+  },
+  {
+    "id": "asteria-coffee",
+    "title": "Asterian coordination coffee",
+    "host": "Ambassador Niko Arden · Asteria",
+    "contact": "amb-asteria",
+    "location": "eu",
+    "announceDay": 5,
+    "day": 8,
+    "block": 0,
+    "description": "Niko invites EU colleagues to compare notes before the next coordination meeting. The invitation promises coffee and a single agenda item.",
+    "choices": {
+      "attend": {
+        "label": "Attend the coffee",
+        "text": "Niko shares a useful draft and a surprisingly large pot of coffee.",
+        "effects": {
+          "confidence": 2
+        },
+        "timeCost": 1,
+        "cashCost": 0,
+        "contactTrust": 4
+      },
+      "delegate": {
+        "label": "Send a colleague",
+        "text": "Your colleague exchanges notes with Niko and returns with the draft.",
+        "effects": {
+          "confidence": 1
+        },
+        "timeCost": 0,
+        "cashCost": 0,
+        "contactTrust": 2
+      },
+      "decline": {
+        "label": "Send regrets",
+        "text": "Niko accepts your regrets and circulates the draft without your comments.",
+        "effects": {
+          "confidence": -1
+        },
+        "timeCost": 0,
+        "cashCost": 0,
+        "contactTrust": -1
+      }
+    },
+    "onMiss": {
+      "text": "Niko notices that Bellaluxe neither attends nor replies to the Asterian coffee invitation.",
+      "effects": {
+        "confidence": -2
+      },
+      "contactTrust": -3
+    }
+  },
+  {
+    "id": "valdoria-lunch",
+    "title": "Valdorian colleagues' lunch",
+    "host": "Ambassador Mara Velen · Valdoria",
+    "contact": "amb-valdoria",
+    "location": "golf",
+    "announceDay": 8,
+    "day": 11,
+    "block": 1,
+    "description": "Mara invites a few diplomats to lunch to exchange views on the approaching ministerial visits. 'A few courses,' the invitation says.",
+    "choices": {
+      "attend": {
+        "label": "Attend the lunch",
+        "text": "Mara shares an unusually candid protocol tip between the fifth and sixth courses.",
+        "effects": {
+          "goodwill": 2,
+          "confidence": 1
+        },
+        "timeCost": 1,
+        "cashCost": 100,
+        "contactTrust": 3
+      },
+      "delegate": {
+        "label": "Send a colleague",
+        "text": "Mara welcomes your colleague, who returns with a protocol tip and a menu the length of a cable.",
+        "effects": {
+          "goodwill": 1
+        },
+        "timeCost": 0,
+        "cashCost": 50,
+        "contactTrust": 1
+      },
+      "decline": {
+        "label": "Decline politely",
+        "text": "Mara accepts your regrets and promises a shorter invitation next time.",
+        "effects": {
+          "goodwill": -1
+        },
+        "timeCost": 0,
+        "cashCost": 0,
+        "contactTrust": -1
+      }
+    },
+    "onMiss": {
+      "text": "Mara finds an empty Bellaluxe place at the lunch and receives no reply to the invitation.",
+      "effects": {
+        "goodwill": -2
+      },
+      "contactTrust": -2
+    }
+  },
+  {
+    "id": "asteria-national-day",
+    "title": "Asterian national-day reception",
+    "host": "Ambassador Niko Arden · Asteria",
+    "contact": "amb-asteria",
+    "location": "eu",
+    "announceDay": 10,
+    "day": 12,
+    "block": 2,
+    "description": "Niko welcomes the diplomatic corps for Asteria's national day. The reception is being held at the EU Delegation while the Asterian residence is repainted.",
+    "choices": {
+      "attend": {
+        "label": "Attend and congratulate Asteria",
+        "text": "You congratulate Niko, who insists the paint samples are not part of the national colours.",
+        "effects": {
+          "goodwill": 2,
+          "confidence": 1
+        },
+        "timeCost": 1,
+        "cashCost": 100,
+        "contactTrust": 3
+      },
+      "delegate": {
+        "label": "Send a colleague with congratulations",
+        "text": "Your colleague delivers Bellaluxe's congratulations and returns with an invitation to inspect the new paint.",
+        "effects": {
+          "goodwill": 1
+        },
+        "timeCost": 0,
+        "cashCost": 50,
+        "contactTrust": 1
+      },
+      "decline": {
+        "label": "Send diplomatic regrets",
+        "text": "Niko accepts your regrets and sends the speech in writing, including the footnotes.",
+        "effects": {},
+        "timeCost": 0,
+        "cashCost": 0,
+        "contactTrust": -1
+      }
+    },
+    "onMiss": {
+      "text": "Niko receives neither a Bellaluxe representative nor a reply to the national-day invitation.",
+      "effects": {
+        "goodwill": -2
+      },
+      "contactTrust": -2
+    }
+  },
+  {
+    "id": "un-final-coordination",
+    "title": "UN partners' final coordination",
+    "host": "UN House · Dr Amara Chen",
+    "contact": "un",
+    "location": "un",
+    "announceDay": 11,
+    "day": 13,
+    "block": 1,
+    "description": "Amara convenes partners for a final exchange ahead of the Minister's arrival. The meeting is intended to last one hour; the agenda has seven annexes.",
+    "choices": {
+      "attend": {
+        "label": "Attend the coordination meeting",
+        "text": "You agree the remaining practical points with Amara and prevent a discussion about logo sizes from becoming an agenda item.",
+        "effects": {
+          "confidence": 2,
+          "goodwill": 1
+        },
+        "timeCost": 1,
+        "cashCost": 0,
+        "contactTrust": 2
+      },
+      "delegate": {
+        "label": "Send a colleague",
+        "text": "Your representative checks the remaining arrangements and brings back an annotated programme.",
+        "effects": {
+          "confidence": 1
+        },
+        "timeCost": 0,
+        "cashCost": 0,
+        "contactTrust": 1
+      },
+      "decline": {
+        "label": "Decline with thanks",
+        "text": "Amara circulates the final notes to Bellaluxe, with a reminder that the meeting was meant to be collaborative.",
+        "effects": {},
+        "timeCost": 0,
+        "cashCost": 0,
+        "contactTrust": -1
+      }
+    },
+    "onMiss": {
+      "text": "The final UN coordination meeting goes ahead without a Bellaluxe representative or reply.",
+      "effects": {
+        "goodwill": -1
+      },
+      "contactTrust": -2
+    }
   }
 ]

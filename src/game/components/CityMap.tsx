@@ -45,7 +45,17 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
           );
         })}
       </div>
-      <p className="px-3 py-2 text-sm">Click the pin to enter where you are. Travelling elsewhere costs {TRAVEL_DP} DP.</p>
+      <div className="map-destinations" aria-label="Destinations">
+        {CAMPAIGN.locations.map((location) => {
+          const here = g.location === location.id;
+          const invitation = invitations.find((item) => item.location === location.id);
+          const lead = leads.find((item) => item.location === location.id);
+          return <Button key={location.id} type="button" variant="outline" className="h-auto min-h-10 justify-start whitespace-normal text-left" onClick={() => here ? onEnter() : (setError(""), setTarget(location.id))}>
+            <span>{here ? "Enter" : "Travel to"} {location.name}{here ? " · you are here" : ""}{invitation ? ` · invitation Day ${invitation.day} ${BLOCKS[invitation.block]?.name}` : ""}{lead ? " · story lead" : ""}</span>
+          </Button>;
+        })}
+      </div>
+      <p className="px-3 py-2 text-sm">Enter where you are or choose a destination. Travelling elsewhere costs {TRAVEL_DP} DP.</p>
       <AlertDialog open={!!target} onOpenChange={(o) => !o && setTarget(null)}>
         <AlertDialogContent className="retro-builder">
           <AlertDialogHeader>

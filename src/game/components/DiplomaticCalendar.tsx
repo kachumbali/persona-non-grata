@@ -22,7 +22,7 @@ export function DiplomaticCalendar() {
     if (response === "delegate" && !worker) { setNotice("Choose a colleague to represent the mission."); return; }
     const ok = g.queue({
       id: `invitation-${invitation.id}`, kind: "event", eventId: invitation.id, eventChoice: response,
-      source: invitation.title, text: choice.text, effects: choice.effects,
+      source: invitation.title, text: choice.text, effects: choice.effects, contact: invitation.contact, contactTrust: choice.contactTrust,
       timeCost: choice.timeCost, cashCost: choice.cashCost,
       worker: response === "delegate" ? worker : undefined, overload: response === "delegate" && overload,
       location: response === "attend" ? invitation.location : undefined,

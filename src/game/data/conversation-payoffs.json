@@ -86,5 +86,76 @@
       "confidence": 1,
       "goodwill": -3
     }
+  },
+  {
+    "flag": "press-background",
+    "source": "Press coverage",
+    "text": "Ruth's visit-day article explains the work behind the Minister's programme. Capital is relieved to find the word 'preparation' used as a compliment.",
+    "effects": {
+      "confidence": 2,
+      "goodwill": 1
+    }
+  },
+  {
+    "flag": "press-reserved",
+    "source": "Press coverage",
+    "text": "Ruth's visit-day article quotes the official line accurately and notes how little it says. Nobody can object to the accuracy.",
+    "effects": {
+      "confidence": 1
+    }
+  },
+  {
+    "flag": "press-correction",
+    "source": "Press coverage",
+    "text": "Ruth mentions the earlier overstatement but praises the public correction. Capital describes the article as manageable, which is nearly affection.",
+    "effects": {
+      "confidence": 1,
+      "goodwill": 1
+    }
+  },
+  {
+    "flag": "press-doubledown",
+    "source": "Press coverage",
+    "text": "Ruth's visit-day article compares the original promise with the subsequent reassurance. Both are printed above the words 'questions remain'.",
+    "effects": {
+      "confidence": -4,
+      "goodwill": -2
+    }
+  },
+  {
+    "flag": "development-voices",
+    "source": "Development project",
+    "text": "At the visit, the project team and community explain what works and what still needs attention. The Minister asks a question that was not on the briefing card.",
+    "effects": {
+      "goodwill": 3,
+      "confidence": 1
+    }
+  },
+  {
+    "flag": "development-speeches",
+    "source": "Development project",
+    "text": "The project visit produces excellent photographs and a complete set of official speeches. The people using the project speak mostly to the driver afterwards.",
+    "effects": {
+      "confidence": 2,
+      "goodwill": -3
+    }
+  },
+  {
+    "flag": "asteria-compromise",
+    "source": "EU coordination",
+    "text": "At the Minister's visit, the EU27 statement includes the compromise you and Niko drafted. The footnote survives in a separate annex.",
+    "effects": {
+      "confidence": 2,
+      "goodwill": 1
+    }
+  },
+  {
+    "flag": "asteria-credit",
+    "source": "EU coordination",
+    "text": "The EU27 statement credits several missions. Niko ensures Bellaluxe's contribution is acknowledged, immediately after a footnote about collective authorship.",
+    "effects": {
+      "confidence": -1,
+      "goodwill": -1
+    }
   }
 ]

@@ -11,6 +11,17 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("supplier location lead", () => {
+  it.each([
+    { location: "pressclub", prior: "press", initial: "honest", title: /off the record/i, option: /offer context without naming sources/i },
+    { location: "un", prior: "elise", initial: "useful", title: /whose voices/i, option: /protect time for the community/i },
+  ])("offers and queues the $location follow-up", ({ location, prior, initial, title, option }) => {
+    useGame.setState({ day: 4, location, completedEvents: [prior], storyOutcomes: { [prior]: { status: "chosen", choice: initial } } });
+    render(<LocationLead />);
+    fireEvent.click(screen.getByRole("button", { name: title }));
+    fireEvent.click(screen.getByRole("button", { name: option }));
+    expect(useGame.getState().pending[0]?.location).toBe(location);
+    expect(screen.getByRole("status")).toHaveTextContent("end of this block");
+  });
   it("offers the correct lead at the bar and queues its decision until block end", () => {
     render(<LocationLead />);
     fireEvent.click(screen.getByRole("button", { name: /follow up: the generous supplier/i }));

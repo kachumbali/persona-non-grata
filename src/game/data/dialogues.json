@@ -1467,5 +1467,25 @@
     }
    }
   }
+ ],
+ "amb-valdoria": [
+  { "id": "anthem", "start": "a", "nodes": { "a": { "text": "Valdoria's national anthem has seven verses. Protocol insists the reception cannot begin until the choir has found the last one.", "choices": [
+    { "label": "Offer the choir a discreet glass of water.", "result": "Mara thanks you. The choir finds verse seven, and the water.", "trust": 4, "effects": { "goodwill": 1 } },
+    { "label": "Suggest starting the reception at verse four.", "result": "Mara calls it a bold proposal for constitutional reform.", "trust": -2, "effects": {} }
+  ] } } },
+  { "id": "seating", "start": "a", "nodes": { "a": { "text": "My seating plan has a reserved chair for every ambassador and one for the person who actually knows where the venue is.", "choices": [
+    { "label": "Make sure the driver gets the good chair.", "result": "Mara moves the driver closer to the door, which everyone agrees is wise.", "trust": 3, "effects": { "morale": 1 } },
+    { "label": "Ask for the chair closest to the camera.", "result": "Mara offers you the camera's carrying case instead.", "trust": -1, "effects": {} }
+  ] } } }
+ ],
+ "amb-asteria": [
+  { "id": "consensus", "start": "a", "nodes": { "a": { "text": "Asteria has agreed to the EU27 consensus, subject to a footnote longer than the consensus.", "choices": [
+    { "label": "Help shorten the footnote together.", "result": "Niko removes two semicolons and calls the result historic.", "trust": 4, "effects": { "confidence": 1 } },
+    { "label": "Propose a footnote to the footnote.", "result": "Niko reaches for a second page. Nobody gets lunch.", "trust": -2, "effects": { "sanity": -1 } }
+  ] } } },
+  { "id": "coffee", "start": "a", "nodes": { "a": { "text": "At the last EU27 meeting, Niko counted the coffee cups to establish whether everyone had been consulted.", "choices": [
+    { "label": "Offer to bring an extra pot next time.", "result": "Niko records your offer under practical cooperation.", "trust": 3, "effects": { "morale": 1 } },
+    { "label": "Demand an audit of the teaspoons.", "result": "Niko opens a spreadsheet and the room falls silent.", "trust": -1, "effects": { "sanity": -1 } }
+  ] } } }
  ]
 }

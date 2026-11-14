@@ -84,6 +84,59 @@ describe("scheduled game rounds", () => {
     const payoff = useGame.getState().goodwillHistory.find((entry) => entry.source === "Protocol seating");
     expect(payoff!.after.goodwill - payoff!.before.goodwill).toBe(delta);
   });
+  it.each([
+    { initial: "honest", lead: "press-honest-followup", choice: "background", flag: "press-background", confidence: 2 },
+    { initial: "promise", lead: "press-promise-followup", choice: "double-down", flag: "press-doubledown", confidence: -4 },
+  ])("carries the $initial press briefing through to visit-day coverage", ({ initial, lead, choice, flag, confidence }) => {
+    useGame.setState({ day: 2, block: 0, minute: BLOCKS[0].time, events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      completedEvents: ["press"], storyOutcomes: { press: { status: "chosen", choice: initial } } });
+    expect(useGame.getState().move("pressclub")).toBe(true);
+    const g = useGame.getState();
+    const event = locationStories(g.day, g.completedEvents, g.storyOutcomes).find((item) => item.id === lead)!;
+    const selected = event.choices.find((item) => item.id === choice)!;
+    expect(g.queue({ id: `event-${lead}`, kind: "event", source: event.title, text: selected.result!, effects: selected.effects ?? {},
+      eventId: event.id, eventChoice: selected.id, flag: selected.flag, timeCost: 1, location: event.location })).toBe(true);
+    g.advance();
+    expect(useGame.getState().storyFlags).toContain(flag);
+    useGame.setState({ day: 14, block: 3, minute: BLOCKS[3].time, events: [], visit: { clearance: true, lounge: true, programme: true, security: true } });
+    useGame.getState().advance();
+    const payoff = useGame.getState().goodwillHistory.find((entry) => entry.source === "Press coverage");
+    expect(payoff!.after.confidence - payoff!.before.confidence).toBe(confidence);
+  });
+  it.each([
+    { initial: "useful", lead: "development-beneficiaries-followup", choice: "voices", flag: "development-voices", goodwill: 3 },
+    { initial: "photo", lead: "development-photo-followup", choice: "speeches", flag: "development-speeches", goodwill: -3 },
+  ])("carries the $initial development choice through the UN visit", ({ initial, lead, choice, flag, goodwill }) => {
+    useGame.setState({ day: 3, block: 0, minute: BLOCKS[0].time, events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      completedEvents: ["elise"], storyOutcomes: { elise: { status: "chosen", choice: initial } } });
+    expect(useGame.getState().move("un")).toBe(true);
+    const g = useGame.getState();
+    const event = locationStories(g.day, g.completedEvents, g.storyOutcomes).find((item) => item.id === lead)!;
+    const selected = event.choices.find((item) => item.id === choice)!;
+    expect(g.queue({ id: `event-${lead}`, kind: "event", source: event.title, text: selected.result!, effects: selected.effects ?? {},
+      eventId: event.id, eventChoice: selected.id, flag: selected.flag, timeCost: 1, location: event.location })).toBe(true);
+    g.advance();
+    expect(useGame.getState().storyFlags).toContain(flag);
+    useGame.setState({ day: 14, block: 3, minute: BLOCKS[3].time, events: [], visit: { clearance: true, lounge: true, programme: true, security: true } });
+    useGame.getState().advance();
+    const payoff = useGame.getState().goodwillHistory.find((entry) => entry.source === "Development project");
+    expect(payoff!.after.goodwill - payoff!.before.goodwill).toBe(goodwill);
+  });
+  it.each([
+    { response: "attend", lead: "asteria-coffee-followup" },
+    { response: "delegate", lead: "asteria-coffee-delegated-followup" },
+  ])("unlocks the Asterian follow-up after the $response invitation response", ({ response, lead }) => {
+    useGame.setState({ day: 9, block: 0, minute: BLOCKS[0].time, events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      completedEvents: ["asteria-coffee"], storyOutcomes: { "asteria-coffee": { status: "chosen", choice: response } } });
+    expect(useGame.getState().move("eu")).toBe(true);
+    const g = useGame.getState();
+    const event = locationStories(g.day, g.completedEvents, g.storyOutcomes).find((item) => item.id === lead)!;
+    const selected = event.choices.find((item) => item.id === "compromise")!;
+    expect(g.queue({ id: `event-${lead}`, kind: "event", source: event.title, text: selected.result!, effects: selected.effects ?? {},
+      eventId: event.id, eventChoice: selected.id, flag: selected.flag, timeCost: 1, location: event.location })).toBe(true);
+    g.advance();
+    expect(useGame.getState().storyFlags).toContain("asteria-compromise");
+  });
   it("does not auto-expire a location lead still present in a pre-update day's schedule", () => {
     const lead = CAMPAIGN.events.find((event) => event.id === "supplier-followup")!;
     useGame.setState({ events: [lead], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),

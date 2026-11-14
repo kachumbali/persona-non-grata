@@ -138,6 +138,18 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
         if (c) { c.trust = clamp(c.trust + (socialRepeat && (p.trust ?? 0) > 0 ? 1 : p.trust ?? 0)); c.fatigue = clamp(c.fatigue + (p.kind === "work" ? 18 : p.kind === "social" ? -12 : 0)); }
         if (p.kind === "social") storyFlags.push(`social:${p.worker}`);
       }
+      if (p.contact && colleagues[p.contact]) {
+        const contact = colleagues[p.contact];
+        if (contact) {
+          const before = contact.trust;
+          contact.trust = clamp(contact.trust + (p.contactTrust ?? 0));
+          const change = contact.trust - before;
+          if (change) {
+            const name = CAMPAIGN.characters.find((person) => person.id === p.contact)?.name ?? p.contact;
+            results.push({ day: s.day, time: s.minute, text: `${name}: trust ${change > 0 ? "+" : ""}${change} (${before} → ${contact.trust}).` });
+          }
+        }
+      }
       if (p.pair && p.worker) {
         const other = p.partner ?? (p.worker === "pavel" ? "anselm" : "sola");
         relationships[pairKey(p.worker, other)] = clamp((relationships[pairKey(p.worker, other)] ?? 50) + p.pair);
@@ -167,6 +179,18 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
       for (const invitation of dueInvitations(s.day, s.block, storyOutcomes)) {
         completedEvents.push(invitation.id);
         storyOutcomes[invitation.id] = { status: "missed" };
+        if (invitation.contact && colleagues[invitation.contact]) {
+          const contact = colleagues[invitation.contact];
+          if (contact) {
+            const before = contact.trust;
+            contact.trust = clamp(contact.trust + (invitation.onMiss.contactTrust ?? 0));
+            const change = contact.trust - before;
+            if (change) {
+              const name = CAMPAIGN.characters.find((person) => person.id === invitation.contact)?.name ?? invitation.contact;
+              results.push({ day: s.day, time: s.minute, text: `${name}: trust ${change > 0 ? "+" : ""}${change} (${before} → ${contact.trust}).` });
+            }
+          }
+        }
         record(invitation.title, invitation.onMiss.text, invitation.onMiss.effects, "Missed instruction");
         ending = pickEnding(meters, false, visit); if (ending) break;
       }
@@ -230,6 +254,11 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     }
     const error = validatePlan(pending, block, economy, playerCapacity(old.character ?? null, old.energy ?? 80, old.composure ?? 75, old.alcohol ?? 0).total);
     return { ...initial, ...old, economy, turn: old.turn ?? ((old.day ?? 1) - 1) * 4 + block, planError: error ? "Your old plan exceeded Chapter 1 limits and was cleared without spending funds. Please replan this block." : "", block, minute: BLOCKS[block]?.time ?? 480, pending: error ? [] : pending, colleagues: old.colleagues ?? initialColleagues(), storyOutcomes, events: old.events ?? dailyEvents(old.day ?? 1, old.seed ?? seed, old.completedEvents ?? [], storyOutcomes) };
+  },
+  // New characters join existing saves without resetting established relationships.
+  merge: (saved, current) => {
+    const old = (saved ?? {}) as Partial<SavedGame>;
+    return { ...current, ...old, colleagues: { ...initialColleagues(), ...(old.colleagues ?? {}) } };
   },
   partialize: (s) => Object.fromEntries(Object.entries(s).filter(([, value]) => typeof value !== "function")) as SavedGame,
 }));

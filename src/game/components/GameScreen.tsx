@@ -4,10 +4,14 @@ import { BLOCKS, ENDINGS, LAST_DAY, VISIT_TASKS, type VisitTask } from "../rules
 
 import { useGame } from "../store";
 import { Portrait } from "./Portrait";
+import payoffs from "../data/conversation-payoffs.json";
+
+const payoffSources = new Set(payoffs.map((payoff) => payoff.source));
 import { CityMap } from "./CityMap";
 import { PlaceScene } from "./PlaceScene";
 import { BlackBerry } from "./BlackBerry";
 import { Interruption } from "./Interruption";
+import { DiplomaticRecord } from "./DiplomaticRecord";
 
 export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const g = useGame();
@@ -26,8 +30,9 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
           <h1 className="mt-6 text-3xl text-destructive">{end.title}</h1>
           <p className="mt-6 font-serif">{c.title} {c.name}: {end.text}</p>
           <p className="mt-4 font-mono">HQ goodwill: {g.meters.confidence} · Host goodwill: {g.meters.goodwill}</p>
-          {g.goodwillHistory.filter((entry) => (entry.source === "The Minister’s menu" || entry.source === "Reception procurement" || entry.source === "Protocol seating")).map((entry, i) => <p key={i} className="mt-4 font-serif">{entry.text}</p>)}
-          {g.goodwillHistory.at(-1) && g.goodwillHistory.at(-1)?.source !== "The Minister’s menu" && g.goodwillHistory.at(-1)?.source !== "Reception procurement" && g.goodwillHistory.at(-1)?.source !== "Protocol seating" && <p className="mt-3 text-sm">Last outcome: {g.goodwillHistory.at(-1)?.text}</p>}
+          {g.goodwillHistory.filter((entry) => payoffSources.has(entry.source)).map((entry, i) => <p key={i} className="mt-4 font-serif">{entry.text}</p>)}
+          {g.goodwillHistory.at(-1) && !payoffSources.has(g.goodwillHistory.at(-1)!.source) && <p className="mt-3 text-sm">Last outcome: {g.goodwillHistory.at(-1)?.text}</p>}
+          <DiplomaticRecord outcomes={g.storyOutcomes} />
           <Button className="mt-8" onClick={g.reset}>Request a new posting</Button>
         </div>
       </main>
