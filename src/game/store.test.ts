@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { BLOCKS, EMAILS, START_METERS } from "./rules";
+import { BLOCKS, CAMPAIGN, EMAILS, START_METERS } from "./rules";
 import { inboxFor, useGame } from "./store";
 const character = { title: "Mr", name: "Test", face: 0, bio: "", traits: [] };
 beforeEach(() => useGame.getState().start(character));
@@ -22,6 +22,28 @@ describe("scheduled game rounds", () => {
     const queue = useGame.getState().queue;
     expect(queue({ id: "a", source: "First", text: "First", effects: {}, kind: "work", playerSlot: true })).toBe(true);
     expect(queue({ id: "b", source: "Second", text: "Second", effects: {}, kind: "dialogue", playerSlot: true })).toBe(true);
+  });
+  it("persists a story choice only on resolution and records missed stories once", () => {
+    const supplier = CAMPAIGN.events.find((event) => event.id === "supplier")!;
+    useGame.setState({ events: [supplier], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });
+    useGame.getState().queue({ id: "event-supplier", source: supplier.title, text: "Accepted", effects: {}, kind: "event", eventId: "supplier", eventChoice: "accept" });
+    expect(useGame.getState().storyOutcomes["supplier"]).toBeUndefined();
+    useGame.getState().advance();
+    expect(useGame.getState().storyOutcomes["supplier"]).toEqual({ status: "chosen", choice: "accept" });
+    expect(useGame.persist.getOptions().partialize?.(useGame.getState()).storyOutcomes["supplier"]).toEqual({ status: "chosen", choice: "accept" });
+    useGame.getState().start(character);
+    useGame.setState({ events: [supplier], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });
+    useGame.getState().advance();
+    expect(useGame.getState().storyOutcomes["supplier"]).toEqual({ status: "missed" });
+    expect(useGame.getState().completedEvents).toContain("supplier");
+  });
+  it("migrates an existing supplier choice and preserves the scheduled day", async () => {
+    const current = useGame.getState();
+    const oldSave = { ...current, day: 3, completedEvents: ["supplier"], storyFlags: ["supplier-accepted"], storyOutcomes: undefined };
+    const migrated = await useGame.persist.getOptions().migrate!(oldSave, 3);
+    expect(migrated.storyOutcomes["supplier"]).toEqual({ status: "chosen", choice: "accept" });
+    expect(migrated.events).toEqual(current.events);
+    expect(migrated.day).toBe(3);
   });
   it("records conversation completion only when resolved and pays off the menu at the visit", () => {
     useGame.setState({ events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });

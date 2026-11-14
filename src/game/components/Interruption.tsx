@@ -24,7 +24,7 @@ export function Interruption() {
   const Icon = how.icon;
   const choose = (c: StoryChoice) => {
     const ok = useGame.getState().queue({ id: `event-${event.id}`, kind: "event", source: event.title, text: c.result ?? "Event resolved.", effects: c.effects ?? {},
-      eventId: event.id, worker: c.worker ?? (event.id === "invitation" ? undefined : event.npc), partner: event.id === "rivalry" ? "anselm" : undefined, trust: c.trust, pair: c.pair,
+      eventId: event.id, eventChoice: c.id, worker: c.worker ?? (event.id === "invitation" ? undefined : event.npc), partner: event.id === "rivalry" ? "anselm" : undefined, trust: c.trust, pair: c.pair,
       flag: c.flag, score: c.score, playerSlot: c.replace, timeCost: dpFor(event.id, c) }, c.replace);
     if (ok) setOpen(false); else setNotice(useGame.getState().planError);
   };

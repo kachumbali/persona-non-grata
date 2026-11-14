@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyEffects, BLOCKS, dailyEvents, goodwillRisk, hospitalityCost, pickEnding, pointsLeft, recordGoodwillChange, socialTrust, START_METERS, visitReady } from "./rules";
+import { applyEffects, BLOCKS, CAMPAIGN, dailyEvents, expiredStories, goodwillRisk, hospitalityCost, pickEnding, pointsLeft, recordGoodwillChange, socialTrust, START_METERS, visitReady } from "./rules";
 
 const ready = { clearance: true, lounge: true, programme: true, security: true };
 
@@ -66,6 +66,27 @@ describe("game rules", () => {
   it("work at dinner costs relationship goodwill", () => {
     expect(socialTrust("pavel", "classic", true)).toBe(-4);
     expect(socialTrust("pavel", "classic", false)).toBe(6);
+  });
+  it("does not repeat completed events when no story is eligible", () => {
+    const all = CAMPAIGN.events.map((event) => event.id);
+    expect(dailyEvents(15, 23, all)).toEqual([]);
+  });
+  it("expires an eligible timed story only once and never expires a locked branch", () => {
+    const story = { id: "timed", title: "Timed", npc: "sola", text: "A lead", minDay: 1, expiresDay: 2, requiresChoice: { eventId: "supplier", choiceId: "check" }, choices: [] };
+    const checked = { supplier: { status: "chosen" as const, choice: "check" } };
+    expect(expiredStories([story], 2, ["supplier"], checked)).toEqual([]);
+    expect(expiredStories([story], 3, ["supplier"], checked)).toEqual([story]);
+    expect(expiredStories([story], 3, ["supplier", "timed"], checked)).toEqual([]);
+    expect(expiredStories([story], 3, ["supplier"], { supplier: { status: "missed" } })).toEqual([]);
+  });
+  it("selects the supplier follow-up for the actual choice, not a missed event", () => {
+    const completed = ["supplier"];
+    const checked = dailyEvents(2, 23, completed, { supplier: { status: "chosen", choice: "check" } });
+    const accepted = dailyEvents(2, 23, completed, { supplier: { status: "chosen", choice: "accept" } });
+    const missed = dailyEvents(2, 23, completed, { supplier: { status: "missed" } });
+    expect(checked.some((e) => e.id === "supplier-followup")).toBe(true);
+    expect(accepted.some((e) => e.id === "supplier-accepted-followup")).toBe(true);
+    expect(missed.some((e) => e.id.startsWith("supplier-"))).toBe(false);
   });
   it("selects one to three stable small episodes for each day", () => {
     for (let day = 1; day <= 15; day++) {

@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import conversationPayoffs from "./data/conversation-payoffs.json";
+import { dueInvitations } from "./calendar";
 import { persist } from "zustand/middleware";
 import {
-  absTime, applyEffects, BLOCKS, CAMPAIGN, clamp, dailyEvents, delegationSucceeds, EMAILS, initialColleagues,
+  absTime, applyEffects, BLOCKS, CAMPAIGN, clamp, dailyEvents, delegationSucceeds, EMAILS, expiredStories, initialColleagues,
   LAST_DAY, pairKey, pickEnding, recordGoodwillChange, START_METERS, visitReady,
   type Effects, type Action, type ColleagueState, type Ending, type GoodwillChange, type Meters,
-  type PendingDecision, type Relationships, type StoryEvent, type VisitStatus,
+  type PendingDecision, type Relationships, type StoryEvent, type StoryOutcome, type VisitStatus,
 } from "./rules";
 
 import { capacityLedger, decisionCash, initialEconomy, playerCapacity, playerTime, START_RING_FENCE, SUPPLEMENT, validatePlan, type Economy } from "./economy";
@@ -21,7 +22,7 @@ interface GameState {
   pending: PendingDecision[]; report: LogEntry[]; score: number; energy: number; composure: number; alcohol: number;
   economy: Economy; turn: number; planError: string; yesterday: Record<number, PendingDecision[]>; todayPlans: Record<number, PendingDecision[]>;
   repeatYesterday: () => void; requestSupplement: () => void; raidReserve: () => void;
-  seed: number; events: StoryEvent[]; completedEvents: string[]; storyFlags: string[];
+  seed: number; events: StoryEvent[]; completedEvents: string[]; storyFlags: string[]; storyOutcomes: Record<string, StoryOutcome>;
   start: (c: Character) => void; reset: () => void;
   move: (location: string) => boolean; moveRoom: (room: string) => void;
   selectNpc: (id: string | null) => void;
@@ -35,7 +36,7 @@ const initial = {
   character: null, day: 1, minute: 480, block: 0, meters: START_METERS, handled: {}, log: [],
   goodwillHistory: [], visit: {}, ending: null, location: "embassy", room: "office", selectedNpc: null,
   colleagues: initialColleagues(), relationships: { [pairKey("anselm", "pavel")]: 20, [pairKey("sola", "development")]: 35 },
-  pending: [], report: [], score: 0, energy: 80, composure: 75, alcohol: 0, seed, events: dailyEvents(1, seed, []), completedEvents: [], storyFlags: [],
+  pending: [], report: [], score: 0, energy: 80, composure: 75, alcohol: 0, seed, events: dailyEvents(1, seed, []), completedEvents: [], storyFlags: [], storyOutcomes: {},
 };
 /** Diplo-Points spent on every trip across town. */
 export const TRAVEL_DP = 1;
@@ -96,7 +97,7 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     const economy = { ...s.economy };
     let meters = { ...s.meters }, visit = { ...s.visit }, score = s.score, energy = s.energy, composure = s.composure, alcohol = Math.max(0, s.alcohol - 1);
     const colleagues = structuredClone(s.colleagues), relationships = { ...s.relationships }, handled = { ...s.handled };
-    const history = [...s.goodwillHistory], results: LogEntry[] = [], completedEvents = [...s.completedEvents], storyFlags = [...s.storyFlags];
+    const history = [...s.goodwillHistory], results: LogEntry[] = [], completedEvents = [...s.completedEvents], storyFlags = [...s.storyFlags], storyOutcomes = { ...s.storyOutcomes };
     const record = (source: string, text: string, effects: Effects, kind: GoodwillChange["kind"] = "Outcome") => {
       const before = meters; meters = applyEffects(before, effects);
       history.push(recordGoodwillChange(before, meters, { day: s.day, time: s.minute, source, text, kind }));
@@ -142,7 +143,10 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
         relationships[pairKey(p.worker, other)] = clamp((relationships[pairKey(p.worker, other)] ?? 50) + p.pair);
       }
       if (p.emailId) handled[p.emailId] = p.emailAction ?? "reply";
-      if (p.eventId && !completedEvents.includes(p.eventId)) completedEvents.push(p.eventId);
+      if (p.eventId && !completedEvents.includes(p.eventId)) {
+        completedEvents.push(p.eventId);
+        storyOutcomes[p.eventId] = { status: "chosen", ...(p.eventChoice ? { choice: p.eventChoice } : {}) };
+      }
       if (p.flag?.startsWith("menu-")) {
         for (let i = storyFlags.length - 1; i >= 0; i--) if (storyFlags[i]?.startsWith("menu-")) storyFlags.splice(i, 1);
       }
@@ -154,9 +158,18 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     if (!ending) {
       const event = s.events[s.block];
       if (event && !s.pending.some((p) => p.eventId === event.id)) {
-        record(event.title, `Unresolved: ${event.title}. ${event.id === "invitation" ? "Protocol records that nobody attended." : "The problem carries a cost even when ignored."}`, event.id === "invitation" ? { goodwill: -4 } : { morale: -1 });
+        completedEvents.push(event.id);
+        storyOutcomes[event.id] = { status: "missed" };
+        record(event.title, event.onMiss?.text ?? `Unresolved: ${event.title}. ${event.id === "invitation" ? "Protocol records that nobody attended." : "The problem carries a cost even when ignored."}`, event.onMiss?.effects ?? (event.id === "invitation" ? { goodwill: -4 } : { morale: -1 }));
+      }
+      for (const invitation of dueInvitations(s.day, s.block, storyOutcomes)) {
+        completedEvents.push(invitation.id);
+        storyOutcomes[invitation.id] = { status: "missed" };
+        record(invitation.title, invitation.onMiss.text, invitation.onMiss.effects, "Missed instruction");
+        ending = pickEnding(meters, false, visit); if (ending) break;
       }
       for (const e of EMAILS) {
+        if (ending) break;
         const cutoff = BLOCKS[s.block + 1]?.time ?? 24 * 60;
         if (handled[e.id] || absTime(e.day, e.time) >= absTime(s.day, cutoff)) continue;
         handled[e.id] = "ignored";
@@ -167,6 +180,13 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     }
     const block = s.block === 3 ? 0 : s.block + 1;
     const day = s.block === 3 ? s.day + 1 : s.day;
+    if (!ending && day !== s.day) {
+      for (const event of expiredStories(CAMPAIGN.events as StoryEvent[], day, completedEvents, storyOutcomes)) {
+        completedEvents.push(event.id);
+        storyOutcomes[event.id] = { status: "missed" };
+        record(event.title, event.onMiss?.text ?? `The opportunity passed: ${event.title}.`, event.onMiss?.effects ?? {});
+      }
+    }
     const minute = BLOCKS[block]?.time ?? 480;
     if (s.block === 3) {
       energy = clamp(energy + 25); composure = clamp(composure + 15);
@@ -191,18 +211,23 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     const todayPlans = { ...s.todayPlans, [s.block]: s.pending };
     const carry = s.pending.filter((p) => (p.remainingBlocks ?? 0) > 1).map((p) => ({ ...p, cashCost: 0, remainingBlocks: (p.remainingBlocks ?? 2) - 1 }));
     set({ economy, turn, planError: "", yesterday: s.block === 3 ? todayPlans : s.yesterday, todayPlans: s.block === 3 ? {} : todayPlans, day, block, minute, meters, visit, score, energy, composure, alcohol, colleagues, relationships, handled, goodwillHistory: history,
-      pending: ending ? [] : carry, report: results, log: [...s.log, ...results], completedEvents, storyFlags, ending,
-      events: s.block === 3 ? dailyEvents(day, s.seed, completedEvents) : s.events, selectedNpc: null });
+      pending: ending ? [] : carry, report: results, log: [...s.log, ...results], completedEvents, storyFlags, storyOutcomes, ending,
+      events: s.block === 3 ? dailyEvents(day, s.seed, completedEvents, storyOutcomes) : s.events, selectedNpc: null });
   },
 }), {
-  name: "persona-non-grata-save", version: 3,
+  name: "persona-non-grata-save", version: 4,
   migrate: (saved) => {
     const old = saved as Partial<SavedGame>;
     const economy = old.economy ?? { ...initialEconomy(), funds: Math.max(START_RING_FENCE, Math.round(((old.meters as (Meters & { budget?: number }) | undefined)?.budget ?? 60) / 60 * 10000)) };
     const block = old.block ?? 0;
     const pending = old.pending ?? [];
+    const storyOutcomes = { ...old.storyOutcomes };
+    if (!storyOutcomes["supplier"] && old.completedEvents?.includes("supplier")) {
+      if (old.storyFlags?.includes("supplier-check")) storyOutcomes["supplier"] = { status: "chosen", choice: "check" };
+      else if (old.storyFlags?.includes("supplier-accepted")) storyOutcomes["supplier"] = { status: "chosen", choice: "accept" };
+    }
     const error = validatePlan(pending, block, economy, playerCapacity(old.character ?? null, old.energy ?? 80, old.composure ?? 75, old.alcohol ?? 0).total);
-    return { ...initial, ...old, economy, turn: old.turn ?? ((old.day ?? 1) - 1) * 4 + block, planError: error ? "Your old plan exceeded Chapter 1 limits and was cleared without spending funds. Please replan this block." : "", block, minute: BLOCKS[block]?.time ?? 480, pending: error ? [] : pending, colleagues: old.colleagues ?? initialColleagues(), events: dailyEvents(old.day ?? 1, seed, old.completedEvents ?? []) };
+    return { ...initial, ...old, economy, turn: old.turn ?? ((old.day ?? 1) - 1) * 4 + block, planError: error ? "Your old plan exceeded Chapter 1 limits and was cleared without spending funds. Please replan this block." : "", block, minute: BLOCKS[block]?.time ?? 480, pending: error ? [] : pending, colleagues: old.colleagues ?? initialColleagues(), storyOutcomes, events: old.events ?? dailyEvents(old.day ?? 1, old.seed ?? seed, old.completedEvents ?? [], storyOutcomes) };
   },
   partialize: (s) => Object.fromEntries(Object.entries(s).filter(([, value]) => typeof value !== "function")) as SavedGame,
 }));

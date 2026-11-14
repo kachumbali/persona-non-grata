@@ -121,19 +121,34 @@ export interface PendingDecision {
   timeCost?: number | undefined; cashCost?: number | undefined; guestTime?: number | undefined;
   overload?: boolean | undefined; service?: "express" | "driver" | undefined; location?: string | undefined;
   venue?: string | undefined; remainingBlocks?: number | undefined; special?: "supplement" | undefined;
-  emailId?: string | undefined; emailAction?: Action | undefined; eventId?: string | undefined; playerSlot?: boolean | undefined;
+  emailId?: string | undefined; emailAction?: Action | undefined; eventId?: string | undefined; eventChoice?: string | undefined; playerSlot?: boolean | undefined;
 }
 export interface StoryChoice {
   id: string; label: string; next?: string; effects?: Effects; result?: string;
   trust?: number; pair?: number; score?: number; flag?: string; replace?: boolean; worker?: string;
 }
-export type StoryEvent = { id: string; title: string; npc: string; text: string; minDay: number; requires?: string; choices: StoryChoice[] };
-export function dailyEvents(day: number, seed: number, completed: string[]): StoryEvent[] {
-  const available = (CAMPAIGN.events as StoryEvent[]).filter((e) => e.minDay <= day && (!e.requires || completed.includes(e.requires)) && !completed.includes(e.id));
-  // Seeded order stays stable across reloads; continuations take precedence.
+export type StoryOutcome = { status: "chosen" | "missed"; choice?: string };
+export type StoryEvent = {
+  id: string; title: string; npc: string; text: string; minDay: number; expiresDay?: number;
+  requires?: string; requiresChoice?: { eventId: string; choiceId: string }; onMiss?: { text: string; effects: Effects }; choices: StoryChoice[];
+};
+/** A prerequisite must have succeeded; missed episodes cannot unlock continuations. */
+export function storyPrerequisitesMet(event: StoryEvent, completed: string[], outcomes: Record<string, StoryOutcome>): boolean {
+  return (!event.requires || (completed.includes(event.requires) && outcomes[event.requires]?.status !== "missed")) &&
+    (!event.requiresChoice || (outcomes[event.requiresChoice.eventId]?.status === "chosen" && outcomes[event.requiresChoice.eventId]?.choice === event.requiresChoice.choiceId));
+}
+/** Stories that reached their deadline before they could be offered are recorded once. */
+export function expiredStories(events: StoryEvent[], day: number, completed: string[], outcomes: Record<string, StoryOutcome>): StoryEvent[] {
+  return events.filter((event) => event.expiresDay !== undefined && event.expiresDay < day && !completed.includes(event.id) && storyPrerequisitesMet(event, completed, outcomes));
+}
+/** Select one to three available events; a day can be quiet when all stories are complete. */
+export function dailyEvents(day: number, seed: number, completed: string[], outcomes: Record<string, StoryOutcome> = {}): StoryEvent[] {
+  const available = (CAMPAIGN.events as StoryEvent[]).filter((event) =>
+    event.minDay <= day && (event.expiresDay === undefined || day <= event.expiresDay) &&
+    storyPrerequisitesMet(event, completed, outcomes) && !completed.includes(event.id),
+  );
   const hash = (id: string) => [...id].reduce((n, char) => ((n * 31) ^ char.charCodeAt(0)) >>> 0, (seed + day * 7919) >>> 0);
-  available.sort((a, b) => Number(Boolean(b.requires)) - Number(Boolean(a.requires)) || hash(a.id) - hash(b.id));
-  if (!available.length) available.push((CAMPAIGN.events as StoryEvent[])[0] ?? { id: "invitation", title: "Invitation", npc: "protocol", text: "Your presence is requested.", minDay: 1, choices: [] });
+  available.sort((a, b) => Number(Boolean(b.requires || b.requiresChoice)) - Number(Boolean(a.requires || a.requiresChoice)) || hash(a.id) - hash(b.id));
   return available.slice(0, 1 + Math.abs((seed + day) % 3));
 }
 export function hospitalityCost(venueId: string, guestCount: number, block: number): number {

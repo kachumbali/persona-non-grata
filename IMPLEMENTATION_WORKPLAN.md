@@ -1,0 +1,67 @@
+# Implementation workplan: daily stories and locations
+
+## Objective and constraints
+
+Keep two concurrent arcs throughout a posting: the chapter-long mission and daily diplomatic stories. Deliver small, playable increments, retaining the existing scheduled blocks, DP, staff capacity, money, goodwill, travel and save systems. Author game content in JSON; keep scheduling and economic rules in browser-safe pure TypeScript, with persistent state in the game store. Story choices should produce consequences, but optional stories must not be mandatory for completing the mission.
+
+Each work package ends with its acceptance checks and a working build. Do not start the next package until its dependency is complete; content and scene art can be prepared independently after the data format is settled.
+
+## WP0 — Baseline and campaign pacing
+
+**Work:** Play the existing opening and at least one complete 15-day posting. Record the availability of side stories, travel and task costs, invitation conflicts, player and staff DP, visit readiness and where the pace slows or feels unfair. Record the current save format and test an existing save.
+
+**Done when:** There is a short list of observed issues and a repeatable playthrough checklist. Existing saves load; the existing tests, type check and build pass. Keep findings separate from assumptions.
+
+## WP1 — Story progression and save compatibility
+
+**Depends on:** WP0.
+
+**Work:** Define a data-driven story format for stages, choice-specific follow-ups, eligibility, location, deadlines, consequences and completion. Keep existing story events playable; decide and document what happens when a lead is declined, missed or expires. Add pure scheduling/progression helpers and persisted story state. Migrate existing saves without losing the chapter mission, commitments or resolved choices. Keep choice resolution in the existing advance-block flow; validate replacement plans atomically. Prevent completed stories from being offered again as fallback events.
+
+**Done when:** A small fixture story branches on the player's choice, resolves or expires exactly once, and survives save/reload. Existing saves and authored events continue to work. Tests cover branches, deadlines, no eligible events, repeat prevention and migration.
+
+## WP2 — Leads, invitations and diplomatic calendar
+
+**Depends on:** WP1.
+
+**Work:** Add a BlockBerry view of active leads and upcoming invitations with host, purpose, location, day/block, deadline and known time/money costs. Model national days, EU27 coordination, UN and other multilateral meetings, and invitations from other missions. Where appropriate, allow attend, delegate or decline; show staff availability and displaced routine duties before confirming. Make travel, player/staff capacity and funds use the same existing validation and queue. Explain missed events and show outcomes in the round report. Use named fictional hosts and characters, expandable in JSON.
+
+**Done when:** A sample invitation can be attended, delegated, declined or missed, with a distinct recorded outcome and no double resolution. The player sees conflicts before committing; failed scheduling leaves the existing plan intact. Dates, leads and statuses persist across reloads. The chapter can still be completed after missing an optional event.
+
+## WP3 — First complete slice: supplier and the Quiet Amendment
+
+**Depends on:** WP1–WP2.
+
+**Work:** Write the supplier's cousin as a two- or three-stage story with accept, investigate and legitimate-alternative paths; connect choices to costs, relationships and later consequences. Give the Quiet Amendment a distinct painted 2D scene, accessible hotspots, its contact and an actionable map lead. Keep travel via the store's move().
+
+**Done when:** A player can discover, visit and resolve the story through at least two materially different paths, including leaving it unresolved. The consequences appear in reports and a later follow-up. Verify on desktop and mobile, including keyboard access, travel costs and save/reload between stages.
+
+## WP4 — Protocol and the Foreign Ministry
+
+**Depends on:** WP3.
+
+**Work:** Add the seating/protocol incident, a distinct ministry scene and protocol-desk hotspot. Offer choices involving host goodwill and Capital's expectations, including delegation where suitable. Connect at least one outcome optionally to the ministerial visit.
+
+**Done when:** Different choices produce traceable consequences for the host, Capital or relationships, and a follow-up acknowledges the choice. The main visit remains finishable through alternative paths. Check invitation, travel and staff conflicts and end-of-block resolution.
+
+## WP5 — Press, development and diplomatic community
+
+**Depends on:** WP4.
+
+**Work:** Add the press-club briefing story and Elise's development/UN story, each with choice-dependent follow-ups. Author a varied initial calendar of national-day receptions, EU27 meetings, UN or other multilateral meetings and invitations from other missions. Introduce a small set of recurring fictional diplomats rather than generating interchangeable names. Create distinct scenes and hotspots for the Press Club and UN House, then the EU Delegation and Golf Club; give each a clear reason to visit and appropriate opportunities. Reuse shared scene components and semantic styling.
+
+**Done when:** Each story has at least two meaningful outcomes, meetings and receptions can recur without repeating already-completed one-off stories, and the calendar supplies varied opportunities across the 15-day chapter without guaranteeing a compulsory event every block. All six outside locations have a distinct visual and actionable purpose.
+
+## WP6 — Endings, pacing and release check
+
+**Depends on:** WP5.
+
+**Work:** Include selected significant side-story and diplomatic-calendar outcomes in the end-of-posting report. Play complete campaigns with different approaches: attend, delegate, decline and miss events; pursue and ignore side stories; prepare or fail the visit. Tune timing, DP and costs based on observations. Check desktop/mobile layouts, accessibility, persistence, JSON validation, types, tests and production build.
+
+**Done when:** Both arcs remain visible throughout the chapter; choices and consequences can be traced in reports; the ending reflects important events without contradictions; optional side stories do not block the core mission. Record any remaining balancing or content gaps before considering the work complete.
+
+## Progress notes
+
+- **WP0, partial:** The existing automated campaign test reaches the Day 15 ending, and the opening/diary have been inspected in the browser. A human full-campaign playthrough and pacing review are still needed.
+- **WP1, first slice:** Story outcomes record resolved choices and missed episodes; follow-ups can depend on choices, deadlines can expire, completed episodes no longer fall back into the schedule, and existing supplier choices migrate from saved flags. The supplier now has separate investigation and acceptance follow-ups.
+- **WP2, first slice:** The BlockBerry diary and map expose three authored invitations (EU27, Valdorian national day and UN roundtable). Attend, delegate, decline and missed outcomes use the existing round, DP, staff and economy rules. Longer-term lead tracking, a broader calendar and richer recurring diplomats remain to be built.
