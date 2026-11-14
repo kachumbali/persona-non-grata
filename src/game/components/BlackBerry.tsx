@@ -34,8 +34,8 @@ export function BlackBerry() {
   const away = g.location !== "embassy";
   return (
     <>
-      {up && <section className="bb-popup" aria-label="BlockBerry">
-        <div className="mb-2 flex items-center gap-1">
+      {up && <section className="bb-popup" data-mail={tab === "mail" && away} aria-label="BlockBerry">
+        <div className="mb-2 flex flex-wrap items-center gap-1 text-primary-foreground">
           <strong className="mr-auto font-mono text-accent">BlockBerry</strong>
           <Button size="sm" variant={tab === "status" ? "secondary" : "ghost"} onClick={() => setTab("status")}>Status</Button>
           <Button size="sm" variant={tab === "calendar" ? "secondary" : "ghost"} onClick={() => setTab("calendar")}>Diary</Button>
@@ -53,7 +53,7 @@ export function BlackBerry() {
             </div>
             {g.planError && <p role="alert" className="text-destructive">{g.planError}</p>}
             {g.report.length > 0 && <details open><summary className="cursor-pointer font-bold">Last round · {g.report.length} items</summary><ul className="max-h-40 overflow-y-auto">{g.report.map((r, i) => <li key={i}>• {r.text}</li>)}</ul></details>}
-          </div> : tab === "calendar" ? <DiplomaticCalendar /> : away ? <Mailbox channel="mail" /> : <p className="text-sm">You're in the office. Use your PC for mail.</p>}
+          </div> : tab === "calendar" ? <DiplomaticCalendar /> : away ? <Mailbox channel="mail" singlePane /> : <p className="text-sm">You're in the office. Use your PC for mail.</p>}
         </div>
       </section>}
       <footer className="hud-bar" aria-label="Resources">

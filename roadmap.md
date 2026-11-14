@@ -22,3 +22,4 @@
 - [ ] Boss key (Leisure Suit Larry style fake work screen) — later, as requested.
 
 - [x] Character-specific, varied, funny dialogues for every NPC (no shared identical lines)
+- [x] Thread 0f8aa267-4891-48b0-8780-294eb3a9fef9: enlarge phone mail and add inbox/back navigation; verify reading and replying.
