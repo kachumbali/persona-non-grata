@@ -1,0 +1,6 @@
+[
+  { "flag": "menu-garlic", "source": "The Minister’s menu", "text": "The Minister detects garlic. Ketu calls it an aromatic diplomatic misunderstanding; Capital calls it an incident. The host delegation asks for seconds.", "effects": { "confidence": -5, "goodwill": 3 } },
+  { "flag": "menu-strict", "source": "The Minister’s menu", "text": "The Minister praises the impeccably compliant 'Food (hot)'. The host delegation quietly asks where the flavour went.", "effects": { "confidence": 3, "goodwill": -2 } },
+  { "flag": "menu-gold", "source": "The Minister’s menu", "text": "The gold-lettered menu is admired by both delegations. 'Fish soup with ambition' becomes the visit’s unlikely diplomatic triumph.", "effects": { "confidence": 2, "goodwill": 2 } },
+  { "flag": "menu-soup", "source": "The Minister’s menu", "text": "The Minister notices 'diplomatique' on the menu. Ketu insists it is a typo; the host delegation decides it is a joke.", "effects": { "confidence": -2, "goodwill": 1 } }
+]

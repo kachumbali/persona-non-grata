@@ -787,6 +787,7 @@
       {
        "label": "Cook what you like. I'll handle the office.",
        "result": "Ketu nods slowly. Somewhere, garlic is being prepared defiantly.",
+       "flag": "menu-garlic",
        "trust": 7,
        "pair": 0,
        "score": 0,
@@ -797,6 +798,7 @@
       {
        "label": "Follow the list exactly.",
        "result": "The menu says 'Food (hot)'. Ketu has quietly died inside.",
+       "flag": "menu-strict",
        "trust": -5,
        "pair": 0,
        "score": 1,
@@ -810,6 +812,7 @@
       {
        "label": "Perfect. Print it in gold.",
        "result": "The menu becomes a collector's item. Capital asks for a copy.",
+       "flag": "menu-gold",
        "trust": 5,
        "pair": 0,
        "score": 1,
@@ -820,6 +823,7 @@
       {
        "label": "Call it 'Soup diplomatique'.",
        "result": "Ketu points out that is a foreign word. You lose an argument to a chef.",
+       "flag": "menu-soup",
        "trust": 2,
        "pair": 0,
        "score": 0,

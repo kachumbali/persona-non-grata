@@ -1,13 +1,14 @@
 import { create } from "zustand";
+import conversationPayoffs from "./data/conversation-payoffs.json";
 import { persist } from "zustand/middleware";
 import {
   absTime, applyEffects, BLOCKS, CAMPAIGN, clamp, dailyEvents, delegationSucceeds, EMAILS, initialColleagues,
-  LAST_DAY, pairKey, pickEnding, recordGoodwillChange, START_METERS,
+  LAST_DAY, pairKey, pickEnding, recordGoodwillChange, START_METERS, visitReady,
   type Effects, type Action, type ColleagueState, type Ending, type GoodwillChange, type Meters,
   type PendingDecision, type Relationships, type StoryEvent, type VisitStatus,
 } from "./rules";
 
-import { capacityLedger, decisionCash, initialEconomy, playerTime, START_RING_FENCE, SUPPLEMENT, validatePlan, type Economy } from "./economy";
+import { capacityLedger, decisionCash, initialEconomy, playerCapacity, playerTime, START_RING_FENCE, SUPPLEMENT, validatePlan, type Economy } from "./economy";
 
 export interface Character { title: string; name: string; face: number; bio: string; traits: string[] }
 export interface LogEntry { day: number; time: number; text: string }
@@ -17,7 +18,7 @@ interface GameState {
   goodwillHistory: GoodwillChange[]; visit: VisitStatus; ending: Ending | null;
   location: string; room: string; selectedNpc: string | null;
   colleagues: Record<string, ColleagueState>; relationships: Relationships;
-  pending: PendingDecision[]; report: LogEntry[]; score: number; energy: number; composure: number;
+  pending: PendingDecision[]; report: LogEntry[]; score: number; energy: number; composure: number; alcohol: number;
   economy: Economy; turn: number; planError: string; yesterday: Record<number, PendingDecision[]>; todayPlans: Record<number, PendingDecision[]>;
   repeatYesterday: () => void; requestSupplement: () => void; raidReserve: () => void;
   seed: number; events: StoryEvent[]; completedEvents: string[]; storyFlags: string[];
@@ -34,7 +35,7 @@ const initial = {
   character: null, day: 1, minute: 480, block: 0, meters: START_METERS, handled: {}, log: [],
   goodwillHistory: [], visit: {}, ending: null, location: "embassy", room: "office", selectedNpc: null,
   colleagues: initialColleagues(), relationships: { [pairKey("anselm", "pavel")]: 20, [pairKey("sola", "development")]: 35 },
-  pending: [], report: [], score: 0, energy: 80, composure: 75, seed, events: dailyEvents(1, seed, []), completedEvents: [], storyFlags: [],
+  pending: [], report: [], score: 0, energy: 80, composure: 75, alcohol: 0, seed, events: dailyEvents(1, seed, []), completedEvents: [], storyFlags: [],
 };
 /** Diplo-Points spent on every trip across town. */
 export const TRAVEL_DP = 1;
@@ -60,7 +61,7 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     if (replacePlayer && s.pending.some((p) => p.remainingBlocks === 1)) { set({ planError: "The second half of your golf round is already committed." }); return false; }
     const old = s.pending.filter((p) => !(decision.kind === "social" && p.kind === "social") && !(replacePlayer && playerTime(p) > 0));
     const plan = [...old, decision];
-    const error = decision.special === "supplement" && s.economy.supplementUsed ? "Capital has already granted your supplement." : validatePlan(plan, s.block, s.economy);
+    const error = decision.special === "supplement" && s.economy.supplementUsed ? "Capital has already granted your supplement." : validatePlan(plan, s.block, s.economy, playerCapacity(s.character, s.energy, s.composure, s.alcohol).total);
     if (error) { set({ planError: error }); return false; }
     set({ pending: plan, planError: "" });
     return true;
@@ -70,7 +71,7 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     if (!s.character || s.ending) return;
     const plan = s.yesterday[s.block];
     if (!plan) return;
-    const error = s.pending.some((p) => p.remainingBlocks === 1) ? "Finish your committed golf round before replacing the plan." : plan.some((p) => p.emailId || p.eventId || p.special || (p.task && s.visit[p.task]) || p.remainingBlocks) ? "Yesterday's plan contains completed or one-off commitments. Plan those again individually." : validatePlan(plan, s.block, s.economy);
+    const error = s.pending.some((p) => p.remainingBlocks === 1) ? "Finish your committed golf round before replacing the plan." : plan.some((p) => p.emailId || p.eventId || p.special || (p.task && s.visit[p.task]) || p.remainingBlocks) ? "Yesterday's plan contains completed or one-off commitments. Plan those again individually." : validatePlan(plan, s.block, s.economy, playerCapacity(s.character, s.energy, s.composure, s.alcohol).total);
     if (error) { set({ planError: error }); return; }
     set({ pending: structuredClone(plan), planError: "" });
   },
@@ -90,10 +91,10 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
   },
   advance: () => {
     const s = get(); if (!s.character || s.ending) return;
-    const invalid = validatePlan(s.pending, s.block, s.economy);
+    const invalid = validatePlan(s.pending, s.block, s.economy, playerCapacity(s.character, s.energy, s.composure, s.alcohol).total);
     if (invalid) { set({ planError: invalid }); return; }
     const economy = { ...s.economy };
-    let meters = { ...s.meters }, visit = { ...s.visit }, score = s.score, energy = s.energy, composure = s.composure;
+    let meters = { ...s.meters }, visit = { ...s.visit }, score = s.score, energy = s.energy, composure = s.composure, alcohol = Math.max(0, s.alcohol - 1);
     const colleagues = structuredClone(s.colleagues), relationships = { ...s.relationships }, handled = { ...s.handled };
     const history = [...s.goodwillHistory], results: LogEntry[] = [], completedEvents = [...s.completedEvents], storyFlags = [...s.storyFlags];
     const record = (source: string, text: string, effects: Effects, kind: GoodwillChange["kind"] = "Outcome") => {
@@ -102,7 +103,7 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
       results.push({ day: s.day, time: s.minute, text });
     };
     let ending: Ending | null = null;
-    for (const row of capacityLedger(s.pending, s.block)) {
+    for (const row of capacityLedger(s.pending, s.block, playerCapacity(s.character, s.energy, s.composure, s.alcohol).total)) {
       if (row.displaced > 0 && row.id !== "self") {
         const c = colleagues[row.id];
         if (c) c.fatigue = clamp(c.fatigue + row.displaced * 10);
@@ -126,6 +127,10 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
       if (success && !storyFlags.includes(rewardKey)) { score += p.score ?? 0; storyFlags.push(rewardKey); }
       energy = clamp(energy + (p.energy ?? -5 * playerTime(p)));
       composure = clamp(composure + (p.composure ?? 0));
+      if (p.drinks) {
+        alcohol = Math.min(5, alcohol + 2);
+        results.push({ day: s.day, time: s.minute, text: "You drank alcohol. Its effect on your DP begins next block and fades over time." });
+      }
       if (p.worker && colleagues[p.worker]) {
         const c = colleagues[p.worker];
         const socialRepeat = p.kind === "social" && storyFlags.includes(`social:${p.worker}`);
@@ -138,7 +143,11 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
       }
       if (p.emailId) handled[p.emailId] = p.emailAction ?? "reply";
       if (p.eventId && !completedEvents.includes(p.eventId)) completedEvents.push(p.eventId);
-      if (p.flag) storyFlags.push(p.flag);
+      if (p.flag?.startsWith("menu-")) {
+        for (let i = storyFlags.length - 1; i >= 0; i--) if (storyFlags[i]?.startsWith("menu-")) storyFlags.splice(i, 1);
+      }
+      if (p.flag && !storyFlags.includes(p.flag)) storyFlags.push(p.flag);
+      if (p.dialogueTopic && !storyFlags.includes(`dialogue:${p.dialogueTopic}`)) storyFlags.push(`dialogue:${p.dialogueTopic}`);
       ending = pickEnding(meters, false, visit); if (ending) break;
     }
     // Unaddressed episodes expire at the end of their scheduled block.
@@ -169,6 +178,9 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
       record("Capital supplement", "ƒ1,500 arrived in the representation account.", {});
     }
     if (day >= LAST_DAY && s.day < LAST_DAY) {
+      for (const payoff of conversationPayoffs) {
+        if (!ending && visitReady(visit) && storyFlags.includes(payoff.flag)) record(payoff.source, payoff.text, payoff.effects);
+      }
       const shortfall = START_RING_FENCE - economy.ringFence;
       if (shortfall > 0) {
         economy.funds -= shortfall;
@@ -178,7 +190,7 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     ending = ending ?? pickEnding(meters, day >= LAST_DAY, visit);
     const todayPlans = { ...s.todayPlans, [s.block]: s.pending };
     const carry = s.pending.filter((p) => (p.remainingBlocks ?? 0) > 1).map((p) => ({ ...p, cashCost: 0, remainingBlocks: (p.remainingBlocks ?? 2) - 1 }));
-    set({ economy, turn, planError: "", yesterday: s.block === 3 ? todayPlans : s.yesterday, todayPlans: s.block === 3 ? {} : todayPlans, day, block, minute, meters, visit, score, energy, composure, colleagues, relationships, handled, goodwillHistory: history,
+    set({ economy, turn, planError: "", yesterday: s.block === 3 ? todayPlans : s.yesterday, todayPlans: s.block === 3 ? {} : todayPlans, day, block, minute, meters, visit, score, energy, composure, alcohol, colleagues, relationships, handled, goodwillHistory: history,
       pending: ending ? [] : carry, report: results, log: [...s.log, ...results], completedEvents, storyFlags, ending,
       events: s.block === 3 ? dailyEvents(day, s.seed, completedEvents) : s.events, selectedNpc: null });
   },
@@ -189,7 +201,7 @@ export const useGame = create<GameState>()(persist<GameState, [], [], SavedGame>
     const economy = old.economy ?? { ...initialEconomy(), funds: Math.max(START_RING_FENCE, Math.round(((old.meters as (Meters & { budget?: number }) | undefined)?.budget ?? 60) / 60 * 10000)) };
     const block = old.block ?? 0;
     const pending = old.pending ?? [];
-    const error = validatePlan(pending, block, economy);
+    const error = validatePlan(pending, block, economy, playerCapacity(old.character ?? null, old.energy ?? 80, old.composure ?? 75, old.alcohol ?? 0).total);
     return { ...initial, ...old, economy, turn: old.turn ?? ((old.day ?? 1) - 1) * 4 + block, planError: error ? "Your old plan exceeded Chapter 1 limits and was cleared without spending funds. Please replan this block." : "", block, minute: BLOCKS[block]?.time ?? 480, pending: error ? [] : pending, colleagues: old.colleagues ?? initialColleagues(), events: dailyEvents(old.day ?? 1, seed, old.completedEvents ?? []) };
   },
   partialize: (s) => Object.fromEntries(Object.entries(s).filter(([, value]) => typeof value !== "function")) as SavedGame,

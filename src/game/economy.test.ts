@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { availableFunds, baselineTime, initialEconomy, participantTime, validatePlan } from "./economy";
+import { availableFunds, baselineTime, initialEconomy, participantTime, playerCapacity, validatePlan } from "./economy";
 import { EMAILS, type PendingDecision } from "./rules";
 import { useGame } from "./store";
 
@@ -19,15 +19,37 @@ describe("Chapter 1 time and money", () => {
     expect(g().move("ministry")).toBe(true);
     expect(g().location).toBe("ministry");
     expect(g().move("eu")).toBe(true);
-    expect(g().move("bar")).toBe(false);
-    expect(g().location).toBe("eu");
+    expect(g().move("bar")).toBe(true);
+    expect(g().move("un")).toBe(true);
+    expect(g().move("embassy")).toBe(false);
+    expect(g().location).toBe("un");
   });
-  it("allows two 1-DP actions but rejects a third", () => {
+  it("allows four 1-DP actions but rejects a fifth", () => {
     const q = useGame.getState().queue;
     expect(q(action("a"))).toBe(true);
     expect(q(action("b", { kind: "email" }))).toBe(true);
-    expect(q(action("c", { kind: "social" }))).toBe(false);
+    expect(q(action("c", { kind: "social" }))).toBe(true);
+    expect(q(action("d"))).toBe(true);
+    expect(q(action("e"))).toBe(false);
     expect(useGame.getState().block).toBe(0);
+  });
+  it("adjusts the player's capacity for stamina, fatigue and alcohol tolerance", () => {
+    expect(playerCapacity({ traits: [] }, 80, 75, 0).total).toBe(4);
+    expect(playerCapacity({ traits: ["punctual"] }, 80, 75, 0).total).toBe(5);
+    expect(playerCapacity({ traits: ["sideevents"] }, 20, 20, 2).total).toBe(2);
+    expect(playerCapacity({ traits: [] }, 80, 75, 2).total).toBe(3);
+    expect(playerCapacity({ traits: ["liver"] }, 80, 75, 2).total).toBe(3);
+    expect(playerCapacity({ traits: ["liver"] }, 80, 75, 3).total).toBe(2);
+  });
+  it("applies a drink and strenuous activity to the next block", () => {
+    useGame.setState({ energy: 38 });
+    expect(useGame.getState().queue(action("drinks", { kind: "social", drinks: true, energy: -10 }))).toBe(true);
+    useGame.getState().advance();
+    const g = useGame.getState();
+    expect(g.alcohol).toBe(2);
+    expect(playerCapacity(g.character, g.energy, g.composure, g.alcohol).total).toBe(2);
+    g.advance();
+    expect(useGame.getState().alcohol).toBe(1);
   });
   it("charges colleague coffee and lunch one DP, dinner zero official DP", () => {
     const social = action("meal", { kind: "social", worker: "pavel" });
@@ -46,6 +68,12 @@ describe("Chapter 1 time and money", () => {
     useGame.getState().advance();
     expect(useGame.getState().colleagues["pavel"]?.fatigue).toBe(28);
     expect(useGame.getState().meters.confidence).toBe(54);
+  });
+  it("allows a later explicitly authorised conversation to displace routine work", () => {
+    const first = action("first", { kind: "dialogue", worker: "pavel" });
+    const second = action("second", { kind: "dialogue", worker: "pavel", overload: true });
+    expect(validatePlan([first, second], 0, initialEconomy())).toBeNull();
+    expect(validatePlan([first, { ...second, overload: false }], 0, initialEconomy())).toContain("duties conflict");
   });
   it("caps each colleague at 2 DP even with displacement", () => {
     expect(validatePlan([action("a", { worker: "pavel", timeCost: 0, overload: true }), action("b", { kind: "dialogue", worker: "pavel", overload: true })], 0, initialEconomy())).toContain("only 2 DP");
@@ -86,9 +114,9 @@ describe("Chapter 1 time and money", () => {
     useGame.getState().queue(action("golf", { timeCost: 2, remainingBlocks: 2, cashCost: 400, score: 3 }));
     useGame.getState().advance();
     expect(useGame.getState().score).toBe(0);
-    expect(useGame.getState().queue(action("extra"))).toBe(false);
+    expect(useGame.getState().queue(action("extra"))).toBe(true);
     useGame.getState().removeDecision("golf");
-    expect(useGame.getState().pending).toHaveLength(1);
+    expect(useGame.getState().pending).toHaveLength(2);
     useGame.getState().advance();
     expect(useGame.getState().score).toBe(3);
     expect(useGame.getState().economy.funds).toBe(9600);

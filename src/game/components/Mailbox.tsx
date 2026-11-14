@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ACTION_LABELS, formatClock, type Action } from "../rules";
 import { inboxFor, useGame } from "../store";
+import { decisionCash, money } from "../economy";
+import choiceLabels from "../data/mail-choices.json";
 
 /** Capital's instructions only arrive on the secure fax in the embassy office. */
 export const isFax = (from: string) => from.startsWith("Capital");
@@ -35,7 +37,12 @@ export function Mailbox({ channel }: { channel: "mail" | "fax" }) {
             <div className="mt-4 border-t border-dashed border-border pt-3">
               {open.status ? <span className="stamp animate-stamp">{open.status === "ignored" ? "Escalated" : ACTION_LABELS[open.status as Action]}</span> : (
                 <div className="flex flex-wrap gap-2">
-                  {(Object.keys(open.options) as Action[]).map((a) => <Button key={a} disabled={scheduled(open.id)} variant="outline" onClick={() => { setOpenId(open.id); g.answer(open.id, a); }}>{ACTION_LABELS[a]} · 1 DP</Button>)}
+                  {(Object.keys(open.options) as Action[]).map((a) => {
+                    const outcome = open.options[a]!;
+                    const cost = decisionCash({ id: open.id, kind: "email", source: open.subject, text: outcome.text, effects: outcome.effects });
+                    const label = (choiceLabels as Record<string, Partial<Record<Action, string>>>)[open.id]?.[a] ?? ACTION_LABELS[a];
+                    return <Button key={a} disabled={scheduled(open.id)} variant="outline" className="h-auto whitespace-normal py-2 text-left" onClick={() => { setOpenId(open.id); g.answer(open.id, a); }}>{label} · 1 DP{cost > 0 ? ` · ${money(cost)}` : ""}</Button>;
+                  })}
                   <span className="self-center text-xs text-muted-foreground">{scheduled(open.id) ? "Reply scheduled for this round" : "Unanswered instructions resolve at round end"}</span>
                 </div>
               )}

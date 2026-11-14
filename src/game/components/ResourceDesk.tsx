@@ -1,18 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Clock3, Repeat2, Banknote } from "lucide-react";
-import { availableFunds, capacityLedger, decisionCash, money, SUPPLEMENT, VISIT_RESERVES } from "../economy";
+import { availableFunds, capacityLedger, decisionCash, money, playerCapacity, staffDuty, SUPPLEMENT, VISIT_RESERVES } from "../economy";
 import { CAMPAIGN } from "../rules";
 import { useGame } from "../store";
 
 export function ResourceDesk() {
   const g = useGame();
-  const ledger = capacityLedger(g.pending, g.block);
+  const capacity = playerCapacity(g.character, g.energy, g.composure, g.alcohol);
+  const ledger = capacityLedger(g.pending, g.block, capacity.total);
   const reserved = g.pending.reduce((n, p) => n + decisionCash(p), 0);
   return <div className="border-b-2 border-border bg-muted p-3" aria-label="Time and money">
     <div className="flex flex-wrap items-center justify-between gap-3">
-      <h3 className="flex items-center gap-2 text-xl"><Clock3 className="size-5" />Your diary · {ledger[0]?.used ?? 0} / 2 DP committed</h3>
+      <h3 className="flex items-center gap-2 text-xl"><Clock3 className="size-5" />Your diary · {ledger[0]?.used ?? 0} / {capacity.total} DP committed</h3>
       <Button size="sm" variant="outline" onClick={g.repeatYesterday} disabled={!g.yesterday[g.block]}><Repeat2 className="size-4" />Repeat yesterday</Button>
     </div>
+    <p className="mt-1 text-xs">DP: base 4{capacity.factors.length ? ` · ${capacity.factors.join(" · ")}` : " · no modifiers"}. Changes from choices apply next block.</p>
     <div className="mt-2 grid gap-1 text-xs sm:grid-cols-3">{ledger.filter((r) => r.id !== "self" && CAMPAIGN.characters.find((c) => c.id === r.id)?.location === "embassy").map((r) => <div key={r.id} className={r.displaced ? "text-destructive" : "text-muted-foreground"}>{CAMPAIGN.characters.find((c) => c.id === r.id)?.name}: {g.block === 3 ? "off duty" : `${r.baseline} baseline · ${r.used} planned · ${r.free} free DP`}{r.displaced > 0 ? ` · ${r.displaced} DP duties displaced` : ""}</div>)}</div>
     <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 border-t border-border pt-2 font-mono" aria-label="Campaign budget">
       <span>Funds {money(g.economy.funds)}</span><span>Visit reserve {money(g.economy.ringFence)}</span><span>Pending {money(reserved)}</span><strong>Available {money(availableFunds(g.economy, g.pending))}</strong>

@@ -2,11 +2,10 @@ import { useState } from "react";
 import { ArrowRight, Smartphone, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BLOCKS } from "../rules";
-import { availableFunds, decisionCash, money, playerTime } from "../economy";
+import { availableFunds, decisionCash, money, playerTime, playerCapacity } from "../economy";
 import { useGame } from "../store";
 import { Mailbox } from "./Mailbox";
 
-const MAX_DP = 2;
 
 function Orb({ label, value, kind }: { label: string; value: number; kind: "hq" | "host" }) {
   return (
@@ -25,8 +24,9 @@ export function BlackBerry() {
   const g = useGame();
   const [up, setUp] = useState(false);
   const [tab, setTab] = useState<"status" | "mail">("status");
+  const capacity = playerCapacity(g.character, g.energy, g.composure, g.alcohol);
   const used = g.pending.reduce((n, p) => n + playerTime(p), 0);
-  const left = Math.max(0, MAX_DP - used);
+  const left = Math.max(0, capacity.total - used);
   const block = BLOCKS[g.block] ?? BLOCKS[0];
   const away = g.location !== "embassy";
   return (
@@ -41,7 +41,8 @@ export function BlackBerry() {
         <div className="bb-screen">
           {tab === "status" ? <div className="space-y-2 text-sm">
             <p className="font-mono">HQ {g.meters.confidence} · Host {g.meters.goodwill} · Morale {g.meters.morale} · Sanity {g.meters.sanity}</p>
-            <p className="font-mono">Energy {g.energy} · Composure {g.composure} · Standing {g.score}</p>
+            <p className="font-mono">Energy {g.energy} · Composure {g.composure} · Alcohol {g.alcohol} · Standing {g.score}</p>
+            <p className="text-xs">DP this block: base 4{capacity.factors.length ? ` · ${capacity.factors.join(" · ")}` : " · no modifiers"} (min 2, max 5)</p>
             <div><strong>Committed this {block.name.toLowerCase()}</strong>
               {g.pending.length === 0 && <p className="text-muted-foreground">Nothing planned. Idle time is noticed.</p>}
               <ul>{g.pending.map((p) => <li key={p.id} className="flex items-center justify-between gap-1 border-b border-border py-0.5"><span>{p.source} · {playerTime(p)} DP · {money(decisionCash(p))}</span><Button variant="ghost" size="icon" className="size-6" aria-label={`Remove ${p.source}`} onClick={() => g.removeDecision(p.id)}><Trash2 className="size-3" /></Button></li>)}</ul>
@@ -54,10 +55,10 @@ export function BlackBerry() {
       <footer className="hud-bar" aria-label="Resources">
         <Orb label="HQ" value={g.meters.confidence} kind="hq" />
         <div className="hud-center">
-          <div className="hud-slot" aria-label={`${left} of ${MAX_DP} Diplo-Points left`}>
+          <div className="hud-slot" aria-label={`${left} of ${capacity.total} Diplo-Points left`}>
             <span className="hud-label">DP</span>
-            {Array.from({ length: MAX_DP }, (_, i) => <span key={i} className="hud-gem" data-on={i < left} />)}
-            <span className="font-mono text-lg">{left}/{MAX_DP}</span>
+            {Array.from({ length: capacity.total }, (_, i) => <span key={i} className="hud-gem" data-on={i < left} />)}
+            <span className="font-mono text-lg">{left}/{capacity.total}</span>
           </div>
           <div className="hud-slot"><span className="hud-label">Funds</span><span className="font-mono text-lg">{money(availableFunds(g.economy, g.pending))}</span></div>
           <div className="hud-slot"><span className="hud-label">Day {g.day}</span><span className="font-mono text-lg">{block.name}</span></div>

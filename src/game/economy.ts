@@ -1,4 +1,20 @@
-import { CAMPAIGN, type PendingDecision } from "./rules";
+import { CAMPAIGN, computeStats, type PendingDecision } from "./rules";
+import duties from "./data/staff-duties.json";
+
+export const PLAYER_DP = 4;
+export const STAFF_DP = 2;
+export function playerCapacity(character: { traits: string[] } | null, energy: number, composure: number, alcohol: number) {
+  const stats = computeStats(character?.traits ?? []);
+  const factors: string[] = [];
+  let capacity = PLAYER_DP;
+  if (stats.stamina >= 4) { capacity++; factors.push("Stamina +1"); }
+  if (stats.stamina <= 2) { capacity--; factors.push("Low stamina −1"); }
+  if (energy < 35) { capacity--; factors.push("Low energy −1"); }
+  if (composure < 30) { capacity--; factors.push("Low composure −1"); }
+  if (alcohol >= (stats.liver >= 5 ? 3 : 2)) { capacity--; factors.push("Alcohol −1"); }
+  return { total: Math.max(2, Math.min(5, capacity)), factors };
+}
+export const staffDuty = (id: string) => (duties as Record<string, string>)[id] ?? "Routine embassy duties";
 
 export const START_FUNDS = 10_000;
 export const VISIT_RESERVES = { Reception: 1800, Hotel: 1600, Transport: 1200, Gifts: 400, "Generator fuel": 500 };
@@ -26,7 +42,7 @@ export function participantTime(p: PendingDecision, id: string, block: number): 
   if (id === "self") return playerTime(p);
   if (p.worker !== id && p.partner !== id) return 0;
   if (p.kind === "social") return block === 3 ? 0 : (p.guestTime ?? 1);
-  if (p.kind === "dialogue") return 1;
+  if (p.kind === "dialogue") return block === 3 ? 0 : 1;
   return 2;
 }
 // Four baseline DP daily, with two free DP distributed across office blocks.
@@ -35,25 +51,32 @@ export function baselineTime(id: string, block: number): number {
   if (index < 0 || block === 3) return 0;
   return block === index % 3 ? 2 : 1;
 }
-export function capacityLedger(plan: PendingDecision[], block: number) {
+export function capacityLedger(plan: PendingDecision[], block: number, playerDP = PLAYER_DP) {
   return ["self", ...CAMPAIGN.characters.map((c) => c.id)].map((id) => {
     const used = plan.reduce((n, p) => n + participantTime(p, id, block), 0);
     const baseline = baselineTime(id, block);
-    const displaced = Math.max(0, baseline + used - 2);
-    return { id, used, baseline, free: Math.max(0, 2 - baseline - used), displaced };
+    const capacity = id === "self" ? playerDP : STAFF_DP;
+    const displaced = Math.max(0, baseline + used - capacity);
+    return { id, used, baseline, free: Math.max(0, capacity - baseline - used), displaced };
   });
 }
-export function validatePlan(plan: PendingDecision[], block: number, economy: Economy): string | null {
+export function validatePlan(plan: PendingDecision[], block: number, economy: Economy, playerDP = PLAYER_DP): string | null {
   if (new Set(plan.map((p) => p.id)).size !== plan.length) return "That commitment is already in your diary.";
   if (block === 3 && plan.some((p) => p.remainingBlocks && p.remainingBlocks > 1)) return "Golf requires two consecutive office blocks.";
   if (plan.some((p) => !Number.isInteger(playerTime(p)) || playerTime(p) < 0 || decisionCash(p) < 0 || !Number.isFinite(decisionCash(p)))) return "Invalid activity cost.";
   if (availableFunds(economy, plan) < 0) return "Insufficient discretionary funds; visit costs remain ring-fenced.";
-  for (const row of capacityLedger(plan, block)) {
-    if (row.used > 2) return `${row.id === "self" ? "You have" : row.id + " has"} only 2 DP this block.`;
+  for (const row of capacityLedger(plan, block, playerDP)) {
+    const capacity = row.id === "self" ? playerDP : STAFF_DP;
+    if (row.used > capacity) return `${row.id === "self" ? "You have" : row.id + " has"} only ${capacity} DP this block.`;
     if (row.id === "self") continue;
     const colleague = CAMPAIGN.characters.find((c) => c.id === row.id)?.location === "embassy";
     if (colleague && block === 3 && row.used > 0) return "Colleagues are off duty; dinner is social, not an extra work shift.";
-    if (row.displaced && plan.some((p) => participantTime(p, row.id, block) > 0 && !p.overload)) return `${row.id}'s baseline duties conflict. Explicitly authorise overtime to displace them.`;
+    let scheduled = 0;
+    for (const p of plan) {
+      const time = participantTime(p, row.id, block);
+      if (time && row.baseline + scheduled + time > capacity && !p.overload) return `${row.id}'s baseline duties conflict. Explicitly authorise displacement of their routine duties.`;
+      scheduled += time;
+    }
   }
   return null;
 }

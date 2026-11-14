@@ -18,10 +18,27 @@ describe("scheduled game rounds", () => {
     expect(useGame.getState().meters.confidence).toBe(38);
     expect(useGame.getState().goodwillHistory.some((c) => c.kind === "Missed instruction")).toBe(true);
   });
-  it("allows only one personal activity per block", () => {
+  it("allows personal activities within the expanded DP budget", () => {
     const queue = useGame.getState().queue;
     expect(queue({ id: "a", source: "First", text: "First", effects: {}, kind: "work", playerSlot: true })).toBe(true);
-    expect(queue({ id: "b", source: "Second", text: "Second", effects: {}, kind: "dialogue", playerSlot: true })).toBe(false);
+    expect(queue({ id: "b", source: "Second", text: "Second", effects: {}, kind: "dialogue", playerSlot: true })).toBe(true);
+  });
+  it("records conversation completion only when resolved and pays off the menu at the visit", () => {
+    useGame.setState({ events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });
+    const choice = { id: "talk", source: "Ketu · menu", text: "Garlic approved", effects: {}, kind: "dialogue" as const, worker: "ketu", overload: true, dialogueTopic: "ketu:menu", flag: "menu-garlic" };
+    expect(useGame.getState().queue(choice)).toBe(true);
+    expect(useGame.getState().storyFlags).not.toContain("dialogue:ketu:menu");
+    useGame.getState().removeDecision("talk");
+    expect(useGame.getState().storyFlags).not.toContain("menu-garlic");
+    useGame.getState().queue(choice);
+    useGame.getState().advance();
+    expect(useGame.getState().storyFlags).toContain("dialogue:ketu:menu");
+    useGame.setState({ day: 14, block: 3, minute: BLOCKS[3].time, events: [], visit: { clearance: true, lounge: true, programme: true, security: true } });
+    useGame.getState().advance();
+    const payoff = useGame.getState().goodwillHistory.find((entry) => entry.source === "The Minister’s menu");
+    expect(payoff?.text).toContain("garlic");
+    expect(payoff!.after.confidence - payoff!.before.confidence).toBe(-5);
+    expect(payoff!.after.goodwill - payoff!.before.goodwill).toBe(3);
   });
   it("does not permit overspending reserved hospitality money", () => {
     const queue = useGame.getState().queue;

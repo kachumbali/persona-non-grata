@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { BLOCKS, CAMPAIGN, hospitalityCost, pairKey, socialTrust, VISIT_TASKS, type VisitTask } from "../rules";
 import { useGame } from "../store";
 import { ResourceDesk } from "./ResourceDesk";
-import { availableFunds, decisionCash, money, playerTime } from "../economy";
+import { availableFunds, capacityLedger, decisionCash, money, playerTime, playerCapacity, staffDuty } from "../economy";
 
 export function PlanningDesk() {
   const g = useGame();
@@ -13,6 +13,7 @@ export function PlanningDesk() {
   const [partner, setPartner] = useState("");
   const [venue, setVenue] = useState("embassy");
   const [guest, setGuest] = useState("");
+  const [drinks, setDrinks] = useState(false);
   const [workDinner, setWorkDinner] = useState(false);
   const [overload, setOverload] = useState(false);
   const [service, setService] = useState<"none" | "express" | "driver">("none");
@@ -21,7 +22,8 @@ export function PlanningDesk() {
   const block = BLOCKS[g.block] ?? BLOCKS[0];
   const location = CAMPAIGN.locations.find((l) => l.id === g.location) ?? CAMPAIGN.locations[0];
   const usedTime = g.pending.reduce((n, p) => n + playerTime(p), 0);
-  const scheduledWork = usedTime >= 2;
+  const scheduledWork = usedTime >= playerCapacity(g.character, g.energy, g.composure, g.alcohol).total;
+  const workerLedger = capacityLedger(g.pending, g.block).find((row) => row.id === worker);
 
   const cost = hospitalityCost(venue, guest ? 1 : 0, g.block);
   const socialTime = g.block === 0 || g.block === 2 ? venue === "embassy" ? 1 : 2 : g.block === 1 && !guest && venue === "embassy" ? 1 : 2;
@@ -59,7 +61,7 @@ export function PlanningDesk() {
           <label className="text-sm">Visit arrangement<select aria-label="Visit arrangement" value={task} onChange={(e) => setTask(e.target.value as VisitTask)} className="mt-1 w-full border border-input bg-muted p-2">{(Object.entries(VISIT_TASKS) as [VisitTask, string][]).map(([id, label]) => <option key={id} value={id}>{label}{g.visit[id] ? " ✓" : ""}</option>)}</select></label>
           {worker !== "self" && <label className="text-sm sm:col-span-2">Cooperate with<select aria-label="Assignment partner" value={partner} onChange={(e) => setPartner(e.target.value)} className="mt-1 w-full border border-input bg-muted p-2"><option value="">Work independently</option>{CAMPAIGN.characters.filter((c) => c.location === "embassy" && c.id !== worker).map((c) => <option key={c.id} value={c.id}>{c.name} · cooperation {g.relationships[pairKey(worker, c.id)] ?? 50}</option>)}</select></label>}
         </div>
-        {worker !== "self" && <p className="my-2 text-xs">Expertise: {CAMPAIGN.characters.find((c) => c.id === worker)?.skills.map((sk) => VISIT_TASKS[sk as VisitTask]).join(", ") || "No visit specialism"}. {g.block === 3 ? "Off duty — no evening assignments." : "Assignments compete with baseline duties."}</p>}
+        {worker !== "self" && <p className="my-2 text-xs">{g.block === 3 ? "Off duty." : `Routine: ${staffDuty(worker)} (${workerLedger?.baseline ?? 0} DP); ${workerLedger?.used ?? 0} DP already planned; ${workerLedger?.free ?? 0} DP free. A 2-DP assignment may displace routine work.`} Expertise: {CAMPAIGN.characters.find((c) => c.id === worker)?.skills.map((sk) => VISIT_TASKS[sk as VisitTask]).join(", ") || "No visit specialism"}. {g.block === 3 ? "Off duty — no evening assignments." : "Assignments compete with baseline duties."}</p>}
         <div className="my-3 flex flex-wrap items-center gap-3 text-sm">
           <label className="flex items-center gap-2"><input type="checkbox" checked={overload} onChange={(e) => setOverload(e.target.checked)} />Displace baseline duties (fatigue & backlog)</label>
           {worker === "self" && <label>Service<select aria-label="Time-saving service" className="ml-2 border border-input bg-muted p-1" value={service} onChange={(e) => setService(e.target.value as "none" | "express" | "driver")}><option value="none">Standard · 2 DP</option><option value="express" disabled={g.location !== "embassy"}>Express paperwork · 1 DP + ƒ250</option><option value="driver" disabled={g.location === "embassy" || g.location === "golf"}>Driver & light work · 1 DP + ƒ150</option></select></label>}
@@ -68,8 +70,9 @@ export function PlanningDesk() {
         <div className="mt-4 border-t border-border pt-3"><h3 className="text-xl">{block.social} · whom will you invite?</h3><div className="mt-2 grid gap-2 sm:grid-cols-2"><select aria-label="Social guest" className="w-full border border-input bg-muted p-2 text-sm" value={guest} onChange={(e) => setGuest(e.target.value)}><option value="">Alone</option>{CAMPAIGN.characters.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select><select aria-label="Social venue" className="w-full border border-input bg-muted p-2 text-sm" value={venue} onChange={(e) => setVenue(e.target.value)}>{CAMPAIGN.venues.map((v) => <option key={v.id} value={v.id}>{v.name} · {v.cost ? `${money(v.cost)} / person` : "staff provisions"}</option>)}</select></div>
           <p className="mt-2 text-xs">{CAMPAIGN.venues.find((v) => v.id === venue)?.description}</p>
           {guest && <p className="mt-1 text-xs">Likes: {CAMPAIGN.characters.find((c) => c.id === guest)?.likes.join(", ")} · Dislikes: {CAMPAIGN.characters.find((c) => c.id === guest)?.dislikes.join(", ")}</p>}
+          {venue !== "embassy" && <label className="my-2 flex gap-2 text-sm"><input type="checkbox" checked={drinks} onChange={(e) => setDrinks(e.target.checked)} />Drink alcohol (can reduce DP in later blocks; liver affects tolerance)</label>}
           {g.block === 3 && <label className="my-2 flex gap-2 text-sm"><input type="checkbox" checked={workDinner} onChange={(e) => setWorkDinner(e.target.checked)} />Discuss work at dinner (colleagues resent overtime)</label>}
-          <Button className="mt-2 h-auto whitespace-normal py-2" variant="outline" onClick={() => { const trust = socialTrust(guest, venue, workDinner && g.block === 3); const name = CAMPAIGN.characters.find((c) => c.id === guest)?.name; const ok = g.queue({ id: "social", kind: "social", source: block.social, text: guest ? `${block.social} with ${name} at ${CAMPAIGN.venues.find((v) => v.id === venue)?.name}: ${trust > 0 ? "a warmer relationship" : "an uncomfortable outing"}. Hospitality cost ${money(cost)}.` : `${block.social} alone. Some welcome quiet.`, effects: {}, cashCost: cost, timeCost: socialTime, venue, overload, worker: guest || undefined, trust, energy: g.block === 1 || g.block === 3 ? 12 : 5, composure: guest ? 2 : 8 }); setNotice(ok ? "Social occasion scheduled." : useGame.getState().planError); }}><Users className="size-4" />{guest ? `Invite · ${socialTime} DP · ${money(cost)}` : `Eat / drink alone · ${socialTime} DP · ${money(cost)}`}</Button>
+          <Button className="mt-2 h-auto whitespace-normal py-2" variant="outline" onClick={() => { const trust = socialTrust(guest, venue, workDinner && g.block === 3); const name = CAMPAIGN.characters.find((c) => c.id === guest)?.name; const ok = g.queue({ id: "social", kind: "social", source: block.social, text: guest ? `${block.social} with ${name} at ${CAMPAIGN.venues.find((v) => v.id === venue)?.name}: ${trust > 0 ? "a warmer relationship" : "an uncomfortable outing"}. Hospitality cost ${money(cost)}.` : `${block.social} alone. Some welcome quiet.`, effects: {}, cashCost: cost, timeCost: socialTime, venue, drinks: venue !== "embassy" && drinks, overload, worker: guest || undefined, trust, energy: g.block === 1 || g.block === 3 ? 12 : 5, composure: guest ? 2 : 8 }); setNotice(ok ? "Social occasion scheduled." : useGame.getState().planError); }}><Users className="size-4" />{guest ? `Invite · ${socialTime} DP · ${money(cost)}` : `Eat / drink alone · ${socialTime} DP · ${money(cost)}`}</Button>
         </div>
       </div>
     </div>

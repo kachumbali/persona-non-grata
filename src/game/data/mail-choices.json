@@ -1,0 +1,16 @@
+{
+  "e1": { "reply": "Send the report yourself", "delegate": "Ask Anselm to draft the report", "note": "File the request without reporting" },
+  "e2": { "forward": "Send the instruction back to Capital", "reply": "Request the missing attachment", "note": "File the instruction as received" },
+  "e3": { "reply": "Pay for diesel from the allowance", "forward": "Ask Capital to procure diesel", "delegate": "Ask Sola to arrange diesel" },
+  "e4": { "reply": "Agree to co-chair", "replyall": "Respond to the whole group", "note": "Decline without a direct refusal" },
+  "e5": { "reply": "Prepare the requested form yourself", "delegate": "Ask Sola to handle the paperwork", "forward": "Ask Capital to submit the form" },
+  "e6": { "reply": "Accept the lunch invitation", "delegate": "Send Colonel Montefiore", "note": "Decline the invitation" },
+  "e7": { "reply": "Make an executive decision about the cheese", "replyall": "Reply to the entire staff thread", "note": "Leave the cheese question unresolved" },
+  "e8": { "reply": "Sign to open the second window", "forward": "Ask Capital for guidance", "delegate": "Ask Maxim to handle the queue" },
+  "e9": { "reply": "Request that the post be deleted", "note": "Leave the post in place", "forward": "Ask Capital for a clarification" },
+  "e10": { "reply": "Explain the Ambassador's absence", "delegate": "Ask Anselm to reply", "note": "File the request without answering" },
+  "visit-clearance": { "reply": "Submit the aircraft clearance yourself", "delegate": "Ask Sola to obtain clearance", "note": "File the request without submitting" },
+  "visit-lounge": { "reply": "Pay for the lounge reservation", "delegate": "Ask Pavel to negotiate the reservation", "note": "Leave the provisional booking unconfirmed" },
+  "visit-security": { "reply": "Book vehicles and approve the route", "delegate": "Ask the security team to arrange the convoy", "note": "Leave the convoy plan unapproved" },
+  "visit-programme": { "reply": "Reconcile and approve the programme", "delegate": "Ask Pavel and Sola to confirm the programme", "note": "File the draft without approval" }
+}

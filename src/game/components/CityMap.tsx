@@ -4,7 +4,7 @@ import city from "@/assets/port-hesperia.jpg";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { CAMPAIGN } from "../rules";
-import { playerTime } from "../economy";
+import { playerTime, playerCapacity } from "../economy";
 import { TRAVEL_DP, useGame } from "../store";
 
 // Hotspot positions (% of the painting) for each campaign location.
@@ -17,7 +17,7 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
   const g = useGame();
   const [target, setTarget] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const left = 2 - g.pending.reduce((n, p) => n + playerTime(p), 0);
+  const left = playerCapacity(g.character, g.energy, g.composure, g.alcohol).total - g.pending.reduce((n, p) => n + playerTime(p), 0);
   const dest = CAMPAIGN.locations.find((l) => l.id === target);
   const travel = () => {
     if (!target) return;

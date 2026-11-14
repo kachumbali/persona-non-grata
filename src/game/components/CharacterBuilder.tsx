@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import bg from "../data/backgrounds.json";
 import { computeStats, pointsLeft, TRAITS, TRAIT_POINTS } from "../rules";
 import { useGame } from "../store";
+import { playerCapacity } from "../economy";
 import { Portrait } from "./Portrait";
 
 const TITLES = ["Mr", "Ms", "Mx", "Dr", "His Excellency (pending)", "Her Excellency (pending)"];
@@ -75,6 +76,7 @@ export function CharacterBuilder() {
             })}
           </div>
           <h2 className="retro-section-heading mb-2 mt-5 font-bold">Stats</h2>
+          <p className="mb-2 text-sm">Starting DP per block: {playerCapacity({ traits }, 80, 75, 0).total}. Stamina changes your base capacity; energy, composure and alcohol can reduce it during the posting.</p>
           <dl className="stats-grid grid gap-x-4 gap-y-1 font-mono">
             {(Object.keys(STAT_LABELS) as (keyof typeof STAT_LABELS)[]).map((k) => (
               <div key={k} className="flex justify-between"><dt>{STAT_LABELS[k]}</dt><dd>{"■".repeat(stats[k])}<span className="text-muted-foreground">{"□".repeat(Math.max(0, 6 - stats[k]))}</span></dd></div>

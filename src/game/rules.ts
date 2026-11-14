@@ -117,7 +117,7 @@ export interface PendingDecision {
   id: string; source: string; text: string; effects: Effects;
   kind: "work" | "email" | "social" | "dialogue" | "event";
   worker?: string | undefined; partner?: string | undefined; task?: VisitTask | undefined; trust?: number | undefined; pair?: number | undefined;
-  score?: number | undefined; energy?: number | undefined; composure?: number | undefined; flag?: string | undefined;
+  dialogueTopic?: string | undefined; drinks?: boolean | undefined; score?: number | undefined; energy?: number | undefined; composure?: number | undefined; flag?: string | undefined;
   timeCost?: number | undefined; cashCost?: number | undefined; guestTime?: number | undefined;
   overload?: boolean | undefined; service?: "express" | "driver" | undefined; location?: string | undefined;
   venue?: string | undefined; remainingBlocks?: number | undefined; special?: "supplement" | undefined;
