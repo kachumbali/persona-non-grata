@@ -28,6 +28,46 @@
        "effects": {
         "confidence": -4
        }
+      },
+      {
+       "label": "Offer to test the reception drinks",
+       "requiresTrait": "liver",
+       "result": "You test the drinks for quality. Your notes become unusually affectionate.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Describe the file as a mystery",
+       "requiresTrait": "novelist",
+       "result": "The missing detail is found, along with an unnecessary suspect.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Promise to attend the follow-up as well",
+       "requiresTrait": "sideevents",
+       "result": "Your enthusiasm helps, though the office now expects another appearance.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Remain motionless through the briefing",
+       "requiresTrait": "eyesopen",
+       "result": "The speaker feels heard. Your colleague quietly checks for a pulse.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
       }
      ]
     },
@@ -90,6 +130,26 @@
        "effects": {
         "confidence": -3
        }
+      },
+      {
+       "label": "Translate the problem into a matrix",
+       "requiresTrait": "brussels",
+       "result": "The matrix clarifies the deadline while obscuring the original sentence.",
+       "trust": -1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Deliver a written protest about the delay",
+       "requiresTrait": "demarche",
+       "result": "The response arrives quickly, with an objection to your tone.",
+       "trust": -1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
       }
      ]
     }
@@ -125,6 +185,36 @@
        "pair": 0,
        "score": 0,
        "effects": {}
+      },
+      {
+       "label": "Request a horizontal synergy",
+       "requiresTrait": "brussels",
+       "result": "A useful contact appears. Nobody agrees what you asked for.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Request an urgent formal appointment",
+       "requiresTrait": "demarche",
+       "result": "The matter is heard; the appointment displaces a less ceremonial task.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Mention your acquaintance with the Commissioner",
+       "requiresTrait": "namedrop",
+       "result": "The name opens the conversation. It also appears in Ruth’s notebook.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
       }
      ]
     },
@@ -185,6 +275,36 @@
        "effects": {
         "morale": 1
        }
+      },
+      {
+       "label": "Volunteer for the difficult toast",
+       "requiresTrait": "liver",
+       "result": "Your toast wins the table; the minutes are less coherent.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Agree to a quick additional meeting",
+       "requiresTrait": "sideevents",
+       "result": "The extra meeting produces a contact and postpones a quiet moment.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Volunteer for the longest presentation",
+       "requiresTrait": "eyesopen",
+       "result": "The presenter is encouraged; your notes contain a mysterious gap.",
+       "trust": -1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
       }
      ]
     }
@@ -221,6 +341,56 @@
        "score": 0,
        "effects": {
         "morale": -2
+       }
+      },
+      {
+       "label": "Propose a tasting as diplomatic research",
+       "requiresTrait": "liver",
+       "result": "The research produces useful contacts and an unreliable conclusion.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Copy everyone for transparency",
+       "requiresTrait": "replyall",
+       "result": "The entire office sees your useful suggestion and the covering joke.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Add one more stop to the programme",
+       "requiresTrait": "sideevents",
+       "result": "The host appreciates it; your own calendar protests.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Sit through the entire committee report",
+       "requiresTrait": "eyesopen",
+       "result": "Your attendance reassures the room. One question catches you unprepared.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Offer the NGO’s local contacts with disclosure",
+       "requiresTrait": "ngo",
+       "result": "A useful introduction follows; the connection is declared in the file.",
+       "trust": 1,
+       "effects": {
+        "goodwill": 1,
+        "morale": -1
        }
       }
      ]
@@ -287,6 +457,26 @@
        "effects": {
         "confidence": -6
        }
+      },
+      {
+       "label": "Turn the complaint into a démarche",
+       "requiresTrait": "demarche",
+       "result": "The file moves. The recipient asks why it needed three seals.",
+       "trust": -1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Invoke a former minister’s support",
+       "requiresTrait": "namedrop",
+       "result": "The title gets attention; Ruth asks whether the person actually agreed.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
       }
      ]
     }
@@ -320,6 +510,36 @@
        "pair": 0,
        "score": 0,
        "effects": {
+        "morale": -1
+       }
+      },
+      {
+       "label": "Insist the position be delivered in writing",
+       "requiresTrait": "demarche",
+       "result": "The record is clear, as is the irritation in the reply.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Recall your dinner with a senior official",
+       "requiresTrait": "namedrop",
+       "result": "The anecdote breaks the ice; Ruth calls it an unsourced dinner.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Request a plain alternative to the local dish",
+       "requiresTrait": "cuisine",
+       "result": "A suitable meal appears; the kitchen receives another special request.",
+       "trust": 1,
+       "effects": {
+        "goodwill": 1,
         "morale": -1
        }
       }
@@ -383,6 +603,46 @@
        "pair": -2,
        "score": 0,
        "effects": {}
+      },
+      {
+       "label": "Compare the cellar inventories personally",
+       "requiresTrait": "liver",
+       "result": "The missing bottles are found; your handwriting is not.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Reply to the whole distribution list",
+       "requiresTrait": "replyall",
+       "result": "The right person responds, along with twelve people seeking removal.",
+       "trust": -1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Maintain an attentive expression throughout",
+       "requiresTrait": "eyesopen",
+       "result": "The meeting continues smoothly, until you applaud at a pause.",
+       "trust": -1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Ask your spouse for an independent lead",
+       "requiresTrait": "ngo",
+       "result": "The lead is promising. Your colleague requests a conflict check.",
+       "trust": -1,
+       "effects": {
+        "goodwill": 1,
+        "morale": -1
+       }
       }
      ]
     }
@@ -417,6 +677,56 @@
        "score": 0,
        "effects": {
         "confidence": -2
+       }
+      },
+      {
+       "label": "Raise a glass to institutional resilience",
+       "requiresTrait": "liver",
+       "result": "The room applauds and the agenda quietly grows longer.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Circulate your answer to every desk",
+       "requiresTrait": "replyall",
+       "result": "The issue is noticed immediately. So is your draft subject line.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Arrive before anyone else and prepare",
+       "requiresTrait": "punctual",
+       "result": "The preparation helps. Your reminder about lateness does not.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Offer to observe the late session",
+       "requiresTrait": "eyesopen",
+       "result": "The chair welcomes your presence and asks for a detailed summary.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Suggest a transparent partner consultation",
+       "requiresTrait": "ngo",
+       "result": "Local views improve the proposal; procurement wants a written disclosure.",
+       "trust": 1,
+       "effects": {
+        "goodwill": 1,
+        "morale": -1
        }
       }
      ]
@@ -479,6 +789,26 @@
        "pair": -4,
        "score": 0,
        "effects": {}
+      },
+      {
+       "label": "Offer an introduction to someone important",
+       "requiresTrait": "namedrop",
+       "result": "A useful meeting becomes possible. Ruth asks for the person’s number.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Ask whether the sauce comes separately",
+       "requiresTrait": "cuisine",
+       "result": "The question prevents trouble and interrupts the chef’s explanation.",
+       "trust": -1,
+       "effects": {
+        "goodwill": 1,
+        "morale": -1
+       }
       }
      ]
     }
@@ -514,6 +844,36 @@
        "pair": 0,
        "score": 1,
        "effects": {}
+      },
+      {
+       "label": "Refer to your contacts in Capital",
+       "requiresTrait": "namedrop",
+       "result": "The room listens. Ruth begins checking your address book.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Praise the table setting instead of tasting",
+       "requiresTrait": "cuisine",
+       "result": "The compliment lands, though the untouched plate is conspicuous.",
+       "trust": 1,
+       "effects": {
+        "goodwill": 1,
+        "morale": -1
+       }
+      },
+      {
+       "label": "Frame the problem as a short story",
+       "requiresTrait": "novelist",
+       "result": "The analogy explains the problem, if not the extra page.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
       }
      ]
     },
@@ -576,6 +936,36 @@
        "effects": {
         "goodwill": 1
        }
+      },
+      {
+       "label": "Include all possible stakeholders",
+       "requiresTrait": "replyall",
+       "result": "The answer travels quickly; nobody can identify the original question.",
+       "trust": -1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Produce a schedule with an early deadline",
+       "requiresTrait": "punctual",
+       "result": "The work starts promptly; your colleague questions the clock.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Share a community contact from home",
+       "requiresTrait": "ngo",
+       "result": "The discussion gains a practical perspective and a question about interests.",
+       "trust": -1,
+       "effects": {
+        "goodwill": 1,
+        "morale": -1
+       }
       }
      ]
     }
@@ -613,6 +1003,46 @@
        "effects": {
         "goodwill": 2,
         "confidence": -2
+       }
+      },
+      {
+       "label": "Make the private note a group discussion",
+       "requiresTrait": "replyall",
+       "result": "The group finds a solution, after debating why it was copied.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Offer a five-minute meeting, timed",
+       "requiresTrait": "punctual",
+       "result": "The decision is made quickly, though the conversation was not finished.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Propose a coordination architecture",
+       "requiresTrait": "brussels",
+       "result": "The framework gives everyone a role; its acronyms require a second meeting.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Declare the connection and request advice",
+       "requiresTrait": "ngo",
+       "result": "The conflict is on record; the advice arrives with an extra form.",
+       "trust": 1,
+       "effects": {
+        "goodwill": 1,
+        "morale": -1
        }
       }
      ]
@@ -678,6 +1108,26 @@
        "effects": {
         "morale": 3
        }
+      },
+      {
+       "label": "Bring your own emergency biscuits",
+       "requiresTrait": "cuisine",
+       "result": "The meeting continues safely; everyone notices the packet.",
+       "trust": -1,
+       "effects": {
+        "goodwill": 1,
+        "morale": -1
+       }
+      },
+      {
+       "label": "Invent a discreet fictional example",
+       "requiresTrait": "novelist",
+       "result": "The dilemma becomes clear; your listener recognises the protagonist.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
       }
      ]
     }
@@ -712,6 +1162,36 @@
        "score": 0,
        "effects": {
         "morale": 1
+       }
+      },
+      {
+       "label": "Negotiate a canapé-only menu",
+       "requiresTrait": "cuisine",
+       "result": "There is enough to eat, and Ketu adds your name to a list.",
+       "trust": 1,
+       "effects": {
+        "goodwill": 1,
+        "morale": -1
+       }
+      },
+      {
+       "label": "Write a more compelling account",
+       "requiresTrait": "novelist",
+       "result": "The report is read. Its dramatic opening requires a correction.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Accept the additional invitation",
+       "requiresTrait": "sideevents",
+       "result": "A useful connection is made; your schedule becomes more ambitious.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
        }
       }
      ]
@@ -773,6 +1253,26 @@
        "pair": 0,
        "score": 1,
        "effects": {}
+      },
+      {
+       "label": "Reserve the room before the request arrives",
+       "requiresTrait": "punctual",
+       "result": "The room is available. Its intended occupants are surprised.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Describe it as a strategic deliverable",
+       "requiresTrait": "brussels",
+       "result": "Capital likes the terminology. Your colleague requests a translation.",
+       "trust": -1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
       }
      ]
     }
@@ -810,6 +1310,36 @@
        "pair": 0,
        "score": 1,
        "effects": {}
+      },
+      {
+       "label": "Bring a stopwatch to the briefing",
+       "requiresTrait": "punctual",
+       "result": "The briefing ends on time; the questions do not.",
+       "trust": 1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Create a task force for the task force",
+       "requiresTrait": "brussels",
+       "result": "Responsibilities become visible, beneath three additional committees.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Draft a note verbale immediately",
+       "requiresTrait": "demarche",
+       "result": "The issue receives formal attention; your colleague inherits the stamps.",
+       "trust": 1,
+       "effects": {
+        "confidence": 1,
+        "sanity": -1
+       }
       }
      ]
     },
@@ -874,6 +1404,26 @@
        "pair": 0,
        "score": 0,
        "effects": {}
+      },
+      {
+       "label": "Give the proposal a narrative arc",
+       "requiresTrait": "novelist",
+       "result": "Your colleague understands the stakes and removes the cliffhanger.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
+      },
+      {
+       "label": "Volunteer for the extra reception",
+       "requiresTrait": "sideevents",
+       "result": "The organiser is grateful. The diary develops a second page.",
+       "trust": -1,
+       "effects": {
+        "morale": 1,
+        "sanity": -1
+       }
       }
      ]
     }
@@ -1081,13 +1631,36 @@
    }
   },
   {
-   "id": "team-europe", "start": "a", "nodes": {
+   "id": "team-europe",
+   "start": "a",
+   "nodes": {
     "a": {
      "text": "I have a Team Europe idea for the port. Member states can provide the staff and funding; the Delegation will provide the logo and a very persuasive press release.",
      "choices": [
-      { "label": "Propose shared credit before anyone commits resources.", "result": "Celeste agrees to discuss the credits before asking for staff. She calls the discussion a Team Europe success.", "trust": 3, "effects": { "confidence": 1 } },
-      { "label": "Ask how the host wants the project to work.", "result": "Celeste pauses, then adds the host's planning office to the proposed consultation list.", "trust": 2, "effects": { "goodwill": 1 } },
-      { "label": "Demand 17.6% of the press release for Bellaluxe.", "result": "Celeste measures the margins and offers you 17.6% of the footnotes.", "trust": -2, "effects": { "confidence": 1 } }
+      {
+       "label": "Propose shared credit before anyone commits resources.",
+       "result": "Celeste agrees to discuss the credits before asking for staff. She calls the discussion a Team Europe success.",
+       "trust": 3,
+       "effects": {
+        "confidence": 1
+       }
+      },
+      {
+       "label": "Ask how the host wants the project to work.",
+       "result": "Celeste pauses, then adds the host's planning office to the proposed consultation list.",
+       "trust": 2,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Demand 17.6% of the press release for Bellaluxe.",
+       "result": "Celeste measures the margins and offers you 17.6% of the footnotes.",
+       "trust": -2,
+       "effects": {
+        "confidence": 1
+       }
+      }
      ]
     }
    }
@@ -1488,66 +2061,477 @@
   }
  ],
  "amb-valdoria": [
-  { "id": "anthem", "start": "a", "nodes": { "a": { "text": "Valdoria's national anthem has seven verses. Protocol insists the reception cannot begin until the choir has found the last one.", "choices": [
-    { "label": "Offer the choir a discreet glass of water.", "result": "Mara thanks you. The choir finds verse seven, and the water.", "trust": 4, "effects": { "goodwill": 1 } },
-    { "label": "Suggest starting the reception at verse four.", "result": "Mara calls it a bold proposal for constitutional reform.", "trust": -2, "effects": {} }
-  ] } } },
-  { "id": "seating", "start": "a", "nodes": { "a": { "text": "My seating plan has a reserved chair for every ambassador and one for the person who actually knows where the venue is.", "choices": [
-    { "label": "Make sure the driver gets the good chair.", "result": "Mara moves the driver closer to the door, which everyone agrees is wise.", "trust": 3, "effects": { "morale": 1 } },
-    { "label": "Ask for the chair closest to the camera.", "result": "Mara offers you the camera's carrying case instead.", "trust": -1, "effects": {} }
-  ] } } }
+  {
+   "id": "anthem",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Valdoria's national anthem has seven verses. Protocol insists the reception cannot begin until the choir has found the last one.",
+     "choices": [
+      {
+       "label": "Offer the choir a discreet glass of water.",
+       "result": "Mara thanks you. The choir finds verse seven, and the water.",
+       "trust": 4,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Suggest starting the reception at verse four.",
+       "result": "Mara calls it a bold proposal for constitutional reform.",
+       "trust": -2,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "seating",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "My seating plan has a reserved chair for every ambassador and one for the person who actually knows where the venue is.",
+     "choices": [
+      {
+       "label": "Make sure the driver gets the good chair.",
+       "result": "Mara moves the driver closer to the door, which everyone agrees is wise.",
+       "trust": 3,
+       "effects": {
+        "morale": 1
+       }
+      },
+      {
+       "label": "Ask for the chair closest to the camera.",
+       "result": "Mara offers you the camera's carrying case instead.",
+       "trust": -1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
  ],
  "amb-asteria": [
-  { "id": "consensus", "start": "a", "nodes": { "a": { "text": "Denmark has agreed to the EU consensus, subject to a footnote longer than the consensus.", "choices": [
-    { "label": "Help shorten the footnote together.", "result": "Niko removes two semicolons and calls the result historic.", "trust": 4, "effects": { "confidence": 1 } },
-    { "label": "Propose a footnote to the footnote.", "result": "Niko reaches for a second page. Nobody gets lunch.", "trust": -2, "effects": { "sanity": -1 } }
-  ] } } },
-  { "id": "coffee", "start": "a", "nodes": { "a": { "text": "At the last EU meeting, Niko counted the coffee cups to establish whether everyone had been consulted.", "choices": [
-    { "label": "Offer to bring an extra pot next time.", "result": "Niko records your offer under practical cooperation.", "trust": 3, "effects": { "morale": 1 } },
-    { "label": "Demand an audit of the teaspoons.", "result": "Niko opens a spreadsheet and the room falls silent.", "trust": -1, "effects": { "sanity": -1 } }
-  ] } } }
+  {
+   "id": "consensus",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Denmark has agreed to the EU consensus, subject to a footnote longer than the consensus.",
+     "choices": [
+      {
+       "label": "Help shorten the footnote together.",
+       "result": "Niko removes two semicolons and calls the result historic.",
+       "trust": 4,
+       "effects": {
+        "confidence": 1
+       }
+      },
+      {
+       "label": "Propose a footnote to the footnote.",
+       "result": "Niko reaches for a second page. Nobody gets lunch.",
+       "trust": -2,
+       "effects": {
+        "sanity": -1
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "coffee",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "At the last EU meeting, Niko counted the coffee cups to establish whether everyone had been consulted.",
+     "choices": [
+      {
+       "label": "Offer to bring an extra pot next time.",
+       "result": "Niko records your offer under practical cooperation.",
+       "trust": 3,
+       "effects": {
+        "morale": 1
+       }
+      },
+      {
+       "label": "Demand an audit of the teaspoons.",
+       "result": "Niko opens a spreadsheet and the room falls silent.",
+       "trust": -1,
+       "effects": {
+        "sanity": -1
+       }
+      }
+     ]
+    }
+   }
+  }
  ],
  "eu-germany": [
-  { "id": "annex", "start": "a", "nodes": { "a": { "text": "I have reduced the meeting agenda to one page. The annex explaining the reduction is twelve pages.", "choices": [
-    { "label": "Read the annex and help trim it.", "result": "Klaus removes three repeated definitions and asks if this is considered radical.", "trust": 4, "effects": { "confidence": 1 } },
-    { "label": "Request an annex about the annex.", "result": "Klaus produces a fresh binder. Lunch is postponed indefinitely.", "trust": -2, "effects": { "sanity": -1 } }
-  ] } } },
-  { "id": "novel", "start": "a", "nodes": { "a": { "text": "Klaus closes a document marked 'Annex IV'. A sentence about a windswept duke remains visible.", "choices": [
-    { "label": "Offer to read the manuscript.", "result": "Klaus asks for honest notes and a strict embargo until publication.", "trust": 3, "effects": { "morale": 1 } },
-    { "label": "Request a synopsis for Capital.", "result": "Klaus insists the duke is not authorised to be quoted.", "trust": -1, "effects": {} }
-  ] } } }
+  {
+   "id": "annex",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "I have reduced the meeting agenda to one page. The annex explaining the reduction is twelve pages.",
+     "choices": [
+      {
+       "label": "Read the annex and help trim it.",
+       "result": "Klaus removes three repeated definitions and asks if this is considered radical.",
+       "trust": 4,
+       "effects": {
+        "confidence": 1
+       }
+      },
+      {
+       "label": "Request an annex about the annex.",
+       "result": "Klaus produces a fresh binder. Lunch is postponed indefinitely.",
+       "trust": -2,
+       "effects": {
+        "sanity": -1
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "novel",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Klaus closes a document marked 'Annex IV'. A sentence about a windswept duke remains visible.",
+     "choices": [
+      {
+       "label": "Offer to read the manuscript.",
+       "result": "Klaus asks for honest notes and a strict embargo until publication.",
+       "trust": 3,
+       "effects": {
+        "morale": 1
+       }
+      },
+      {
+       "label": "Request a synopsis for Capital.",
+       "result": "Klaus insists the duke is not authorised to be quoted.",
+       "trust": -1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
  ],
  "eu-france": [
-  { "id": "translation", "start": "a", "nodes": { "a": { "text": "The French draft calls the meeting cordial. Henri says the English version has made it sound affectionate.", "choices": [
-    { "label": "Help find wording both versions can live with.", "result": "Henri accepts 'constructive' in both languages and checks the punctuation twice.", "trust": 3, "effects": { "goodwill": 1 } },
-    { "label": "Keep affectionate. It might improve the atmosphere.", "result": "Henri promises to correct the atmosphere in the next translation.", "trust": -2, "effects": {} }
-  ] } } },
-  { "id": "printer", "start": "a", "nodes": { "a": { "text": "Henri is holding a screwdriver beside a printer that has refused three perfectly diplomatic requests.", "choices": [
-    { "label": "Hold the paper tray while he repairs it.", "result": "The printer works. Henri asks you not to mention his technical skills to the whole delegation.", "trust": 4, "effects": { "morale": 1 } },
-    { "label": "Issue the printer a formal protest.", "result": "Henri files the protest under 'mechanical correspondence'.", "trust": 1, "effects": {} }
-  ] } } }
+  {
+   "id": "translation",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "The French draft calls the meeting cordial. Henri says the English version has made it sound affectionate.",
+     "choices": [
+      {
+       "label": "Help find wording both versions can live with.",
+       "result": "Henri accepts 'constructive' in both languages and checks the punctuation twice.",
+       "trust": 3,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Keep affectionate. It might improve the atmosphere.",
+       "result": "Henri promises to correct the atmosphere in the next translation.",
+       "trust": -2,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "printer",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Henri is holding a screwdriver beside a printer that has refused three perfectly diplomatic requests.",
+     "choices": [
+      {
+       "label": "Hold the paper tray while he repairs it.",
+       "result": "The printer works. Henri asks you not to mention his technical skills to the whole delegation.",
+       "trust": 4,
+       "effects": {
+        "morale": 1
+       }
+      },
+      {
+       "label": "Issue the printer a formal protest.",
+       "result": "Henri files the protest under 'mechanical correspondence'.",
+       "trust": 1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
  ],
  "eu-malta": [
-  { "id": "two-briefs", "start": "a", "nodes": { "a": { "text": "Malta's brief is in the blue folder. Cyprus and Luxembourg authorised me to present their positions at the budget-share meeting; their briefs are in green and yellow.", "choices": [
-    { "label": "Ask what each mission actually wants.", "result": "Tanya explains all three positions separately and thanks you for not calling them a single brief.", "trust": 4, "effects": { "goodwill": 1 } },
-    { "label": "Suggest combining the folders to save time.", "result": "Tanya hands you a third folder labelled 'permission'. It is empty.", "trust": -2, "effects": {} }
-  ] } } },
-  { "id": "drums", "start": "a", "nodes": { "a": { "text": "Tanya taps an intricate rhythm on the meeting table. It is the most decisive thing the table has heard all morning.", "choices": [
-    { "label": "Ask about the rhythm.", "result": "Tanya describes her old band and offers to make the next reception considerably louder.", "trust": 3, "effects": { "morale": 1 } },
-    { "label": "Ask if the rhythm can shorten the speeches.", "result": "Tanya suggests a drum solo after the first seven minutes of each intervention.", "trust": 2, "effects": {} }
-  ] } } }
+  {
+   "id": "two-briefs",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Malta's brief is in the blue folder. Cyprus and Luxembourg authorised me to present their positions at the budget-share meeting; their briefs are in green and yellow.",
+     "choices": [
+      {
+       "label": "Ask what each mission actually wants.",
+       "result": "Tanya explains all three positions separately and thanks you for not calling them a single brief.",
+       "trust": 4,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Suggest combining the folders to save time.",
+       "result": "Tanya hands you a third folder labelled 'permission'. It is empty.",
+       "trust": -2,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "drums",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Tanya taps an intricate rhythm on the meeting table. It is the most decisive thing the table has heard all morning.",
+     "choices": [
+      {
+       "label": "Ask about the rhythm.",
+       "result": "Tanya describes her old band and offers to make the next reception considerably louder.",
+       "trust": 3,
+       "effects": {
+        "morale": 1
+       }
+      },
+      {
+       "label": "Ask if the rhythm can shorten the speeches.",
+       "result": "Tanya suggests a drum solo after the first seven minutes of each intervention.",
+       "trust": 2,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
  ],
  "eu-sweden": [
-  { "id": "agenda", "start": "a", "nodes": { "a": { "text": "Lars has marked every absent mission on the agenda. There are more pencil notes than agenda items.", "choices": [
-    { "label": "Check who authorised a representative.", "result": "Lars marks the authorised proxies and leaves the others blank until they respond.", "trust": 4, "effects": { "goodwill": 1 } },
-    { "label": "Declare everyone present by consensus.", "result": "Lars asks whether the empty chairs agreed to that wording.", "trust": -2, "effects": {} }
-  ] } } },
-  { "id": "cards", "start": "a", "nodes": { "a": { "text": "Lars says the evening card game is strictly informal. The seating chart suggests otherwise.", "choices": [
-    { "label": "Ask to join without bringing briefing notes.", "result": "Lars approves, then produces a very formal deck of cards.", "trust": 3, "effects": { "sanity": 1 } },
-    { "label": "Ask whether the cards use qualified majority voting.", "result": "Lars deals you a rulebook and the oldest deck in the building.", "trust": 2, "effects": {} }
-  ] } } }
+  {
+   "id": "agenda",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Lars has marked every absent mission on the agenda. There are more pencil notes than agenda items.",
+     "choices": [
+      {
+       "label": "Check who authorised a representative.",
+       "result": "Lars marks the authorised proxies and leaves the others blank until they respond.",
+       "trust": 4,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Declare everyone present by consensus.",
+       "result": "Lars asks whether the empty chairs agreed to that wording.",
+       "trust": -2,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "cards",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Lars says the evening card game is strictly informal. The seating chart suggests otherwise.",
+     "choices": [
+      {
+       "label": "Ask to join without bringing briefing notes.",
+       "result": "Lars approves, then produces a very formal deck of cards.",
+       "trust": 3,
+       "effects": {
+        "sanity": 1
+       }
+      },
+      {
+       "label": "Ask whether the cards use qualified majority voting.",
+       "result": "Lars deals you a rulebook and the oldest deck in the building.",
+       "trust": 2,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
  ],
- "port-officer": [{"id": "routes", "start": "a", "nodes": {"a": {"text": "Mira unfolds a port map marked with collection routes. Donors keep asking where to stand for the photograph.", "choices": [{"label": "Ask which route needs attention.", "result": "Mira identifies a blocked collection point and thanks you for asking.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Ask where the logo will be visible.", "result": "Mira points to the bin currently blocking the route.", "trust": -1, "effects": {}}]}}}, {"id": "crews", "start": "a", "nodes": {"a": {"text": "Mira says port crews have practical ideas but rarely appear in project announcements.", "choices": [{"label": "Ask to hear the crews’ suggestions.", "result": "Mira offers to arrange a practical briefing.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Suggest a larger ceremonial ribbon.", "result": "Mira measures the ribbon against the blocked drain.", "trust": -1, "effects": {}}]}}}],
- "bar-insurer": [{"id": "insurance", "start": "a", "nodes": {"a": {"text": "Sofia knows which insurers will cover port cargo, but needs reliable collection records before recommending a contract.", "choices": [{"label": "Ask what records would help.", "result": "Sofia outlines a useful manifest and introduces you to a port contact.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Promise perfect records without checking.", "result": "Sofia asks whether your promise is insured.", "trust": -1, "effects": {}}]}}}, {"id": "music", "start": "a", "nodes": {"a": {"text": "Sofia organises a Portuguese reception and is deciding between a maritime insurer and a musician for the last seat.", "choices": [{"label": "Suggest inviting both for different parts of the evening.", "result": "Sofia finds room in the programme for a conversation and a song.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Reserve the seat for your own delegation.", "result": "Sofia notes your request in a very small notebook.", "trust": -1, "effects": {}}]}}}],
- "un-coordinator": [{"id": "customs", "start": "a", "nodes": {"a": {"text": "Idra is tracking donated bins stuck in customs. Each agency has produced a separate spreadsheet.", "choices": [{"label": "Compare the shipment numbers together.", "result": "Idra spots a duplicate entry and finds the correct customs file.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Suggest another inter-agency spreadsheet.", "result": "Idra adds your suggestion to the spreadsheet of spreadsheets.", "trust": -1, "effects": {}}]}}}, {"id": "handover", "start": "a", "nodes": {"a": {"text": "Idra wants local crews involved before donors announce another programme.", "choices": [{"label": "Ask who will maintain the equipment.", "result": "Idra shares the maintenance plan and makes a note to include the crews.", "trust": 2, "effects": {"goodwill": 1}}, {"label": "Ask when the launch photograph is.", "result": "Idra checks the camera budget, then points to the empty maintenance line.", "trust": -1, "effects": {}}]}}}]
+ "port-officer": [
+  {
+   "id": "routes",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Mira unfolds a port map marked with collection routes. Donors keep asking where to stand for the photograph.",
+     "choices": [
+      {
+       "label": "Ask which route needs attention.",
+       "result": "Mira identifies a blocked collection point and thanks you for asking.",
+       "trust": 2,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Ask where the logo will be visible.",
+       "result": "Mira points to the bin currently blocking the route.",
+       "trust": -1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "crews",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Mira says port crews have practical ideas but rarely appear in project announcements.",
+     "choices": [
+      {
+       "label": "Ask to hear the crews’ suggestions.",
+       "result": "Mira offers to arrange a practical briefing.",
+       "trust": 2,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Suggest a larger ceremonial ribbon.",
+       "result": "Mira measures the ribbon against the blocked drain.",
+       "trust": -1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "bar-insurer": [
+  {
+   "id": "insurance",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Sofia knows which insurers will cover port cargo, but needs reliable collection records before recommending a contract.",
+     "choices": [
+      {
+       "label": "Ask what records would help.",
+       "result": "Sofia outlines a useful manifest and introduces you to a port contact.",
+       "trust": 2,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Promise perfect records without checking.",
+       "result": "Sofia asks whether your promise is insured.",
+       "trust": -1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "music",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Sofia organises a Portuguese reception and is deciding between a maritime insurer and a musician for the last seat.",
+     "choices": [
+      {
+       "label": "Suggest inviting both for different parts of the evening.",
+       "result": "Sofia finds room in the programme for a conversation and a song.",
+       "trust": 2,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Reserve the seat for your own delegation.",
+       "result": "Sofia notes your request in a very small notebook.",
+       "trust": -1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "un-coordinator": [
+  {
+   "id": "customs",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Idra is tracking donated bins stuck in customs. Each agency has produced a separate spreadsheet.",
+     "choices": [
+      {
+       "label": "Compare the shipment numbers together.",
+       "result": "Idra spots a duplicate entry and finds the correct customs file.",
+       "trust": 2,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Suggest another inter-agency spreadsheet.",
+       "result": "Idra adds your suggestion to the spreadsheet of spreadsheets.",
+       "trust": -1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "handover",
+   "start": "a",
+   "nodes": {
+    "a": {
+     "text": "Idra wants local crews involved before donors announce another programme.",
+     "choices": [
+      {
+       "label": "Ask who will maintain the equipment.",
+       "result": "Idra shares the maintenance plan and makes a note to include the crews.",
+       "trust": 2,
+       "effects": {
+        "goodwill": 1
+       }
+      },
+      {
+       "label": "Ask when the launch photograph is.",
+       "result": "Idra checks the camera budget, then points to the empty maintenance line.",
+       "trust": -1,
+       "effects": {}
+      }
+     ]
+    }
+   }
+  }
+ ]
 }

@@ -268,22 +268,144 @@
       "line": "We can support the programme. We cannot promise six agencies will agree on one logo."
     },
     {
-      "id": "amb-valdoria", "name": "Ambassador Mara Velen", "role": "Ambassador of Valdoria", "face": 1, "location": "golf",
-      "likes": ["classic", "local"], "dislikes": ["shady"], "skills": [],
+      "id": "amb-valdoria",
+      "name": "Ambassador Mara Velen",
+      "role": "Ambassador of Valdoria",
+      "face": 1,
+      "location": "golf",
+      "likes": [
+        "classic",
+        "local"
+      ],
+      "dislikes": [
+        "shady"
+      ],
+      "skills": [],
       "line": "My national-day speech was eight minutes. The applause was longer because the exit was locked."
     },
     {
-      "id": "amb-asteria", "name": "Ambassador Niko Arden", "role": "Ambassador of Denmark", "face": 2, "location": "eu",
-      "likes": ["local", "sushi"], "dislikes": ["bling"], "skills": [],
+      "id": "amb-asteria",
+      "name": "Ambassador Niko Arden",
+      "role": "Ambassador of Denmark",
+      "face": 2,
+      "location": "eu",
+      "likes": [
+        "local",
+        "sushi"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [],
       "line": "Denmark supports consensus, provided someone else writes the first draft."
     },
-    {"id": "port-officer", "name": "Mira Sene", "role": "Ombrazian Port Environment Officer", "face": 4, "location": "ministry", "likes": ["local"], "dislikes": ["bling"], "skills": [], "line": "The port needs a working waste collection, not another photograph of an empty bin."},
-    {"id": "bar-insurer", "name": "Sofia da Costa", "role": "Portuguese Maritime Liaison", "face": 3, "location": "bar", "likes": ["local", "classic"], "dislikes": ["shady"], "skills": [], "line": "I can introduce you to the insurers. First tell me who actually maintains the harbour."},
-    {"id": "un-coordinator", "name": "Idra Venn", "role": "UN Programme Logistics Officer", "face": 2, "location": "un", "likes": ["local"], "dislikes": ["bling"], "skills": [], "line": "The donor reports say the bins have arrived. The bins say they are still in customs."},
-    { "id": "eu-germany", "name": "Klaus Weber", "role": "German Ambassador", "face": 0, "location": "eu", "likes": ["classic"], "dislikes": ["bling"], "skills": [], "line": "The coordination table is in Annex IV. The chairs have their own annex." },
-    { "id": "eu-france", "name": "Henri de Valois", "role": "French Ambassador", "face": 3, "location": "eu", "likes": ["classic"], "dislikes": ["shady"], "skills": [], "line": "The draft is acceptable in principle. In French, the principle is considerably more elegant." },
-    { "id": "eu-malta", "name": "Tanya Farrugia", "role": "Maltese Ambassador", "face": 4, "location": "eu", "likes": ["local"], "dislikes": ["bling"], "skills": [], "line": "I have Malta's brief and, with permission for this meeting, the briefs from Cyprus and Luxembourg. They agree on the biscuits, at least." },
-    { "id": "eu-sweden", "name": "Lars Lindqvist", "role": "Swedish Ambassador", "face": 5, "location": "eu", "likes": ["local", "classic"], "dislikes": ["bling"], "skills": [], "line": "Before we decide who speaks, perhaps we should ask who has not been invited." }
+    {
+      "id": "port-officer",
+      "name": "Mira Sene",
+      "role": "Ombrazian Port Environment Officer",
+      "face": 4,
+      "location": "ministry",
+      "likes": [
+        "local"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [],
+      "line": "The port needs a working waste collection, not another photograph of an empty bin."
+    },
+    {
+      "id": "bar-insurer",
+      "name": "Sofia da Costa",
+      "role": "Portuguese Maritime Liaison",
+      "face": 3,
+      "location": "bar",
+      "likes": [
+        "local",
+        "classic"
+      ],
+      "dislikes": [
+        "shady"
+      ],
+      "skills": [],
+      "line": "I can introduce you to the insurers. First tell me who actually maintains the harbour."
+    },
+    {
+      "id": "un-coordinator",
+      "name": "Idra Venn",
+      "role": "UN Programme Logistics Officer",
+      "face": 2,
+      "location": "un",
+      "likes": [
+        "local"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [],
+      "line": "The donor reports say the bins have arrived. The bins say they are still in customs."
+    },
+    {
+      "id": "eu-germany",
+      "name": "Klaus Weber",
+      "role": "German Ambassador",
+      "face": 0,
+      "location": "eu",
+      "likes": [
+        "classic"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [],
+      "line": "The coordination table is in Annex IV. The chairs have their own annex."
+    },
+    {
+      "id": "eu-france",
+      "name": "Henri de Valois",
+      "role": "French Ambassador",
+      "face": 3,
+      "location": "eu",
+      "likes": [
+        "classic"
+      ],
+      "dislikes": [
+        "shady"
+      ],
+      "skills": [],
+      "line": "The draft is acceptable in principle. In French, the principle is considerably more elegant."
+    },
+    {
+      "id": "eu-malta",
+      "name": "Tanya Farrugia",
+      "role": "Maltese Ambassador",
+      "face": 4,
+      "location": "eu",
+      "likes": [
+        "local"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [],
+      "line": "I have Malta's brief and, with permission for this meeting, the briefs from Cyprus and Luxembourg. They agree on the biscuits, at least."
+    },
+    {
+      "id": "eu-sweden",
+      "name": "Lars Lindqvist",
+      "role": "Swedish Ambassador",
+      "face": 5,
+      "location": "eu",
+      "likes": [
+        "local",
+        "classic"
+      ],
+      "dislikes": [
+        "bling"
+      ],
+      "skills": [],
+      "line": "Before we decide who speaks, perhaps we should ask who has not been invited."
+    }
   ],
   "venues": [
     {
@@ -503,52 +625,579 @@
   },
   "events": [
     {
-      "id": "eu-budget-share-meeting", "title": "The 17.6% meeting", "npc": "eu", "location": "eu", "minDay": 1,
+      "id": "eu-budget-share-meeting",
+      "title": "The 17.6% meeting",
+      "npc": "eu",
+      "location": "eu",
+      "minDay": 1,
       "text": "Celeste calls the local EU coordination meeting to order. Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework; your colleague has brought a stopwatch to claim 17.6% of the speaking time, biscuits and credit. Tanya of Malta says Cyprus and Luxembourg have authorised her to present their briefs at this meeting. France wants to reach the host ministry before it closes. Germany has already put the stopwatch in an annex.",
       "choices": [
-        { "id": "claim", "label": "Claim Bellaluxe's 17.6% of speaking time and biscuits", "effects": { "confidence": 2 }, "trust": -2, "contact": "eu-malta", "contactTrust": -3, "result": "Your colleague starts the stopwatch. Tanya's Cyprus and Luxembourg briefs are postponed until after the biscuits. Capital appreciates the visible arithmetic." },
-        { "id": "share", "label": "Give Tanya time to present Malta's, Cyprus's and Luxembourg's views", "effects": { "goodwill": 1 }, "trust": 1, "contact": "eu-malta", "contactTrust": 4, "result": "Tanya presents all three briefs. Celeste calls it Team Europe; the stopwatch records 17.6% of a very patient silence." },
-        { "id": "reform", "label": "Propose equal initial speaking time, then discuss the budget", "effects": { "confidence": 1 }, "trust": 2, "contact": "eu-germany", "contactTrust": 2, "result": "Klaus agrees to an equal first round, subject to a one-page annex. Henri gets to the ministry before it closes." }
+        {
+          "id": "claim",
+          "label": "Claim Bellaluxe's 17.6% of speaking time and biscuits",
+          "effects": {
+            "confidence": 2
+          },
+          "trust": -2,
+          "contact": "eu-malta",
+          "contactTrust": -3,
+          "result": "Your colleague starts the stopwatch. Tanya's Cyprus and Luxembourg briefs are postponed until after the biscuits. Capital appreciates the visible arithmetic."
+        },
+        {
+          "id": "share",
+          "label": "Give Tanya time to present Malta's, Cyprus's and Luxembourg's views",
+          "effects": {
+            "goodwill": 1
+          },
+          "trust": 1,
+          "contact": "eu-malta",
+          "contactTrust": 4,
+          "result": "Tanya presents all three briefs. Celeste calls it Team Europe; the stopwatch records 17.6% of a very patient silence."
+        },
+        {
+          "id": "reform",
+          "label": "Propose equal initial speaking time, then discuss the budget",
+          "effects": {
+            "confidence": 1
+          },
+          "trust": 2,
+          "contact": "eu-germany",
+          "contactTrust": 2,
+          "result": "Klaus agrees to an equal first round, subject to a one-page annex. Henri gets to the ministry before it closes."
+        },
+        {
+          "id": "trait-liver",
+          "label": "Propose a toast to the budget share",
+          "requiresTrait": "liver",
+          "result": "Celeste agrees to a toast; the stopwatch is temporarily repurposed as a coaster.",
+          "effects": {
+            "goodwill": 1,
+            "sanity": -1
+          },
+          "trust": 1
+        }
       ]
     },
     {
-      "id": "eu-budget-share-claim-followup", "title": "The missing Cyprus paragraph", "npc": "eu-malta", "minDay": 2,
-      "requiresChoice": { "eventId": "eu-budget-share-meeting", "choiceId": "claim" },
+      "id": "eu-budget-share-claim-followup",
+      "title": "The missing Cyprus paragraph",
+      "npc": "eu-malta",
+      "minDay": 2,
+      "requiresChoice": {
+        "eventId": "eu-budget-share-meeting",
+        "choiceId": "claim"
+      },
       "text": "Tanya calls: Cyprus's authorised position was left out after Bellaluxe's stopwatch expired. The statement is still a draft, but the biscuits are not.",
       "choices": [
-        { "id": "amend", "label": "Ask Celeste to add the Cyprus paragraph", "effects": { "goodwill": 1 }, "trust": 3, "result": "Tanya supplies the authorised paragraph and Celeste amends the draft. Capital asks whether the correction used any of its speaking time." },
-        { "id": "leave", "label": "Leave the draft as it is", "effects": { "confidence": 1 }, "trust": -2, "result": "The draft goes forward without Cyprus's paragraph. Tanya promises to bring a larger stopwatch." }
+        {
+          "id": "amend",
+          "label": "Ask Celeste to add the Cyprus paragraph",
+          "effects": {
+            "goodwill": 1
+          },
+          "trust": 3,
+          "result": "Tanya supplies the authorised paragraph and Celeste amends the draft. Capital asks whether the correction used any of its speaking time."
+        },
+        {
+          "id": "leave",
+          "label": "Leave the draft as it is",
+          "effects": {
+            "confidence": 1
+          },
+          "trust": -2,
+          "result": "The draft goes forward without Cyprus's paragraph. Tanya promises to bring a larger stopwatch."
+        }
       ]
     },
     {
-      "id": "eu-budget-share-share-followup", "title": "Two briefs and a cup of coffee", "npc": "eu-malta", "minDay": 2,
-      "requiresChoice": { "eventId": "eu-budget-share-meeting", "choiceId": "share" },
+      "id": "eu-budget-share-share-followup",
+      "title": "Two briefs and a cup of coffee",
+      "npc": "eu-malta",
+      "minDay": 2,
+      "requiresChoice": {
+        "eventId": "eu-budget-share-meeting",
+        "choiceId": "share"
+      },
       "text": "Tanya thanks you for giving Malta, Cyprus and Luxembourg time to speak. Cyprus has now authorised a concise amendment; the host's protocol desk says it can accept it before lunch.",
       "choices": [
-        { "id": "support", "label": "Support the authorised amendment", "effects": { "goodwill": 2 }, "trust": 3, "result": "The amendment reaches the host desk. Both missions receive credit; Celeste asks whether the cover page can say Team Europe." },
-        { "id": "defer", "label": "Defer it until Bellaluxe has checked with Capital", "effects": { "confidence": 1 }, "trust": -1, "result": "Capital receives the amendment for review. Tanya points out that lunch was the deadline, not a suggestion." }
+        {
+          "id": "support",
+          "label": "Support the authorised amendment",
+          "effects": {
+            "goodwill": 2
+          },
+          "trust": 3,
+          "result": "The amendment reaches the host desk. Both missions receive credit; Celeste asks whether the cover page can say Team Europe."
+        },
+        {
+          "id": "defer",
+          "label": "Defer it until Bellaluxe has checked with Capital",
+          "effects": {
+            "confidence": 1
+          },
+          "trust": -1,
+          "result": "Capital receives the amendment for review. Tanya points out that lunch was the deadline, not a suggestion."
+        }
       ]
     },
     {
-      "id": "eu-budget-share-reform-followup", "title": "The annex on equal time", "npc": "eu-germany", "minDay": 2,
-      "requiresChoice": { "eventId": "eu-budget-share-meeting", "choiceId": "reform" },
+      "id": "eu-budget-share-reform-followup",
+      "title": "The annex on equal time",
+      "npc": "eu-germany",
+      "minDay": 2,
+      "requiresChoice": {
+        "eventId": "eu-budget-share-meeting",
+        "choiceId": "reform"
+      },
       "text": "Klaus has reduced the equal-time proposal to one page, plus an annex defining a page. Celeste asks whether Bellaluxe will endorse the rule before the next meeting.",
       "choices": [
-        { "id": "endorse", "label": "Endorse the equal first round", "effects": { "goodwill": 1 }, "trust": 3, "result": "Klaus circulates the rule. Everyone gets a turn to object to the annex." },
-        { "id": "exception", "label": "Request a 17.6% exception for Bellaluxe", "effects": { "confidence": 2 }, "trust": -2, "result": "Klaus adds a second annex titled 'exception to equal time'. Capital asks for a copy." }
+        {
+          "id": "endorse",
+          "label": "Endorse the equal first round",
+          "effects": {
+            "goodwill": 1
+          },
+          "trust": 3,
+          "result": "Klaus circulates the rule. Everyone gets a turn to object to the annex."
+        },
+        {
+          "id": "exception",
+          "label": "Request a 17.6% exception for Bellaluxe",
+          "effects": {
+            "confidence": 2
+          },
+          "trust": -2,
+          "result": "Klaus adds a second annex titled 'exception to equal time'. Capital asks for a copy."
+        }
       ]
     },
-    {"id": "eu-clean-port", "title": "Team Europe and the clean port", "npc": "eu", "location": "eu", "minDay": 2, "text": "Celeste proposes a Team Europe clean-port initiative: member states supply money and staff, while her draft announcement credits the EU Delegation. Ombrazia's port environment officer Mira Sene says collection routes and local crews matter more than a launch photograph. Germany's Klaus has offered safety advice; Bellaluxe must decide whether to contribute.", "choices": [{"id": "accept", "label": "Accept the Delegation-led announcement; fund collection planning", "staff": "development", "cashCost": 200, "trust": 3, "contact": "port-officer", "contactTrust": 1, "effects": {"confidence": -2, "goodwill": 1}, "result": "Elise and local crews plan collection; Bellaluxe pays ƒ200. Celeste announces the Delegation initiative. Capital asks where Bellaluxe appears."}, {"id": "national", "label": "Insist on Bellaluxe branding before contributing", "staff": "development", "cashCost": 100, "trust": -3, "contact": "port-officer", "contactTrust": -1, "effects": {"confidence": 2}, "result": "Elise prepares a ƒ100 Bellaluxe proposal. Celeste delays the joint announcement; Mira must wait for agreement before scheduling crews."}, {"id": "shared", "label": "Negotiate shared credit and a practical work plan", "staff": "development", "cashCost": 150, "trust": 1, "contact": "port-officer", "contactTrust": 3, "effects": {"goodwill": 2}, "result": "Elise commits ƒ150 and agrees routes with Mira. The announcement names both Bellaluxe and the Delegation; Celeste wanted the larger logo and Capital wanted the first line."}, {"id": "decline", "label": "Decline the contribution and keep embassy resources free", "trust": -1, "effects": {}, "result": "Bellaluxe keeps its funds and staff time. Celeste seeks another partner, and Mira has no Bellaluxe commitment to schedule."}]},
-    {"id": "clean-port-accept-host", "title": "The port without a name", "npc": "port-officer", "location": "ministry", "minDay": 3, "requiresChoice": {"eventId": "eu-clean-port", "choiceId": "accept"}, "text": "Mira says the collection routes are ready, but the Delegation announcement does not name Bellaluxe. Local crews know Elise did the work; Capital knows only what appeared in the fax.", "choices": [{"id": "correct", "label": "Request a factual correction naming all contributors", "trust": 2, "effects": {"confidence": 1}, "result": "Mira sends a corrected list of contributors. Celeste says a list can still have a Team Europe heading."}, {"id": "deliver", "label": "Keep the announcement and start collection", "trust": 1, "effects": {"goodwill": 1}, "result": "The crews start work without revising the announcement. Capital files a small but very legible complaint."}]},
-    {"id": "clean-port-national-host", "title": "A plaque before a route", "npc": "port-officer", "location": "ministry", "minDay": 3, "requiresChoice": {"eventId": "eu-clean-port", "choiceId": "national"}, "text": "Mira has a Bellaluxe proposal but no agreed joint collection timetable. The Delegation wants the logo question settled; the port wants the rubbish removed.", "choices": [{"id": "release", "label": "Release the plan for the local crews to use", "trust": 3, "effects": {"goodwill": 2}, "result": "Mira puts the plan to work while the logos remain under discussion. Bellaluxe keeps a named role."}, {"id": "hold", "label": "Hold the plan until the branding is agreed", "trust": -3, "effects": {"confidence": 1}, "result": "Capital welcomes the firm position. Mira postpones the crews and asks who will pay for another week of storage."}]},
-    {"id": "clean-port-shared-host", "title": "Two logos, one collection route", "npc": "port-officer", "location": "ministry", "minDay": 3, "requiresChoice": {"eventId": "eu-clean-port", "choiceId": "shared"}, "text": "Mira has scheduled the local crews using Elise’s shared plan. Both Bellaluxe and the Delegation are named, but the announcement leaves out the port workers.", "choices": [{"id": "include", "label": "Add the port crews to the public credit", "trust": 3, "effects": {"goodwill": 2}, "result": "Mira adds the crews and the collection begins. The revised credit line is longer than the route description."}, {"id": "publish", "label": "Publish the agreed version on time", "trust": -1, "effects": {"confidence": 1}, "result": "The announcement appears on schedule. The crews start work, but Mira notes whose names were omitted."}]},
-    {"id": "clean-port-decline-host", "title": "The missing port partner", "npc": "port-officer", "location": "ministry", "minDay": 3, "requiresChoice": {"eventId": "eu-clean-port", "choiceId": "decline"}, "text": "Mira says Celeste is looking for another contributor. Without a Bellaluxe commitment, the port is adjusting the schedule rather than counting on work that was never promised.", "choices": [{"id": "contacts", "label": "Offer Mira an introduction without promising funds or staff", "trust": 2, "effects": {"goodwill": 1}, "result": "Mira receives a useful contact; the port still needs a funded partner before expanding collection."}, {"id": "wait", "label": "Wait for the Delegation to find a partner", "trust": 0, "effects": {}, "result": "Mira adjusts the port timetable. Bellaluxe makes no further commitment."}]},
-    {"id": "staff-sola-elise", "title": "Whose project is it?", "npc": "sola", "location": "embassy", "minDay": 2, "text": "Sola has been asked to translate Elise's finished project proposal for local partners. Elise is proud of her work; Sola says the partners should have been asked what they need before the proposal was written. The visit team wants a decision today.", "choices": [{"id": "consult", "label": "Ask Sola and the partners to shape the proposal with Elise", "trust": 4, "pair": 8, "pairTarget": "development", "contact": "development", "contactTrust": 1, "effects": {"goodwill": 1}, "result": "Sola contacts the partners before the proposal is finalised. Elise agrees to revise it, although her timetable is now rather less beautiful."}, {"id": "instruct", "label": "Tell Sola to translate Elise’s proposal as written", "trust": -4, "pair": -5, "pairTarget": "development", "contact": "development", "contactTrust": 2, "effects": {"confidence": 1}, "result": "Sola translates the proposal. Elise meets her deadline, but the partners have not yet been asked what they need."}, {"id": "pause", "label": "Pause the proposal until both colleagues can agree a process", "trust": 1, "pair": 2, "pairTarget": "development", "effects": {}, "result": "Sola and Elise agree to discuss the process. The proposal waits; neither has promised an immediate answer."}]},
-    {"id": "staff-sola-consult-followup", "title": "A project with local authors", "npc": "development", "location": "embassy", "minDay": 3, "requiresChoice": {"eventId": "staff-sola-elise", "choiceId": "consult"}, "text": "Elise brings back Sola's notes from the partners. Their priorities differ from her draft, and changing it will mean telling Capital the original proposal was incomplete.", "choices": [{"id": "revise", "label": "Back the partners’ revisions and explain them to Capital", "trust": 3, "pair": 4, "pairTarget": "sola", "effects": {"goodwill": 2, "confidence": -1}, "result": "Elise and Sola name the partners as contributors. Capital receives a revised proposal and a less flattering timeline."}, {"id": "credit", "label": "Keep the original draft but acknowledge the consultation", "trust": -2, "pair": -2, "pairTarget": "sola", "effects": {"confidence": 1, "goodwill": -1}, "result": "The draft leaves on time. Sola points out that acknowledgement is not the same as using the partners’ advice."}]},
-    {"id": "staff-sola-instruct-followup", "title": "The translation comes back", "npc": "sola", "location": "embassy", "minDay": 3, "requiresChoice": {"eventId": "staff-sola-elise", "choiceId": "instruct"}, "text": "The local partners have returned the translated proposal with practical objections. Sola says she would have raised these earlier if anyone had asked. Elise wants a chance to put them right.", "choices": [{"id": "repair", "label": "Acknowledge the mistake and ask Sola and Elise to revise it", "trust": 4, "pair": 5, "pairTarget": "development", "effects": {"goodwill": 1, "confidence": -1}, "result": "Sola accepts the apology and arranges a revision with Elise. The delay is real; so is the improvement."}, {"id": "send", "label": "Send the original proposal and note the objections separately", "trust": -3, "pair": -2, "pairTarget": "development", "effects": {"confidence": 1, "goodwill": -2}, "result": "Capital gets the proposal on time. Sola sends the partners a separate explanation of why their comments were not included."}]},
-    {"id": "staff-sola-pause-followup", "title": "A process, eventually", "npc": "development", "location": "embassy", "minDay": 3, "requiresChoice": {"eventId": "staff-sola-elise", "choiceId": "pause"}, "text": "Elise and Sola have agreed to ask the partners for comments, but neither wants to own the delayed deadline. Capital has noticed the blank in the timetable.", "choices": [{"id": "own", "label": "Take responsibility for the delay and agree a new deadline", "trust": 2, "pair": 4, "pairTarget": "sola", "effects": {"confidence": -1, "morale": 1}, "result": "You take the call from Capital. Sola and Elise agree who will consult the partners and when."}, {"id": "blame", "label": "Tell Capital the two colleagues are responsible", "trust": -3, "pair": -2, "pairTarget": "sola", "effects": {"confidence": 1, "morale": -2}, "result": "Capital gets two names. Elise and Sola get a reason to be wary of their next joint brief."}]},
-    {"id": "staff-rivalry-mediate-followup", "title": "The joint briefing returns", "npc": "anselm", "location": "embassy", "minDay": 2, "requiresChoice": {"eventId": "rivalry", "choiceId": "mediate"}, "text": "Anselm has incorporated Pavel’s corrections and asks whether his contribution will be named, as you promised when mediating their dispute. Pavel wants the facts checked before the briefing goes to Capital.", "choices": [{"id": "credit", "label": "Check the facts and credit both authors", "trust": 4, "pair": 4, "pairTarget": "pavel", "effects": {"morale": 2}, "result": "The briefing names both authors. Pavel checks the figures; Anselm discovers that an edit is not an accusation."}, {"id": "anonymous", "label": "Send it under your own name to save time", "trust": -4, "pair": -2, "pairTarget": "pavel", "effects": {"confidence": 1, "morale": -1}, "result": "Capital gets the briefing. Anselm and Pavel compare notes about your interpretation of shared credit."}]},
-    {"id": "staff-rivalry-order-followup", "title": "A briefing, reluctantly", "npc": "pavel", "location": "embassy", "minDay": 2, "requiresChoice": {"eventId": "rivalry", "choiceId": "order"}, "text": "Pavel has sent the combined briefing you ordered. Anselm has written a separate correction and neither will speak to the other. Capital wants one reliable version.", "choices": [{"id": "mediate", "label": "Hear both colleagues and agree who checks the facts", "trust": 3, "pair": 10, "pairTarget": "anselm", "effects": {"morale": 1, "confidence": -1}, "result": "Pavel and Anselm agree on a fact check. The repair takes time, and neither calls it a friendship."}, {"id": "override", "label": "Send Pavel’s version and tell Anselm to drop it", "trust": 1, "pair": -3, "pairTarget": "anselm", "contact": "anselm", "contactTrust": -4, "effects": {"confidence": 1, "morale": -2}, "result": "Pavel’s version goes to Capital. Anselm files his correction and starts keeping a careful record of whose name is on which draft."}]},
+    {
+      "id": "eu-clean-port",
+      "title": "Team Europe and the clean port",
+      "npc": "eu",
+      "location": "eu",
+      "minDay": 2,
+      "text": "Celeste proposes a Team Europe clean-port initiative: member states supply money and staff, while her draft announcement credits the EU Delegation. Ombrazia's port environment officer Mira Sene says collection routes and local crews matter more than a launch photograph. Germany's Klaus has offered safety advice; Bellaluxe must decide whether to contribute.",
+      "choices": [
+        {
+          "id": "accept",
+          "label": "Accept the Delegation-led announcement; fund collection planning",
+          "staff": "development",
+          "cashCost": 200,
+          "trust": 3,
+          "contact": "port-officer",
+          "contactTrust": 1,
+          "effects": {
+            "confidence": -2,
+            "goodwill": 1
+          },
+          "result": "Elise and local crews plan collection; Bellaluxe pays ƒ200. Celeste announces the Delegation initiative. Capital asks where Bellaluxe appears."
+        },
+        {
+          "id": "national",
+          "label": "Insist on Bellaluxe branding before contributing",
+          "staff": "development",
+          "cashCost": 100,
+          "trust": -3,
+          "contact": "port-officer",
+          "contactTrust": -1,
+          "effects": {
+            "confidence": 2
+          },
+          "result": "Elise prepares a ƒ100 Bellaluxe proposal. Celeste delays the joint announcement; Mira must wait for agreement before scheduling crews."
+        },
+        {
+          "id": "shared",
+          "label": "Negotiate shared credit and a practical work plan",
+          "staff": "development",
+          "cashCost": 150,
+          "trust": 1,
+          "contact": "port-officer",
+          "contactTrust": 3,
+          "effects": {
+            "goodwill": 2
+          },
+          "result": "Elise commits ƒ150 and agrees routes with Mira. The announcement names both Bellaluxe and the Delegation; Celeste wanted the larger logo and Capital wanted the first line."
+        },
+        {
+          "id": "decline",
+          "label": "Decline the contribution and keep embassy resources free",
+          "trust": -1,
+          "effects": {},
+          "result": "Bellaluxe keeps its funds and staff time. Celeste seeks another partner, and Mira has no Bellaluxe commitment to schedule."
+        }
+      ]
+    },
+    {
+      "id": "clean-port-accept-host",
+      "title": "The port without a name",
+      "npc": "port-officer",
+      "location": "ministry",
+      "minDay": 3,
+      "requiresChoice": {
+        "eventId": "eu-clean-port",
+        "choiceId": "accept"
+      },
+      "text": "Mira says the collection routes are ready, but the Delegation announcement does not name Bellaluxe. Local crews know Elise did the work; Capital knows only what appeared in the fax.",
+      "choices": [
+        {
+          "id": "correct",
+          "label": "Request a factual correction naming all contributors",
+          "trust": 2,
+          "effects": {
+            "confidence": 1
+          },
+          "result": "Mira sends a corrected list of contributors. Celeste says a list can still have a Team Europe heading.",
+          "formal": true
+        },
+        {
+          "id": "deliver",
+          "label": "Keep the announcement and start collection",
+          "trust": 1,
+          "effects": {
+            "goodwill": 1
+          },
+          "result": "The crews start work without revising the announcement. Capital files a small but very legible complaint.",
+          "formal": true
+        }
+      ]
+    },
+    {
+      "id": "clean-port-national-host",
+      "title": "A plaque before a route",
+      "npc": "port-officer",
+      "location": "ministry",
+      "minDay": 3,
+      "requiresChoice": {
+        "eventId": "eu-clean-port",
+        "choiceId": "national"
+      },
+      "text": "Mira has a Bellaluxe proposal but no agreed joint collection timetable. The Delegation wants the logo question settled; the port wants the rubbish removed.",
+      "choices": [
+        {
+          "id": "release",
+          "label": "Release the plan for the local crews to use",
+          "trust": 3,
+          "effects": {
+            "goodwill": 2
+          },
+          "result": "Mira puts the plan to work while the logos remain under discussion. Bellaluxe keeps a named role.",
+          "formal": true
+        },
+        {
+          "id": "hold",
+          "label": "Hold the plan until the branding is agreed",
+          "trust": -3,
+          "effects": {
+            "confidence": 1
+          },
+          "result": "Capital welcomes the firm position. Mira postpones the crews and asks who will pay for another week of storage.",
+          "formal": true
+        }
+      ]
+    },
+    {
+      "id": "clean-port-shared-host",
+      "title": "Two logos, one collection route",
+      "npc": "port-officer",
+      "location": "ministry",
+      "minDay": 3,
+      "requiresChoice": {
+        "eventId": "eu-clean-port",
+        "choiceId": "shared"
+      },
+      "text": "Mira has scheduled the local crews using Elise’s shared plan. Both Bellaluxe and the Delegation are named, but the announcement leaves out the port workers.",
+      "choices": [
+        {
+          "id": "include",
+          "label": "Add the port crews to the public credit",
+          "trust": 3,
+          "effects": {
+            "goodwill": 2
+          },
+          "result": "Mira adds the crews and the collection begins. The revised credit line is longer than the route description.",
+          "formal": true
+        },
+        {
+          "id": "publish",
+          "label": "Publish the agreed version on time",
+          "trust": -1,
+          "effects": {
+            "confidence": 1
+          },
+          "result": "The announcement appears on schedule. The crews start work, but Mira notes whose names were omitted.",
+          "formal": true
+        }
+      ]
+    },
+    {
+      "id": "clean-port-decline-host",
+      "title": "The missing port partner",
+      "npc": "port-officer",
+      "location": "ministry",
+      "minDay": 3,
+      "requiresChoice": {
+        "eventId": "eu-clean-port",
+        "choiceId": "decline"
+      },
+      "text": "Mira says Celeste is looking for another contributor. Without a Bellaluxe commitment, the port is adjusting the schedule rather than counting on work that was never promised.",
+      "choices": [
+        {
+          "id": "contacts",
+          "label": "Offer Mira an introduction without promising funds or staff",
+          "trust": 2,
+          "effects": {
+            "goodwill": 1
+          },
+          "result": "Mira receives a useful contact; the port still needs a funded partner before expanding collection.",
+          "formal": true
+        },
+        {
+          "id": "wait",
+          "label": "Wait for the Delegation to find a partner",
+          "trust": 0,
+          "effects": {},
+          "result": "Mira adjusts the port timetable. Bellaluxe makes no further commitment.",
+          "formal": true
+        }
+      ]
+    },
+    {
+      "id": "staff-sola-elise",
+      "title": "Whose project is it?",
+      "npc": "sola",
+      "location": "embassy",
+      "minDay": 2,
+      "text": "Sola has been asked to translate Elise's finished project proposal for local partners. Elise is proud of her work; Sola says the partners should have been asked what they need before the proposal was written. The visit team wants a decision today.",
+      "choices": [
+        {
+          "id": "consult",
+          "label": "Ask Sola and the partners to shape the proposal with Elise",
+          "trust": 4,
+          "pair": 8,
+          "pairTarget": "development",
+          "contact": "development",
+          "contactTrust": 1,
+          "effects": {
+            "goodwill": 1
+          },
+          "result": "Sola contacts the partners before the proposal is finalised. Elise agrees to revise it, although her timetable is now rather less beautiful."
+        },
+        {
+          "id": "instruct",
+          "label": "Tell Sola to translate Elise’s proposal as written",
+          "trust": -4,
+          "pair": -5,
+          "pairTarget": "development",
+          "contact": "development",
+          "contactTrust": 2,
+          "effects": {
+            "confidence": 1
+          },
+          "result": "Sola translates the proposal. Elise meets her deadline, but the partners have not yet been asked what they need."
+        },
+        {
+          "id": "pause",
+          "label": "Pause the proposal until both colleagues can agree a process",
+          "trust": 1,
+          "pair": 2,
+          "pairTarget": "development",
+          "effects": {},
+          "result": "Sola and Elise agree to discuss the process. The proposal waits; neither has promised an immediate answer."
+        }
+      ]
+    },
+    {
+      "id": "staff-sola-consult-followup",
+      "title": "A project with local authors",
+      "npc": "development",
+      "location": "embassy",
+      "minDay": 3,
+      "requiresChoice": {
+        "eventId": "staff-sola-elise",
+        "choiceId": "consult"
+      },
+      "text": "Elise brings back Sola's notes from the partners. Their priorities differ from her draft, and changing it will mean telling Capital the original proposal was incomplete.",
+      "choices": [
+        {
+          "id": "revise",
+          "label": "Back the partners’ revisions and explain them to Capital",
+          "trust": 3,
+          "pair": 4,
+          "pairTarget": "sola",
+          "effects": {
+            "goodwill": 2,
+            "confidence": -1
+          },
+          "result": "Elise and Sola name the partners as contributors. Capital receives a revised proposal and a less flattering timeline."
+        },
+        {
+          "id": "credit",
+          "label": "Keep the original draft but acknowledge the consultation",
+          "trust": -2,
+          "pair": -2,
+          "pairTarget": "sola",
+          "effects": {
+            "confidence": 1,
+            "goodwill": -1
+          },
+          "result": "The draft leaves on time. Sola points out that acknowledgement is not the same as using the partners’ advice."
+        }
+      ]
+    },
+    {
+      "id": "staff-sola-instruct-followup",
+      "title": "The translation comes back",
+      "npc": "sola",
+      "location": "embassy",
+      "minDay": 3,
+      "requiresChoice": {
+        "eventId": "staff-sola-elise",
+        "choiceId": "instruct"
+      },
+      "text": "The local partners have returned the translated proposal with practical objections. Sola says she would have raised these earlier if anyone had asked. Elise wants a chance to put them right.",
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Acknowledge the mistake and ask Sola and Elise to revise it",
+          "trust": 4,
+          "pair": 5,
+          "pairTarget": "development",
+          "effects": {
+            "goodwill": 1,
+            "confidence": -1
+          },
+          "result": "Sola accepts the apology and arranges a revision with Elise. The delay is real; so is the improvement."
+        },
+        {
+          "id": "send",
+          "label": "Send the original proposal and note the objections separately",
+          "trust": -3,
+          "pair": -2,
+          "pairTarget": "development",
+          "effects": {
+            "confidence": 1,
+            "goodwill": -2
+          },
+          "result": "Capital gets the proposal on time. Sola sends the partners a separate explanation of why their comments were not included."
+        }
+      ]
+    },
+    {
+      "id": "staff-sola-pause-followup",
+      "title": "A process, eventually",
+      "npc": "development",
+      "location": "embassy",
+      "minDay": 3,
+      "requiresChoice": {
+        "eventId": "staff-sola-elise",
+        "choiceId": "pause"
+      },
+      "text": "Elise and Sola have agreed to ask the partners for comments, but neither wants to own the delayed deadline. Capital has noticed the blank in the timetable.",
+      "choices": [
+        {
+          "id": "own",
+          "label": "Take responsibility for the delay and agree a new deadline",
+          "trust": 2,
+          "pair": 4,
+          "pairTarget": "sola",
+          "effects": {
+            "confidence": -1,
+            "morale": 1
+          },
+          "result": "You take the call from Capital. Sola and Elise agree who will consult the partners and when."
+        },
+        {
+          "id": "blame",
+          "label": "Tell Capital the two colleagues are responsible",
+          "trust": -3,
+          "pair": -2,
+          "pairTarget": "sola",
+          "effects": {
+            "confidence": 1,
+            "morale": -2
+          },
+          "result": "Capital gets two names. Elise and Sola get a reason to be wary of their next joint brief."
+        }
+      ]
+    },
+    {
+      "id": "staff-rivalry-mediate-followup",
+      "title": "The joint briefing returns",
+      "npc": "anselm",
+      "location": "embassy",
+      "minDay": 2,
+      "requiresChoice": {
+        "eventId": "rivalry",
+        "choiceId": "mediate"
+      },
+      "text": "Anselm has incorporated Pavel’s corrections and asks whether his contribution will be named, as you promised when mediating their dispute. Pavel wants the facts checked before the briefing goes to Capital.",
+      "choices": [
+        {
+          "id": "credit",
+          "label": "Check the facts and credit both authors",
+          "trust": 4,
+          "pair": 4,
+          "pairTarget": "pavel",
+          "effects": {
+            "morale": 2
+          },
+          "result": "The briefing names both authors. Pavel checks the figures; Anselm discovers that an edit is not an accusation."
+        },
+        {
+          "id": "anonymous",
+          "label": "Send it under your own name to save time",
+          "trust": -4,
+          "pair": -2,
+          "pairTarget": "pavel",
+          "effects": {
+            "confidence": 1,
+            "morale": -1
+          },
+          "result": "Capital gets the briefing. Anselm and Pavel compare notes about your interpretation of shared credit."
+        }
+      ]
+    },
+    {
+      "id": "staff-rivalry-order-followup",
+      "title": "A briefing, reluctantly",
+      "npc": "pavel",
+      "location": "embassy",
+      "minDay": 2,
+      "requiresChoice": {
+        "eventId": "rivalry",
+        "choiceId": "order"
+      },
+      "text": "Pavel has sent the combined briefing you ordered. Anselm has written a separate correction and neither will speak to the other. Capital wants one reliable version.",
+      "choices": [
+        {
+          "id": "mediate",
+          "label": "Hear both colleagues and agree who checks the facts",
+          "trust": 3,
+          "pair": 10,
+          "pairTarget": "anselm",
+          "effects": {
+            "morale": 1,
+            "confidence": -1
+          },
+          "result": "Pavel and Anselm agree on a fact check. The repair takes time, and neither calls it a friendship."
+        },
+        {
+          "id": "override",
+          "label": "Send Pavel’s version and tell Anselm to drop it",
+          "trust": 1,
+          "pair": -3,
+          "pairTarget": "anselm",
+          "contact": "anselm",
+          "contactTrust": -4,
+          "effects": {
+            "confidence": 1,
+            "morale": -2
+          },
+          "result": "Pavel’s version goes to Capital. Anselm files his correction and starts keeping a careful record of whose name is on which draft."
+        }
+      ]
+    },
     {
       "id": "invitation",
       "title": "Your presence is requested immediately",
@@ -563,7 +1212,8 @@
           "effects": {
             "goodwill": 5
           },
-          "result": "You attend the ceremony. Your planned work must wait."
+          "result": "You attend the ceremony. Your planned work must wait.",
+          "formal": true
         },
         {
           "id": "delegate",
@@ -573,7 +1223,8 @@
             "goodwill": 2
           },
           "trust": 2,
-          "result": "Anselm represents the mission. The strict brief limits his promises."
+          "result": "Anselm represents the mission. The strict brief limits his promises.",
+          "formal": true
         },
         {
           "id": "decline",
@@ -581,7 +1232,19 @@
           "effects": {
             "goodwill": -4
           },
-          "result": "Protocol records your absence with considerable courtesy."
+          "result": "Protocol records your absence with considerable courtesy.",
+          "formal": true
+        },
+        {
+          "id": "trait-replyall",
+          "label": "Reply to the entire guest list",
+          "requiresTrait": "replyall",
+          "result": "Protocol gets your answer, along with every guest and a confused caterer.",
+          "effects": {
+            "goodwill": 1,
+            "sanity": -1
+          },
+          "trust": 1
         }
       ]
     },
@@ -611,6 +1274,17 @@
             "morale": -3
           },
           "result": "One document appears. They stop speaking to each other."
+        },
+        {
+          "id": "trait-namedrop",
+          "label": "Invoke a former minister to settle authorship",
+          "requiresTrait": "namedrop",
+          "result": "Pavel and Anselm accept the former minister as an unlikely authority on their briefing.",
+          "effects": {
+            "morale": 1,
+            "sanity": -1
+          },
+          "trust": 1
         }
       ]
     },
@@ -648,7 +1322,10 @@
       "text": "Marcel slides Sola's findings across the table. The supplier belongs to a protocol official’s cousin. A correspondent is asking about the reception. 'I know a different caterer,' he adds. 'And, regrettably, the cousin.'",
       "minDay": 2,
       "requires": "supplier",
-      "requiresChoice": { "eventId": "supplier", "choiceId": "check" },
+      "requiresChoice": {
+        "eventId": "supplier",
+        "choiceId": "check"
+      },
       "choices": [
         {
           "id": "transparent",
@@ -680,10 +1357,32 @@
       "location": "bar",
       "text": "The caterer's generous price was for plates. The invoice charges separately for food, chairs and the privilege of sitting on them. A protocol official's cousin owns the company.",
       "minDay": 2,
-      "requiresChoice": { "eventId": "supplier", "choiceId": "accept" },
+      "requiresChoice": {
+        "eventId": "supplier",
+        "choiceId": "accept"
+      },
       "choices": [
-        { "id": "disclose", "flag": "supplier-renegotiate", "label": "Tell Capital and renegotiate in public", "effects": { "confidence": 1, "budget": -2 }, "trust": 2, "result": "Capital admires your transparency after asking why the chairs cost extra." },
-        { "id": "pay", "flag": "supplier-pay", "label": "Pay quietly and keep the reception", "effects": { "budget": -4, "confidence": -3 }, "result": "The chairs arrive. So does an invoice for sitting on them twice." }
+        {
+          "id": "disclose",
+          "flag": "supplier-renegotiate",
+          "label": "Tell Capital and renegotiate in public",
+          "effects": {
+            "confidence": 1,
+            "budget": -2
+          },
+          "trust": 2,
+          "result": "Capital admires your transparency after asking why the chairs cost extra."
+        },
+        {
+          "id": "pay",
+          "flag": "supplier-pay",
+          "label": "Pay quietly and keep the reception",
+          "effects": {
+            "budget": -4,
+            "confidence": -3
+          },
+          "result": "The chairs arrive. So does an invoice for sitting on them twice."
+        }
       ]
     },
     {
@@ -693,8 +1392,27 @@
       "text": "Director Ndao calls: the draft visit plan seats Ombrazia's Deputy Minister behind a decorative fern. The fern is not accredited. How will you respond?",
       "minDay": 3,
       "choices": [
-        { "id": "apologise", "label": "Apologise and ask Protocol to help revise the plan", "effects": { "goodwill": 2 }, "trust": 2, "result": "Ndao accepts the apology and invites you to review the seating plan at the Foreign Ministry from Day 4." },
-        { "id": "capital", "label": "Defend Capital's seating instructions", "effects": { "confidence": 2, "goodwill": -2 }, "trust": -2, "result": "Ndao requests your presence at the Foreign Ministry from Day 4, with the seating plan and a larger fern." }
+        {
+          "id": "apologise",
+          "label": "Apologise and ask Protocol to help revise the plan",
+          "effects": {
+            "goodwill": 2
+          },
+          "trust": 2,
+          "result": "Ndao accepts the apology and invites you to review the seating plan at the Foreign Ministry from Day 4.",
+          "formal": true
+        },
+        {
+          "id": "capital",
+          "label": "Defend Capital's seating instructions",
+          "effects": {
+            "confidence": 2,
+            "goodwill": -2
+          },
+          "trust": -2,
+          "result": "Ndao requests your presence at the Foreign Ministry from Day 4, with the seating plan and a larger fern.",
+          "formal": true
+        }
       ]
     },
     {
@@ -704,10 +1422,35 @@
       "location": "ministry",
       "text": "Ndao lays out two cards and the disputed fern. A compromise would move the Deputy Minister forward, though Capital's delegation would lose its preferred photograph.",
       "minDay": 4,
-      "requiresChoice": { "eventId": "seating-complaint", "choiceId": "apologise" },
+      "requiresChoice": {
+        "eventId": "seating-complaint",
+        "choiceId": "apologise"
+      },
       "choices": [
-        { "id": "compromise", "flag": "protocol-compromise", "label": "Move the Deputy Minister forward and explain to Capital", "effects": { "goodwill": 4, "confidence": -1 }, "trust": 3, "result": "Ndao approves the revised seating plan. Capital asks whether the fern can be photoshopped back in." },
-        { "id": "unchanged", "flag": "protocol-unchanged", "label": "Keep Capital's original plan", "effects": { "goodwill": -3, "confidence": 2 }, "trust": -3, "result": "Ndao restores the original plan, carefully placing the fern where it can witness the consequences." }
+        {
+          "id": "compromise",
+          "flag": "protocol-compromise",
+          "label": "Move the Deputy Minister forward and explain to Capital",
+          "effects": {
+            "goodwill": 4,
+            "confidence": -1
+          },
+          "trust": 3,
+          "result": "Ndao approves the revised seating plan. Capital asks whether the fern can be photoshopped back in.",
+          "formal": true
+        },
+        {
+          "id": "unchanged",
+          "flag": "protocol-unchanged",
+          "label": "Keep Capital's original plan",
+          "effects": {
+            "goodwill": -3,
+            "confidence": 2
+          },
+          "trust": -3,
+          "result": "Ndao restores the original plan, carefully placing the fern where it can witness the consequences.",
+          "formal": true
+        }
       ]
     },
     {
@@ -717,10 +1460,35 @@
       "location": "ministry",
       "text": "Ndao has compared Capital's seating instructions with the host's protocol rules. The documents disagree on precedence, furniture and the definition of a doorway.",
       "minDay": 4,
-      "requiresChoice": { "eventId": "seating-complaint", "choiceId": "capital" },
+      "requiresChoice": {
+        "eventId": "seating-complaint",
+        "choiceId": "capital"
+      },
       "choices": [
-        { "id": "compromise", "flag": "protocol-compromise", "label": "Accept Ndao's compromise and brief Capital", "effects": { "goodwill": 3, "confidence": -1 }, "trust": 2, "result": "A compromise emerges. Both ministries describe it as their original idea." },
-        { "id": "unchanged", "flag": "protocol-unchanged", "label": "Insist on Capital's instructions", "effects": { "goodwill": -4, "confidence": 2 }, "trust": -3, "result": "Ndao signs the plan with a pen that seems to be under considerable pressure." }
+        {
+          "id": "compromise",
+          "flag": "protocol-compromise",
+          "label": "Accept Ndao's compromise and brief Capital",
+          "effects": {
+            "goodwill": 3,
+            "confidence": -1
+          },
+          "trust": 2,
+          "result": "A compromise emerges. Both ministries describe it as their original idea.",
+          "formal": true
+        },
+        {
+          "id": "unchanged",
+          "flag": "protocol-unchanged",
+          "label": "Insist on Capital's instructions",
+          "effects": {
+            "goodwill": -4,
+            "confidence": 2
+          },
+          "trust": -3,
+          "result": "Ndao signs the plan with a pen that seems to be under considerable pressure.",
+          "formal": true
+        }
       ]
     },
     {
@@ -760,10 +1528,33 @@
       "location": "un",
       "text": "Amara has reserved a project visit with people who use its services. One partner wants to fill the discussion with speeches; the community asks for time to speak for itself.",
       "minDay": 3,
-      "requiresChoice": { "eventId": "elise", "choiceId": "useful" },
+      "requiresChoice": {
+        "eventId": "elise",
+        "choiceId": "useful"
+      },
       "choices": [
-        { "id": "voices", "flag": "development-voices", "label": "Protect time for the community's questions", "effects": { "goodwill": 3, "confidence": -1 }, "trust": 3, "result": "Amara revises the programme so the community can speak. The speeches are shortened under protest." },
-        { "id": "speeches", "flag": "development-speeches", "label": "Give the partners their speaking slots", "effects": { "confidence": 2, "goodwill": -2 }, "trust": -2, "result": "Every partner receives a speaking slot. The community is allotted a photograph." }
+        {
+          "id": "voices",
+          "flag": "development-voices",
+          "label": "Protect time for the community's questions",
+          "effects": {
+            "goodwill": 3,
+            "confidence": -1
+          },
+          "trust": 3,
+          "result": "Amara revises the programme so the community can speak. The speeches are shortened under protest."
+        },
+        {
+          "id": "speeches",
+          "flag": "development-speeches",
+          "label": "Give the partners their speaking slots",
+          "effects": {
+            "confidence": 2,
+            "goodwill": -2
+          },
+          "trust": -2,
+          "result": "Every partner receives a speaking slot. The community is allotted a photograph."
+        }
       ]
     },
     {
@@ -773,10 +1564,33 @@
       "location": "un",
       "text": "Amara shows you the proposed photo stop. The camera position is immaculate, but the project team has been given no time to explain what it actually does.",
       "minDay": 3,
-      "requiresChoice": { "eventId": "elise", "choiceId": "photo" },
+      "requiresChoice": {
+        "eventId": "elise",
+        "choiceId": "photo"
+      },
       "choices": [
-        { "id": "voices", "flag": "development-voices", "label": "Add time for the project team and community", "effects": { "goodwill": 3, "confidence": -1 }, "trust": 3, "result": "Amara makes space for a real discussion. Capital asks if the camera can listen as well." },
-        { "id": "speeches", "flag": "development-speeches", "label": "Keep the photograph and official speeches", "effects": { "confidence": 2, "goodwill": -2 }, "trust": -2, "result": "The photograph is perfectly framed. The project team waits politely just outside it." }
+        {
+          "id": "voices",
+          "flag": "development-voices",
+          "label": "Add time for the project team and community",
+          "effects": {
+            "goodwill": 3,
+            "confidence": -1
+          },
+          "trust": 3,
+          "result": "Amara makes space for a real discussion. Capital asks if the camera can listen as well."
+        },
+        {
+          "id": "speeches",
+          "flag": "development-speeches",
+          "label": "Keep the photograph and official speeches",
+          "effects": {
+            "confidence": 2,
+            "goodwill": -2
+          },
+          "trust": -2,
+          "result": "The photograph is perfectly framed. The project team waits politely just outside it."
+        }
       ]
     },
     {
@@ -816,10 +1630,33 @@
       "location": "eu",
       "text": "After your conversation over coffee, Ambassador Arden offers Bellaluxe a chance to shape the EU's joint statement. The draft is short; the footnotes are not.",
       "minDay": 9,
-      "requiresChoice": { "eventId": "asteria-coffee", "choiceId": "attend" },
+      "requiresChoice": {
+        "eventId": "asteria-coffee",
+        "choiceId": "attend"
+      },
       "choices": [
-        { "id": "compromise", "flag": "asteria-compromise", "label": "Help Niko find a practical compromise", "effects": { "confidence": 2, "goodwill": 1 }, "trust": 4, "result": "Niko includes your amendment. The footnote shrinks by a historic three lines." },
-        { "id": "credit", "flag": "asteria-credit", "label": "Claim the proposal as Bellaluxe's initiative", "effects": { "confidence": 2, "goodwill": -1 }, "trust": -4, "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags." }
+        {
+          "id": "compromise",
+          "flag": "asteria-compromise",
+          "label": "Help Niko find a practical compromise",
+          "effects": {
+            "confidence": 2,
+            "goodwill": 1
+          },
+          "trust": 4,
+          "result": "Niko includes your amendment. The footnote shrinks by a historic three lines."
+        },
+        {
+          "id": "credit",
+          "flag": "asteria-credit",
+          "label": "Claim the proposal as Bellaluxe's initiative",
+          "effects": {
+            "confidence": 2,
+            "goodwill": -1
+          },
+          "trust": -4,
+          "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags."
+        }
       ]
     },
     {
@@ -829,10 +1666,33 @@
       "location": "eu",
       "text": "The colleague you sent made a good impression. Ambassador Arden now offers Bellaluxe a chance to shape the EU's joint statement in person.",
       "minDay": 9,
-      "requiresChoice": { "eventId": "asteria-coffee", "choiceId": "delegate" },
+      "requiresChoice": {
+        "eventId": "asteria-coffee",
+        "choiceId": "delegate"
+      },
       "choices": [
-        { "id": "compromise", "flag": "asteria-compromise", "label": "Help Niko find a practical compromise", "effects": { "confidence": 2, "goodwill": 1 }, "trust": 4, "result": "Niko includes your amendment. The footnote shrinks by a historic three lines." },
-        { "id": "credit", "flag": "asteria-credit", "label": "Claim the proposal as Bellaluxe's initiative", "effects": { "confidence": 2, "goodwill": -1 }, "trust": -4, "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags." }
+        {
+          "id": "compromise",
+          "flag": "asteria-compromise",
+          "label": "Help Niko find a practical compromise",
+          "effects": {
+            "confidence": 2,
+            "goodwill": 1
+          },
+          "trust": 4,
+          "result": "Niko includes your amendment. The footnote shrinks by a historic three lines."
+        },
+        {
+          "id": "credit",
+          "flag": "asteria-credit",
+          "label": "Claim the proposal as Bellaluxe's initiative",
+          "effects": {
+            "confidence": 2,
+            "goodwill": -1
+          },
+          "trust": -4,
+          "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags."
+        }
       ]
     },
     {
@@ -842,10 +1702,32 @@
       "location": "pressclub",
       "text": "Ruth kept your distinction between confirmed and pending arrangements. Now she wants background on the visit. 'You can say no,' she says, which makes you more suspicious.",
       "minDay": 2,
-      "requiresChoice": { "eventId": "press", "choiceId": "honest" },
+      "requiresChoice": {
+        "eventId": "press",
+        "choiceId": "honest"
+      },
       "choices": [
-        { "id": "background", "flag": "press-background", "label": "Offer context without naming sources", "effects": { "confidence": 1, "goodwill": 2 }, "trust": 4, "result": "Ruth checks her notes. The background may make a better story than the rumour." },
-        { "id": "reserved", "flag": "press-reserved", "label": "Stick to the public line", "effects": { "confidence": 2 }, "trust": -1, "result": "Ruth writes down your public line and draws a small question mark beside it." }
+        {
+          "id": "background",
+          "flag": "press-background",
+          "label": "Offer context without naming sources",
+          "effects": {
+            "confidence": 1,
+            "goodwill": 2
+          },
+          "trust": 4,
+          "result": "Ruth checks her notes. The background may make a better story than the rumour."
+        },
+        {
+          "id": "reserved",
+          "flag": "press-reserved",
+          "label": "Stick to the public line",
+          "effects": {
+            "confidence": 2
+          },
+          "trust": -1,
+          "result": "Ruth writes down your public line and draws a small question mark beside it."
+        }
       ]
     },
     {
@@ -855,10 +1737,33 @@
       "location": "pressclub",
       "text": "Ruth places your promise that everything is ready beside a list of arrangements that are not. The microphone is conspicuously switched on this time.",
       "minDay": 2,
-      "requiresChoice": { "eventId": "press", "choiceId": "promise" },
+      "requiresChoice": {
+        "eventId": "press",
+        "choiceId": "promise"
+      },
       "choices": [
-        { "id": "correct", "flag": "press-correction", "label": "Correct the claim and explain the work ahead", "effects": { "confidence": -1, "goodwill": 1 }, "trust": 3, "result": "The correction is less glamorous than the promise. It is also considerably more accurate." },
-        { "id": "double-down", "flag": "press-doubledown", "label": "Insist the arrangements are entirely under control", "effects": { "confidence": -2, "goodwill": -1 }, "trust": -3, "result": "Ruth underlines 'entirely'. The second underline is audible." }
+        {
+          "id": "correct",
+          "flag": "press-correction",
+          "label": "Correct the claim and explain the work ahead",
+          "effects": {
+            "confidence": -1,
+            "goodwill": 1
+          },
+          "trust": 3,
+          "result": "The correction is less glamorous than the promise. It is also considerably more accurate."
+        },
+        {
+          "id": "double-down",
+          "flag": "press-doubledown",
+          "label": "Insist the arrangements are entirely under control",
+          "effects": {
+            "confidence": -2,
+            "goodwill": -1
+          },
+          "trust": -3,
+          "result": "Ruth underlines 'entirely'. The second underline is audible."
+        }
       ]
     },
     {

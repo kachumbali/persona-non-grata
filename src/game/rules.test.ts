@@ -1,9 +1,32 @@
 import { describe, expect, it } from "vitest";
-import { applyEffects, BLOCKS, CAMPAIGN, dailyEvents, expiredStories, goodwillRisk, locationStories, hospitalityCost, pickEnding, pointsLeft, recordGoodwillChange, socialTrust, START_METERS, visitReady } from "./rules";
+import { USED_STATS } from "./character";
+import { TRAITS, type StatKey } from "./rules";
+import {
+  applyEffects,
+  BLOCKS,
+  CAMPAIGN,
+  dailyEvents,
+  expiredStories,
+  goodwillRisk,
+  locationStories,
+  hospitalityCost,
+  pickEnding,
+  pointsLeft,
+  recordGoodwillChange,
+  socialTrust,
+  START_METERS,
+  visitReady,
+} from "./rules";
 
 const ready = { clearance: true, lounge: true, programme: true, security: true };
 
 describe("game rules", () => {
+  it("does not offer traits affecting only unused statistics", () => {
+    for (const trait of TRAITS)
+      expect(Object.keys(trait.stats).some((stat) => USED_STATS.includes(stat as StatKey))).toBe(
+        true,
+      );
+  });
   it("meters stay between 0 and 100", () => {
     expect(applyEffects(START_METERS, { confidence: -500 }).confidence).toBe(0);
     expect(applyEffects(START_METERS, { sanity: 500 }).sanity).toBe(100);
@@ -15,10 +38,12 @@ describe("game rules", () => {
     expect(pickEnding(START_METERS, false)).toBeNull();
   });
   it("high confidence and goodwill on day 15 is Promoted Sideways", () => {
-    expect(pickEnding({ ...START_METERS, confidence: 70, goodwill: 60 }, true, ready)).toBe("promoted");
+    expect(pickEnding({ ...START_METERS, confidence: 70, goodwill: 60 }, true, ready)).toBe(
+      "promoted",
+    );
   });
   it("negative traits refund points", () => {
-    expect(pointsLeft(["replyall"])).toBe(5);
+    expect(pointsLeft(["replyall"])).toBe(4);
     expect(pointsLeft(["liver", "eyesopen"])).toBe(-1);
   });
   it("zero HQ goodwill replaces the player", () => {
@@ -32,7 +57,9 @@ describe("game rules", () => {
     expect(pickEnding(START_METERS, true, { ...ready, clearance: false })).toBe("cancelled");
   });
   it("positive goodwill does not trigger replacement or PNG at arrival", () => {
-    expect(pickEnding({ ...START_METERS, confidence: 1, goodwill: 1 }, true, ready)).toBe("ambassador");
+    expect(pickEnding({ ...START_METERS, confidence: 1, goodwill: 1 }, true, ready)).toBe(
+      "ambassador",
+    );
   });
   it("warns below the risk thresholds", () => {
     expect(goodwillRisk(25)).toBe("warning");
@@ -42,7 +69,13 @@ describe("game rules", () => {
   it("records actual clamped goodwill changes rather than nominal penalties", () => {
     const before = { ...START_METERS, confidence: 4 };
     const after = applyEffects(before, { confidence: -12, goodwill: 3 });
-    const entry = recordGoodwillChange(before, after, { day: 1, time: 500, source: "Instruction", kind: "Missed instruction", text: "Deadline missed" });
+    const entry = recordGoodwillChange(before, after, {
+      day: 1,
+      time: 500,
+      source: "Instruction",
+      kind: "Missed instruction",
+      text: "Deadline missed",
+    });
     expect(entry.after.confidence - entry.before.confidence).toBe(-4);
     expect(entry.after.goodwill - entry.before.goodwill).toBe(3);
   });
@@ -72,20 +105,39 @@ describe("game rules", () => {
     expect(dailyEvents(15, 23, all)).toEqual([]);
   });
   it("expires an eligible timed story only once and never expires a locked branch", () => {
-    const story = { id: "timed", title: "Timed", npc: "sola", text: "A lead", minDay: 1, expiresDay: 2, requiresChoice: { eventId: "supplier", choiceId: "check" }, choices: [] };
+    const story = {
+      id: "timed",
+      title: "Timed",
+      npc: "sola",
+      text: "A lead",
+      minDay: 1,
+      expiresDay: 2,
+      requiresChoice: { eventId: "supplier", choiceId: "check" },
+      choices: [],
+    };
     const checked = { supplier: { status: "chosen" as const, choice: "check" } };
     expect(expiredStories([story], 2, ["supplier"], checked)).toEqual([]);
     expect(expiredStories([story], 3, ["supplier"], checked)).toEqual([story]);
     expect(expiredStories([story], 3, ["supplier", "timed"], checked)).toEqual([]);
-    expect(expiredStories([story], 3, ["supplier"], { supplier: { status: "missed" } })).toEqual([]);
+    expect(expiredStories([story], 3, ["supplier"], { supplier: { status: "missed" } })).toEqual(
+      [],
+    );
   });
   it("selects the supplier follow-up for the actual choice, not a missed event", () => {
     const completed = ["supplier"];
-    const checked = locationStories(2, completed, { supplier: { status: "chosen", choice: "check" } });
-    const accepted = locationStories(2, completed, { supplier: { status: "chosen", choice: "accept" } });
+    const checked = locationStories(2, completed, {
+      supplier: { status: "chosen", choice: "check" },
+    });
+    const accepted = locationStories(2, completed, {
+      supplier: { status: "chosen", choice: "accept" },
+    });
     const missed = locationStories(2, completed, { supplier: { status: "missed" } });
     expect(checked.some((e) => e.id === "supplier-followup" && e.location === "bar")).toBe(true);
-    expect(dailyEvents(2, 23, completed, { supplier: { status: "chosen", choice: "check" } }).some((e) => e.id === "supplier-followup")).toBe(false);
+    expect(
+      dailyEvents(2, 23, completed, { supplier: { status: "chosen", choice: "check" } }).some(
+        (e) => e.id === "supplier-followup",
+      ),
+    ).toBe(false);
     expect(accepted.some((e) => e.id === "supplier-accepted-followup")).toBe(true);
     expect(missed.some((e) => e.id.startsWith("supplier-"))).toBe(false);
   });

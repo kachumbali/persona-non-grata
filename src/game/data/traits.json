@@ -1,13 +1,122 @@
 [
-  { "id": "liver", "name": "Functional Alcoholism", "cost": 2, "desc": "Liver drains slower. Morning meetings suffer.", "stats": { "liver": 3, "stamina": -1 } },
-  { "id": "replyall", "name": "Reply-All Reflex", "cost": -2, "desc": "Every reply reaches everyone. Everyone.", "stats": { "deniability": -2 } },
-  { "id": "punctual", "name": "Pathologically Punctual", "cost": 1, "desc": "Arrives before the meeting is scheduled.", "stats": { "stamina": 1 } },
-  { "id": "brussels", "name": "Brussels Brain", "cost": -1, "desc": "Speaks only in acronyms. Nobody understands you.", "stats": { "gravitas": 1, "charm": -2 } },
-  { "id": "demarche", "name": "Compulsive Démarche", "cost": -1, "desc": "Cannot pass a ministry without delivering something.", "stats": { "gravitas": 1, "deniability": -1 } },
-  { "id": "namedrop", "name": "Name-dropper", "cost": 1, "desc": "\"As I told the Commissioner…\"", "stats": { "gravitas": 1 } },
-  { "id": "cuisine", "name": "Allergic to Local Cuisine", "cost": -1, "desc": "But not to canapés.", "stats": { "charm": -1 } },
-  { "id": "novelist", "name": "Secret Novelist", "cost": 1, "desc": "Boosts creativity. Drains focus.", "stats": { "deniability": 1, "stamina": -1 } },
-  { "id": "sideevents", "name": "Cannot Say No to Side Events", "cost": -2, "desc": "Your calendar is a side event.", "stats": { "stamina": -2, "charm": 1 } },
-  { "id": "eyesopen", "name": "Sleeps With Eyes Open", "cost": 2, "desc": "In meetings. Undetected. So far.", "stats": { "stamina": 2 } },
-  { "id": "ngo", "name": "Spouse Runs a Local NGO", "cost": 0, "desc": "Conflict of interest. Sometimes useful.", "stats": { "charm": 1, "deniability": -1 } }
+  {
+    "id": "liver",
+    "name": "Functional Alcoholism",
+    "cost": 2,
+    "desc": "Better alcohol tolerance; evening drinks make the next morning harder.",
+    "stats": {
+      "liver": 3,
+      "stamina": -1
+    },
+    "plays": "Alcohol tolerance rises; evening drinks cause a morning hangover and can strengthen social trust."
+  },
+  {
+    "id": "replyall",
+    "name": "Reply-All Reflex",
+    "cost": -1,
+    "desc": "One reply in four reaches everyone. Recall it before the block ends.",
+    "stats": {
+      "deniability": -2
+    },
+    "plays": "One in four replies goes to everyone unless recalled for 1 DP; missed instructions hurt more."
+  },
+  {
+    "id": "punctual",
+    "name": "Pathologically Punctual",
+    "cost": 1,
+    "desc": "Arrives before the meeting is scheduled.",
+    "stats": {
+      "stamina": 1,
+      "charm": -1
+    },
+    "plays": "Extra stamina improves DP and overnight recovery, but impatience reduces charm."
+  },
+  {
+    "id": "brussels",
+    "name": "Brussels Brain",
+    "cost": -1,
+    "desc": "Speaks only in acronyms. Nobody understands you.",
+    "stats": {
+      "gravitas": 1,
+      "charm": -2
+    },
+    "plays": "Formal instructions earn more HQ goodwill, but low charm weakens positive relationship gains."
+  },
+  {
+    "id": "demarche",
+    "name": "Compulsive Démarche",
+    "cost": -1,
+    "desc": "Cannot pass a ministry without delivering something.",
+    "stats": {
+      "gravitas": 1,
+      "deniability": -1
+    },
+    "plays": "Formal choices earn more HQ goodwill, but missed instructions are harder to explain away."
+  },
+  {
+    "id": "namedrop",
+    "name": "Name-dropper",
+    "cost": 2,
+    "desc": "\"As I told the Commissioner…\"",
+    "stats": {
+      "gravitas": 1,
+      "charm": 1
+    },
+    "plays": "Dropping names helps with host officials but damages your standing with Ruth whenever used."
+  },
+  {
+    "id": "cuisine",
+    "name": "Allergic to Local Cuisine",
+    "cost": -1,
+    "desc": "But not to canapés.",
+    "stats": {
+      "charm": -1
+    },
+    "plays": "Lower charm reduces positive social and contact trust gains."
+  },
+  {
+    "id": "novelist",
+    "name": "Secret Novelist",
+    "cost": 1,
+    "desc": "A gift for plausible stories, at the expense of stamina.",
+    "stats": {
+      "deniability": 1,
+      "stamina": -1
+    },
+    "plays": "Higher deniability softens missed instructions, but lower stamina reduces recovery."
+  },
+  {
+    "id": "sideevents",
+    "name": "Cannot Say No to Side Events",
+    "cost": -1,
+    "desc": "Your calendar is a side event.",
+    "stats": {
+      "stamina": -2,
+      "charm": 1
+    },
+    "plays": "Low stamina limits DP and recovery while charm improves positive relationship gains."
+  },
+  {
+    "id": "eyesopen",
+    "name": "Sleeps With Eyes Open",
+    "cost": 2,
+    "desc": "In meetings. Undetected. So far.",
+    "stats": {
+      "stamina": 2,
+      "gravitas": -1,
+      "charm": -1
+    },
+    "plays": "Extra stamina improves DP and recovery, but reduced charm weakens relationship gains."
+  },
+  {
+    "id": "ngo",
+    "name": "Spouse Runs a Local NGO",
+    "cost": 0,
+    "desc": "Conflict of interest. Sometimes useful.",
+    "stats": {
+      "charm": 1,
+      "deniability": -1
+    },
+    "plays": "Charm improves relationship gains, while lower deniability worsens missed instructions."
+  }
 ]

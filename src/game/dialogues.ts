@@ -1,16 +1,42 @@
+import type { ChoiceGate } from "./character";
 import DIALOGUES from "./data/dialogues.json";
 
-export interface TalkChoice { label: string; next?: string; result?: string; trust?: number; pair?: number; pairTarget?: string; score?: number; flag?: string; effects?: Record<string, number> }
-export interface TalkNode { text: string; choices: TalkChoice[] }
-export interface Topic { id: string; start: string; nodes: Record<string, TalkNode> }
+export interface TalkChoice extends ChoiceGate {
+  label: string;
+  next?: string;
+  result?: string;
+  trust?: number;
+  pair?: number;
+  pairTarget?: string;
+  score?: number;
+  flag?: string;
+  formal?: boolean;
+  effects?: Record<string, number>;
+}
+export interface TalkNode {
+  text: string;
+  choices: TalkChoice[];
+}
+export interface Topic {
+  id: string;
+  start: string;
+  nodes: Record<string, TalkNode>;
+}
 
 const ALL = DIALOGUES as Record<string, Topic[]>;
 
 /** Topics a character can raise; empty when none are authored. */
-export function topicsFor(npcId: string): Topic[] { return ALL[npcId] ?? []; }
+export function topicsFor(npcId: string): Topic[] {
+  return ALL[npcId] ?? [];
+}
 
 /** Each character raises a different topic as blocks pass, skipping ones already finished when possible. */
-export function pickTopic(npcId: string, day: number, block: number, done: string[] = []): Topic | undefined {
+export function pickTopic(
+  npcId: string,
+  day: number,
+  block: number,
+  done: string[] = [],
+): Topic | undefined {
   const all = topicsFor(npcId);
   const fresh = all.filter((t) => !done.includes(`${npcId}:${t.id}`));
   const pool = fresh.length ? fresh : all;
