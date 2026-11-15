@@ -91,7 +91,7 @@ Make the game ready for more than one chapter and more than one coding tool. Not
 
 Finish every system inside the one chapter that exists, then test it with five people from the circuit before building more.
 
-### B-01 Mission pacing: make the visit a fifteen-day job
+### B-01 Mission pacing: make the visit a fifteen-day job (done)
 
 - Type: Rules and code · Size: M · Depends on: F-05
 - Goal: The simulated playthroughs show a careful player confirms all four visit tasks on Day 1 for ƒ900. The main mission then creates no tension, and two thirds of the blocks have nothing waiting.

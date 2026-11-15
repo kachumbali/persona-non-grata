@@ -129,7 +129,7 @@ Required: topic `id`, `start` (a node key), `nodes`. Each node has `text` and `c
 }
 ```
 
-Required: `id`, `day`, `time` (game minutes from midnight; the day runs 480 to 1080), `from`, `subject`, `body`, `options`, `ignore` (with `text`, `effects`). Option keys, any subset: `reply`, `delegate`, `forward`, `note`, `replyall`, `trait`. Each option has `text` and `effects`; optional `label`, `formal`, `confirms` (a visit task: clearance, lounge, programme or security; leave out unless the mail is about the minister's visit), and the gates. Include at least `reply` and `note`. Emails have no `flag` field, so they cannot record consequences; say so in your note.
+Required: `id`, `day`, `time` (game minutes from midnight; the day runs 480 to 1080), `from`, `subject`, `body`, `options`, `ignore` (with `text`, `effects`). Option keys, any subset: `reply`, `delegate`, `forward`, `note`, `replyall`, `trait`. Each option has `text` and `effects`; optional `label`, `formal`, `confirmsStep` (one step of a visit task, written `task.step`, for example `clearance.landing-form`; leave out unless the mail is about the minister's visit. The step ids are in `missionSteps` in chapter.json, and the mail must arrive on or after the step's `earliestDay`. The step's cash cost comes from the chapter file, so give such options no `budget` effect), and the gates. Include at least `reply` and `note`. Emails have no `flag` field, so they cannot record consequences; say so in your note.
 
 ## Format 4: press clipping (goes in `clippings` in src/game/chapters/port-hesperia-2006/press.json)
 

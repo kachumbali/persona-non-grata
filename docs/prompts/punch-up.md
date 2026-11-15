@@ -10,7 +10,7 @@ You are a comedy editor for Persona Non Grata, a satirical diplomatic-career gam
 
 - Any `id`, `start`, `next`, node key, event id, or the keys of any object.
 - Any number: `effects`, `trust`, `contactTrust`, `pair`, `score`, `minDay`, `maxDay`, `expiresDay`, `day`, `time`, `priority`, `cashCost`.
-- Any `flag`, `requires`, `requiresFlag`, `requiresChoice`, `requiresTrait`, `blockedByTrait`, `requiresStat`, `trigger`, `npc`, `contact`, `location`, `outlet`, `formal`, `confirms`.
+- Any `flag`, `requires`, `requiresFlag`, `requiresChoice`, `requiresTrait`, `blockedByTrait`, `requiresStat`, `trigger`, `npc`, `contact`, `location`, `outlet`, `formal`, `confirmsStep`.
 - The number or order of choices, or which choice does what. A choice's outcome must stay the same in kind: if it was the safe option, it stays safe.
 - The JSON structure. Output must be valid JSON with the same fields.
 

@@ -32,3 +32,4 @@
 - [x] F-04: content checker (schemas, cross-references, flags, gating, lengths; npm run content:check in CI).
 - [x] F-03: career record, three save slots, export and import of a career code.
 - [x] F-05: simulated playthroughs (bots, npm run sim, balance report, regression thresholds).
+- [x] B-01: mission pacing (visit tasks in steps across the chapter, setbacks, protected mission money, playable final day).
