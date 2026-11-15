@@ -5,16 +5,9 @@
       "name": "Anselm Voss-Rietveld",
       "role": "Political & Press Officer · first posting",
       "location": "embassy",
-      "likes": [
-        "bling",
-        "sushi"
-      ],
-      "dislikes": [
-        "local"
-      ],
-      "skills": [
-        "programme"
-      ],
+      "likes": ["bling", "sushi"],
+      "dislikes": ["local"],
+      "skills": ["programme"],
       "line": "I could brief Capital myself. They remember me from training.",
       "gender": "male",
       "portrait": "npc-anselm"
@@ -24,17 +17,9 @@
       "name": "Pavel Oskarsen",
       "role": "Veteran Head of Administration",
       "location": "embassy",
-      "likes": [
-        "classic"
-      ],
-      "dislikes": [
-        "bling",
-        "sushi"
-      ],
-      "skills": [
-        "lounge",
-        "security"
-      ],
+      "likes": ["classic"],
+      "dislikes": ["bling", "sushi"],
+      "skills": ["lounge", "security"],
       "line": "I have seen six ambassadors. Five also thought a promise was a reservation.",
       "gender": "male",
       "portrait": "npc-pavel"
@@ -44,16 +29,9 @@
       "name": "Sola Dewrin",
       "role": "Local Staff Chief",
       "location": "embassy",
-      "likes": [
-        "local"
-      ],
-      "dislikes": [
-        "bling"
-      ],
-      "skills": [
-        "clearance",
-        "programme"
-      ],
+      "likes": ["local"],
+      "dislikes": ["bling"],
+      "skills": ["clearance", "programme"],
       "line": "I can make the calls. But I am not everybody’s translator and emergency exit.",
       "gender": "female",
       "portrait": "npc-sola"
@@ -63,15 +41,9 @@
       "name": "Elise",
       "role": "Development Counsellor",
       "location": "embassy",
-      "likes": [
-        "local"
-      ],
-      "dislikes": [
-        "bling"
-      ],
-      "skills": [
-        "programme"
-      ],
+      "likes": ["local"],
+      "dislikes": ["bling"],
+      "skills": ["programme"],
       "line": "The Minister could visit our project. Provided we remember the people, not just the photograph.",
       "gender": "female",
       "portrait": "npc-development"
@@ -81,16 +53,9 @@
       "name": "Bianca Montefiore",
       "role": "Defence Attaché",
       "location": "embassy",
-      "likes": [
-        "classic",
-        "shady"
-      ],
-      "dislikes": [
-        "sushi"
-      ],
-      "skills": [
-        "security"
-      ],
+      "likes": ["classic", "shady"],
+      "dislikes": ["sushi"],
+      "skills": ["security"],
       "line": "A convoy needs vehicles, not a beautifully formatted spreadsheet.",
       "gender": "female",
       "portrait": "npc-bianca"
@@ -100,16 +65,9 @@
       "name": "Ines Thibault-Lund",
       "role": "Consul",
       "location": "embassy",
-      "likes": [
-        "sushi",
-        "local"
-      ],
-      "dislikes": [
-        "bling"
-      ],
-      "skills": [
-        "clearance"
-      ],
+      "likes": ["sushi", "local"],
+      "dislikes": ["bling"],
+      "skills": ["clearance"],
       "line": "Four hundred people in the queue. No, they do not disappear when the Minister arrives.",
       "gender": "female",
       "portrait": "npc-ines"
@@ -119,16 +77,9 @@
       "name": "Lucien Falk",
       "role": "Digital & Public Diplomacy Officer",
       "location": "embassy",
-      "likes": [
-        "sushi",
-        "bling"
-      ],
-      "dislikes": [
-        "classic"
-      ],
-      "skills": [
-        "programme"
-      ],
+      "likes": ["sushi", "bling"],
+      "dislikes": ["classic"],
+      "skills": ["programme"],
       "line": "A good photograph is worth a thousand words. Legal would prefer zero.",
       "gender": "male",
       "portrait": "npc-press"
@@ -138,13 +89,8 @@
       "name": "Maxim",
       "role": "Intern",
       "location": "embassy",
-      "likes": [
-        "local",
-        "sushi"
-      ],
-      "dislikes": [
-        "bling"
-      ],
+      "likes": ["local", "sushi"],
+      "dislikes": ["bling"],
       "skills": [],
       "line": "I made a checklist of the checklists. Is that useful?",
       "gender": "male",
@@ -155,16 +101,9 @@
       "name": "Ketu Marrimba",
       "role": "Embassy Chef",
       "location": "embassy",
-      "likes": [
-        "local",
-        "classic"
-      ],
-      "dislikes": [
-        "sushi"
-      ],
-      "skills": [
-        "lounge"
-      ],
+      "likes": ["local", "classic"],
+      "dislikes": ["sushi"],
+      "skills": ["lounge"],
       "line": "I can feed the delegation. I cannot feed its ego.",
       "gender": "female",
       "portrait": "npc-ketu"
@@ -174,15 +113,9 @@
       "name": "Director Ndao",
       "role": "Local Protocol Director",
       "location": "ministry",
-      "likes": [
-        "classic"
-      ],
-      "dislikes": [
-        "shady"
-      ],
-      "skills": [
-        "clearance"
-      ],
+      "likes": ["classic"],
+      "dislikes": ["shady"],
+      "skills": ["clearance"],
       "line": "Permission has three stamps. You have submitted two and a coffee stain.",
       "gender": "male",
       "portrait": "npc-protocol"
@@ -192,16 +125,9 @@
       "name": "Celeste Norren",
       "role": "Head of the EU Delegation",
       "location": "eu",
-      "likes": [
-        "classic",
-        "sushi"
-      ],
-      "dislikes": [
-        "bling"
-      ],
-      "skills": [
-        "programme"
-      ],
+      "likes": ["classic", "sushi"],
+      "dislikes": ["bling"],
+      "skills": ["programme"],
       "line": "Yes, Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework. No, that is not your biscuit quota.",
       "gender": "female",
       "portrait": "npc-eu"
@@ -211,16 +137,9 @@
       "name": "Marcel Deux",
       "role": "Unofficial intermediary",
       "location": "bar",
-      "likes": [
-        "shady",
-        "bling"
-      ],
-      "dislikes": [
-        "classic"
-      ],
-      "skills": [
-        "lounge"
-      ],
+      "likes": ["shady", "bling"],
+      "dislikes": ["classic"],
+      "skills": ["lounge"],
       "line": "Everything is possible. The question is who owes whom afterwards.",
       "gender": "male",
       "portrait": "npc-fixer"
@@ -230,16 +149,9 @@
       "name": "Ruth Vale",
       "role": "Press correspondent",
       "location": "pressclub",
-      "likes": [
-        "local",
-        "shady"
-      ],
-      "dislikes": [
-        "bling"
-      ],
-      "skills": [
-        "programme"
-      ],
+      "likes": ["local", "shady"],
+      "dislikes": ["bling"],
+      "skills": ["programme"],
       "line": "Off the record is an agreement, not something you say after the quote.",
       "gender": "female",
       "portrait": "npc-journalist"
@@ -249,16 +161,9 @@
       "name": "Minister Bako",
       "role": "Deputy Foreign Minister",
       "location": "golf",
-      "likes": [
-        "bling",
-        "classic"
-      ],
-      "dislikes": [
-        "sushi"
-      ],
-      "skills": [
-        "clearance"
-      ],
+      "likes": ["bling", "classic"],
+      "dislikes": ["sushi"],
+      "skills": ["clearance"],
       "line": "An appointment? My secretary says I am unavailable. My caddie disagrees.",
       "gender": "male",
       "portrait": "npc-golf"
@@ -268,16 +173,9 @@
       "name": "Dr Amara Chen",
       "role": "UN Resident Coordinator",
       "location": "un",
-      "likes": [
-        "local",
-        "sushi"
-      ],
-      "dislikes": [
-        "bling"
-      ],
-      "skills": [
-        "programme"
-      ],
+      "likes": ["local", "sushi"],
+      "dislikes": ["bling"],
+      "skills": ["programme"],
       "line": "We can support the programme. We cannot promise six agencies will agree on one logo.",
       "gender": "female",
       "portrait": "npc-un"
@@ -287,13 +185,8 @@
       "name": "Ambassador Mara Velen",
       "role": "Ambassador of Valdoria",
       "location": "golf",
-      "likes": [
-        "classic",
-        "local"
-      ],
-      "dislikes": [
-        "shady"
-      ],
+      "likes": ["classic", "local"],
+      "dislikes": ["shady"],
       "skills": [],
       "line": "My national-day speech was eight minutes. The applause was longer because the exit was locked.",
       "gender": "female",
@@ -304,13 +197,8 @@
       "name": "Ambassador Niko Arden",
       "role": "Ambassador of Denmark",
       "location": "eu",
-      "likes": [
-        "local",
-        "sushi"
-      ],
-      "dislikes": [
-        "bling"
-      ],
+      "likes": ["local", "sushi"],
+      "dislikes": ["bling"],
       "skills": [],
       "line": "Denmark supports consensus, provided someone else writes the first draft.",
       "gender": "male",
@@ -321,12 +209,8 @@
       "name": "Mira Sene",
       "role": "Ombrazian Port Environment Officer",
       "location": "ministry",
-      "likes": [
-        "local"
-      ],
-      "dislikes": [
-        "bling"
-      ],
+      "likes": ["local"],
+      "dislikes": ["bling"],
       "skills": [],
       "line": "The port needs a working waste collection, not another photograph of an empty bin.",
       "gender": "female",
@@ -337,13 +221,8 @@
       "name": "Sofia da Costa",
       "role": "Portuguese Maritime Liaison",
       "location": "bar",
-      "likes": [
-        "local",
-        "classic"
-      ],
-      "dislikes": [
-        "shady"
-      ],
+      "likes": ["local", "classic"],
+      "dislikes": ["shady"],
       "skills": [],
       "line": "I can introduce you to the insurers. First tell me who actually maintains the harbour.",
       "gender": "female",
@@ -354,12 +233,8 @@
       "name": "Idra Venn",
       "role": "UN Programme Logistics Officer",
       "location": "un",
-      "likes": [
-        "local"
-      ],
-      "dislikes": [
-        "bling"
-      ],
+      "likes": ["local"],
+      "dislikes": ["bling"],
       "skills": [],
       "line": "The donor reports say the bins have arrived. The bins say they are still in customs.",
       "gender": "male",
@@ -370,12 +245,8 @@
       "name": "Klaus Weber",
       "role": "German Ambassador",
       "location": "eu",
-      "likes": [
-        "classic"
-      ],
-      "dislikes": [
-        "bling"
-      ],
+      "likes": ["classic"],
+      "dislikes": ["bling"],
       "skills": [],
       "line": "The coordination table is in Annex IV. The chairs have their own annex.",
       "gender": "male",
@@ -386,12 +257,8 @@
       "name": "Henri de Valois",
       "role": "French Ambassador",
       "location": "eu",
-      "likes": [
-        "classic"
-      ],
-      "dislikes": [
-        "shady"
-      ],
+      "likes": ["classic"],
+      "dislikes": ["shady"],
       "skills": [],
       "line": "The draft is acceptable in principle. In French, the principle is considerably more elegant.",
       "gender": "male",
@@ -402,12 +269,8 @@
       "name": "Tanya Farrugia",
       "role": "Maltese Ambassador",
       "location": "eu",
-      "likes": [
-        "local"
-      ],
-      "dislikes": [
-        "bling"
-      ],
+      "likes": ["local"],
+      "dislikes": ["bling"],
       "skills": [],
       "line": "I have Malta's brief and, with permission for this meeting, the briefs from Cyprus and Luxembourg. They agree on the biscuits, at least.",
       "gender": "female",
@@ -418,13 +281,8 @@
       "name": "Lars Lindqvist",
       "role": "Swedish Ambassador",
       "location": "eu",
-      "likes": [
-        "local",
-        "classic"
-      ],
-      "dislikes": [
-        "bling"
-      ],
+      "likes": ["local", "classic"],
+      "dislikes": ["bling"],
       "skills": [],
       "line": "Before we decide who speaks, perhaps we should ask who has not been invited.",
       "gender": "male",
@@ -1818,6 +1676,38 @@
           "result": "The claim is printed. From Day 2, Ruth wants an explanation at the Press Correspondents Club."
         }
       ]
+    },
+    {
+      "id": "fuel-quay",
+      "title": "The fuel quay",
+      "npc": "port-officer",
+      "location": "ministry",
+      "text": "Mira Sene has an inspection timetable and a warning about fuel deliveries.",
+      "minDay": 4,
+      "expiresDay": 10,
+      "choices": [
+        {
+          "id": "buy",
+          "label": "Buy fuel early",
+          "cashCost": 300,
+          "flag": "fuel-bought",
+          "result": "The early fuel purchase protects the generator delivery."
+        },
+        {
+          "id": "coordinate",
+          "label": "Ask Mira for the inspection timetable",
+          "contact": "port-officer",
+          "contactTrust": 5,
+          "flag": "fuel-mira",
+          "result": "Mira coordinates the inspected fuel delivery."
+        },
+        {
+          "id": "ignore",
+          "label": "Leave the matter alone",
+          "result": "Mira files the timetable without a Bellaluxe request."
+        }
+      ],
+      "requiresFlag": "fuel-lead"
     }
   ]
 }

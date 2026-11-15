@@ -14,8 +14,16 @@ export function LocationLead() {
   const [notice, setNotice] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const [overload, setOverload] = useState(false);
-  const leads = locationStories(g.day, g.completedEvents, g.storyOutcomes).filter(
-    (lead) => lead.location === g.location,
+  const leads = locationStories(
+    g.day,
+    g.completedEvents,
+    g.storyOutcomes,
+    CAMPAIGN.events as import("../rules").StoryEvent[],
+    g.storyFlags,
+  ).filter(
+    (lead) =>
+      lead.location === g.location &&
+      (lead.id !== "fuel-quay" || g.storyFlags.includes("fuel-lead")),
   );
   const event = leads.find((lead) => lead.id === selectedId) ?? leads[0];
   if (!event) return null;

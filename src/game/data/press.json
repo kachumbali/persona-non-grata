@@ -1,0 +1,480 @@
+{
+  "outlets": [
+    {
+      "id": "herald",
+      "name": "The Hesperian Herald",
+      "voice": "Government-friendly and flattering"
+    },
+    {
+      "id": "today",
+      "name": "Ombrazia Today",
+      "voice": "Photographs and excitement"
+    },
+    {
+      "id": "vale",
+      "name": "Ruth Vale’s foreign column",
+      "voice": "Dry and precise"
+    },
+    {
+      "id": "wire",
+      "name": "Port Wire Service",
+      "voice": "Brief and factual"
+    },
+    {
+      "id": "digest",
+      "name": "Regional Missions Digest",
+      "voice": "Embassy cable gossip"
+    }
+  ],
+  "clippings": [
+    {
+      "id": "fuel-2",
+      "outlet": "wire",
+      "headline": "Inspection at fuel quay",
+      "body": "A routine safety inspection has begun at the fuel quay. Tanker movements continue.",
+      "day": 2,
+      "priority": 100,
+      "signal": true,
+      "maxim": {
+        "headline": "Inspection of a very safe routine",
+        "body": "The quay is inspecting its routine. Tankers remain involved."
+      }
+    },
+    {
+      "id": "fuel-4",
+      "outlet": "today",
+      "headline": "Tankers form an orderly queue",
+      "body": "A photograph shows tanker lorries waiting outside the fuel quay. Their drivers had no estimate for reopening.",
+      "day": 4,
+      "priority": 100,
+      "signal": true
+    },
+    {
+      "id": "fuel-5",
+      "outlet": "herald",
+      "headline": "Minister finds no dispute",
+      "body": "Deputy Foreign Minister Bako says there is no dispute at the fuel quay. The inspection remains routine.",
+      "day": 5,
+      "priority": 100,
+      "signal": true
+    },
+    {
+      "id": "fuel-7",
+      "outlet": "digest",
+      "headline": "Another mission buys fuel",
+      "body": "The Valdorian embassy has quietly bought generator fuel. Its cable describes this as a seasonal precaution.",
+      "day": 7,
+      "priority": 100,
+      "signal": true
+    },
+    {
+      "id": "fuel-8",
+      "outlet": "wire",
+      "headline": "Port officer declines comment",
+      "body": "Mira Sene, the port environment officer, declined to comment on the inspection timetable.",
+      "day": 8,
+      "priority": 100,
+      "signal": true
+    },
+    {
+      "id": "fuel-9",
+      "outlet": "vale",
+      "headline": "Port portfolio may move",
+      "body": "A cabinet reshuffle may move responsibility for the port. Officials have not agreed who would inherit the inspection.",
+      "day": 9,
+      "priority": 100,
+      "signal": true
+    },
+    {
+      "id": "fuel-11",
+      "outlet": "today",
+      "headline": "Strike notice at the quay",
+      "body": "Dockworkers have posted a strike notice over safety checks and staffing at the fuel quay.",
+      "day": 11,
+      "priority": 100,
+      "signal": true
+    },
+    {
+      "id": "fuel-bought",
+      "outlet": "wire",
+      "headline": "Early buyers supplied",
+      "body": "Early fuel purchases have reached missions before rationing. Other customers await an allocation.",
+      "day": 13,
+      "priority": 100,
+      "signal": true,
+      "trigger": {
+        "flag": "fuel-bought"
+      }
+    },
+    {
+      "id": "fuel-mira",
+      "outlet": "wire",
+      "headline": "Inspection timetable agreed",
+      "body": "Mira Sene has coordinated a timetable for inspected deliveries. Participating missions expect their fuel on time.",
+      "day": 13,
+      "priority": 100,
+      "signal": true,
+      "trigger": {
+        "flag": "fuel-mira"
+      }
+    },
+    {
+      "id": "fuel-ration",
+      "outlet": "wire",
+      "headline": "Fuel rationing begins",
+      "body": "The port has begun rationing generator fuel. Late buyers face higher delivery charges.",
+      "day": 13,
+      "priority": 100,
+      "signal": true,
+      "trigger": {
+        "notFlag": "fuel-protected"
+      }
+    },
+    {
+      "id": "consequence-namedrop",
+      "outlet": "vale",
+      "headline": "A name without a name",
+      "body": "Ruth Vale asks which Commissioner, exactly, the diplomat meant.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "trait": "namedrop"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-liver",
+      "outlet": "today",
+      "headline": "Breakfast listener photographed",
+      "body": "A diplomat was photographed listening intently with closed eyes at a UN breakfast.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "trait": "liver"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-replyall",
+      "outlet": "digest",
+      "headline": "An enthusiastic distribution",
+      "body": "An embassy contribution reached a wider audience than the agenda required.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "trait": "replyall"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-eyesopen",
+      "outlet": "vale",
+      "headline": "Eyes on the room",
+      "body": "A Bellaluxe representative noticed the vacant chair before the chair did.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "trait": "eyesopen"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-sideevents",
+      "outlet": "digest",
+      "headline": "A full diary",
+      "body": "Bellaluxe found time for another reception. The host found another guest list.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "trait": "sideevents"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-accident",
+      "outlet": "digest",
+      "headline": "Reply travels",
+      "body": "A Bellaluxe reply has been quoted in a regional missions digest. The distribution list was extensive.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "trait": "accident:replyall"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-double",
+      "outlet": "vale",
+      "headline": "Correction declined",
+      "body": "Bellaluxe has repeated its account. Ruth Vale notes that repetition does not alter the record.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "flag": "press-doubledown"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-accept",
+      "outlet": "herald",
+      "headline": "Supplier appointed",
+      "body": "A supplier has secured the embassy order. The announcement does not mention a competing quotation.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "flag": "supplier-accepted"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-check",
+      "outlet": "vale",
+      "headline": "A second quotation",
+      "body": "Bellaluxe checked the supplier’s figures. The revised quotation contains fewer surprises.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "flag": "supplier-check"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-claim",
+      "outlet": "digest",
+      "headline": "Credit claimed",
+      "body": "Bellaluxe claimed the credit at the EU budget meeting. Other missions have filed their own accounts.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "outcome": {
+          "eventId": "eu-budget-share-meeting",
+          "choice": "claim"
+        }
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-share",
+      "outlet": "digest",
+      "headline": "Credit shared",
+      "body": "EU partners shared credit for the budget meeting. Each has retained a copy.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "outcome": {
+          "eventId": "eu-budget-share-meeting",
+          "choice": "share"
+        }
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-garlic",
+      "outlet": "today",
+      "headline": "A fragrant menu",
+      "body": "The ministerial menu includes garlic. Photographers have been asked to stand upwind.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "flag": "menu-garlic"
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-seating",
+      "outlet": "herald",
+      "headline": "A chair remains empty",
+      "body": "The seating complaint went unanswered. Protocol has left a chair empty while it considers the matter.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "outcome": {
+          "eventId": "seating-complaint",
+          "status": "missed"
+        }
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-cold",
+      "outlet": "herald",
+      "headline": "A cool assessment",
+      "body": "The Herald asks whether Bellaluxe understands the value of a constructive relationship with its hosts.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "meterBelow": {
+          "key": "goodwill",
+          "value": 25
+        }
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "consequence-ruth",
+      "outlet": "vale",
+      "headline": "Questions remain",
+      "body": "Ruth Vale finds Bellaluxe’s explanations less persuasive than its stationery.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 50,
+      "trigger": {
+        "trustBelow": {
+          "id": "journalist",
+          "value": 30
+        }
+      },
+      "once": true,
+      "capital": {
+        "confidence": 2
+      }
+    },
+    {
+      "id": "filler-0",
+      "outlet": "herald",
+      "headline": "A fountain is inaugurated",
+      "body": "The city opened its restored fountain. Officials praised the water for arriving on schedule.",
+      "minDay": 1,
+      "maxDay": 15,
+      "priority": 1
+    },
+    {
+      "id": "filler-1",
+      "outlet": "today",
+      "headline": "Umbrellas on parade",
+      "body": "A sudden shower interrupted the diplomatic walking tour. The umbrellas completed it.",
+      "minDay": 1,
+      "maxDay": 15,
+      "priority": 1
+    },
+    {
+      "id": "filler-2",
+      "outlet": "vale",
+      "headline": "An agenda with an agenda",
+      "body": "A committee has appointed a committee to shorten its meetings. Its first report is due next month.",
+      "minDay": 1,
+      "maxDay": 15,
+      "priority": 1
+    },
+    {
+      "id": "filler-3",
+      "outlet": "wire",
+      "headline": "Market opens early",
+      "body": "The central market opens an hour early this week. Fish sellers requested the change.",
+      "minDay": 1,
+      "maxDay": 15,
+      "priority": 1
+    },
+    {
+      "id": "filler-4",
+      "outlet": "digest",
+      "headline": "Reception season continues",
+      "body": "Three missions have scheduled receptions on the same evening. Drivers are comparing routes.",
+      "minDay": 1,
+      "maxDay": 15,
+      "priority": 1
+    },
+    {
+      "id": "filler-5",
+      "outlet": "herald",
+      "headline": "New signs for ministry",
+      "body": "The ministry has installed signs directing visitors to the office that issues directions.",
+      "minDay": 1,
+      "maxDay": 15,
+      "priority": 1
+    },
+    {
+      "id": "filler-6",
+      "outlet": "today",
+      "headline": "A very official cake",
+      "body": "A cake at the trade reception survived four speeches and one photograph.",
+      "minDay": 1,
+      "maxDay": 15,
+      "priority": 1
+    },
+    {
+      "id": "filler-7",
+      "outlet": "wire",
+      "headline": "Ferry timetable revised",
+      "body": "The harbour ferry has a revised timetable. Copies are available at the landing.",
+      "minDay": 1,
+      "maxDay": 15,
+      "priority": 1
+    },
+    {
+      "id": "horoscope",
+      "outlet": "today",
+      "headline": "Today’s horoscope",
+      "body": "A document will cross your desk. Consider reading it.",
+      "minDay": 1,
+      "maxDay": 15,
+      "priority": 0
+    }
+  ],
+  "scenario": {
+    "2": ["fuel-2"],
+    "4": ["fuel-4"],
+    "5": ["fuel-5"],
+    "7": ["fuel-7"],
+    "8": ["fuel-8"],
+    "9": ["fuel-9"],
+    "11": ["fuel-11"],
+    "13": ["fuel-bought", "fuel-mira", "fuel-ration"]
+  }
+}

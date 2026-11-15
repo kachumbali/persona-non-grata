@@ -21,7 +21,7 @@ function Orb({ label, value, kind }: { label: string; value: number; kind: "hq" 
 }
 
 /** Diablo-style bottom resource bar with the BlockBerry built in: DP, money, goodwill, phone and End block. */
-export function BlackBerry() {
+export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
   const g = useGame();
   const [up, setUp] = useState(false);
   const [tab, setTab] = useState<"status" | "mail" | "calendar">("status");
@@ -73,6 +73,18 @@ export function BlackBerry() {
           <div className="bb-screen">
             {tab === "status" ? (
               <div className="space-y-2 text-sm">
+                {g.block === 0 && g.pressDay === g.day && onOpenPress && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      onOpenPress();
+                      setUp(false);
+                    }}
+                  >
+                    Press review {g.pressRead ? "· read" : "· unread"}
+                  </Button>
+                )}
                 <p className="font-mono">
                   HQ {g.meters.confidence} · Host {g.meters.goodwill} · Morale {g.meters.morale} ·
                   Sanity {g.meters.sanity}

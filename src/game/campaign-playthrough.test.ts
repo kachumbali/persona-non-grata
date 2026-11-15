@@ -207,6 +207,9 @@ describe("full-posting paths", () => {
         day: 15,
         ending: expect.stringMatching(/promoted|ambassador/),
       });
+      // This simulation never opens the press review, so it exercises the optional path.
+      expect(final.pressSeen).toEqual([]);
+      expect(final.goodwillHistory.some((entry) => entry.source === "Fuel quay")).toBe(true);
       expect(errors).toEqual([]);
       if (traitId) expect(momentsHit).toBeGreaterThanOrEqual(5);
       expect(Object.values(final.visit).filter(Boolean)).toHaveLength(4);

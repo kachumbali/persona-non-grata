@@ -251,6 +251,7 @@ export type StoryEvent = {
   expiresDay?: number;
   location?: string;
   requires?: string;
+  requiresFlag?: string;
   requiresChoice?: { eventId: string; choiceId: string };
   onMiss?: { text: string; effects: Effects };
   choices: StoryChoice[];
@@ -275,9 +276,11 @@ export function expiredStories(
   day: number,
   completed: string[],
   outcomes: Record<string, StoryOutcome>,
+  flags: string[] = [],
 ): StoryEvent[] {
   return events.filter(
     (event) =>
+      (!event.requiresFlag || flags.includes(event.requiresFlag)) &&
       event.expiresDay !== undefined &&
       event.expiresDay < day &&
       !completed.includes(event.id) &&
@@ -290,10 +293,12 @@ export function locationStories(
   completed: string[],
   outcomes: Record<string, StoryOutcome>,
   events: StoryEvent[] = CAMPAIGN.events as StoryEvent[],
+  flags: string[] = [],
 ): StoryEvent[] {
   return events.filter(
     (event) =>
       !!event.location &&
+      (!event.requiresFlag || flags.includes(event.requiresFlag)) &&
       event.minDay <= day &&
       (event.expiresDay === undefined || day <= event.expiresDay) &&
       !completed.includes(event.id) &&

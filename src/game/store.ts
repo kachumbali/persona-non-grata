@@ -1,3 +1,4 @@
+import { pressReview, clippings } from "./press";
 import {
   accidentalReplyAll,
   charmGain,
@@ -101,6 +102,17 @@ interface GameState {
   events: StoryEvent[];
   completedEvents: string[];
   storyFlags: string[];
+  pressSeen: string[];
+  pressDay: number;
+  pressIds: string[];
+  pressCompiler: "press" | "maxim";
+  pressRead: boolean;
+  pressDismissedDay: number;
+  dismissPress: () => void;
+  pressClippedDay: number;
+  preparePress: () => void;
+  readPress: () => void;
+  clipPress: (id: string) => void;
   storyOutcomes: Record<string, StoryOutcome>;
   start: (c: Character) => void;
   reset: () => void;
@@ -116,6 +128,10 @@ interface GameState {
 const seed = 23;
 type SavedGame = Omit<
   GameState,
+  | "dismissPress"
+  | "preparePress"
+  | "readPress"
+  | "clipPress"
   | "start"
   | "reset"
   | "move"
@@ -162,6 +178,13 @@ const initial = {
   events: dailyEvents(1, seed, []),
   completedEvents: [],
   storyFlags: [],
+  pressSeen: [],
+  pressDay: 0,
+  pressIds: [],
+  pressCompiler: "press" as const,
+  pressRead: false,
+  pressDismissedDay: 0,
+  pressClippedDay: 0,
   storyOutcomes: {},
 };
 /** Diplo-Points spent on every trip across town. */
@@ -171,6 +194,66 @@ export const useGame = create<GameState>()(
   persist<GameState, [], [], SavedGame>(
     (set, get) => ({
       ...initial,
+      dismissPress: () => set((s) => ({ pressDismissedDay: s.day })),
+      preparePress: () => {
+        const s = get();
+        if (s.block !== 0 || s.pressDay === s.day) return;
+        const review = pressReview(s, s.day);
+        set({
+          pressDay: s.day,
+          pressIds: review.clippings.map((c) => c.id),
+          pressCompiler: review.compiler,
+          pressRead: false,
+        });
+      },
+      readPress: () => {
+        const s = get();
+        if (s.block !== 0 || s.pressDay !== s.day) return;
+        const flags = [...s.storyFlags];
+        if (
+          s.day >= 4 &&
+          s.pressIds.some((id) => clippings.find((c) => c.id === id)?.signal) &&
+          !flags.includes("fuel-lead")
+        )
+          flags.push("fuel-lead");
+        set({
+          pressRead: true,
+          pressSeen: [...new Set([...s.pressSeen, ...s.pressIds])],
+          storyFlags: flags,
+        });
+      },
+      clipPress: (id) => {
+        const s = get();
+        if (
+          s.block !== 0 ||
+          s.pressDay !== s.day ||
+          s.pressClippedDay === s.day ||
+          !s.pressIds.includes(id)
+        )
+          return;
+        const clipping = clippings.find((c) => c.id === id);
+        if (!clipping) return;
+        const useful = clipping.signal || clipping.capital;
+        const text = useful
+          ? `Capital receives: ${clipping.headline}.`
+          : "Capital asks you to stop forwarding the horoscope.";
+        const meters = applyEffects(s.meters, { confidence: useful ? 2 : -1 });
+        const entry = { day: s.day, time: s.minute, text };
+        set({
+          meters,
+          pressClippedDay: s.day,
+          goodwillHistory: [
+            ...s.goodwillHistory,
+            recordGoodwillChange(s.meters, meters, {
+              ...entry,
+              source: "Press review",
+              kind: "Outcome",
+            }),
+          ],
+          log: [...s.log, entry],
+          report: [...s.report, entry],
+        });
+      },
       start: (character) =>
         set({
           ...initial,
@@ -579,6 +662,17 @@ export const useGame = create<GameState>()(
                 (relationships[pairKey(p.worker, other)] ?? 50) + p.pair,
               );
           }
+          if (p.traitChoice && success)
+            storyFlags.push(
+              `trait:${p.traitChoice}:${p.eventId ?? p.emailId ?? p.dialogueTopic ?? p.source}`,
+            );
+          if (p.emailId && p.recall && p.emailAction === "replyall")
+            storyFlags.push(`trait-accident:replyall:${p.emailId}`);
+          if (
+            p.eventId === "fuel-quay" &&
+            (p.eventChoice === "buy" || p.eventChoice === "coordinate")
+          )
+            storyFlags.push("fuel-protected");
           if (p.emailId) handled[p.emailId] = p.emailAction ?? "reply";
           if (p.eventId && !completedEvents.includes(p.eventId)) {
             completedEvents.push(p.eventId);
@@ -677,6 +771,7 @@ export const useGame = create<GameState>()(
             day,
             completedEvents,
             storyOutcomes,
+            storyFlags,
           )) {
             completedEvents.push(event.id);
             storyOutcomes[event.id] = { status: "missed" };
@@ -710,6 +805,10 @@ export const useGame = create<GameState>()(
           for (const payoff of conversationPayoffs) {
             if (!ending && visitReady(visit) && storyFlags.includes(payoff.flag))
               record(payoff.source, payoff.text, payoff.effects);
+          }
+          if (!storyFlags.includes("fuel-protected")) {
+            economy.funds -= 400;
+            record("Fuel quay", "Late generator fuel costs an extra ƒ400 at procurement.", {});
           }
           const shortfall = START_RING_FENCE - economy.ringFence;
           if (shortfall > 0) {
@@ -761,7 +860,7 @@ export const useGame = create<GameState>()(
     }),
     {
       name: "persona-non-grata-save",
-      version: 7,
+      version: 8,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = old.economy ?? {
@@ -808,11 +907,20 @@ export const useGame = create<GameState>()(
         return {
           ...initial,
           ...old,
-          character: old.character ? (() => {
-            const legacy = old.character as Character & { face?: number };
-            const { face, ...rest } = legacy;
-            return { ...rest, portrait: legacy.portrait ?? `diplomat-${(face ?? 0) + 1}` };
-          })() : null,
+          character: old.character
+            ? (() => {
+                const legacy = old.character as Character & { face?: number };
+                const { face, ...rest } = legacy;
+                return { ...rest, portrait: legacy.portrait ?? `diplomat-${(face ?? 0) + 1}` };
+              })()
+            : null,
+          pressSeen: old.pressSeen ?? [],
+          pressDay: old.pressDay ?? 0,
+          pressIds: old.pressIds ?? [],
+          pressCompiler: old.pressCompiler ?? "press",
+          pressRead: old.pressRead ?? false,
+          pressDismissedDay: old.pressDismissedDay ?? 0,
+          pressClippedDay: old.pressClippedDay ?? 0,
           hangover: old.hangover ?? false,
           economy,
           turn: old.turn ?? ((old.day ?? 1) - 1) * 4 + block,
