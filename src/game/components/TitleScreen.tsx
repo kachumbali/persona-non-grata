@@ -194,7 +194,7 @@ export function TitleScreen({ onNew, onLoad }: { onNew: () => void; onLoad: () =
                         value={code}
                         rows={4}
                         onFocus={(e) => e.currentTarget.select()}
-                        className="mt-1 w-full rounded border border-input bg-background p-2 font-mono text-xs"
+                        className="mt-1 w-full rounded border border-input bg-card p-2 font-mono text-xs text-card-foreground"
                       />
                       <div className="mt-1 flex flex-wrap items-center gap-2">
                         <Button size="sm" onClick={copy}>
@@ -220,7 +220,7 @@ export function TitleScreen({ onNew, onLoad }: { onNew: () => void; onLoad: () =
                         rows={2}
                         placeholder="PNG1.…"
                         onChange={(e) => setImports((v) => ({ ...v, [i]: e.target.value }))}
-                        className="mt-1 w-full rounded border border-input bg-background p-2 font-mono text-xs"
+                        className="mt-1 w-full rounded border border-input bg-card p-2 font-mono text-xs text-card-foreground"
                       />
                       <Button
                         size="sm"
