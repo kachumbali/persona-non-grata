@@ -43,7 +43,7 @@ Make the game ready for more than one chapter and more than one coding tool. Not
   - Rename player-facing 'Chapter 1' labels so they come from the chapter pack.
 - Done when: The game plays exactly as before. All existing tests pass with only import changes. A second, empty test chapter with 2 days and 1 mission task can be loaded in a test.
 
-### F-03 Career record and save slots
+### F-03 Career record and save slots (done)
 
 - Type: Rules and code · Size: M · Depends on: F-02
 - Goal: A career must outlive a chapter. Today there is one save that holds one posting.
@@ -55,7 +55,7 @@ Make the game ready for more than one chapter and more than one coding tool. Not
   - Migrate existing saves into slot 1.
 - Done when: Finishing Port Hesperia writes a chapter result into the career. An exported code restores the same career in another browser. Old saves still load.
 
-### F-04 Content checker
+### F-04 Content checker (done)
 
 - Type: Rules and code · Size: M · Depends on: F-02
 - Goal: Most future work is writing JSON with AI tools. Mistakes in content must be caught by a script, not by players.
@@ -90,6 +90,19 @@ Make the game ready for more than one chapter and more than one coding tool. Not
 ## M2: Port Hesperia complete
 
 Finish every system inside the one chapter that exists, then test it with five people from the circuit before building more.
+
+### B-01 Mission pacing: make the visit a fifteen-day job
+
+- Type: Rules and code · Size: M · Depends on: F-05
+- Goal: The simulated playthroughs show a careful player confirms all four visit tasks on Day 1 for ƒ900. The main mission then creates no tension, and two thirds of the blocks have nothing waiting.
+- Work:
+  - Turn each mission task into three or four steps defined in the chapter pack, each with an earliest day, a cost in time or money, and a requirement such as a skill, a trust level or an earlier step.
+  - Add scripted setbacks from Capital and the host that reopen steps: the arrival time moves, the delegation grows, the lounge is double-booked, the motorcade route is closed for a parade.
+  - The visit is ready only when every task's last step is confirmed. Show the steps and what blocks each one on the mission dashboard.
+  - Ring-fence the mission's own costs so hospitality spending cannot make the visit impossible by accident.
+  - Make the final day playable as an arrival sequence instead of ending when the day counter is reached.
+  - Update the simulation thresholds: no bot completes the mission before Day 11, a careful bot still succeeds in at least 80% of runs, and an ignorer still fails.
+- Done when: In the simulation the mission stays open until the last days for every bot, and the number of blocks with nothing waiting drops clearly. Old saves still load.
 
 ### P-01 Portrait cleanup
 
