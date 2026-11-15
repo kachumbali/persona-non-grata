@@ -4,7 +4,7 @@ import bg from "../data/backgrounds.json";
 import portraits from "../data/portraits.json";
 import { computeStats, pointsLeft, TRAITS, TRAIT_POINTS } from "../rules";
 import { activeChapter } from "../chapters";
-import { useGame } from "../store";
+import { startCareer } from "../saves";
 import { playerCapacity } from "../economy";
 import { Portrait } from "./Portrait";
 
@@ -19,7 +19,6 @@ const STAT_LABELS = {
 const rand = (n: number) => Math.floor(Math.random() * n);
 
 export function CharacterBuilder() {
-  const start = useGame((s) => s.start);
   const chapter = activeChapter().manifest;
   const [title, setTitle] = useState<string>("Mr");
   const [name, setName] = useState("");
@@ -205,7 +204,12 @@ export function CharacterBuilder() {
           <Button
             size="lg"
             disabled={!canStart}
-            onClick={() => start({ title, name: name.trim(), portrait, bio, traits })}
+            onClick={() =>
+              startCareer(
+                { title, name: name.trim(), portrait, bio, traits },
+                { origin: slots[0], misstep: slots[1], reason: slots[2] },
+              )
+            }
           >
             Accept posting · 15 working days
           </Button>

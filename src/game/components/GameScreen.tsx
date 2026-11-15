@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { blocks, endings, lastDay, missionTasks, type VisitTask } from "../rules";
 
 import { activeChapter } from "../chapters";
+import { newPosting } from "../saves";
 import { useGame } from "../store";
 import { Portrait } from "./Portrait";
 import { CityMap } from "./CityMap";
@@ -77,7 +78,7 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
           )}
           <DiplomaticRecord outcomes={g.storyOutcomes} />
           <StoryRecord outcomes={g.storyOutcomes} completed={g.completedEvents} day={g.day} />
-          <Button className="mt-8" onClick={g.reset}>
+          <Button className="mt-8" onClick={newPosting}>
             Request a new posting
           </Button>
         </div>

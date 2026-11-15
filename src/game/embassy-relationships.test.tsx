@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { PlaceScene } from "./components/PlaceScene";
 import { delegationSucceeds, emails, initialColleagues, locationStories, pairKey } from "./rules";
+import { initSaves, reloadSaves, SAVE_KEY } from "./saves";
 import { useGame } from "./store";
 
 beforeEach(() => {
@@ -155,21 +156,20 @@ describe("embassy relationships", () => {
       ),
     ).toBe(false);
   });
-  it("keeps the chosen Sola story through save reload and resolves its follow-up once", async () => {
+  it("keeps the chosen Sola story through save reload and resolves its follow-up once", () => {
+    initSaves();
     useGame.setState({
       day: 3,
       completedEvents: ["staff-sola-elise"],
       storyOutcomes: { "staff-sola-elise": { status: "chosen", choice: "instruct" } },
     });
-    const saved = localStorage.getItem("persona-non-grata-save");
+    const saved = localStorage.getItem(SAVE_KEY);
     expect(saved).toBeTruthy();
     useGame
       .getState()
       .start({ title: "Mx", name: "Other", portrait: "diplomat-1", bio: "", traits: [] });
-    localStorage.setItem("persona-non-grata-save", saved!);
-    await act(async () => {
-      await useGame.persist.rehydrate();
-    });
+    localStorage.setItem(SAVE_KEY, saved!);
+    act(() => reloadSaves());
     render(<PlaceScene onLeave={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: /Follow up: The translation comes back/ }));
     fireEvent.click(screen.getByLabelText(/Allow displaced routine work/));

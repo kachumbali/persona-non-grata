@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { dueInvitations, allInvitations, visibleInvitations } from "./calendar";
 import { blocks, campaign, emails } from "./rules";
+import { initSaves, reloadSaves, SAVE_KEY } from "./saves";
 import { useGame } from "./store";
 
 const invitation = allInvitations()[0]!;
@@ -129,6 +130,7 @@ describe("diplomatic invitations", () => {
     expect(fresh.colleagues["amb-valdoria"]?.trust).toBe(50);
   });
   it("restores a queued invitation and resolves it once after reloading the save", async () => {
+    initSaves();
     const choice = invitation.choices.attend;
     expect(
       useGame.getState().queue({
@@ -145,13 +147,13 @@ describe("diplomatic invitations", () => {
         contactTrust: choice.contactTrust,
       }),
     ).toBe(true);
-    const saved = localStorage.getItem("persona-non-grata-save");
+    const saved = localStorage.getItem(SAVE_KEY);
     expect(saved).not.toBeNull();
     useGame
       .getState()
       .start({ title: "Dr", name: "Other", portrait: "diplomat-2", bio: "", traits: [] });
-    localStorage.setItem("persona-non-grata-save", saved!);
-    await useGame.persist.rehydrate();
+    localStorage.setItem(SAVE_KEY, saved!);
+    reloadSaves();
     expect(useGame.getState().character?.name).toBe("Tester");
     expect(useGame.getState().pending.some((item) => item.eventId === invitation.id)).toBe(true);
     useGame.getState().advance();

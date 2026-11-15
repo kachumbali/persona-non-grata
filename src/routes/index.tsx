@@ -4,7 +4,11 @@ import { CharacterBuilder } from "@/game/components/CharacterBuilder";
 import { TitleScreen } from "@/game/components/TitleScreen";
 import { GameScreen } from "@/game/components/GameScreen";
 import { activeChapter } from "@/game/chapters";
+import { initSaves } from "@/game/saves";
 import { useGame } from "@/game/store";
+
+// Load the save slots before the first render (the game reads browser storage, so client only).
+if (typeof window !== "undefined") initSaves();
 
 export const Route = createFileRoute("/")({
   ssr: false, // the game reads its save from the browser

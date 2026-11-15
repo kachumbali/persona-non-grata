@@ -11,7 +11,7 @@ import {
 import { create } from "zustand";
 import { activeChapter, activeChapterId, DEFAULT_CHAPTER_ID } from "./chapters";
 import { dueInvitations } from "./calendar";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import {
   absTime,
   applyEffects,
@@ -882,7 +882,15 @@ export const useGame = create<GameState>()(
       },
     }),
     {
-      name: "persona-non-grata-save",
+      // The posting is no longer persisted here: src/game/saves.ts writes it, with the career, into
+      // the save slots. This middleware stays for its versioned migrate/merge/partialize hooks, which
+      // the slot manager runs for old saves and which define what a saved posting contains.
+      name: "persona-non-grata-posting",
+      storage: createJSONStorage(() => ({
+        getItem: () => null,
+        setItem: () => {},
+        removeItem: () => {},
+      })),
       version: 9,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
