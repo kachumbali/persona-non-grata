@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, Smartphone, Trash2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Mail, Smartphone, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BLOCKS } from "../rules";
 import { dueInvitations } from "../calendar";
@@ -7,6 +7,7 @@ import { availableFunds, decisionCash, money, playerTime, playerCapacity } from 
 import { useGame } from "../store";
 import { Mailbox } from "./Mailbox";
 import { DiplomaticCalendar } from "./DiplomaticCalendar";
+import { PostingBriefing } from "./PostingBriefing";
 
 function Orb({ label, value, kind }: { label: string; value: number; kind: "hq" | "host" }) {
   return (
@@ -25,6 +26,7 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
   const g = useGame();
   const [up, setUp] = useState(false);
   const [tab, setTab] = useState<"status" | "mail" | "calendar">("status");
+  const [briefingOpen, setBriefingOpen] = useState(false);
   const capacity = playerCapacity(g.character, g.energy, g.composure, g.alcohol, g.hangover);
   const used = g.pending.reduce((n, p) => n + playerTime(p), 0);
   const left = Math.max(0, capacity.total - used);
@@ -36,7 +38,7 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
   return (
     <>
       {up && (
-        <section className="bb-popup" data-mail={tab === "mail" && away} aria-label="BlockBerry">
+        <section className="bb-popup" data-mail={tab === "mail"} aria-label="BlockBerry">
           <div className="mb-2 flex flex-wrap items-center gap-1 text-primary-foreground">
             <strong className="mr-auto font-mono text-accent">BlockBerry</strong>
             <Button
@@ -56,7 +58,10 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
             <Button
               size="sm"
               variant={tab === "mail" ? "secondary" : "ghost"}
-              onClick={() => setTab("mail")}
+              onClick={() => {
+                setTab("mail");
+                setBriefingOpen(false);
+              }}
             >
               Mail
             </Button>
@@ -147,10 +152,25 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
               </div>
             ) : tab === "calendar" ? (
               <DiplomaticCalendar />
-            ) : away ? (
-              <Mailbox channel="mail" singlePane />
             ) : (
-              <p className="text-sm">You're in the office. Use your PC for mail.</p>
+              briefingOpen ? (
+                <div className="space-y-3">
+                  <Button size="sm" variant="outline" onClick={() => setBriefingOpen(false)}>
+                    <ArrowLeft className="size-4" /> Back to inbox
+                  </Button>
+                  <PostingBriefing />
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <Button variant="outline" className="h-auto w-full justify-start whitespace-normal text-left" onClick={() => setBriefingOpen(true)}>
+                    <Mail className="size-4 shrink-0" />
+                    <span>Posting briefing · Welcome to your posting</span>
+                  </Button>
+                  {away ? <Mailbox channel="mail" singlePane /> : (
+                    <p className="text-sm">You're in the office. Use your PC for other mail.</p>
+                  )}
+                </div>
+              )
             )}
           </div>
         </section>

@@ -43,3 +43,4 @@ use the editor.
 - Every posting has two concurrent story arcs: a chapter-long mission and daily side stories or side quests. Preserve both when extending the game; see GAME_DESIGN.md for the design rule.
 - The diplomatic setting is around 2006: call the group the EU, use real country names only for EU member states, and keep the host and other third countries fictional and non-obvious. Preserve the user's deliberately anachronistic "Team Europe" satire; see GAME_DESIGN.md and EU_DIPLOMATIC_CAST_PLAN.md.
 - Phone mail uses Mailbox's single-pane mode with explicit inbox/back navigation; office mail and fax retain their two-pane layout so the phone reader gets the full available width.
+- Posting briefing copy is authored in JSON and rendered by one shared email reader for the arrival popup and permanent BlockBerry inbox entry, so both remain consistent without becoming a timed instruction.

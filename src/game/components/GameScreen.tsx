@@ -14,6 +14,8 @@ import { Interruption } from "./Interruption";
 import { DiplomaticRecord } from "./DiplomaticRecord";
 import { StoryRecord } from "./StoryRecord";
 import { PressReview } from "./PressReview";
+import { PostingBriefing } from "./PostingBriefing";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const g = useGame();
@@ -103,36 +105,18 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
         </div>
       </header>
 
-      {briefingOpen && (
-        <section className="paper mb-4 p-4" aria-label="Welcome briefing">
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <div>
-              <h2 className="text-lg font-bold">Welcome to your posting</h2>
-              <p className="text-sm">
-                The Ambassador is away. The Minister arrives on Day {LAST_DAY}. Capital assures you
-                this is an opportunity.
-              </p>
-            </div>
-            <Button variant="outline" size="sm" onClick={() => setBriefingOpen(false)}>
-              Dismiss briefing
-            </Button>
-          </div>
-          <ol className="mt-2 list-inside list-decimal space-y-1 text-sm">
-            <li>
-              Enter the embassy on the map. Check the secure fax for Capital and the PC for other
-              mail.
-            </li>
-            <li>
-              Plan your work: the base is 4 Diplo-Points (DP) per block. Stamina, low energy,
-              composure and drinking can change this; travel and mail decisions cost 1 DP each.
-            </li>
-            <li>
-              End the block to resolve your plans. Unanswered instructions may be missed. Confirm
-              all four visit arrangements before arrival.
-            </li>
-          </ol>
-        </section>
-      )}
+      <Dialog open={briefingOpen} onOpenChange={setBriefingOpen}>
+        <DialogContent className="max-h-[85dvh] overflow-y-auto bg-card sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Courrielleur 98 · Welcome to your posting</DialogTitle>
+            <DialogDescription>Personnel Directorate · Posting briefing</DialogDescription>
+          </DialogHeader>
+          <PostingBriefing />
+          <Button variant="outline" onClick={() => setBriefingOpen(false)}>
+            Dismiss briefing
+          </Button>
+        </DialogContent>
+      </Dialog>
       {pressOpen && (
         <PressReview
           onClose={() => {

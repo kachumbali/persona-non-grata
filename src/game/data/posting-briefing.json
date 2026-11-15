@@ -1,0 +1,27 @@
+{
+  "from": "Personnel Directorate · Republic of Bellaluxe",
+  "subject": "Welcome to your posting",
+  "intro": "The Ambassador is away. You are Deputy Head of Mission, now Acting Head of Mission in Port Hesperia. Capital assures you this is an opportunity. Capital is not here.",
+  "sections": [
+    {
+      "title": "Your desk, your problem",
+      "text": "Capital’s instructions arrive by secure fax at the embassy. Ordinary correspondence arrives on your office PC. Your BlockBerry carries mail away from the office, your diary and round reports; this posting briefing remains in its Mail inbox wherever you are."
+    },
+    {
+      "title": "Time and embassy funds",
+      "text": "Your base allowance is 4 Diplo-Points (DP) per block. Stamina, energy, composure and drinking can change it. Travel and mail decisions cost 1 DP each. Colleagues have routine duties of their own, and hospitality comes out of embassy funds. End the block to resolve your plans; unanswered instructions may be missed."
+    },
+    {
+      "title": "Morning press review",
+      "text": "Every morning Lucien Falk compiles local press clippings: developing stories, embassy coverage and consequences of earlier decisions. If he is tired, worked the previous evening, or the rota intervenes, Maxim the intern takes over. His translations occasionally acquire a horoscope. The review appears after this briefing and can be reopened from BlockBerry Status during the morning."
+    },
+    {
+      "title": "What to do with the newspapers",
+      "text": "Reading and clipping cost 0 DP. Done reading marks the review read; Skip leaves it unread. You may forward one clipping to Capital per day: useful reporting earns HQ goodwill; forwarding the horoscope does not. When Lucien is available at the embassy, asking him for background costs 1 DP. Later coverage can reveal a developing fuel-quay lead. The review is optional, but newspapers have a habit of knowing things before we do."
+    },
+    {
+      "title": "Keep the posting",
+      "text": "Confirm all four ministerial visit arrangements before arrival. Exhaust HQ goodwill and you are replaced; exhaust host-country goodwill and you are declared persona non grata. A cancelled visit is not considered an innovative scheduling solution."
+    }
+  ]
+}
