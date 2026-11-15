@@ -55,3 +55,7 @@ use the editor.
 - Never rewrite pushed history.
 - Tick the package in roadmap.md.
 - Finish with a summary of decisions.
+
+## Content checker
+
+`npm run content:check` validates every chapter pack with zod schemas (closed objects, so typos like `requiresTriat` fail) and cross-references: character, location, venue, portrait, trait, stat, task, outlet and event ids; duplicate ids; flags read but never set (error) or set but never read (warning); missing result texts; scenes where every choice is gated; days outside the chapter; dangling or unreachable dialogue nodes; and text length limits (warnings, from docs/WRITING_GUIDE.md). It prints findings by file and JSON path plus per-chapter counts, and exits 1 on any error. The logic is the pure `checkChapter` in src/game/content-check.ts; flags that store.ts sets itself live in `CODE_SET_FLAGS` there, so add to it if code starts setting a new flag. CI runs it after the tests. Run it after every content change.
