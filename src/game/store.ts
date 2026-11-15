@@ -70,7 +70,7 @@ export interface LogEntry {
   time: number;
   text: string;
 }
-interface GameState {
+export interface GameState {
   /** Which chapter pack this save belongs to. */
   chapterId: string;
   character: Character | null;
@@ -131,7 +131,7 @@ interface GameState {
   advance: () => void;
 }
 const seed = 23;
-type SavedGame = Omit<
+export type SavedGame = Omit<
   GameState,
   | "dismissPress"
   | "preparePress"
