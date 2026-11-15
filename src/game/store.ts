@@ -242,7 +242,12 @@ export function resolveStep(
   if (!step) return decision.step ? `${decision.task}: no such mission step.` : decision;
   const label = stepLabel(step, decision.task, s.setbacksApplied);
   const status = stepStatus(stepContext(s), decision.task, step.id);
-  if (status.state === "done") return `${label} is already done.`;
+  if (status.state === "done") {
+    // A mail can still be answered once its step is done by other means; it just confirms nothing.
+    if (decision.kind !== "email") return `${label} is already done.`;
+    const { task: _task, step: _step, ...rest } = decision;
+    return rest;
+  }
   if (status.state === "blocked") return `Not yet: ${label} (${status.reason}).`;
   const inPerson =
     decision.kind === "work" ? !decision.worker : decision.emailAction !== "delegate";

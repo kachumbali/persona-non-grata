@@ -82,12 +82,12 @@ const stat = (xs: number[]): Stat => ({
   max: xs.length ? Math.max(...xs) : 0,
 });
 
-function idleByDay(rs: RunResult[]): number[] {
-  // A run played day d if it went past it, or ended during it (the last day itself is never played).
-  const played = (r: RunResult, day: number) => r.day > day || (r.day === day && r.endedEarly);
-  const days = Math.max(0, ...rs.map((r) => (r.endedEarly ? r.day : r.day - 1))) + 1;
+function idleByDay(rs: RunResult[], pick: (r: RunResult) => number[]): number[] {
+  // A run played day d if it reached it.
+  const played = (r: RunResult, day: number) => r.day >= day;
+  const days = Math.max(0, ...rs.map((r) => r.day)) + 1;
   return Array.from({ length: days }, (_, day) =>
-    day === 0 ? 0 : mean(rs.filter((r) => played(r, day)).map((r) => r.idleByDay[day] ?? 0)),
+    day === 0 ? 0 : mean(rs.filter((r) => played(r, day)).map((r) => pick(r)[day] ?? 0)),
   );
 }
 
@@ -131,6 +131,16 @@ export interface Report {
   idleBlocks: { byBot: Record<string, Stat>; overall: Stat };
   /** Mean idle blocks (of 4) on each day, over the runs of the bots that play the chapter through. */
   idleByDay: number[];
+  /** The same two, counting only authored prompts (the definition before the mission steps). */
+  idleBlocksPromptsOnly: { byBot: Record<string, Stat>; overall: Stat };
+  idleByDayPromptsOnly: number[];
+  /** The day the mission was completed (runs that completed it), and how many bots' runs did. */
+  missionCompleteDay: { byBot: Record<string, Stat>; overall: Stat };
+  missionCompletedShare: Record<string, number>;
+  /** Mission steps done per run, and runs that ended with the mission unfinished after a refusal for lack of mission money. */
+  stepsDone: { byBot: Record<string, Stat>; overall: Stat };
+  stepsTotal: number;
+  missionMoneyFailures: string[];
   /** Days on which no block had anything waiting, per run. */
   emptyDays: { byBot: Record<string, Stat>; overall: Stat };
   emptyPlans: { byBot: Record<string, Stat>; overall: Stat };
@@ -245,7 +255,37 @@ export function aggregate(results: RunResult[]): Report {
     neverTaken: { choices: missing(universe.choices, takenAll) },
     neverSeenShipped: unseen(shipped),
     idleBlocks: statsBy((r) => r.idleBlocks),
-    idleByDay: idleByDay(results.filter((r) => COMPETENT.includes(r.bot))),
+    idleByDay: idleByDay(
+      results.filter((r) => COMPETENT.includes(r.bot)),
+      (r) => r.idleByDay,
+    ),
+    idleBlocksPromptsOnly: statsBy((r) => r.idleBlocksPromptsOnly),
+    idleByDayPromptsOnly: idleByDay(
+      results.filter((r) => COMPETENT.includes(r.bot)),
+      (r) => r.idleByDayPromptsOnly,
+    ),
+    missionCompleteDay: {
+      byBot: Object.fromEntries(
+        Object.entries(byBot).map(([b, rs]) => [
+          b,
+          stat(rs.flatMap((r) => (r.missionCompleteDay === null ? [] : [r.missionCompleteDay]))),
+        ]),
+      ),
+      overall: stat(
+        results.flatMap((r) => (r.missionCompleteDay === null ? [] : [r.missionCompleteDay])),
+      ),
+    },
+    missionCompletedShare: Object.fromEntries(
+      Object.entries(byBot).map(([b, rs]) => [
+        b,
+        rs.filter((r) => r.missionCompleteDay !== null).length / (rs.length || 1),
+      ]),
+    ),
+    stepsDone: statsBy((r) => r.stepsDone),
+    stepsTotal: results[0]?.stepsTotal ?? 0,
+    missionMoneyFailures: results
+      .filter((r) => r.missionConfirmed.length < r.missionTotal && r.missionMoneyRefusals > 0)
+      .map((r) => runLabel(r)),
     emptyDays: statsBy((r) => r.idleByDay.filter((n) => n >= 4).length),
     emptyPlans: statsBy((r) => r.emptyPlans),
     conflictDays: statsBy((r) => r.conflictDays),
@@ -398,7 +438,9 @@ export function formatReport(r: Report): string {
   out.push(
     `Only counting the shipped game seed: ${r.neverSeenShipped.events.length} events, ${r.neverSeenShipped.topics.length} topics, ${r.neverSeenShipped.choices.length} choices never seen.`,
   );
-  h("Blocks with nothing to decide per run (no mail, episode, invitation or lead waiting)");
+  h(
+    "Blocks with nothing to decide per run (no mail, episode, invitation, lead or mission step waiting)",
+  );
   out.push(statTable("bot", r.idleBlocks.byBot, r.idleBlocks.overall));
   out.push("\nDays on which nothing at all was waiting (all four blocks idle), per run:");
   out.push(statTable("bot", r.emptyDays.byBot, r.emptyDays.overall));
@@ -409,15 +451,26 @@ export function formatReport(r: Report): string {
       [["idle", ...r.idleByDay.slice(1).map((n) => num(n))]],
     ),
   );
+  out.push(
+    "\nBlocks with no mail, episode, invitation or lead waiting (mission steps not counted):",
+  );
+  out.push(statTable("bot", r.idleBlocksPromptsOnly.byBot, r.idleBlocksPromptsOnly.overall));
+  out.push("\nSame, by day, careful / socialiser / press-reader runs:");
+  out.push(
+    table(
+      ["day", ...r.idleByDayPromptsOnly.slice(1).map((_, i) => String(i + 1))],
+      [["idle", ...r.idleByDayPromptsOnly.slice(1).map((n) => num(n))]],
+    ),
+  );
   out.push("\nBlocks in which the bot itself queued nothing:");
   out.push(statTable("bot", r.emptyPlans.byBot, r.emptyPlans.overall));
   h("Days with a scheduling conflict per run (two or more time-bound things in one block)");
   out.push(statTable("bot", r.conflictDays.byBot, r.conflictDays.overall));
   out.push("\nSame, but ordinary mail arriving in the block also counts as time-bound:");
   out.push(statTable("bot", r.conflictDaysWithMail.byBot, r.conflictDaysWithMail.overall));
-  h("Lowest funds seen per run (ƒ; ring-fenced visit reserves are part of funds)");
+  h("Lowest funds seen per run (ƒ; the reserves are part of funds)");
   out.push(statTable("bot", r.lowestFunds.byBot, r.lowestFunds.overall, 0));
-  out.push("\nLowest funds above the ring-fenced reserves:");
+  out.push("\nLowest funds above the reserves (visit reserves and mission steps):");
   out.push(statTable("bot", r.lowestAvailable.byBot, r.lowestAvailable.overall, 0));
   h("Mission");
   out.push(
@@ -425,6 +478,39 @@ export function formatReport(r: Report): string {
   );
   out.push(
     `Runs that ended with the mission unfinished: ${r.missionIncomplete.length} of ${r.runs}; of those, reached the final day unfinished: ${r.missionFailedAtFinal.length}.`,
+  );
+  out.push(
+    `Runs that left the mission unfinished after a step was refused for lack of money: ${r.missionMoneyFailures.length}.`,
+  );
+  out.push(
+    `\nDay the mission was completed (runs that completed it; the chapter has ${r.stepsTotal} steps):`,
+  );
+  out.push(
+    table(
+      ["bot", "completed", "mean day", "earliest", "latest", "steps done"],
+      [...Object.keys(r.missionCompleteDay.byBot), "all"].map((b) => {
+        const d = b === "all" ? r.missionCompleteDay.overall : r.missionCompleteDay.byBot[b]!;
+        const share =
+          b === "all"
+            ? r.runs
+              ? Object.entries(r.missionCompletedShare).reduce(
+                  (n, [bot, v]) =>
+                    n + v * (r.endingsByBot[bot] ? sum(Object.values(r.endingsByBot[bot]!)) : 0),
+                  0,
+                ) / r.runs
+              : 0
+            : r.missionCompletedShare[b]!;
+        const steps = b === "all" ? r.stepsDone.overall : r.stepsDone.byBot[b]!;
+        return [
+          b,
+          `${Math.round(share * 100)}%`,
+          share ? num(d.mean) : "-",
+          share ? String(d.min) : "-",
+          share ? String(d.max) : "-",
+          num(steps.mean),
+        ];
+      }),
+    ),
   );
   for (const m of r.missionFailedAtFinal.slice(0, 15))
     out.push(`  ${m.run}: ${m.confirmed}/${m.total} tasks`);

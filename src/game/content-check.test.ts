@@ -180,3 +180,69 @@ describe("content checker catches mistakes", () => {
     );
   });
 });
+
+describe("content checker on mission steps and setbacks", () => {
+  const errorsAt = (pack: ChapterPack, path: string) =>
+    check(pack).filter((f) => f.level === "error" && f.file === "chapter.json" && f.path === path);
+  it("a task without steps", () => {
+    const pack = fresh();
+    pack.manifest.missionSteps["lounge"] = [];
+    expect(errorsAt(pack, "missionSteps.lounge")).toHaveLength(1);
+  });
+  it("duplicate step ids in a task", () => {
+    const pack = fresh();
+    pack.manifest.missionSteps["lounge"]![1]!.id = "reservation";
+    expect(errorsAt(pack, "missionSteps.lounge[1].id")).toHaveLength(1);
+  });
+  it("requiresStep that does not exist, and a step that requires itself", () => {
+    const pack = fresh();
+    pack.manifest.missionSteps["lounge"]![2]!.requiresStep = { task: "programme", step: "ghost" };
+    expect(errorsAt(pack, "missionSteps.lounge[2].requiresStep")).toHaveLength(1);
+    const own = fresh();
+    own.manifest.missionSteps["lounge"]![2]!.requiresStep = { task: "lounge", step: "guest-list" };
+    expect(errorsAt(own, "missionSteps.lounge[2].requiresStep")).toHaveLength(1);
+  });
+  it("earliestDay outside the chapter", () => {
+    const pack = fresh();
+    pack.manifest.missionSteps["lounge"]![0]!.earliestDay = 40;
+    expect(errorsAt(pack, "missionSteps.lounge[0].earliestDay")).toHaveLength(1);
+  });
+  it("a last step that cannot be done before the final day", () => {
+    const pack = fresh();
+    pack.manifest.missionSteps["programme"]![3]!.earliestDay = 15;
+    expect(errorsAt(pack, "missionSteps.programme[3].earliestDay")).toHaveLength(1);
+  });
+  it("steps that require each other in a loop", () => {
+    const pack = fresh();
+    pack.manifest.missionSteps["lounge"]![0]!.requiresStep = { task: "lounge", step: "guest-list" };
+    expect(errorsAt(pack, "missionSteps.lounge").length).toBeGreaterThan(0);
+  });
+  it("a setback that leaves too little time to recover", () => {
+    const pack = fresh();
+    pack.manifest.setbacks[3]!.day = 14;
+    pack.emails.find((e) => e.id === "setback-parade")!.day = 14;
+    expect(errorsAt(pack, "setbacks[3].targets")).toHaveLength(1);
+  });
+  it("a setback whose mail is missing or on another day", () => {
+    const pack = fresh();
+    pack.manifest.setbacks[0]!.mail = "no-mail";
+    pack.manifest.setbacks[1]!.mail = "setback-parade";
+    expect(errorsAt(pack, "setbacks[0].mail")).toHaveLength(1);
+    expect(errorsAt(pack, "setbacks[1].mail")).toHaveLength(1);
+  });
+  it("a setback that reopens a step that costs cash, or names an unknown step", () => {
+    const pack = fresh();
+    pack.manifest.setbacks[0]!.targets.push({ task: "lounge", step: "deposit" });
+    pack.manifest.setbacks[0]!.targets.push({ task: "lounge", step: "ghost" });
+    expect(errorsAt(pack, "setbacks[0].targets[3]")).toHaveLength(1);
+    expect(errorsAt(pack, "setbacks[0].targets[4]")).toHaveLength(1);
+  });
+  it("a mail that confirms a step before the step opens", () => {
+    const pack = fresh();
+    pack.emails.find((e) => e.id === "visit-lounge")!.day = 3;
+    const found = check(pack).filter(
+      (f) => f.level === "error" && f.file === "emails.json" && f.path.endsWith("confirmsStep"),
+    );
+    expect(found.length).toBeGreaterThan(0);
+  });
+});

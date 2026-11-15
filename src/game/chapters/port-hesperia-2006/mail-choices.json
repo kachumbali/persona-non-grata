@@ -128,5 +128,15 @@
     "reply": "Present the printed programme",
     "delegate": "Ask Anselm to hand it over",
     "note": "Take note of the request"
+  },
+  "arrival-headcount": {
+    "reply": "Send the final headcount",
+    "delegate": "Ask Pavel to send it",
+    "note": "Take note of the headcount"
+  },
+  "arrival-banquet": {
+    "reply": "Seat them by rank",
+    "delegate": "Ask Sola to move the place cards",
+    "note": "Take note of the seating"
   }
 }

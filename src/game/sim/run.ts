@@ -56,7 +56,7 @@ export interface RunResult {
   lowestMeters: Meters;
   funds: number;
   lowestFunds: number;
-  /** Lowest funds above the ring-fenced visit reserves. */
+  /** Lowest funds above the visit reserves and the mission steps' reserve. */
   lowestAvailable: number;
   missionConfirmed: string[];
   missionTotal: number;
@@ -67,8 +67,13 @@ export interface RunResult {
   stepsTotal: number;
   /** Times the store refused a mission step for lack of funds. */
   missionMoneyRefusals: number;
-  /** Blocks with nothing waiting and no mission step that could be done either. */
-  idleBlocksNoStep: number;
+  /**
+   * Blocks in which no authored prompt (mail, episode, invitation, lead here) was waiting, the
+   * definition used before the mission steps existed. `idleBlocks` also counts a mission step
+   * that could be done now as something waiting.
+   */
+  idleBlocksPromptsOnly: number;
+  idleByDayPromptsOnly: number[];
   score: number;
   /** Trait-tagged choices taken, by trait (a choice that failed or was recalled is not counted). */
   traitChoices: Record<string, number>;
@@ -78,7 +83,7 @@ export interface RunResult {
   seen: string[];
   /** Ids of choices and topics the bot actually took. */
   taken: string[];
-  /** Blocks in which no authored prompt (mail, episode, invitation, lead here) was waiting. */
+  /** Blocks in which nothing was waiting: no prompt and no mission step that could be done now. */
   idleBlocks: number;
   /** Idle blocks by day: index 1 is Day 1 (index 0 is unused). */
   idleByDay: number[];
@@ -97,6 +102,10 @@ export interface RunResult {
   workStalled: number;
   dutiesDisplaced: number;
 }
+
+/** Cash that is spoken for: the visit reserves and the mission steps still to do. */
+const reserved = (e: { ringFence: number; missionReserve?: number | undefined }) =>
+  e.ringFence + (e.missionReserve ?? 0);
 
 const zeroMeters = (): Meters => ({ confidence: 100, goodwill: 100, morale: 100, sanity: 100 });
 
@@ -138,15 +147,16 @@ function play(options: SimOptions, chapterId: string): RunResult {
   const conflictDays = new Set<number>();
   const conflictDaysWithMail = new Set<number>();
   const idleByDay: number[] = Array.from({ length: days + 1 }, () => 0);
+  const idleByDayPromptsOnly: number[] = Array.from({ length: days + 1 }, () => 0);
   let conflictBlocks = 0,
     idleBlocks = 0,
-    idleBlocksNoStep = 0,
+    idleBlocksPromptsOnly = 0,
     missionCompleteDay: number | null = null,
     emptyPlans = 0,
     blocksPlayed = 0,
     stalls = 0;
   let lowestFunds = useGame.getState().economy.funds;
-  let lowestAvailable = lowestFunds - useGame.getState().economy.ringFence;
+  let lowestAvailable = lowestFunds - reserved(useGame.getState().economy);
   const lowestMeters = zeroMeters();
   const startedWith = startMeters();
   for (const key of Object.keys(lowestMeters) as (keyof Meters)[])
@@ -183,7 +193,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     blocksPlayed++;
     s = useGame.getState();
     lowestFunds = Math.min(lowestFunds, s.economy.funds);
-    lowestAvailable = Math.min(lowestAvailable, s.economy.funds - s.economy.ringFence);
+    lowestAvailable = Math.min(lowestAvailable, s.economy.funds - reserved(s.economy));
     for (const key of Object.keys(lowestMeters) as (keyof Meters)[])
       lowestMeters[key] = Math.min(lowestMeters[key], s.meters[key]);
   }
@@ -215,13 +225,16 @@ function play(options: SimOptions, chapterId: string): RunResult {
     }
     const answerable = player.openMail().filter(arrives);
     if (!due.length && !event && !answerable.length && !player.leadsHere().length) {
-      idleBlocks++;
-      idleByDay[s.day] = (idleByDay[s.day] ?? 0) + 1;
+      idleBlocksPromptsOnly++;
+      idleByDayPromptsOnly[s.day] = (idleByDayPromptsOnly[s.day] ?? 0) + 1;
       const stepWaiting = Object.keys(missionTasks()).some((task) => {
         const step = nextStep(s.missionSteps, task);
         return !!step && stepStatus(stepContext(s), task, step.id).state === "available";
       });
-      if (!stepWaiting) idleBlocksNoStep++;
+      if (!stepWaiting) {
+        idleBlocks++;
+        idleByDay[s.day] = (idleByDay[s.day] ?? 0) + 1;
+      }
     }
   }
 
@@ -257,7 +270,8 @@ function play(options: SimOptions, chapterId: string): RunResult {
     missionMoneyRefusals: Object.entries(tracker.planErrors)
       .filter(([text]) => text.includes("mission step"))
       .reduce((n, [, count]) => n + count, 0),
-    idleBlocksNoStep,
+    idleBlocksPromptsOnly,
+    idleByDayPromptsOnly,
     score: s.score,
     traitChoices,
     traitOffers: { ...tracker.traitOffers },

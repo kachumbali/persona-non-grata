@@ -503,14 +503,14 @@
       "note": {
         "text": "The amendments are noted. Capital notes that they were noted.",
         "effects": {
-          "confidence": -3
+          "confidence": -2
         }
       }
     },
     "ignore": {
       "text": "The amendments are deemed accepted by silence. Capital now has eleven new ones.",
       "effects": {
-        "confidence": -6
+        "confidence": -5
       }
     }
   },
@@ -578,14 +578,14 @@
       "note": {
         "text": "The change is noted. The Minister's aircraft does not note it.",
         "effects": {
-          "confidence": -3
+          "confidence": -2
         }
       }
     },
     "ignore": {
       "text": "The old arrival time stays in the programme. The Minister keeps the new one.",
       "effects": {
-        "confidence": -4
+        "confidence": -3
       }
     }
   },
@@ -614,14 +614,14 @@
       "note": {
         "text": "The new version is noted. The old version is also noted, for balance.",
         "effects": {
-          "goodwill": -2
+          "goodwill": -1
         }
       }
     },
     "ignore": {
       "text": "Protocol keeps your 7.2 on file, as a curiosity.",
       "effects": {
-        "goodwill": -4
+        "goodwill": -3
       }
     }
   },
@@ -652,14 +652,14 @@
       "note": {
         "text": "The guest list remains a category. The airport waits.",
         "effects": {
-          "confidence": -3
+          "confidence": -2
         }
       }
     },
     "ignore": {
       "text": "The lounge assigns the Minister the next available chair, which is not in the lounge.",
       "effects": {
-        "confidence": -5
+        "confidence": -4
       }
     }
   },
@@ -699,7 +699,7 @@
     "ignore": {
       "text": "The programme approval deadline passes. The Ministerial Office records a missed instruction.",
       "effects": {
-        "confidence": -12
+        "confidence": -8
       }
     }
   },
@@ -731,15 +731,15 @@
       "note": {
         "text": "The request waits for a stamp that nobody has ordered.",
         "effects": {
-          "confidence": -3
+          "confidence": -2
         }
       }
     },
     "ignore": {
       "text": "The confirmation expires unstamped. Protocol regrets that it cannot regret this.",
       "effects": {
-        "confidence": -5,
-        "goodwill": -3
+        "confidence": -4,
+        "goodwill": -2
       }
     }
   },
@@ -768,14 +768,14 @@
       "note": {
         "text": "The delegation is noted. It is noted again on arrival.",
         "effects": {
-          "confidence": -3
+          "confidence": -2
         }
       }
     },
     "ignore": {
       "text": "Six additional delegates are discovered at the airport, by the delegates.",
       "effects": {
-        "confidence": -5
+        "confidence": -3
       }
     }
   },
@@ -804,53 +804,14 @@
       "note": {
         "text": "The parade is noted. It proceeds regardless.",
         "effects": {
-          "goodwill": -2
+          "goodwill": -1
         }
       }
     },
     "ignore": {
       "text": "The Office closes the road and informs the embassy by closing the road.",
       "effects": {
-        "goodwill": -4
-      }
-    }
-  },
-  {
-    "id": "visit-motorcade",
-    "day": 12,
-    "time": 560,
-    "from": "Security and Transport Desk",
-    "subject": "Motorcade and escort: final booking",
-    "body": "Vehicles and escort must be booked today at the rate in force. The rate in force will be communicated once the vehicles are booked.",
-    "options": {
-      "reply": {
-        "text": "You book vehicles and escort. The Desk confirms in writing that they exist.",
-        "effects": {
-          "confidence": 3,
-          "goodwill": 2
-        },
-        "confirmsStep": "security.motorcade"
-      },
-      "delegate": {
-        "text": "Bianca books the escort with the Desk's liaison. The vehicles are described as available in principle.",
-        "effects": {
-          "confidence": 2,
-          "morale": -1
-        },
-        "confirmsStep": "security.motorcade"
-      },
-      "note": {
-        "text": "The motorcade stays a plan. The Minister's driver is a hope.",
-        "effects": {
-          "confidence": -3
-        }
-      }
-    },
-    "ignore": {
-      "text": "The escort is released to another delegation, which is delighted.",
-      "effects": {
-        "confidence": -6,
-        "goodwill": -2
+        "goodwill": -3
       }
     }
   },
@@ -883,14 +844,89 @@
       "note": {
         "text": "The programme stays in draft. Drafts do not land.",
         "effects": {
-          "confidence": -5
+          "confidence": -4
         }
       }
     },
     "ignore": {
       "text": "The programme goes unprinted. Capital offers to print it for you, which is worse.",
       "effects": {
-        "confidence": -8
+        "confidence": -6
+      }
+    }
+  },
+  {
+    "id": "visit-motorcade",
+    "day": 13,
+    "time": 520,
+    "from": "Security and Transport Desk",
+    "subject": "Motorcade and escort: final booking",
+    "body": "Vehicles and escort must be booked today at the rate in force. The rate in force will be communicated once the vehicles are booked.",
+    "options": {
+      "reply": {
+        "text": "You book vehicles and escort. The Desk confirms in writing that they exist.",
+        "effects": {
+          "confidence": 3,
+          "goodwill": 2
+        },
+        "confirmsStep": "security.motorcade"
+      },
+      "delegate": {
+        "text": "Bianca books the escort with the Desk's liaison. The vehicles are described as available in principle.",
+        "effects": {
+          "confidence": 2,
+          "morale": -1
+        },
+        "confirmsStep": "security.motorcade"
+      },
+      "note": {
+        "text": "The motorcade stays a plan. The Minister's driver is a hope.",
+        "effects": {
+          "confidence": -2
+        }
+      }
+    },
+    "ignore": {
+      "text": "The escort is released to another delegation, which is delighted.",
+      "effects": {
+        "confidence": -5,
+        "goodwill": -2
+      }
+    }
+  },
+  {
+    "id": "arrival-headcount",
+    "day": 14,
+    "time": 500,
+    "from": "Airport — VIP Services",
+    "subject": "Lounge: final headcount",
+    "body": "The lounge requires the final headcount by noon. Please note that the headcount changes by the hour, and that the lounge counts chairs, not people.",
+    "options": {
+      "reply": {
+        "text": "You send forty-seven. The lounge counts twelve chairs and orders a larger lounge.",
+        "effects": {
+          "confidence": 2,
+          "sanity": -2
+        }
+      },
+      "delegate": {
+        "text": "Pavel sends the headcount with a map of the chairs. The airport admires the map.",
+        "effects": {
+          "confidence": 1,
+          "morale": 1
+        }
+      },
+      "note": {
+        "text": "The headcount is noted. The lounge notes the delegation instead.",
+        "effects": {
+          "confidence": -2
+        }
+      }
+    },
+    "ignore": {
+      "text": "The lounge assumes twelve and plans for twelve. The delegation will find this instructive.",
+      "effects": {
+        "confidence": -4
       }
     }
   },
@@ -898,19 +934,19 @@
     "id": "arrival-eve",
     "day": 14,
     "time": 900,
-    "from": "Capital — Protocol",
+    "from": "Ombrazia — Local Protocol",
     "subject": "The Minister arrives tomorrow",
-    "body": "Please confirm that everything is ready. Please also confirm that you are ready. The second confirmation is optional and will be minuted.",
+    "body": "The Minister arrives tomorrow. Protocol asks the Chargé d'Affaires to confirm that everything is ready, and that the Chargé d'Affaires is. The second confirmation is optional and will be minuted.",
     "options": {
       "reply": {
-        "text": "You confirm both. Capital takes the second as a figure of speech.",
+        "text": "You confirm both. Protocol takes the second as a figure of speech.",
         "effects": {
           "confidence": 3,
           "sanity": -2
         }
       },
       "delegate": {
-        "text": "Anselm confirms on your behalf. Capital asks who you are.",
+        "text": "Anselm confirms on your behalf. Protocol asks who you are.",
         "effects": {
           "confidence": -1,
           "morale": 1
@@ -926,7 +962,7 @@
     "ignore": {
       "text": "Capital assumes everything is ready. It has assumed this before.",
       "effects": {
-        "confidence": -5
+        "confidence": -4
       }
     }
   },
@@ -956,15 +992,15 @@
       "note": {
         "text": "You take note of the aircraft. The aircraft takes note of you, from above.",
         "effects": {
-          "confidence": -4
+          "confidence": -3
         }
       }
     },
     "ignore": {
       "text": "The Minister descends the steps to find Protocol and a vacant apron.",
       "effects": {
-        "confidence": -6,
-        "goodwill": -3
+        "confidence": -5,
+        "goodwill": -2
       }
     }
   },
@@ -972,7 +1008,7 @@
     "id": "arrival-programme",
     "day": 15,
     "time": 760,
-    "from": "Capital — Ministerial Office",
+    "from": "Minister's Office — Travelling Party",
     "subject": "Minister asks for the programme",
     "body": "The Minister would like to see the programme. Please provide it. Please also provide the programme the Minister has already seen.",
     "options": {
@@ -993,7 +1029,7 @@
       "note": {
         "text": "The request is noted. The Minister's aide supplies a programme of his own.",
         "effects": {
-          "confidence": -4
+          "confidence": -3
         }
       }
     },
@@ -1001,6 +1037,43 @@
       "text": "The Minister proceeds without a programme, which is what most programmes allow.",
       "effects": {
         "confidence": -4
+      }
+    }
+  },
+  {
+    "id": "arrival-banquet",
+    "day": 15,
+    "time": 1020,
+    "from": "Ombrazia — Local Protocol",
+    "subject": "Seating for tonight's dinner",
+    "body": "Tonight's dinner seats the Minister between two hosts who have not spoken since the Format Reform. Please advise on the seating. Protocol has already advised on it, twice.",
+    "options": {
+      "reply": {
+        "text": "You seat them by rank and the Minister by the window. Both hosts compliment the window.",
+        "effects": {
+          "confidence": 3,
+          "goodwill": 3,
+          "sanity": -2
+        }
+      },
+      "delegate": {
+        "text": "Sola moves three place cards. The dinner is described as 'cordial' by all three.",
+        "effects": {
+          "goodwill": 2,
+          "morale": 1
+        }
+      },
+      "note": {
+        "text": "The seating is noted. It is also occupied.",
+        "effects": {
+          "goodwill": -2
+        }
+      }
+    },
+    "ignore": {
+      "text": "A corrected seating plan is issued, showing the dinner as it occurred and recording it as intended.",
+      "effects": {
+        "goodwill": -3
       }
     }
   }

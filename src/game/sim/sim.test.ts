@@ -27,6 +27,7 @@ beforeAll(() => {
 const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / (xs.length || 1);
 const share = (rs: RunResult[], f: (r: RunResult) => boolean) => rs.filter(f).length / rs.length;
 const competent = () => results.filter((r) => COMPETENT.includes(r.bot));
+const careful = () => results.filter((r) => r.bot === "careful");
 const positive = (r: RunResult) => r.ending === "promoted" || r.ending === "ambassador";
 
 describe("sim building blocks", () => {
@@ -102,6 +103,31 @@ describe("simulated playthroughs", () => {
     expect(report.carefulMissionRate).toBeGreaterThanOrEqual(0.8);
   });
 
+  it("no bot completes the mission before Day 11", () => {
+    // target (B-01): the mission stays open until the last days. Met today: the programme's last
+    // step opens on Day 13, so the earliest completion in any run is Day 13.
+    for (const r of results)
+      if (r.missionCompleteDay !== null)
+        expect(r.missionCompleteDay, `${r.bot} ${r.build} ${r.seed}`).toBeGreaterThanOrEqual(11);
+    expect(report.missionCompleteDay.overall.min).toBeGreaterThanOrEqual(11);
+  });
+
+  it("the ignorer still fails the mission, and money never decides it", () => {
+    for (const r of results.filter((x) => x.bot === "ignorer"))
+      expect(r.missionCompleteDay, `${r.build} ${r.seed}`).toBeNull();
+    // target (B-01): hospitality cannot starve the mission. Met today: no run that left the
+    // mission unfinished had a step refused for lack of funds.
+    expect(report.missionMoneyFailures).toEqual([]);
+    for (const r of results) expect(r.missionMoneyRefusals, `${r.bot} ${r.build}`).toBe(0);
+  });
+
+  it("the arrival day is played: a run that survives plays all 60 blocks", () => {
+    for (const r of results.filter((x) => !x.endedEarly)) {
+      expect(r.day, `${r.bot} ${r.build}`).toBe(15);
+      expect(r.blocksPlayed, `${r.bot} ${r.build}`).toBe(60);
+    }
+  });
+
   it("no build is dominated by one ending across the bots", () => {
     // target: no build ends in the same ending in more than 70% of runs.
     // Met today: at most 60% per build over all bots (about 40% in this reduced matrix), and at
@@ -156,16 +182,21 @@ describe("simulated playthroughs", () => {
 
   it("days carry scheduling conflicts", () => {
     // target: a scheduling conflict on at least 12 of 15 days.
-    // NOT met today: about 2 to 3 days per run (timed items: 7 invitations, 4 mission mails and
-    // the daily episode rarely land in the same block). Guards against losing the few we have.
-    expect(mean(competent().map((r) => r.conflictDays))).toBeGreaterThanOrEqual(1.5);
+    // NOT met today: about 4 to 5 days per run (before B-01: 2 to 3). The timed items are 7
+    // invitations, the mission mails, setbacks and arrival mails, and the daily episode. Guards against losing
+    // them.
+    expect(mean(competent().map((r) => r.conflictDays))).toBeGreaterThanOrEqual(3);
   });
 
   it("blocks with nothing to decide stay at today's level or fewer", () => {
-    // target: no block without a decision (0 idle blocks of 56).
-    // NOT met today: a competent bot finds nothing waiting in about 37 of 56 blocks, because
-    // the daily episodes and mail dry up after day 5.
-    expect(mean(competent().map((r) => r.idleBlocks))).toBeLessThanOrEqual(42);
+    // target: no block without a decision (0 idle blocks of 60).
+    // NOT met today: counting a mission step that can be done now as something waiting, a
+    // competent bot finds nothing waiting in about 22 of 60 blocks (about 29 for careful and
+    // press-reader). Before B-01 there were no steps and a careful bot found about 37 of 56 idle.
+    // Counting only authored prompts, as before, it is about 32 of 60 for a competent bot.
+    expect(mean(competent().map((r) => r.idleBlocks))).toBeLessThanOrEqual(25);
+    expect(mean(careful().map((r) => r.idleBlocks))).toBeLessThanOrEqual(32);
+    expect(mean(competent().map((r) => r.idleBlocksPromptsOnly))).toBeLessThanOrEqual(36);
   });
 
   it("funds stay positive", () => {
