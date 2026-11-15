@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { BLOCKS, CAMPAIGN, EMAILS, locationStories, START_METERS } from "./rules";
 import { inboxFor, useGame } from "./store";
-const character = { title: "Mr", name: "Test", face: 0, bio: "", traits: [] };
+const character = { title: "Mr", name: "Test", portrait: "diplomat-1", bio: "", traits: [] };
 beforeEach(() => useGame.getState().start(character));
 
 describe("scheduled game rounds", () => {

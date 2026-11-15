@@ -115,7 +115,7 @@ export const EmbassyScene = memo(function EmbassyScene() {
   const staff = data.staff.find((s) => s.id === staffId);
   const chooseStaff = (s: Staff) => { setStaffId(s.id); setRoomId(s.room); useGame.getState().moveRoom(s.room); useGame.getState().selectNpc(s.id); };
   const chooseRoom = (id: string) => { setRoomId(id); setStaffId(null); useGame.getState().moveRoom(id); };
-  const player = useMemo(() => ({ id: "player", name: character?.name ?? "Chargé d’Affaires", role: "Deputy Head of Mission · acting", room: playerRoom, face: character?.face ?? 0, x: -1.5, z: 0.65 }), [character, playerRoom]);
+  const player = useMemo(() => ({ id: "player", name: character?.name ?? "Chargé d’Affaires", role: "Deputy Head of Mission · acting", room: playerRoom, face: Math.max(0, Number(character?.portrait?.match(/^diplomat-(\d+)$/)?.[1] ?? 1) - 1), x: -1.5, z: 0.65 }), [character, playerRoom]);
   if (!room) return null;
 
   return <section className="embassy-window mb-4 overflow-hidden bg-card" aria-label="Embassy floor plan">

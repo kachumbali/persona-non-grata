@@ -22,7 +22,7 @@ export function TitleScreen({ onNew, onLoad }: { onNew: () => void; onLoad: () =
           <div className="mt-6 flex flex-col gap-3">
             <Button size="lg" className="retro-button" onClick={newGame}>New game</Button>
             <Button size="lg" variant="outline" className="retro-button h-auto py-2" disabled={!save} onClick={onLoad}>
-              {save ? <span className="flex items-center gap-3 text-left"><Portrait face={save.face} size={32} /><span>Load game<span className="block text-xs">{save.title} {save.name} · Day {g.day}, {BLOCKS[g.block]?.name}</span></span></span> : "Load game · no saved posting"}
+              {save ? <span className="flex items-center gap-3 text-left"><Portrait portrait={save.portrait} size={32} /><span>Load game<span className="block text-xs">{save.title} {save.name} · Day {g.day}, {BLOCKS[g.block]?.name}</span></span></span> : "Load game · no saved posting"}
             </Button>
           </div>
           <p className="mt-6 text-xs text-muted-foreground">Your progress saves automatically in this browser.</p>

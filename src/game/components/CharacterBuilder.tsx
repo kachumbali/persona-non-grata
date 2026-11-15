@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import bg from "../data/backgrounds.json";
+import portraits from "../data/portraits.json";
 import { computeStats, pointsLeft, TRAITS, TRAIT_POINTS } from "../rules";
 import { useGame } from "../store";
 import { playerCapacity } from "../economy";
@@ -20,7 +21,8 @@ export function CharacterBuilder() {
   const start = useGame((s) => s.start);
   const [title, setTitle] = useState<string>("Mr");
   const [name, setName] = useState("");
-  const [face, setFace] = useState(0);
+  const [portrait, setPortrait] = useState(portraits[0]!.id);
+  const [filter, setFilter] = useState<"all" | "female" | "male">("all");
   const [slots, setSlots] = useState<[number, number, number]>([0, 0, 0]);
   const [traits, setTraits] = useState<string[]>([]);
   const left = pointsLeft(traits);
@@ -70,19 +72,46 @@ export function CharacterBuilder() {
                 className="flex-1 rounded border border-input bg-background px-3 py-2 font-mono text-sm"
               />
             </div>
-            <div className="mt-4 grid grid-cols-4 gap-2">
-              {Array.from({ length: 8 }, (_, i) => (
+            <div className="mt-4 flex flex-wrap gap-2" aria-label="Portrait filters">
+              {(
+                [
+                  ["all", "All"],
+                  ["female", "Women"],
+                  ["male", "Men"],
+                ] as const
+              ).map(([value, label]) => (
                 <Button
-                  key={i}
-                  variant="ghost"
-                  aria-label={`Select portrait ${i + 1}`}
-                  aria-pressed={face === i}
-                  onClick={() => setFace(i)}
-                  className="portrait-choice"
+                  key={value}
+                  variant="outline"
+                  size="sm"
+                  aria-pressed={filter === value}
+                  onClick={() => setFilter(value)}
                 >
-                  <Portrait face={i} size={96} />
+                  {label}
                 </Button>
               ))}
+            </div>
+            <div
+              className="mt-2 grid max-h-80 grid-cols-[repeat(auto-fill,minmax(72px,1fr))] gap-2 overflow-y-auto"
+              aria-label="Choose a portrait"
+            >
+              {portraits
+                .filter(
+                  (item) =>
+                    !("reservedFor" in item) && (filter === "all" || item.gender === filter),
+                )
+                .map((item) => (
+                  <Button
+                    key={item.id}
+                    variant="ghost"
+                    aria-label={`Select portrait ${item.id}`}
+                    aria-pressed={portrait === item.id}
+                    onClick={() => setPortrait(item.id)}
+                    className="portrait-choice"
+                  >
+                    <Portrait portrait={item.id} size={96} />
+                  </Button>
+                ))}
             </div>
 
             <h2 className="retro-section-heading mb-3 mt-6 font-bold">2. Background</h2>
@@ -174,7 +203,7 @@ export function CharacterBuilder() {
           <Button
             size="lg"
             disabled={!canStart}
-            onClick={() => start({ title, name: name.trim(), face, bio, traits })}
+            onClick={() => start({ title, name: name.trim(), portrait, bio, traits })}
           >
             Accept posting · 15 working days
           </Button>

@@ -4,7 +4,7 @@ import { Mailbox, isFax } from "./components/Mailbox";
 import { inboxFor, useGame } from "./store";
 
 beforeEach(() => {
-  useGame.getState().start({ title: "Mx", name: "Test", face: 0, bio: "", traits: [] });
+  useGame.getState().start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ location: "bar", minute: 720, block: 1, events: [] });
 });
 afterEach(cleanup);

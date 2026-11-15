@@ -7,7 +7,7 @@ import { useGame } from "./store";
 
 const meeting = INVITATIONS.find((item) => item.id === "asteria-coffee")!;
 beforeEach(() => {
-  useGame.getState().start({ title: "Mx", name: "Test", face: 0, bio: "", traits: [] });
+  useGame.getState().start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ day: meeting.day, block: meeting.block, minute: BLOCKS[meeting.block]!.time,
     events: [], handled: Object.fromEntries(EMAILS.map((email) => [email.id, "reply"])) });
 });

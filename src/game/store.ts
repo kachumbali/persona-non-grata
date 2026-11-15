@@ -57,7 +57,7 @@ import {
 export interface Character {
   title: string;
   name: string;
-  face: number;
+  portrait: string;
   bio: string;
   traits: string[];
 }
@@ -761,7 +761,7 @@ export const useGame = create<GameState>()(
     }),
     {
       name: "persona-non-grata-save",
-      version: 6,
+      version: 7,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = old.economy ?? {
@@ -808,6 +808,11 @@ export const useGame = create<GameState>()(
         return {
           ...initial,
           ...old,
+          character: old.character ? (() => {
+            const legacy = old.character as Character & { face?: number };
+            const { face, ...rest } = legacy;
+            return { ...rest, portrait: legacy.portrait ?? `diplomat-${(face ?? 0) + 1}` };
+          })() : null,
           hangover: old.hangover ?? false,
           economy,
           turn: old.turn ?? ((old.day ?? 1) - 1) * 4 + block,

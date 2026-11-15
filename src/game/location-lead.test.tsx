@@ -4,7 +4,7 @@ import { LocationLead } from "./components/LocationLead";
 import { useGame } from "./store";
 
 beforeEach(() => {
-  useGame.getState().start({ title: "Mr", name: "Test", face: 0, bio: "", traits: [] });
+  useGame.getState().start({ title: "Mr", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ day: 2, location: "bar", events: [], completedEvents: ["supplier"],
     storyOutcomes: { supplier: { status: "chosen", choice: "check" } } });
 });

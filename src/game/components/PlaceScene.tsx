@@ -59,7 +59,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
         {!atEu && <div className="scene-people">
           {people.map((c) => (
             <button key={c.id} type="button" className="scene-person" data-active={g.selectedNpc === c.id} onClick={() => g.selectNpc(c.id)} aria-label={`Talk to ${c.name}`}>
-              <Portrait face={c.face} size={56} /><span className="map-label">{c.name.split(" ")[0]}</span>
+              <Portrait portrait={c.portrait} size={56} /><span className="map-label">{c.name.split(" ")[0]}</span>
             </button>
           ))}
         </div>}
@@ -68,7 +68,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
         <h3 className="font-bold">At the EU Delegation</h3>
         <p className="mb-2 text-xs text-muted-foreground">Not every EU mission is resident here. Representation of an absent mission applies only where explicitly stated.</p>
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{people.map((person) => <button key={person.id} type="button" className="flex items-center gap-2 border border-border bg-muted p-2 text-left hover:bg-accent focus-visible:outline-2 focus-visible:outline-accent" aria-pressed={g.selectedNpc === person.id} onClick={() => g.selectNpc(person.id)}>
-          <Portrait face={person.face} size={40} /><span><strong className="block text-sm">{person.name}</strong><span className="block text-xs">{representation[person.id] ?? person.role}</span></span>
+          <Portrait portrait={person.portrait} size={40} /><span><strong className="block text-sm">{person.name}</strong><span className="block text-xs">{representation[person.id] ?? person.role}</span></span>
         </button>)}</div>
       </section>}
       <p className="px-3 py-2 text-sm">{place?.description} {atEmbassy ? "Click your PC, the fax, or a colleague." : "Click someone to talk, or follow a lead if one is available. Your BlockBerry keeps mail within reach (bottom right)."}</p>

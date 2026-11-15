@@ -5,7 +5,7 @@ import { useGame } from "./store";
 
 const invitation = INVITATIONS[0]!;
 beforeEach(() => {
-  useGame.getState().start({ title: "Ms", name: "Tester", face: 0, bio: "", traits: [] });
+  useGame.getState().start({ title: "Ms", name: "Tester", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ day: invitation.day, block: invitation.block, minute: BLOCKS[invitation.block]!.time,
     events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });
 });
@@ -58,7 +58,7 @@ describe("diplomatic invitations", () => {
       contact: dinner.contact, contactTrust: choice.contactTrust })).toBe(true);
     useGame.getState().advance();
     expect(useGame.getState().colleagues["amb-valdoria"]?.trust).toBe(54);
-    useGame.getState().start({ title: "Ms", name: "Tester", face: 0, bio: "", traits: [] });
+    useGame.getState().start({ title: "Ms", name: "Tester", portrait: "diplomat-1", bio: "", traits: [] });
     useGame.setState({ day: dinner.day, block: dinner.block, minute: BLOCKS[dinner.block]!.time,
       events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });
     useGame.getState().advance();
@@ -81,7 +81,7 @@ describe("diplomatic invitations", () => {
       contact: invitation.contact, contactTrust: choice.contactTrust })).toBe(true);
     const saved = localStorage.getItem("persona-non-grata-save");
     expect(saved).not.toBeNull();
-    useGame.getState().start({ title: "Dr", name: "Other", face: 1, bio: "", traits: [] });
+    useGame.getState().start({ title: "Dr", name: "Other", portrait: "diplomat-2", bio: "", traits: [] });
     localStorage.setItem("persona-non-grata-save", saved!);
     await useGame.persist.rehydrate();
     expect(useGame.getState().character?.name).toBe("Tester");

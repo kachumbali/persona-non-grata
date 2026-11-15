@@ -4,7 +4,7 @@ import { dueInvitations } from "./calendar";
 import { CAMPAIGN, locationStories, type StoryChoice, type StoryEvent } from "./rules";
 import { inboxFor, useGame } from "./store";
 
-const character = { title: "Mx", name: "Player", face: 0, bio: "", traits: [] };
+const character = { title: "Mx", name: "Player", portrait: "diplomat-1", bio: "", traits: [] };
 const preferred: Record<string, string> = {
   invitation: "delegate",
   rivalry: "mediate",

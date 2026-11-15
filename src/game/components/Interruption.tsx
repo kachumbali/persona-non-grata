@@ -106,7 +106,7 @@ export function Interruption() {
           <div className="flex gap-4 p-4">
             {npc && (
               <div className="shrink-0 self-start">
-                <Portrait face={npc.face} size={88} />
+                <Portrait portrait={npc.portrait} size={88} />
               </div>
             )}
             <div className="min-w-0">

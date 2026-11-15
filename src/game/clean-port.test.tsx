@@ -6,7 +6,7 @@ import { topicsFor } from "./dialogues";
 import { useGame } from "./store";
 
 beforeEach(() => {
-  useGame.getState().start({ title: "Mx", name: "Test", face: 0, bio: "", traits: [] });
+  useGame.getState().start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ day: 2, location: "eu", events: [], handled: Object.fromEntries(EMAILS.map((email) => [email.id, "reply"])) });
 });
 afterEach(cleanup);

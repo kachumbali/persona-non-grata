@@ -27,7 +27,7 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
       <main className="mx-auto max-w-xl px-4 py-16 text-center">
         <div className="paper p-8">
           <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Persona Non Grata — Chapter 1 · Final cable · Day {g.day}</p>
-          <Portrait face={c.face} size={96} />
+          <Portrait portrait={c.portrait} size={96} />
           <h1 className="mt-6 text-3xl text-destructive">{end.title}</h1>
           <p className="mt-6 font-serif">{c.title} {c.name}: {end.text}</p>
           <p className="mt-4 font-mono">HQ goodwill: {g.meters.confidence} · Host goodwill: {g.meters.goodwill}</p>
@@ -44,7 +44,7 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   return (
     <main className="mx-auto max-w-7xl retro-game px-3 py-4 sm:px-5">
       <header className="paper mb-4 flex flex-wrap items-center gap-4 px-4 py-3">
-        <Portrait face={c.face} size={48} />
+        <Portrait portrait={c.portrait} size={48} />
         <div className="mr-auto min-w-0 flex-1 basis-[240px]">
           <h1 className="text-xl font-bold leading-tight">Persona Non Grata — Chapter 1</h1>
           <p className="text-sm">{c.title} {c.name} · Acting Head of Mission</p>

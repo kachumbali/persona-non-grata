@@ -1,0 +1,383 @@
+[
+  {
+    "id": "diplomat-1",
+    "file": "diplomat-1.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Brown hair, red tie"
+  },
+  {
+    "id": "diplomat-2",
+    "file": "diplomat-2.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Blonde hair, pearls"
+  },
+  {
+    "id": "diplomat-3",
+    "file": "diplomat-3.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Bald, glasses"
+  },
+  {
+    "id": "diplomat-4",
+    "file": "diplomat-4.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Dark bob"
+  },
+  {
+    "id": "diplomat-5",
+    "file": "diplomat-5.png",
+    "gender": "male",
+    "age": "senior",
+    "look": "Grey hair, moustache"
+  },
+  {
+    "id": "diplomat-6",
+    "file": "diplomat-6.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Curly hair, gold hoops"
+  },
+  {
+    "id": "diplomat-7",
+    "file": "diplomat-7.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Slick hair, thin moustache"
+  },
+  {
+    "id": "diplomat-8",
+    "file": "diplomat-8.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Red hair, glasses"
+  },
+  {
+    "id": "player-09",
+    "file": "player-09.png",
+    "gender": "female",
+    "age": "young",
+    "look": "Young diplomat with badges"
+  },
+  {
+    "id": "player-10",
+    "file": "player-10.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Diplomat in headscarf"
+  },
+  {
+    "id": "player-11",
+    "file": "player-11.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Diplomat with glasses and dark bob"
+  },
+  {
+    "id": "player-12",
+    "file": "player-12.png",
+    "gender": "female",
+    "age": "senior",
+    "look": "Senior diplomat with grey hair"
+  },
+  {
+    "id": "player-13",
+    "file": "player-13.png",
+    "gender": "female",
+    "age": "young",
+    "look": "Diplomat with phone"
+  },
+  {
+    "id": "player-14",
+    "file": "player-14.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Red-haired diplomat with flag pin"
+  },
+  {
+    "id": "player-15",
+    "file": "player-15.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Diplomat with braids"
+  },
+  {
+    "id": "player-16",
+    "file": "player-16.png",
+    "gender": "female",
+    "age": "senior",
+    "look": "Senior diplomat with spectacles"
+  },
+  {
+    "id": "player-17",
+    "file": "player-17.png",
+    "gender": "male",
+    "age": "young",
+    "look": "Young diplomat with badges"
+  },
+  {
+    "id": "player-18",
+    "file": "player-18.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Diplomat with beard"
+  },
+  {
+    "id": "player-19",
+    "file": "player-19.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Diplomat with glasses"
+  },
+  {
+    "id": "player-20",
+    "file": "player-20.png",
+    "gender": "male",
+    "age": "senior",
+    "look": "Silver-haired diplomat"
+  },
+  {
+    "id": "player-21",
+    "file": "player-21.png",
+    "gender": "male",
+    "age": "young",
+    "look": "Diplomat with phone"
+  },
+  {
+    "id": "player-22",
+    "file": "player-22.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Bald diplomat with stained tie"
+  },
+  {
+    "id": "player-23",
+    "file": "player-23.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Curly-haired diplomat with moustache"
+  },
+  {
+    "id": "player-24",
+    "file": "player-24.png",
+    "gender": "male",
+    "age": "senior",
+    "look": "Senior diplomat with grey beard"
+  },
+  {
+    "id": "young-01",
+    "file": "young-01.png",
+    "gender": "female",
+    "age": "young",
+    "look": "Young intern with lanyard"
+  },
+  {
+    "id": "young-02",
+    "file": "young-02.png",
+    "gender": "male",
+    "age": "young",
+    "look": "Young intern with badge"
+  },
+  {
+    "id": "young-03",
+    "file": "young-03.png",
+    "gender": "female",
+    "age": "young",
+    "look": "Young diplomat with lanyard"
+  },
+  {
+    "id": "npc-anselm",
+    "file": "npc-anselm.png",
+    "gender": "male",
+    "age": "young",
+    "look": "Anselm Voss-Rietveld — Political & Press Officer · first posting",
+    "reservedFor": "anselm"
+  },
+  {
+    "id": "npc-pavel",
+    "file": "npc-pavel.png",
+    "gender": "male",
+    "age": "senior",
+    "look": "Pavel Oskarsen — Veteran Head of Administration",
+    "reservedFor": "pavel"
+  },
+  {
+    "id": "npc-sola",
+    "file": "npc-sola.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Sola Dewrin — Local Staff Chief",
+    "reservedFor": "sola"
+  },
+  {
+    "id": "npc-development",
+    "file": "npc-development.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Elise — Development Counsellor",
+    "reservedFor": "development"
+  },
+  {
+    "id": "npc-bianca",
+    "file": "npc-bianca.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Bianca Montefiore — Defence Attaché",
+    "reservedFor": "bianca"
+  },
+  {
+    "id": "npc-ines",
+    "file": "npc-ines.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Ines Thibault-Lund — Consul",
+    "reservedFor": "ines"
+  },
+  {
+    "id": "npc-press",
+    "file": "npc-press.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Lucien Falk — Digital & Public Diplomacy Officer",
+    "reservedFor": "press"
+  },
+  {
+    "id": "npc-maxim",
+    "file": "npc-maxim.png",
+    "gender": "male",
+    "age": "young",
+    "look": "Maxim — Intern",
+    "reservedFor": "maxim"
+  },
+  {
+    "id": "npc-ketu",
+    "file": "npc-ketu.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Ketu Marrimba — Embassy Chef",
+    "reservedFor": "ketu"
+  },
+  {
+    "id": "npc-protocol",
+    "file": "npc-protocol.png",
+    "gender": "male",
+    "age": "senior",
+    "look": "Director Ndao — Local Protocol Director",
+    "reservedFor": "protocol"
+  },
+  {
+    "id": "npc-eu",
+    "file": "npc-eu.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Celeste Norren — Head of the EU Delegation",
+    "reservedFor": "eu"
+  },
+  {
+    "id": "npc-fixer",
+    "file": "npc-fixer.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Marcel Deux — Unofficial intermediary",
+    "reservedFor": "fixer"
+  },
+  {
+    "id": "npc-journalist",
+    "file": "npc-journalist.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Ruth Vale — Press correspondent",
+    "reservedFor": "journalist"
+  },
+  {
+    "id": "npc-golf",
+    "file": "npc-golf.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Minister Bako — Deputy Foreign Minister",
+    "reservedFor": "golf"
+  },
+  {
+    "id": "npc-un",
+    "file": "npc-un.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Dr Amara Chen — UN Resident Coordinator",
+    "reservedFor": "un"
+  },
+  {
+    "id": "npc-amb-valdoria",
+    "file": "npc-amb-valdoria.png",
+    "gender": "female",
+    "age": "senior",
+    "look": "Ambassador Mara Velen — Ambassador of Valdoria",
+    "reservedFor": "amb-valdoria"
+  },
+  {
+    "id": "npc-amb-asteria",
+    "file": "npc-amb-asteria.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Ambassador Niko Arden — Ambassador of Denmark",
+    "reservedFor": "amb-asteria"
+  },
+  {
+    "id": "npc-port-officer",
+    "file": "npc-port-officer.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Mira Sene — Ombrazian Port Environment Officer",
+    "reservedFor": "port-officer"
+  },
+  {
+    "id": "npc-bar-insurer",
+    "file": "npc-bar-insurer.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Sofia da Costa — Portuguese Maritime Liaison",
+    "reservedFor": "bar-insurer"
+  },
+  {
+    "id": "npc-un-coordinator",
+    "file": "npc-un-coordinator.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Idra Venn — UN Programme Logistics Officer",
+    "reservedFor": "un-coordinator"
+  },
+  {
+    "id": "npc-eu-germany",
+    "file": "npc-eu-germany.png",
+    "gender": "male",
+    "age": "senior",
+    "look": "Klaus Weber — German Ambassador",
+    "reservedFor": "eu-germany"
+  },
+  {
+    "id": "npc-eu-france",
+    "file": "npc-eu-france.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Henri de Valois — French Ambassador",
+    "reservedFor": "eu-france"
+  },
+  {
+    "id": "npc-eu-malta",
+    "file": "npc-eu-malta.png",
+    "gender": "female",
+    "age": "mid",
+    "look": "Tanya Farrugia — Maltese Ambassador",
+    "reservedFor": "eu-malta"
+  },
+  {
+    "id": "npc-eu-sweden",
+    "file": "npc-eu-sweden.png",
+    "gender": "male",
+    "age": "mid",
+    "look": "Lars Lindqvist — Swedish Ambassador",
+    "reservedFor": "eu-sweden"
+  }
+]

@@ -5,7 +5,7 @@ import { delegationSucceeds, EMAILS, initialColleagues, locationStories, pairKey
 import { useGame } from "./store";
 
 beforeEach(() => {
-  useGame.getState().start({ title: "Mx", name: "Test", face: 0, bio: "", traits: [] });
+  useGame.getState().start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ day: 2, location: "embassy", events: [], handled: Object.fromEntries(EMAILS.map((email) => [email.id, "reply"])) });
 });
 afterEach(cleanup);
@@ -70,7 +70,7 @@ describe("embassy relationships", () => {
     useGame.setState({ day: 3, completedEvents: ["staff-sola-elise"], storyOutcomes: { "staff-sola-elise": { status: "chosen", choice: "instruct" } } });
     const saved = localStorage.getItem("persona-non-grata-save");
     expect(saved).toBeTruthy();
-    useGame.getState().start({ title: "Mx", name: "Other", face: 0, bio: "", traits: [] });
+    useGame.getState().start({ title: "Mx", name: "Other", portrait: "diplomat-1", bio: "", traits: [] });
     localStorage.setItem("persona-non-grata-save", saved!);
     await act(async () => { await useGame.persist.rehydrate(); });
     render(<PlaceScene onLeave={() => {}} />);

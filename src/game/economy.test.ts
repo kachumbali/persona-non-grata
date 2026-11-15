@@ -5,7 +5,7 @@ import { useGame } from "./store";
 
 const action = (id: string, overrides: Partial<PendingDecision> = {}): PendingDecision => ({ id, kind: "work", source: id, text: id, effects: {}, timeCost: 1, ...overrides });
 beforeEach(() => {
-  useGame.getState().start({ title: "Dr", name: "Economist", face: 0, bio: "", traits: [] });
+  useGame.getState().start({ title: "Dr", name: "Economist", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });
 });
 describe("Chapter 1 time and money", () => {

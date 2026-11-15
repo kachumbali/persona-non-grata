@@ -72,7 +72,7 @@ export function Conversation() {
   };
   return (
     <div className="dialogue-box" aria-label="Conversation">
-      <Portrait face={npc.face} size={96} />
+      <Portrait portrait={npc.portrait} size={96} />
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-2">
           <h3 className="text-xl">

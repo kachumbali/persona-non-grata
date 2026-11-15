@@ -1,12 +1,50 @@
-import face1 from "@/assets/portraits/diplomat-1.png";
-import face2 from "@/assets/portraits/diplomat-2.png";
-import face3 from "@/assets/portraits/diplomat-3.png";
-import face4 from "@/assets/portraits/diplomat-4.png";
-import face5 from "@/assets/portraits/diplomat-5.png";
-import face6 from "@/assets/portraits/diplomat-6.png";
-import face7 from "@/assets/portraits/diplomat-7.png";
-import face8 from "@/assets/portraits/diplomat-8.png";
-const faces = [face1, face2, face3, face4, face5, face6, face7, face8];
-export function Portrait({ face, size = 64 }: { face: number; size?: number }) {
-  return <img className="pixel-portrait" src={faces[((face % 8) + 8) % 8]} width={size} height={Math.round(size * 4 / 3)} alt={`Diplomat portrait ${face + 1}`} />;
+import portraits from "../data/portraits.json";
+import campaignData from "../data/campaign.json";
+
+if (import.meta.env.DEV) {
+  const assigned = new Map<string, string[]>();
+  for (const npc of campaignData.characters) {
+    const names = assigned.get(npc.portrait) ?? [];
+    names.push(npc.id);
+    assigned.set(npc.portrait, names);
+  }
+  for (const [portrait, names] of assigned) {
+    if (names.length > 1)
+      console.warn(`Portrait ${portrait} is shared by NPCs: ${names.join(", ")}`);
+  }
+}
+
+const images = import.meta.glob<string>("@/assets/portraits/*.png", {
+  eager: true,
+  import: "default",
+});
+
+export function Portrait({ portrait, size = 64 }: { portrait?: string; size?: number }) {
+  const id = portrait;
+  const entry = portraits.find((item) => item.id === id);
+  const src = entry && images[`/src/assets/portraits/${entry.file}`];
+  const height = Math.round((size * 4) / 3);
+  if (!src)
+    return (
+      <span
+        className="pixel-portrait"
+        role="img"
+        aria-label="Unknown portrait"
+        style={{ width: size, height, display: "grid", placeItems: "center" }}
+      >
+        <svg viewBox="0 0 96 128" width="100%" height="100%" aria-hidden="true">
+          <circle cx="48" cy="43" r="19" fill="currentColor" />
+          <path d="M12 120c2-34 16-51 36-51s34 17 36 51" fill="currentColor" />
+        </svg>
+      </span>
+    );
+  return (
+    <img
+      className="pixel-portrait"
+      src={src}
+      width={size}
+      height={height}
+      alt={`Portrait: ${entry.look}`}
+    />
+  );
 }
