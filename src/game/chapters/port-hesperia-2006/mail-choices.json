@@ -55,18 +55,78 @@
     "note": "File the request without submitting"
   },
   "visit-lounge": {
-    "reply": "Pay for the lounge reservation",
-    "delegate": "Ask Pavel to negotiate the reservation",
+    "reply": "Pay the lounge deposit",
+    "delegate": "Ask Pavel to negotiate the deposit",
     "note": "Leave the provisional booking unconfirmed"
   },
   "visit-security": {
-    "reply": "Book vehicles and approve the route",
-    "delegate": "Ask the security team to arrange the convoy",
-    "note": "Leave the convoy plan unapproved"
+    "reply": "Drive the route and approve it",
+    "delegate": "Ask the security team to drive it",
+    "note": "Leave the route undriven"
   },
   "visit-programme": {
-    "reply": "Reconcile and approve the programme",
+    "reply": "Reconcile and agree the programme",
     "delegate": "Ask Pavel and Sola to confirm the programme",
-    "note": "File the draft without approval"
+    "note": "File the draft without agreement"
+  },
+  "visit-amendments": {
+    "reply": "Absorb the amendments yourself",
+    "delegate": "Ask Anselm to absorb them",
+    "note": "Take note of the amendments"
+  },
+  "visit-stamp": {
+    "reply": "Request the stamp in person",
+    "delegate": "Ask Ines to request it",
+    "note": "Leave the confirmation unstamped"
+  },
+  "visit-guestlist": {
+    "reply": "Send the final guest list",
+    "delegate": "Ask Ketu to prepare it",
+    "note": "Leave the list as categories"
+  },
+  "visit-motorcade": {
+    "reply": "Book the vehicles and escort",
+    "delegate": "Ask Bianca to book them",
+    "note": "Leave the motorcade unbooked"
+  },
+  "visit-print": {
+    "reply": "Approve the final programme",
+    "delegate": "Ask Pavel and Sola to print it",
+    "note": "File the programme in draft"
+  },
+  "setback-arrival": {
+    "reply": "Acknowledge the new time",
+    "delegate": "Ask Anselm to circulate it",
+    "note": "Take note of the revision"
+  },
+  "setback-form": {
+    "reply": "Thank Protocol for the version",
+    "delegate": "Ask Sola to find version 7.3",
+    "note": "Take note of the new version"
+  },
+  "setback-delegation": {
+    "reply": "Advise everyone in order of rank",
+    "delegate": "Ask Pavel to advise the lounge",
+    "note": "Take note of the delegation"
+  },
+  "setback-parade": {
+    "reply": "Ask whether the Minister may join",
+    "delegate": "Ask Bianca to find a route",
+    "note": "Take note of the parade"
+  },
+  "arrival-eve": {
+    "reply": "Confirm that all is ready",
+    "delegate": "Ask Anselm to confirm",
+    "note": "Take note of the arrival"
+  },
+  "arrival-landed": {
+    "reply": "Meet the aircraft yourself",
+    "delegate": "Ask Pavel to meet it",
+    "note": "Take note of the aircraft"
+  },
+  "arrival-programme": {
+    "reply": "Present the printed programme",
+    "delegate": "Ask Anselm to hand it over",
+    "note": "Take note of the request"
   }
 }

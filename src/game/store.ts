@@ -11,6 +11,25 @@ import {
 import { create } from "zustand";
 import { activeChapter, activeChapterId, DEFAULT_CHAPTER_ID } from "./chapters";
 import { dueInvitations } from "./calendar";
+import {
+  applySetbacks,
+  emptyProgress,
+  findStep,
+  inPersonBlock,
+  missionReserve,
+  nextStep,
+  parseStepRef,
+  progressFromVisit,
+  setbacksBefore,
+  stepCash,
+  stepContext,
+  stepDone,
+  stepLabel,
+  stepStatus,
+  stepsOf,
+  taskComplete,
+  type MissionProgress,
+} from "./mission";
 import { createJSONStorage, persist } from "zustand/middleware";
 import {
   absTime,
@@ -82,6 +101,10 @@ export interface GameState {
   log: LogEntry[];
   goodwillHistory: GoodwillChange[];
   visit: VisitStatus;
+  /** Ids of the mission steps done, by task. `visit[task]` is true when all of a task's are. */
+  missionSteps: MissionProgress;
+  /** Ids of the setbacks that have already landed. */
+  setbacksApplied: string[];
   ending: Ending | null;
   location: string;
   room: string;
@@ -170,6 +193,8 @@ const initialState = () => {
     log: [],
     goodwillHistory: [],
     visit: {},
+    missionSteps: emptyProgress(),
+    setbacksApplied: [] as string[],
     ending: null,
     location: m.startLocation,
     room: m.startRoom,
@@ -200,6 +225,33 @@ const initialState = () => {
 };
 /** Diplo-Points spent on every trip across town. */
 export const TRAVEL_DP = 1;
+
+/**
+ * A decision that works on a mission task must name a step that can be done now. A decision that
+ * names only the task works on its next step. Returns the decision with the step and its cash
+ * filled in, or the reason it cannot be queued.
+ */
+export function resolveStep(
+  s: Pick<GameState, "day" | "missionSteps" | "colleagues" | "setbacksApplied">,
+  decision: PendingDecision,
+): PendingDecision | string {
+  if (!decision.task) return decision;
+  const step = decision.step
+    ? findStep(decision.task, decision.step)
+    : nextStep(s.missionSteps, decision.task);
+  if (!step) return decision.step ? `${decision.task}: no such mission step.` : decision;
+  const label = stepLabel(step, decision.task, s.setbacksApplied);
+  const status = stepStatus(stepContext(s), decision.task, step.id);
+  if (status.state === "done") return `${label} is already done.`;
+  if (status.state === "blocked") return `Not yet: ${label} (${status.reason}).`;
+  const inPerson =
+    decision.kind === "work" ? !decision.worker : decision.emailAction !== "delegate";
+  const trustBlock = inPerson ? inPersonBlock(step, s.colleagues) : null;
+  if (trustBlock) return `${label}: in person it ${trustBlock}. Send a colleague with the skill.`;
+  const stepCost = stepCash(step, decision.task, s.setbacksApplied);
+  const base = decision.cashCost ?? Math.max(0, -(decision.effects.budget ?? 0) * 100);
+  return { ...decision, step: step.id, stepCost, cashCost: base + stepCost };
+}
 
 export const useGame = create<GameState>()(
   persist<GameState, [], [], SavedGame>(
@@ -302,9 +354,15 @@ export const useGame = create<GameState>()(
       },
       moveRoom: (room) => set({ room }),
       selectNpc: (selectedNpc) => set({ selectedNpc }),
-      queue: (decision, replacePlayer = false) => {
+      queue: (requested, replacePlayer = false) => {
         const s = get();
         if (!s.character || s.ending) return false;
+        const stepped = resolveStep(s, requested);
+        if (typeof stepped === "string") {
+          set({ planError: stepped });
+          return false;
+        }
+        const decision = stepped;
         if (replacePlayer && s.pending.some((p) => p.remainingBlocks === 1)) {
           set({ planError: "The second half of your golf round is already committed." });
           return false;
@@ -343,7 +401,8 @@ export const useGame = create<GameState>()(
                   p.emailId ||
                   p.eventId ||
                   p.special ||
-                  (p.task && s.visit[p.task]) ||
+                  (p.task &&
+                    (p.step ? stepDone(s.missionSteps, p.task, p.step) : s.visit[p.task])) ||
                   p.remainingBlocks,
               )
             ? "Yesterday's plan contains completed or one-off commitments. Plan those again individually."
@@ -426,13 +485,15 @@ export const useGame = create<GameState>()(
               effects: { confidence: -2, sanity: -1 },
             })
           : o;
+        const confirmed = parseStepRef(actual.confirmsStep);
         get().queue({
           id: `email-${id}`,
           kind: "email",
           source: e.subject,
           text: accident ? `${actual.text} (Reply-All Reflex: accidental reply all.)` : actual.text,
           effects: actual.effects,
-          task: actual.confirms,
+          task: confirmed?.task,
+          step: confirmed?.step,
           formal: actual.formal,
           traitChoice: actual.requiresTrait,
           emailId: id,
@@ -445,21 +506,26 @@ export const useGame = create<GameState>()(
         const item = s.pending.find((p) => p.emailId === id && p.recall);
         if (!item?.recall) return;
         const original = item.recall;
-        const plan = s.pending.map((p) =>
-          p === item
-            ? {
-                ...p,
-                text: `${original.text} (Accidental reply recalled.)`,
-                effects: original.effects,
-                task: original.confirms,
-                formal: original.formal,
-                traitChoice: original.requiresTrait,
-                emailAction: "reply" as const,
-                recall: undefined,
-                timeCost: 2,
-              }
-            : p,
-        );
+        const confirmed = parseStepRef(original.confirmsStep);
+        const restored = resolveStep(s, {
+          ...item,
+          text: `${original.text} (Accidental reply recalled.)`,
+          effects: original.effects,
+          task: confirmed?.task,
+          step: confirmed?.step,
+          stepCost: undefined,
+          cashCost: undefined,
+          formal: original.formal,
+          traitChoice: original.requiresTrait,
+          emailAction: "reply" as const,
+          recall: undefined,
+          timeCost: 2,
+        });
+        if (typeof restored === "string") {
+          set({ planError: restored });
+          return;
+        }
+        const plan = s.pending.map((p) => (p === item ? restored : p));
         const error = validatePlan(
           plan,
           s.block,
@@ -486,6 +552,10 @@ export const useGame = create<GameState>()(
           return;
         }
         const economy = { ...s.economy };
+        const missionSteps: MissionProgress = Object.fromEntries(
+          Object.entries(s.missionSteps).map(([task, ids]) => [task, [...ids]]),
+        );
+        let setbacksApplied = [...s.setbacksApplied];
         const stats = computeStats(s.character.traits);
         let hangover = s.block === 0 ? false : s.hangover;
         const visit = { ...s.visit };
@@ -538,7 +608,7 @@ export const useGame = create<GameState>()(
           }
         }
         for (const p of s.pending) {
-          economy.funds -= decisionCash(p);
+          economy.funds -= decisionCash(p) - (p.stepCost ?? 0);
           if ((p.effects.budget ?? 0) > 0) economy.funds += (p.effects.budget ?? 0) * 100;
           if (p.special === "supplement") {
             economy.supplementUsed = true;
@@ -554,6 +624,7 @@ export const useGame = create<GameState>()(
             continue;
           }
           let success = true;
+          const stepDef = p.task && p.step ? findStep(p.task, p.step) : undefined;
           if (p.kind === "work" && p.worker && p.task)
             success = delegationSucceeds(
               p.worker,
@@ -562,9 +633,12 @@ export const useGame = create<GameState>()(
               relationships,
               p.partner,
               s.block,
+              stepDef?.skill ?? p.task,
             );
           let text = success
-            ? p.text
+            ? p.kind === "work" && stepDef
+              ? `${p.source}: ${stepDef.result}`
+              : p.text
             : `${p.source}: work stalled. Check skills, fatigue, trust and cooperation before reassigning.`;
           const formal = success && p.formal ? formalBonus(stats.gravitas) : 0;
           const effects = success
@@ -575,9 +649,29 @@ export const useGame = create<GameState>()(
             : { confidence: -2, morale: -1 };
           if (formal) text += ` (Gravitas +${formal} HQ goodwill)`;
           record(p.source, text, effects);
-          if (success && p.task) {
+          if (success && p.task && stepDef && p.step) {
+            // A step is done once; a second decision on it (a mail after the work) changes nothing.
+            if (!stepDone(missionSteps, p.task, p.step)) {
+              const paid = stepCash(stepDef, p.task, setbacksApplied);
+              economy.funds -= paid;
+              missionSteps[p.task] = [...(missionSteps[p.task] ?? []), p.step];
+              economy.missionReserve = missionReserve(missionSteps);
+              if (taskComplete(missionSteps, p.task)) {
+                if (!visit[p.task]) score += 10;
+                visit[p.task] = true;
+                results.push({
+                  day: s.day,
+                  time: s.minute,
+                  text: `${activeChapter().manifest.missionTasks[p.task] ?? p.task}: confirmed in full.`,
+                });
+              }
+            }
+          } else if (success && p.task && !p.step) {
+            // A decision queued before the steps existed: it confirmed the whole task.
             if (!visit[p.task]) score += 10;
             visit[p.task] = true;
+            missionSteps[p.task] = stepsOf(p.task).map((x) => x.id);
+            economy.missionReserve = missionReserve(missionSteps);
           }
           const rewardKey = `reward:${p.source}`;
           if (success && !storyFlags.includes(rewardKey)) {
@@ -777,8 +871,34 @@ export const useGame = create<GameState>()(
             if (ending) break;
           }
         }
-        const block = s.block === 3 ? 0 : s.block + 1;
-        const day = s.block === 3 ? s.day + 1 : s.day;
+        // The last day is played: the posting ends when its final block has resolved.
+        const finishing = s.day >= lastDay() && s.block === 3;
+        const block = s.block === 3 ? (finishing ? 3 : 0) : s.block + 1;
+        const day = s.block === 3 && !finishing ? s.day + 1 : s.day;
+        if (day !== s.day) {
+          // Capital and the host change the arrangements overnight.
+          const landed = applySetbacks(day, missionSteps, setbacksApplied);
+          setbacksApplied = landed.applied;
+          for (const task of Object.keys(landed.progress)) {
+            missionSteps[task] = landed.progress[task] ?? [];
+          }
+          for (const { id, text } of landed.texts) {
+            const setback = activeChapter().manifest.setbacks.find((x) => x.id === id);
+            const reopened = landed.reopened
+              .filter((r) => setback?.targets.some((t) => t.task === r.task && t.step === r.step))
+              .map((r) => {
+                visit[r.task] = false;
+                const step = findStep(r.task, r.step);
+                return step ? stepLabel(step, r.task, setbacksApplied) : r.step;
+              });
+            results.push({
+              day,
+              time: blocks()[0]?.time ?? 480,
+              text: `${text}${reopened.length ? ` Reopened: ${reopened.join("; ")}.` : ""}`,
+            });
+          }
+          economy.missionReserve = missionReserve(missionSteps);
+        }
         if (!ending && day !== s.day) {
           for (const event of expiredStories(
             campaign().events as StoryEvent[],
@@ -843,7 +963,7 @@ export const useGame = create<GameState>()(
             );
           }
         }
-        ending = ending ?? pickEnding(meters, day >= lastDay(), visit);
+        ending = ending ?? pickEnding(meters, finishing, visit);
         const todayPlans = { ...s.todayPlans, [s.block]: s.pending };
         const carry = s.pending
           .filter((p) => (p.remainingBlocks ?? 0) > 1)
@@ -860,6 +980,8 @@ export const useGame = create<GameState>()(
           minute,
           meters,
           visit,
+          missionSteps,
+          setbacksApplied,
           score,
           energy,
           composure,
@@ -891,20 +1013,25 @@ export const useGame = create<GameState>()(
         setItem: () => {},
         removeItem: () => {},
       })),
-      version: 9,
+      version: 10,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
-        const economy = old.economy ?? {
-          ...initialEconomy(),
-          funds: Math.max(
-            startRingFence(),
-            Math.round(
-              (((old.meters as (Meters & { budget?: number }) | undefined)?.budget ?? 60) / 60) *
-                10000,
+        const economy = {
+          ...(old.economy ?? {
+            ...initialEconomy(),
+            funds: Math.max(
+              startRingFence(),
+              Math.round(
+                (((old.meters as (Meters & { budget?: number }) | undefined)?.budget ?? 60) / 60) *
+                  10000,
+              ),
             ),
-          ),
+          }),
         };
         const block = old.block ?? 0;
+        // A task that was confirmed has all its steps done; setbacks of past days have landed.
+        const missionSteps = old.missionSteps ?? progressFromVisit(old.visit ?? {});
+        economy.missionReserve = missionReserve(missionSteps);
         // Keep stable IDs and the exact obligations; only refresh the former fictional EU name in pending text.
         const pending = (old.pending ?? []).map((item) =>
           item.eventId?.startsWith("asteria-")
@@ -938,6 +1065,8 @@ export const useGame = create<GameState>()(
         return {
           ...initialState(),
           ...old,
+          missionSteps,
+          setbacksApplied: old.setbacksApplied ?? setbacksBefore(old.day ?? 1),
           chapterId: old.chapterId ?? DEFAULT_CHAPTER_ID,
           character: old.character
             ? (() => {
@@ -972,9 +1101,20 @@ export const useGame = create<GameState>()(
       // New characters join existing saves without resetting established relationships.
       merge: (saved, current) => {
         const old = (saved ?? {}) as Partial<SavedGame>;
+        // Postings saved before the mission steps: a confirmed task has all its steps done.
+        const missionSteps = old.missionSteps ?? progressFromVisit(old.visit ?? {});
+        const economy = old.economy
+          ? {
+              ...old.economy,
+              missionReserve: old.economy.missionReserve ?? missionReserve(missionSteps),
+            }
+          : current.economy;
         return {
           ...current,
           ...old,
+          economy,
+          missionSteps,
+          setbacksApplied: old.setbacksApplied ?? setbacksBefore(old.day ?? 1),
           colleagues: { ...initialColleagues(), ...(old.colleagues ?? {}) },
         };
       },

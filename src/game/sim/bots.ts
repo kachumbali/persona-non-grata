@@ -18,25 +18,29 @@ export interface Bot {
 
 // ---- shared habits ------------------------------------------------------------------------
 
-/** Confirm open mission tasks. `suitable` delegates by skill; otherwise to whoever is free. */
+/**
+ * Work on the mission: for each task whose next step can be done now, delegate it (by skill, or to
+ * whoever is free) or, if `self`, do it in person. `skipMail` leaves steps that a mail offers to
+ * confirm for the mail (the bot that never reads its mail never does them).
+ */
 function missionWork(
   p: Player,
-  o: { suitable: boolean; max: number; cashFloor?: number; self?: boolean },
+  o: { suitable: boolean; max: number; self?: boolean; skipMail?: boolean },
 ): number {
   if (p.s.block === 3) return 0;
   let done = 0;
   for (const task of p.openTasks()) {
     if (done >= o.max) break;
-    if (p.s.pending.some((x) => x.task === task)) continue;
-    const cost = task === "lounge" ? 500 : task === "security" ? 400 : 0;
-    if (cost && p.available() < cost + (o.cashFloor ?? 0)) continue;
+    const step = p.openStep(task);
+    if (!step) continue;
+    if (o.skipMail && p.stepHasMail(task, step.id)) continue;
     const workers = o.suitable ? p.suitableStaff(task) : p.rng.shuffle(p.staff().map((c) => c.id));
     let ok = false;
     for (const worker of workers) {
       ok = p.delegateTask(task, worker);
       if (ok) break;
     }
-    if (!ok && o.self && p.freeDP() >= 2) ok = p.selfTask(task);
+    if (!ok && o.self && p.freeDP() >= (step.dp ?? 2)) ok = p.selfTask(task);
     if (ok) done++;
   }
   return done;
@@ -95,7 +99,7 @@ function carefulPlan(p: Player, extras: { press: boolean; leads: boolean }) {
   goHomeForFax(p);
   restIfLow(p, 30);
   // Mission first. Delegating costs staff time, not the player's.
-  missionWork(p, { suitable: true, max: 2, cashFloor: 300 });
+  missionWork(p, { suitable: true, max: 2, self: p.s.day >= 9 });
   const event = p.currentEvent();
   if (event) p.respondEvent(event, "best");
   attendInvitations(p);
@@ -123,7 +127,7 @@ function carefulPlan(p: Player, extras: { press: boolean; leads: boolean }) {
 export const careful: Bot = {
   id: "careful",
   description:
-    "Mission tasks first (delegated by skill), answers every email with the best-looking option, attends invitations, rests when tired, stays within budget.",
+    "Mission steps as soon as each opens (delegated by skill), answers every email with the best-looking option, attends invitations, rests when tired, stays within budget.",
   traitBias: 0.5,
   overload: "ifNeeded",
   plan: (p) => carefulPlan(p, { press: false, leads: false }),
@@ -141,7 +145,7 @@ export const pressReader: Bot = {
 export const socialiser: Bot = {
   id: "socialiser",
   description:
-    "Coffees, lunches, dinners and conversations; attends everything; takes trait-tagged choices when offered; tends the mission only when mail or the deadline forces it.",
+    "Coffees, lunches, dinners and conversations; attends everything; takes trait-tagged choices when offered; tends the mission only when mail or the deadline forces it (from Day 10).",
   traitBias: 0.9,
   overload: "ifNeeded",
   plan: (p) => {
@@ -167,7 +171,7 @@ export const socialiser: Bot = {
         if (place) p.travel(place.id);
       }
     }
-    if (p.s.day >= 11) missionWork(p, { suitable: true, max: 2, self: true });
+    if (p.s.day >= 10) missionWork(p, { suitable: true, max: 2, self: true });
     // The social calendar: one outing a block, then talk to whoever is in the room.
     const company = p.rng.shuffle(p.peopleHere());
     const guest = company[0] ?? p.rng.pick(p.staff().map((c) => c.id));
@@ -219,13 +223,13 @@ export const reckless: Bot = {
 export const ignorer: Bot = {
   id: "ignorer",
   description:
-    "Never opens mail, skips the press review, ignores invitations and episodes, and only does the mission tasks.",
+    "Never opens mail, skips the press review, ignores invitations and episodes, and only does the mission steps that no mail offers to confirm.",
   traitBias: 0,
   overload: "ifNeeded",
   plan: (p) => {
     p.skipPress();
     if (p.s.location !== p.office && p.freeDP() >= 3) p.travel(p.office);
-    missionWork(p, { suitable: true, max: 1, self: true });
+    missionWork(p, { suitable: true, max: 1, self: true, skipMail: true });
   },
 };
 

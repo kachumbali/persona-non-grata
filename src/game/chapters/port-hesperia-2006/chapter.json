@@ -10,10 +10,26 @@
   "missionActor": "Minister",
   "days": 15,
   "blocks": [
-    { "name": "Morning", "time": 480, "social": "Coffee break I" },
-    { "name": "Midday", "time": 720, "social": "Lunch" },
-    { "name": "Afternoon", "time": 900, "social": "Coffee break II" },
-    { "name": "Evening", "time": 1140, "social": "Dinner" }
+    {
+      "name": "Morning",
+      "time": 480,
+      "social": "Coffee break I"
+    },
+    {
+      "name": "Midday",
+      "time": 720,
+      "social": "Lunch"
+    },
+    {
+      "name": "Afternoon",
+      "time": 900,
+      "social": "Coffee break II"
+    },
+    {
+      "name": "Evening",
+      "time": 1140,
+      "social": "Dinner"
+    }
   ],
   "missionTasks": {
     "clearance": "Plane landing clearance",
@@ -48,18 +64,48 @@
     }
   },
   "endingRules": [
-    { "ending": "png", "meterAtMost": { "goodwill": 0 } },
-    { "ending": "replaced", "meterAtMost": { "confidence": 0 } },
-    { "ending": "retired", "meterAtMost": { "sanity": 0 } },
-    { "ending": "cancelled", "finalDay": true, "missionIncomplete": true },
+    {
+      "ending": "png",
+      "meterAtMost": {
+        "goodwill": 0
+      }
+    },
+    {
+      "ending": "replaced",
+      "meterAtMost": {
+        "confidence": 0
+      }
+    },
+    {
+      "ending": "retired",
+      "meterAtMost": {
+        "sanity": 0
+      }
+    },
+    {
+      "ending": "cancelled",
+      "finalDay": true,
+      "missionIncomplete": true
+    },
     {
       "ending": "promoted",
       "finalDay": true,
-      "meterAtLeast": { "confidence": 65, "goodwill": 50 }
+      "meterAtLeast": {
+        "confidence": 65,
+        "goodwill": 50
+      }
     },
-    { "ending": "ambassador", "finalDay": true }
+    {
+      "ending": "ambassador",
+      "finalDay": true
+    }
   ],
-  "startMeters": { "confidence": 55, "goodwill": 50, "morale": 50, "sanity": 70 },
+  "startMeters": {
+    "confidence": 55,
+    "goodwill": 50,
+    "morale": 50,
+    "sanity": 70
+  },
   "startEnergy": 80,
   "startComposure": 75,
   "startTrust": 50,
@@ -67,8 +113,16 @@
   "officeLocation": "embassy",
   "startRoom": "office",
   "startRelationships": [
-    { "a": "anselm", "b": "pavel", "value": 20 },
-    { "a": "sola", "b": "development", "value": 35 }
+    {
+      "a": "anselm",
+      "b": "pavel",
+      "value": 20
+    },
+    {
+      "a": "sola",
+      "b": "development",
+      "value": 35
+    }
   ],
   "openingLog": "The Ambassador is absent. You are the Deputy, now acting head of mission. Plan your first morning.",
   "economy": {
@@ -80,8 +134,204 @@
       "Gifts": 400,
       "Generator fuel": 500
     },
-    "supplement": { "amount": 1500, "goodwillCost": 5, "delay": 2 },
-    "reserveRelease": { "amount": 500, "goodwillCost": 5 },
-    "lateFuel": { "protectedFlag": "fuel-protected", "cost": 400 }
-  }
+    "supplement": {
+      "amount": 1500,
+      "goodwillCost": 5,
+      "delay": 2
+    },
+    "reserveRelease": {
+      "amount": 500,
+      "goodwillCost": 5
+    },
+    "lateFuel": {
+      "protectedFlag": "fuel-protected",
+      "cost": 400
+    }
+  },
+  "missionSteps": {
+    "clearance": [
+      {
+        "id": "note-verbale",
+        "label": "Note verbale to the Foreign Ministry",
+        "short": "the note verbale",
+        "earliestDay": 1,
+        "result": "The note verbale is delivered and receives a reference number. A reference number is not an answer, but it is filed like one."
+      },
+      {
+        "id": "landing-form",
+        "label": "Overflight and landing form, correct version",
+        "short": "the landing form",
+        "earliestDay": 5,
+        "result": "Protocol accepts the landing form in the version in force and initials every page except the one that matters."
+      },
+      {
+        "id": "protocol-stamp",
+        "label": "Protocol's stamped confirmation",
+        "short": "Protocol's stamp",
+        "earliestDay": 10,
+        "cash": 100,
+        "requiresTrust": {
+          "character": "protocol",
+          "min": 55
+        },
+        "result": "Director Ndao's office stamps the confirmation, for a small fee. The stamp is the right stamp and is kept under glass."
+      }
+    ],
+    "lounge": [
+      {
+        "id": "reservation",
+        "label": "Provisional lounge reservation",
+        "short": "the provisional booking",
+        "earliestDay": 2,
+        "dp": 1,
+        "result": "The airport enters a provisional hold for the Minister. 'Provisional' is underlined twice."
+      },
+      {
+        "id": "deposit",
+        "label": "Lounge deposit paid",
+        "short": "the lounge deposit",
+        "earliestDay": 6,
+        "cash": 500,
+        "result": "The deposit is paid and a receipt issued in triplicate. The lounge is confirmed, subject to the guest list."
+      },
+      {
+        "id": "guest-list",
+        "label": "Final guest list accepted",
+        "short": "the final guest list",
+        "earliestDay": 9,
+        "requiresStep": {
+          "task": "programme",
+          "step": "amendments"
+        },
+        "result": "The airport accepts forty-one names for a lounge of twelve and describes it as a reception."
+      }
+    ],
+    "programme": [
+      {
+        "id": "first-draft",
+        "label": "First draft programme to Capital",
+        "short": "the programme draft",
+        "earliestDay": 1,
+        "result": "The first draft reaches Capital, which acknowledges receipt and reserves its position."
+      },
+      {
+        "id": "amendments",
+        "label": "Capital's amendments absorbed",
+        "short": "Capital's amendments",
+        "earliestDay": 7,
+        "result": "Capital's eleven amendments are absorbed. Nine of them contradict the other two."
+      },
+      {
+        "id": "host-agreement",
+        "label": "Host agreement on the programme",
+        "short": "the host agreement",
+        "earliestDay": 10,
+        "requiresStep": {
+          "task": "clearance",
+          "step": "landing-form"
+        },
+        "result": "The Ministry agrees the programme, subject to the programme."
+      },
+      {
+        "id": "final-print",
+        "label": "Final printed programme",
+        "short": "the printed programme",
+        "earliestDay": 13,
+        "result": "The programme is printed, bound and approved by both sides. It is dated Day 15 and wrong only in the minor details."
+      }
+    ],
+    "security": [
+      {
+        "id": "advance-team",
+        "label": "Advance team request",
+        "short": "the advance team request",
+        "earliestDay": 3,
+        "result": "The advance team request is filed. The Security Desk acknowledges it with a request for the advance team."
+      },
+      {
+        "id": "route-recon",
+        "label": "Route reconnaissance",
+        "short": "the route reconnaissance",
+        "earliestDay": 8,
+        "result": "The route is driven twice, once in each direction. Both directions are recorded as satisfactory."
+      },
+      {
+        "id": "motorcade",
+        "label": "Motorcade and escort confirmed",
+        "short": "the motorcade",
+        "earliestDay": 12,
+        "cash": 400,
+        "result": "Vehicles and escort are confirmed in writing. The vehicles are described as 'available in principle'."
+      }
+    ]
+  },
+  "setbacks": [
+    {
+      "id": "arrival-moves",
+      "day": 8,
+      "mail": "setback-arrival",
+      "text": "Capital moves the Minister's arrival forward by one hour and forty minutes.",
+      "targets": [
+        {
+          "task": "programme",
+          "step": "amendments"
+        },
+        {
+          "task": "programme",
+          "step": "host-agreement",
+          "label": "Host agreement on the new arrival time"
+        },
+        {
+          "task": "security",
+          "step": "motorcade",
+          "label": "Motorcade and escort for the new arrival time",
+          "cashDelta": 100
+        }
+      ]
+    },
+    {
+      "id": "form-superseded",
+      "day": 9,
+      "mail": "setback-form",
+      "text": "Protocol supersedes the landing form with version 7.3.",
+      "targets": [
+        {
+          "task": "clearance",
+          "step": "landing-form",
+          "label": "Landing form, version 7.3"
+        }
+      ]
+    },
+    {
+      "id": "delegation-grows",
+      "day": 11,
+      "mail": "setback-delegation",
+      "text": "The Minister's delegation has grown by six.",
+      "targets": [
+        {
+          "task": "lounge",
+          "step": "guest-list",
+          "label": "Guest list for the enlarged delegation"
+        },
+        {
+          "task": "programme",
+          "step": "final-print",
+          "label": "Final printed programme, with annex F"
+        }
+      ]
+    },
+    {
+      "id": "route-closed",
+      "day": 12,
+      "mail": "setback-parade",
+      "text": "The city closes the motorcade route for a parade.",
+      "targets": [
+        {
+          "task": "security",
+          "step": "route-recon",
+          "label": "Route reconnaissance, parade route"
+        }
+      ]
+    }
+  ]
 }

@@ -31,6 +31,12 @@ const fixture: ChapterPack = {
       { name: "D", time: 1140, social: "Dinner" },
     ],
     missionTasks: { t1: "The only task" },
+    missionSteps: {
+      t1: [
+        { id: "only", label: "The only step", short: "the step", earliestDay: 1, result: "Done." },
+      ],
+    },
+    setbacks: [],
     endings: {
       win: { title: "Done", text: "The inspector is satisfied." },
       fail: { title: "Not done", text: "The inspector is not." },
@@ -115,6 +121,14 @@ describe("chapter packs", () => {
       useGame.getState().advance();
     }
     g = useGame.getState();
+    // The last day is played: the ending comes when its final block has resolved.
+    expect(g.day).toBe(2);
+    expect(g.ending).toBeNull();
+    for (let i = 0; i < 4; i++) {
+      expect(useGame.getState().ending).toBeNull();
+      useGame.getState().advance();
+    }
+    g = useGame.getState();
     expect(g.day).toBe(2);
     expect(g.ending).toBe("fail");
     expect(fixture.manifest.endings[g.ending!]?.title).toBe("Not done");
@@ -124,8 +138,21 @@ describe("chapter packs", () => {
     registerChapter(fixture);
     setActiveChapter("test-fixture");
     useGame.getState().start(character);
-    useGame.setState({ visit: { t1: true } });
-    for (let i = 0; i < 4; i++) useGame.getState().advance();
+    // Doing the task's only step confirms it; the step cash is drawn from the mission reserve.
+    expect(
+      useGame.getState().queue({
+        id: "player-work",
+        kind: "work",
+        playerSlot: true,
+        task: "t1",
+        source: "You",
+        text: "",
+        effects: {},
+        timeCost: 2,
+      }),
+    ).toBe(true);
+    for (let i = 0; i < 8; i++) useGame.getState().advance();
+    expect(useGame.getState().visit["t1"]).toBe(true);
     expect(useGame.getState().ending).toBe("win");
   });
 
@@ -143,7 +170,7 @@ describe("chapter packs", () => {
     const migrate = useGame.persist.getOptions().migrate!;
     const migrated = (await migrate({ day: 3 }, 8)) as { chapterId: string };
     expect(migrated.chapterId).toBe("port-hesperia-2006");
-    expect(useGame.persist.getOptions().version).toBe(9);
+    expect(useGame.persist.getOptions().version).toBe(10);
   });
 
   it("rejects unknown chapters", () => {

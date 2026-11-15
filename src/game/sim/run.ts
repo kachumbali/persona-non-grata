@@ -12,7 +12,9 @@ import {
   lastDay,
   missionTasks,
   startMeters,
+  visitReady,
 } from "../rules";
+import { nextStep, stepContext, stepStatus, stepsOf } from "../mission";
 import type { Meters } from "../rules";
 import { useGame } from "../store";
 import { botById, type Bot, type BotId } from "./bots";
@@ -58,6 +60,15 @@ export interface RunResult {
   lowestAvailable: number;
   missionConfirmed: string[];
   missionTotal: number;
+  /** The day the mission was last completed (every task confirmed); null if it was not. */
+  missionCompleteDay: number | null;
+  /** Mission steps done and the total number of steps. */
+  stepsDone: number;
+  stepsTotal: number;
+  /** Times the store refused a mission step for lack of funds. */
+  missionMoneyRefusals: number;
+  /** Blocks with nothing waiting and no mission step that could be done either. */
+  idleBlocksNoStep: number;
   score: number;
   /** Trait-tagged choices taken, by trait (a choice that failed or was recalled is not counted). */
   traitChoices: Record<string, number>;
@@ -129,6 +140,8 @@ function play(options: SimOptions, chapterId: string): RunResult {
   const idleByDay: number[] = Array.from({ length: days + 1 }, () => 0);
   let conflictBlocks = 0,
     idleBlocks = 0,
+    idleBlocksNoStep = 0,
+    missionCompleteDay: number | null = null,
     emptyPlans = 0,
     blocksPlayed = 0,
     stalls = 0;
@@ -151,8 +164,11 @@ function play(options: SimOptions, chapterId: string): RunResult {
     if (s.ending) break;
     if (s.pending.length === 0) emptyPlans++;
     const before = s.turn;
+    const dayBefore = s.day;
     useGame.getState().advance();
     s = useGame.getState();
+    if (visitReady(s.visit)) missionCompleteDay = missionCompleteDay ?? dayBefore;
+    else missionCompleteDay = null;
     if (s.turn === before && !s.ending) {
       stalls++;
       tracker.planErrors[`advance refused: ${s.planError}`] =
@@ -189,7 +205,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
           player.see(`choice:event:${event.id}:${c.id}`);
     }
     const mail = emails().filter((e) => arrives(e) && !s.handled[e.id]);
-    const missionMail = mail.filter((e) => Object.values(e.options).some((o) => o?.confirms));
+    const missionMail = mail.filter((e) => Object.values(e.options).some((o) => o?.confirmsStep));
     const expiring = player.leads().filter((lead) => lead.expiresDay === s.day);
     const competing = due.length + (event ? 1 : 0) + missionMail.length + expiring.length;
     if (competing - missionMail.length + mail.length >= 2) conflictDaysWithMail.add(s.day);
@@ -201,6 +217,11 @@ function play(options: SimOptions, chapterId: string): RunResult {
     if (!due.length && !event && !answerable.length && !player.leadsHere().length) {
       idleBlocks++;
       idleByDay[s.day] = (idleByDay[s.day] ?? 0) + 1;
+      const stepWaiting = Object.keys(missionTasks()).some((task) => {
+        const step = nextStep(s.missionSteps, task);
+        return !!step && stepStatus(stepContext(s), task, step.id).state === "available";
+      });
+      if (!stepWaiting) idleBlocksNoStep++;
     }
   }
 
@@ -230,6 +251,13 @@ function play(options: SimOptions, chapterId: string): RunResult {
       .filter(([, done]) => done)
       .map(([task]) => task),
     missionTotal: Object.keys(missionTasks()).length,
+    missionCompleteDay,
+    stepsDone: Object.values(s.missionSteps).reduce((n, ids) => n + ids.length, 0),
+    stepsTotal: Object.keys(missionTasks()).reduce((n, t) => n + stepsOf(t).length, 0),
+    missionMoneyRefusals: Object.entries(tracker.planErrors)
+      .filter(([text]) => text.includes("mission step"))
+      .reduce((n, [, count]) => n + count, 0),
+    idleBlocksNoStep,
     score: s.score,
     traitChoices,
     traitOffers: { ...tracker.traitOffers },

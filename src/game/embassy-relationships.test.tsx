@@ -84,6 +84,7 @@ describe("embassy relationships", () => {
     expect(delegationSucceeds("maxim", "security", staff, {}, "maxim")).toBe(false);
   });
   it("resolves a joint assignment using the partner's skill and applies both workloads", () => {
+    useGame.setState({ day: 3 });
     expect(
       useGame.getState().queue({
         id: "joint",
@@ -100,7 +101,7 @@ describe("embassy relationships", () => {
     ).toBe(true);
     useGame.getState().advance();
     const state = useGame.getState();
-    expect(state.visit["security"]).toBe(true);
+    expect(state.missionSteps["security"]).toEqual(["advance-team"]);
     expect(state.colleagues["maxim"]?.fatigue).toBeGreaterThanOrEqual(18);
     expect(state.colleagues["bianca"]?.fatigue).toBeGreaterThanOrEqual(18);
   });

@@ -16,6 +16,7 @@ import {
   computeStats,
   hospitalityCost,
   locationStories,
+  emails,
   missionTasks,
   socialTrust,
   type Action,
@@ -25,6 +26,7 @@ import {
   type StoryChoice,
   type StoryEvent,
 } from "../rules";
+import { nextStep, stepContext, stepStatus, type MissionStep } from "../mission";
 import { inboxFor, useGame, type GameState } from "../store";
 import type { Rng } from "./rng";
 
@@ -241,12 +243,42 @@ export class Player {
   }
 
   // ---- mission work (PlanningDesk) --------------------------------------------------------
-  private taskCost = (task: string) => (task === "lounge" ? 500 : task === "security" ? 400 : 0);
-  /** Staff who can do the task right now, most rested first. */
+  /**
+   * The step of the task that can be done now: its next step, if the day, the order and the other
+   * tasks allow it and nothing in the diary already does it. Undefined when it is blocked or taken.
+   */
+  openStep(task: string): MissionStep | undefined {
+    const s = this.s;
+    const step = nextStep(s.missionSteps, task);
+    if (!step) return undefined;
+    if (stepStatus(stepContext(s), task, step.id).state !== "available") return undefined;
+    if (s.pending.some((p) => p.task === task && p.step === step.id && p.kind === "work"))
+      return undefined;
+    return step;
+  }
+  /** True when the step named "task.step" is neither done nor blocked. */
+  stepOpen(ref: string): boolean {
+    const s = this.s;
+    const [task, step] = ref.split(".");
+    return (
+      !!task &&
+      !!step &&
+      stepStatus(stepContext(s), task, step).state === "available" &&
+      !this.s.pending.some((p) => p.task === task && p.step === step)
+    );
+  }
+  /** True when a mail offers to confirm this step (the quick way, if it has arrived). */
+  stepHasMail(task: string, step: string): boolean {
+    return emails().some((e) =>
+      Object.values(e.options).some((o) => o?.confirmsStep === `${task}.${step}`),
+    );
+  }
+  /** Staff who can do the task's next step right now, most rested first. */
   suitableStaff(task: string): string[] {
     const s = this.s;
+    const skill = nextStep(s.missionSteps, task)?.skill ?? task;
     return this.staff()
-      .filter((c) => c.skills.includes(task))
+      .filter((c) => c.skills.includes(skill))
       .filter((c) => {
         const state = s.colleagues[c.id];
         return !!state && state.trust >= 25 && state.fatigue < 80 && this.staffFree(c.id) > 0;
@@ -270,7 +302,6 @@ export class Player {
       source: `${name} · ${missionTasks()[task]}`,
       text: `${name} secured written confirmation: ${missionTasks()[task]}.`,
       effects: { confidence: 3 },
-      cashCost: this.taskCost(task),
       timeCost: 0,
       overload,
       score: 2,
@@ -291,8 +322,7 @@ export class Player {
       source: `You · ${missionTasks()[task]}`,
       text: `You secured written confirmation: ${missionTasks()[task]}.`,
       effects: { confidence: 3 },
-      cashCost: this.taskCost(task),
-      timeCost: 2,
+      timeCost: nextStep(s.missionSteps, task)?.dp ?? 2,
       overload: false,
       score: 2,
       trust: 1,
@@ -639,7 +669,7 @@ export class Player {
       const ranked = this.order(
         options,
         ([, o]) => o,
-        ([, o]) => optionValue(o) + (o.confirms && !this.s.visit[o.confirms] ? 6 : 0),
+        ([, o]) => optionValue(o) + (o.confirmsStep && this.stepOpen(o.confirmsStep) ? 6 : 0),
         style,
       );
       for (const [action] of ranked) this.see(`choice:email:${email.id}:${action}`);

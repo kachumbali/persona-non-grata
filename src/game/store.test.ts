@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { blocks, campaign, emails, locationStories, startMeters } from "./rules";
+import { workOnMissionSteps } from "./test-support";
 import { inboxFor, useGame } from "./store";
 const character = { title: "Mr", name: "Test", portrait: "diplomat-1", bio: "", traits: [] };
 beforeEach(() => useGame.getState().start(character));
@@ -441,7 +442,7 @@ describe("scheduled game rounds", () => {
         source: "Dinner",
         text: "Dinner",
         effects: {},
-        cashCost: 4000,
+        cashCost: 3000,
         timeCost: 1,
         kind: "social",
       }),
@@ -452,7 +453,7 @@ describe("scheduled game rounds", () => {
         source: "Convoy",
         text: "Convoy",
         effects: {},
-        cashCost: 501,
+        cashCost: 401,
         timeCost: 1,
         kind: "work",
       }),
@@ -489,20 +490,23 @@ describe("scheduled game rounds", () => {
     expect(useGame.getState().visit["programme"]).toBeUndefined();
     expect(useGame.getState().report.some((r) => r.text.includes("work stalled"))).toBe(true);
   });
-  it("competent independent delegation confirms a visit requirement", () => {
+  it("competent independent delegation does the next step of a visit requirement", () => {
+    useGame.setState({ day: 2 });
     useGame.getState().queue({
       id: "lounge",
       source: "Lounge",
       text: "Lounge booked",
-      effects: { budget: -5 },
+      effects: {},
       kind: "work",
       worker: "pavel",
       task: "lounge",
       overload: true,
     });
     useGame.getState().advance();
-    expect(useGame.getState().visit["lounge"]).toBe(true);
-    expect(useGame.getState().score).toBe(10);
+    expect(useGame.getState().missionSteps["lounge"]).toEqual(["reservation"]);
+    // One step is not the task: the lounge is confirmed only when its last step is done.
+    expect(useGame.getState().visit["lounge"]).toBeUndefined();
+    expect(useGame.getState().score).toBe(0);
   });
   it("replaces the player at zero HQ goodwill and prevents further rounds", () => {
     useGame.setState({ meters: { ...startMeters(), confidence: 6 } });
@@ -527,7 +531,7 @@ describe("scheduled game rounds", () => {
     useGame.getState().advance();
     expect(useGame.getState().ending).toBe("png");
   });
-  it("missing programme cancels the visit when day 15 starts", () => {
+  it("missing programme cancels the visit once the arrival day has been played", () => {
     useGame.setState({
       day: 14,
       block: 3,
@@ -537,8 +541,38 @@ describe("scheduled game rounds", () => {
       visit: { clearance: true, lounge: true, security: true },
     });
     useGame.getState().advance();
+    // Day 15 starts and is played; the ending is decided when its last block resolves.
+    expect(useGame.getState().day).toBe(15);
+    expect(useGame.getState().block).toBe(0);
+    expect(useGame.getState().ending).toBeNull();
+    for (let i = 0; i < 3; i++) {
+      useGame.getState().advance();
+      expect(useGame.getState().ending).toBeNull();
+    }
+    expect(useGame.getState().block).toBe(3);
+    useGame.getState().advance();
     expect(useGame.getState().day).toBe(15);
     expect(useGame.getState().ending).toBe("cancelled");
+  });
+  it("a meter at zero still ends the posting during the arrival day", () => {
+    useGame.setState({
+      day: 15,
+      block: 1,
+      minute: blocks()[1]!.time,
+      events: [],
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
+      meters: { ...startMeters(), confidence: 1 },
+      visit: { clearance: true, lounge: true, security: true, programme: true },
+    });
+    useGame.getState().queue({
+      id: "blunder",
+      source: "Apron",
+      text: "The Minister is received by the wrong delegation.",
+      effects: { confidence: -5 },
+      kind: "event",
+    });
+    useGame.getState().advance();
+    expect(useGame.getState().ending).toBe("replaced");
   });
   it("four blocks make one working day", () => {
     useGame.setState({
@@ -551,7 +585,8 @@ describe("scheduled game rounds", () => {
     expect(useGame.getState().minute).toBe(480);
   });
   it("a prepared campaign reaches a successful day-15 ending", () => {
-    for (let turn = 0; turn < 56; turn++) {
+    for (let turn = 0; turn < 60; turn++) {
+      workOnMissionSteps();
       const s = useGame.getState();
       for (const email of inboxFor(s.day, s.minute, s.handled)) {
         if (!email.status) s.answer(email.id, "reply");

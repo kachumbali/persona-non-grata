@@ -191,14 +191,16 @@
           "goodwill": 8,
           "sanity": -3
         },
-        "formal": true
+        "formal": true,
+        "confirmsStep": "clearance.note-verbale"
       },
       "delegate": {
         "text": "Sola Dewrin knows the stamp order. It works. Nobody asks how.",
         "effects": {
           "goodwill": 6,
           "morale": 2
-        }
+        },
+        "confirmsStep": "clearance.note-verbale"
       },
       "forward": {
         "text": "The Capital replies in Format 7-B. Diplomatic silence follows.",
@@ -399,11 +401,11 @@
   },
   {
     "id": "visit-clearance",
-    "day": 4,
+    "day": 5,
     "time": 500,
     "from": "Ombrazia — Local Protocol",
     "subject": "Ministerial aircraft: landing permission",
-    "body": "Submit the aircraft details and the correct diplomatic form. Permission is not granted merely because you have requested permission.",
+    "body": "Submit the aircraft details and the correct diplomatic form. Permission is not granted merely because you have requested permission. Please use the version in force.",
     "options": {
       "reply": {
         "text": "Protocol approves the aircraft clearance after your corrected submission. Written approval received.",
@@ -412,7 +414,7 @@
           "goodwill": 3,
           "sanity": -3
         },
-        "confirms": "clearance"
+        "confirmsStep": "clearance.landing-form"
       },
       "delegate": {
         "text": "Sola obtains the signed landing permission. The stamp is finally the right stamp.",
@@ -420,7 +422,7 @@
           "confidence": 2,
           "morale": 2
         },
-        "confirms": "clearance"
+        "confirmsStep": "clearance.landing-form"
       },
       "note": {
         "text": "The request remains on your desk. No clearance has been granted.",
@@ -442,24 +444,22 @@
     "day": 6,
     "time": 500,
     "from": "Airport — VIP Services",
-    "subject": "VIP lounge: confirm reservation",
-    "body": "The lounge can be reserved for the Minister. Payment and guest details are required before we issue confirmation.",
+    "subject": "VIP lounge: deposit required",
+    "body": "The lounge can be held for the Minister. A deposit is required before we issue confirmation. The deposit confirms the booking, not the guests.",
     "options": {
       "reply": {
         "text": "You approve the lounge payment. The airport sends a confirmed reservation.",
         "effects": {
-          "budget": -8,
           "confidence": 3
         },
-        "confirms": "lounge"
+        "confirmsStep": "lounge.deposit"
       },
       "delegate": {
         "text": "Pavel negotiates the official rate and secures written lounge confirmation.",
         "effects": {
-          "budget": -5,
           "confidence": 2
         },
-        "confirms": "lounge"
+        "confirmsStep": "lounge.deposit"
       },
       "note": {
         "text": "Noted is not reserved. The airport releases its provisional hold.",
@@ -476,30 +476,67 @@
     }
   },
   {
+    "id": "visit-amendments",
+    "day": 7,
+    "time": 500,
+    "from": "Capital — Ministerial Office",
+    "subject": "Amendments to the draft programme",
+    "body": "Capital has reviewed the draft programme and attaches eleven amendments. Please absorb them and confirm that the programme is unchanged.",
+    "options": {
+      "reply": {
+        "text": "You absorb the amendments personally. The programme is unchanged, apart from all of it.",
+        "effects": {
+          "confidence": 4,
+          "sanity": -4
+        },
+        "confirmsStep": "programme.amendments",
+        "formal": true
+      },
+      "delegate": {
+        "text": "Anselm absorbs the amendments overnight. Capital notes the speed and queries the thoroughness.",
+        "effects": {
+          "confidence": 2,
+          "morale": -1
+        },
+        "confirmsStep": "programme.amendments"
+      },
+      "note": {
+        "text": "The amendments are noted. Capital notes that they were noted.",
+        "effects": {
+          "confidence": -3
+        }
+      }
+    },
+    "ignore": {
+      "text": "The amendments are deemed accepted by silence. Capital now has eleven new ones.",
+      "effects": {
+        "confidence": -6
+      }
+    }
+  },
+  {
     "id": "visit-security",
     "day": 8,
     "time": 500,
     "from": "Security and Transport Desk",
-    "subject": "Ministerial convoy and security approval",
-    "body": "The route, vehicles and security liaison require approval. Please settle the transport allocation today.",
+    "subject": "Ministerial convoy: route to be driven",
+    "body": "The route to the airport must be driven and approved before vehicles can be allocated. It is the only route; please drive it anyway.",
     "options": {
       "reply": {
-        "text": "Vehicles are booked and the security liaison signs off the route.",
+        "text": "You drive the route and approve it. The security liaison signs off the route and the driver.",
         "effects": {
-          "budget": -6,
           "confidence": 3,
           "goodwill": 2
         },
-        "confirms": "security"
+        "confirmsStep": "security.route-recon"
       },
       "delegate": {
-        "text": "The security team coordinates the convoy and returns the signed route approval.",
+        "text": "The security team drives the route twice and returns a signed approval. Both directions are satisfactory.",
         "effects": {
-          "budget": -4,
           "confidence": 2,
           "morale": -2
         },
-        "confirms": "security"
+        "confirmsStep": "security.route-recon"
       },
       "note": {
         "text": "The convoy plan remains unapproved.",
@@ -517,12 +554,122 @@
     }
   },
   {
+    "id": "setback-arrival",
+    "day": 8,
+    "time": 500,
+    "from": "Capital — Ministerial Office",
+    "subject": "Arrival time revised",
+    "body": "The Minister will now arrive one hour and forty minutes earlier. The change is described as minor. Please update the programme, the escort and anyone who has already been told.",
+    "options": {
+      "reply": {
+        "text": "You acknowledge the new time and ask for the old one in writing. Capital sends neither.",
+        "effects": {
+          "confidence": 3,
+          "sanity": -2
+        }
+      },
+      "delegate": {
+        "text": "Anselm circulates the new time. Two people receive it, one of them the Minister's office.",
+        "effects": {
+          "confidence": 1,
+          "morale": -1
+        }
+      },
+      "note": {
+        "text": "The change is noted. The Minister's aircraft does not note it.",
+        "effects": {
+          "confidence": -3
+        }
+      }
+    },
+    "ignore": {
+      "text": "The old arrival time stays in the programme. The Minister keeps the new one.",
+      "effects": {
+        "confidence": -4
+      }
+    }
+  },
+  {
+    "id": "setback-form",
+    "day": 9,
+    "time": 500,
+    "from": "Ombrazia — Local Protocol",
+    "subject": "Landing form: version 7.3 in force",
+    "body": "Protocol regrets that the landing form has been superseded. Version 7.3 is now in force. Version 7.2 remains valid for forms already refused.",
+    "options": {
+      "reply": {
+        "text": "You thank Protocol for the clarity. Protocol thanks you for the thanks.",
+        "effects": {
+          "goodwill": 3,
+          "sanity": -2
+        }
+      },
+      "delegate": {
+        "text": "Sola obtains version 7.3 from a drawer that was not on the list.",
+        "effects": {
+          "goodwill": 2,
+          "morale": 1
+        }
+      },
+      "note": {
+        "text": "The new version is noted. The old version is also noted, for balance.",
+        "effects": {
+          "goodwill": -2
+        }
+      }
+    },
+    "ignore": {
+      "text": "Protocol keeps your 7.2 on file, as a curiosity.",
+      "effects": {
+        "goodwill": -4
+      }
+    }
+  },
+  {
+    "id": "visit-guestlist",
+    "day": 9,
+    "time": 540,
+    "from": "Airport — VIP Services",
+    "subject": "Guest list: final version requested",
+    "body": "The lounge seats twelve. Please send the final guest list, with names. The previous list contained categories.",
+    "options": {
+      "reply": {
+        "text": "You send forty-one names. The airport counts twelve chairs and approves the list.",
+        "effects": {
+          "confidence": 3,
+          "sanity": -2
+        },
+        "confirmsStep": "lounge.guest-list"
+      },
+      "delegate": {
+        "text": "Ketu drafts the list with the menu in mind. The airport approves it, mostly for the catering.",
+        "effects": {
+          "confidence": 2,
+          "morale": 2
+        },
+        "confirmsStep": "lounge.guest-list"
+      },
+      "note": {
+        "text": "The guest list remains a category. The airport waits.",
+        "effects": {
+          "confidence": -3
+        }
+      }
+    },
+    "ignore": {
+      "text": "The lounge assigns the Minister the next available chair, which is not in the lounge.",
+      "effects": {
+        "confidence": -5
+      }
+    }
+  },
+  {
     "id": "visit-programme",
     "day": 10,
     "time": 500,
     "from": "Capital — Ministerial Office",
-    "subject": "Final visit programme: approval required",
-    "body": "The host ministry has offered meeting times and a project stop. Approve the attached programme to obtain written confirmation from both sides. A draft is not a programme.",
+    "subject": "Visit programme: host agreement required",
+    "body": "The host ministry has offered meeting times and a project stop. Approve the programme to obtain written agreement from both sides. A draft is not a programme.",
     "options": {
       "reply": {
         "text": "You reconcile the meeting times. Capital and the host ministry confirm the final programme in writing.",
@@ -531,8 +678,8 @@
           "goodwill": 3,
           "sanity": -4
         },
-        "confirms": "programme",
-        "formal": true
+        "formal": true,
+        "confirmsStep": "programme.host-agreement"
       },
       "delegate": {
         "text": "Pavel checks the timings with Sola. Both ministries issue written confirmation of the programme.",
@@ -540,7 +687,7 @@
           "confidence": 4,
           "morale": 2
         },
-        "confirms": "programme"
+        "confirmsStep": "programme.host-agreement"
       },
       "note": {
         "text": "The draft is filed without approval. The visit still has no confirmed programme.",
@@ -553,6 +700,307 @@
       "text": "The programme approval deadline passes. The Ministerial Office records a missed instruction.",
       "effects": {
         "confidence": -12
+      }
+    }
+  },
+  {
+    "id": "visit-stamp",
+    "day": 10,
+    "time": 540,
+    "from": "Ombrazia — Local Protocol",
+    "subject": "Arrival confirmation: stamp required",
+    "body": "Protocol is pleased to confirm the arrival once the confirmation has been stamped. The stamp is available from Protocol, on request, for a fee.",
+    "options": {
+      "reply": {
+        "text": "You request the stamp in person. Director Ndao's office stamps it, slowly, with feeling.",
+        "effects": {
+          "confidence": 3,
+          "goodwill": 3,
+          "sanity": -2
+        },
+        "confirmsStep": "clearance.protocol-stamp"
+      },
+      "delegate": {
+        "text": "Ines submits the request through the consular channel. The stamp arrives by bag, still warm.",
+        "effects": {
+          "confidence": 2,
+          "morale": 1
+        },
+        "confirmsStep": "clearance.protocol-stamp"
+      },
+      "note": {
+        "text": "The request waits for a stamp that nobody has ordered.",
+        "effects": {
+          "confidence": -3
+        }
+      }
+    },
+    "ignore": {
+      "text": "The confirmation expires unstamped. Protocol regrets that it cannot regret this.",
+      "effects": {
+        "confidence": -5,
+        "goodwill": -3
+      }
+    }
+  },
+  {
+    "id": "setback-delegation",
+    "day": 11,
+    "time": 500,
+    "from": "Capital — Ministerial Office",
+    "subject": "Delegation enlarged",
+    "body": "The Minister's delegation has grown by six. All six are described as essential. Please advise the lounge, the escort and the printer. The printer is unaware of the delegation.",
+    "options": {
+      "reply": {
+        "text": "You advise everyone, in order of rank. The printer is advised last, and objects first.",
+        "effects": {
+          "confidence": 3,
+          "sanity": -3
+        }
+      },
+      "delegate": {
+        "text": "Pavel advises the lounge and the escort. The printer finds out from the lounge.",
+        "effects": {
+          "confidence": 1,
+          "morale": -1
+        }
+      },
+      "note": {
+        "text": "The delegation is noted. It is noted again on arrival.",
+        "effects": {
+          "confidence": -3
+        }
+      }
+    },
+    "ignore": {
+      "text": "Six additional delegates are discovered at the airport, by the delegates.",
+      "effects": {
+        "confidence": -5
+      }
+    }
+  },
+  {
+    "id": "setback-parade",
+    "day": 12,
+    "time": 500,
+    "from": "Ombrazia — Municipal Traffic Office",
+    "subject": "Parade on the airport road",
+    "body": "The airport road will be closed on Day 15 for a parade of the Founding Mango. The parade has priority over all arrivals, including the founding one.",
+    "options": {
+      "reply": {
+        "text": "You ask whether the Minister may join the parade. The Office will consider it a request.",
+        "effects": {
+          "goodwill": 3,
+          "sanity": -2
+        }
+      },
+      "delegate": {
+        "text": "Bianca finds a route that crosses the parade only twice. The Office finds this acceptable.",
+        "effects": {
+          "goodwill": 2,
+          "morale": 1
+        }
+      },
+      "note": {
+        "text": "The parade is noted. It proceeds regardless.",
+        "effects": {
+          "goodwill": -2
+        }
+      }
+    },
+    "ignore": {
+      "text": "The Office closes the road and informs the embassy by closing the road.",
+      "effects": {
+        "goodwill": -4
+      }
+    }
+  },
+  {
+    "id": "visit-motorcade",
+    "day": 12,
+    "time": 560,
+    "from": "Security and Transport Desk",
+    "subject": "Motorcade and escort: final booking",
+    "body": "Vehicles and escort must be booked today at the rate in force. The rate in force will be communicated once the vehicles are booked.",
+    "options": {
+      "reply": {
+        "text": "You book vehicles and escort. The Desk confirms in writing that they exist.",
+        "effects": {
+          "confidence": 3,
+          "goodwill": 2
+        },
+        "confirmsStep": "security.motorcade"
+      },
+      "delegate": {
+        "text": "Bianca books the escort with the Desk's liaison. The vehicles are described as available in principle.",
+        "effects": {
+          "confidence": 2,
+          "morale": -1
+        },
+        "confirmsStep": "security.motorcade"
+      },
+      "note": {
+        "text": "The motorcade stays a plan. The Minister's driver is a hope.",
+        "effects": {
+          "confidence": -3
+        }
+      }
+    },
+    "ignore": {
+      "text": "The escort is released to another delegation, which is delighted.",
+      "effects": {
+        "confidence": -6,
+        "goodwill": -2
+      }
+    }
+  },
+  {
+    "id": "visit-print",
+    "day": 13,
+    "time": 500,
+    "from": "Capital — Ministerial Office",
+    "subject": "Final programme: for printing",
+    "body": "The programme is to be printed today, approved by both sides and bound. Please confirm that it will not be amended further. It will.",
+    "options": {
+      "reply": {
+        "text": "You approve the final programme. It is printed within the hour and amended within two.",
+        "effects": {
+          "confidence": 5,
+          "goodwill": 2,
+          "sanity": -3
+        },
+        "confirmsStep": "programme.final-print",
+        "formal": true
+      },
+      "delegate": {
+        "text": "Pavel and Sola take the programme to the printer. Both sides initial it. Nobody reads it.",
+        "effects": {
+          "confidence": 3,
+          "morale": 1
+        },
+        "confirmsStep": "programme.final-print"
+      },
+      "note": {
+        "text": "The programme stays in draft. Drafts do not land.",
+        "effects": {
+          "confidence": -5
+        }
+      }
+    },
+    "ignore": {
+      "text": "The programme goes unprinted. Capital offers to print it for you, which is worse.",
+      "effects": {
+        "confidence": -8
+      }
+    }
+  },
+  {
+    "id": "arrival-eve",
+    "day": 14,
+    "time": 900,
+    "from": "Capital — Protocol",
+    "subject": "The Minister arrives tomorrow",
+    "body": "Please confirm that everything is ready. Please also confirm that you are ready. The second confirmation is optional and will be minuted.",
+    "options": {
+      "reply": {
+        "text": "You confirm both. Capital takes the second as a figure of speech.",
+        "effects": {
+          "confidence": 3,
+          "sanity": -2
+        }
+      },
+      "delegate": {
+        "text": "Anselm confirms on your behalf. Capital asks who you are.",
+        "effects": {
+          "confidence": -1,
+          "morale": 1
+        }
+      },
+      "note": {
+        "text": "You take note. The note is read as a confirmation, which is generous.",
+        "effects": {
+          "confidence": -2
+        }
+      }
+    },
+    "ignore": {
+      "text": "Capital assumes everything is ready. It has assumed this before.",
+      "effects": {
+        "confidence": -5
+      }
+    }
+  },
+  {
+    "id": "arrival-landed",
+    "day": 15,
+    "time": 500,
+    "from": "Ombrazia — Local Protocol",
+    "subject": "Aircraft on approach",
+    "body": "The Minister's aircraft is on approach. Protocol requests the Chargé d'Affaires at the apron, in the correct place. The correct place is marked on the form.",
+    "options": {
+      "reply": {
+        "text": "You stand where the form says. The aircraft lands near enough, and the Minister waves at the wrong delegation.",
+        "effects": {
+          "confidence": 4,
+          "goodwill": 2,
+          "sanity": -2
+        }
+      },
+      "delegate": {
+        "text": "Pavel meets the aircraft with the lounge manager. The Minister is received by a clipboard.",
+        "effects": {
+          "confidence": 1,
+          "morale": 1
+        }
+      },
+      "note": {
+        "text": "You take note of the aircraft. The aircraft takes note of you, from above.",
+        "effects": {
+          "confidence": -4
+        }
+      }
+    },
+    "ignore": {
+      "text": "The Minister descends the steps to find Protocol and a vacant apron.",
+      "effects": {
+        "confidence": -6,
+        "goodwill": -3
+      }
+    }
+  },
+  {
+    "id": "arrival-programme",
+    "day": 15,
+    "time": 760,
+    "from": "Capital — Ministerial Office",
+    "subject": "Minister asks for the programme",
+    "body": "The Minister would like to see the programme. Please provide it. Please also provide the programme the Minister has already seen.",
+    "options": {
+      "reply": {
+        "text": "You present the printed programme. The Minister reads the title and approves the rest.",
+        "effects": {
+          "confidence": 4,
+          "goodwill": 2
+        }
+      },
+      "delegate": {
+        "text": "Anselm hands over a copy. The Minister asks who Anselm is and keeps the copy.",
+        "effects": {
+          "confidence": 1,
+          "morale": 1
+        }
+      },
+      "note": {
+        "text": "The request is noted. The Minister's aide supplies a programme of his own.",
+        "effects": {
+          "confidence": -4
+        }
+      }
+    },
+    "ignore": {
+      "text": "The Minister proceeds without a programme, which is what most programmes allow.",
+      "effects": {
+        "confidence": -4
       }
     }
   }

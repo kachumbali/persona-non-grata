@@ -29,10 +29,12 @@ beforeEach(() => {
   });
 });
 describe("Chapter 1 time and money", () => {
-  it("starts with ƒ10,000 and reserves ƒ5,500, leaving ƒ4,500", () => {
+  it("starts with ƒ10,000, reserves ƒ5,500 for the visit and ƒ1,100 for the mission steps", () => {
     expect(initialEconomy().funds).toBe(10000);
     expect(initialEconomy().ringFence).toBe(5500);
-    expect(availableFunds(initialEconomy(), [])).toBe(4500);
+    // Stamp 100 + deposit 500 + motorcade 400, plus the 100 the arrival change may add.
+    expect(initialEconomy().missionReserve).toBe(1100);
+    expect(availableFunds(initialEconomy(), [])).toBe(3400);
   });
   it("travelling across town costs 1 DP and stops when DP run out", () => {
     const g = () => useGame.getState();
@@ -122,15 +124,15 @@ describe("Chapter 1 time and money", () => {
   it("retains the old plan when an atomic replacement is unaffordable", () => {
     useGame.getState().queue(action("original"));
     expect(
-      useGame.getState().queue(action("replacement", { cashCost: 4501, timeCost: 2 }), true),
+      useGame.getState().queue(action("replacement", { cashCost: 3401, timeCost: 2 }), true),
     ).toBe(false);
     expect(useGame.getState().pending.map((p) => p.id)).toEqual(["original"]);
   });
   it("charges reserved spending once on resolution and frees it on removal", () => {
     useGame.getState().queue(action("bill", { cashCost: 280 }));
-    expect(availableFunds(useGame.getState().economy, useGame.getState().pending)).toBe(4220);
+    expect(availableFunds(useGame.getState().economy, useGame.getState().pending)).toBe(3120);
     useGame.getState().removeDecision("bill");
-    expect(availableFunds(useGame.getState().economy, [])).toBe(4500);
+    expect(availableFunds(useGame.getState().economy, [])).toBe(3400);
     useGame.getState().queue(action("bill", { cashCost: 280 }));
     useGame.getState().advance();
     expect(useGame.getState().economy.funds).toBe(9720);
@@ -167,7 +169,7 @@ describe("Chapter 1 time and money", () => {
     expect(useGame.getState().economy.funds).toBe(9600);
   });
   it("revalidates yesterday atomically against today's funds", () => {
-    useGame.setState({ yesterday: { 0: [action("expensive", { cashCost: 4501 })] } });
+    useGame.setState({ yesterday: { 0: [action("expensive", { cashCost: 3401 })] } });
     useGame.getState().queue(action("kept"));
     useGame.getState().repeatYesterday();
     expect(useGame.getState().pending[0]?.id).toBe("kept");

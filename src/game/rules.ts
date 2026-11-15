@@ -19,7 +19,8 @@ export interface Outcome extends ChoiceGate {
   text: string;
   label?: string;
   effects: Effects;
-  confirms?: VisitTask;
+  /** Confirms one step of a mission task, written "task.step". */
+  confirmsStep?: string;
   formal?: boolean;
 }
 export interface GoodwillChange {
@@ -187,6 +188,10 @@ export interface PendingDecision {
   partner?: string | undefined;
   pairTarget?: string | undefined;
   task?: VisitTask | undefined;
+  /** The step of `task` this decision does; its cash comes from the mission reserve. */
+  step?: string | undefined;
+  /** The part of `cashCost` that is the step's own cost, paid from the mission reserve. */
+  stepCost?: number | undefined;
   trust?: number | undefined;
   pair?: number | undefined;
   dialogueTopic?: string | undefined;
@@ -345,6 +350,8 @@ export function delegationSucceeds(
   pairs: Relationships,
   partner?: string,
   block = 0,
+  /** The skill needed; defaults to the task id (a step may name another). */
+  skill: string = task,
 ): boolean {
   const c = campaign().characters.find((x) => x.id === worker);
   const state = colleagues[worker];
@@ -357,7 +364,7 @@ export function delegationSucceeds(
     state.fatigue >= 80
   )
     return false;
-  if (!partner) return c.skills.includes(task);
+  if (!partner) return c.skills.includes(skill);
   const teammate = campaign().characters.find(
     (person) =>
       person.id === partner && person.location === activeChapter().manifest.officeLocation,
@@ -372,5 +379,5 @@ export function delegationSucceeds(
     (pairs[pairKey(worker, partner)] ?? 50) < 25
   )
     return false;
-  return c.skills.includes(task) || teammate.skills.includes(task);
+  return c.skills.includes(skill) || teammate.skills.includes(skill);
 }

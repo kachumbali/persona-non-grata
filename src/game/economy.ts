@@ -1,4 +1,5 @@
 import { activeChapter } from "./chapters";
+import { emptyProgress, missionReserve as reserveFor } from "./mission";
 import { campaign, computeStats, type PendingDecision } from "./rules";
 
 export const PLAYER_DP = 4;
@@ -52,21 +53,46 @@ export const money = (n: number) => `ƒ${n.toLocaleString("en-US")}`;
 export interface Economy {
   funds: number;
   ringFence: number;
+  /**
+   * Cash set aside for the mission steps still to do (step costs plus what a setback could add).
+   * It is part of `funds` but not available for anything else; completing a step pays from it.
+   * Missing in saves from before the steps; the store restores it.
+   */
+  missionReserve?: number;
   supplementDue: number | null;
   supplementUsed: boolean;
 }
 export const initialEconomy = (): Economy => ({
   funds: startFunds(),
   ringFence: startRingFence(),
+  missionReserve: reserveFor(emptyProgress()),
   supplementDue: null,
   supplementUsed: false,
 });
 export function decisionCash(p: PendingDecision): number {
   return p.cashCost ?? Math.max(0, -(p.effects.budget ?? 0) * 100);
 }
+/** The part of a decision's cash that is optional spending (not a mission step's own cost). */
+export const optionalCash = (p: PendingDecision): number =>
+  Math.max(0, decisionCash(p) - (p.stepCost ?? 0));
+/** Optional spending: funds above the visit reserves, the mission reserve and what is planned. */
 export function availableFunds(e: Economy, plan: PendingDecision[]): number {
-  return e.funds - e.ringFence - plan.reduce((n, p) => n + decisionCash(p), 0);
+  return (
+    e.funds - e.ringFence - (e.missionReserve ?? 0) - plan.reduce((n, p) => n + optionalCash(p), 0)
+  );
 }
+/** What the plan's mission steps will draw from the reserve (a step counted once). */
+export function stepCashInPlan(plan: PendingDecision[]): number {
+  const byStep = new Map<string, number>();
+  for (const p of plan) {
+    if (!p.step) continue;
+    const key = `${p.task}.${p.step}`;
+    byStep.set(key, Math.max(byStep.get(key) ?? 0, p.stepCost ?? 0));
+  }
+  return [...byStep.values()].reduce((a, b) => a + b, 0);
+}
+/** The mission reserve once the steps in `progress` are done. */
+export const missionReserveFor = reserveFor;
 export function playerTime(p: PendingDecision): number {
   if (p.timeCost !== undefined) return p.timeCost;
   if (p.kind === "dialogue" || p.kind === "email") return 1;
@@ -118,8 +144,10 @@ export function validatePlan(
     )
   )
     return "Invalid activity cost.";
-  if (availableFunds(economy, plan) < 0)
+  const optional = plan.reduce((n, p) => n + optionalCash(p), 0);
+  if (optional > 0 && availableFunds(economy, plan) < 0)
     return "Insufficient discretionary funds; visit costs remain ring-fenced.";
+  if (economy.funds < stepCashInPlan(plan)) return "Insufficient funds for this mission step.";
   for (const row of capacityLedger(plan, block, playerDP)) {
     const capacity = row.id === "self" ? playerDP : STAFF_DP;
     if (row.used > capacity)

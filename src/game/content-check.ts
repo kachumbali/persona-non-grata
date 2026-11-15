@@ -8,6 +8,7 @@ import type { Invitation } from "./calendar";
 import type { Topic } from "./dialogues";
 import type { Email, StoryChoice, StoryEvent } from "./rules";
 import type { Campaign, ChapterManifest, ChapterPack, PressData } from "./chapters/types";
+import { parseStepRef } from "./mission";
 
 export type Finding = {
   level: "error" | "warning";
@@ -179,7 +180,7 @@ function buildSchemas(strict: boolean) {
     text: str,
     label: opt(str),
     effects,
-    confirms: opt(str),
+    confirmsStep: opt(str),
     formal: opt(z.boolean()),
     ...gate,
   });
@@ -262,6 +263,32 @@ function buildSchemas(strict: boolean) {
     days: int.min(1),
     blocks: z.array(obj({ name: str, time: num, social: str })).min(1),
     missionTasks: z.record(str, str),
+    missionSteps: z.record(
+      str,
+      z.array(
+        obj({
+          id: str,
+          label: str,
+          short: str,
+          earliestDay: int,
+          dp: opt(z.number().int().min(1).max(4)),
+          skill: opt(str),
+          cash: opt(num),
+          requiresStep: opt(obj({ task: str, step: str })),
+          requiresTrust: opt(obj({ character: str, min: num })),
+          result: str,
+        }),
+      ),
+    ),
+    setbacks: z.array(
+      obj({
+        id: str,
+        day: int,
+        mail: str,
+        text: str,
+        targets: z.array(obj({ task: str, step: str, label: opt(str), cashDelta: opt(num) })),
+      }),
+    ),
     endings: z.record(str, obj({ title: str, text: str })),
     endingRules: z.array(
       obj({
@@ -840,8 +867,24 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
         checkGate(o, f, op);
         needText(o.text, f, [...op, "text"], "result text");
         limit(o.text, TEXT_LIMITS.emailOptionText, f, [...op, "text"], "Email option text");
-        if (o.confirms)
-          refCheck(taskIds, "mission task id", o.confirms, f, pathOf([...op, "confirms"]));
+        if (o.confirmsStep) {
+          const ref = parseStepRef(o.confirmsStep);
+          const step = ref
+            ? manifest?.missionSteps?.[ref.task]?.find((x) => x.id === ref.step)
+            : undefined;
+          if (!ref || !step)
+            error(
+              f,
+              pathOf([...op, "confirmsStep"]),
+              `Unknown mission step "${o.confirmsStep}" (write it as task.step)`,
+            );
+          else if (e.day < step.earliestDay)
+            error(
+              f,
+              pathOf([...op, "confirmsStep"]),
+              `Email "${e.id}" arrives on day ${e.day}, before "${o.confirmsStep}" can be done (day ${step.earliestDay})`,
+            );
+        }
       }
       needText(e.ignore.text, f, [i, "ignore", "text"], "result text for ignoring the email");
       limit(
@@ -866,6 +909,177 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
         if (!(action in email.options))
           error(f, pathOf([id, action]), `Email "${id}" has no "${action}" option`);
     }
+  }
+
+  // Mission steps and setbacks.
+  if (manifest) {
+    const f = F.manifest;
+    const steps = manifest.missionSteps ?? {};
+    const emailById = new Map((emails ?? []).map((e) => [e.id, e]));
+    const skills = new Set(characters.flatMap((c) => c.skills));
+    for (const task of Object.keys(manifest.missionTasks))
+      if (!steps[task]?.length)
+        error(f, pathOf(["missionSteps", task]), `Mission task "${task}" has no steps`);
+    const stepAt = (task: string, id: string) => steps[task]?.find((x) => x.id === id);
+    for (const [task, list] of Object.entries(steps)) {
+      refCheck(taskIds, "mission task id", task, f, pathOf(["missionSteps", task]));
+      duplicates(
+        list,
+        (x) => x.id,
+        (i, id) =>
+          error(
+            f,
+            pathOf(["missionSteps", task, i, "id"]),
+            `Duplicate step id "${id}" in "${task}"`,
+          ),
+      );
+      list.forEach((st, i) => {
+        const at = (k: string): string => pathOf(["missionSteps", task, i, k]);
+        checkDay(st.earliestDay, f, ["missionSteps", task, i, "earliestDay"], "earliestDay");
+        if (st.skill && !skills.has(st.skill))
+          warn(f, at("skill"), `No character has the skill "${st.skill}", so nobody can be sent`);
+        if (st.requiresStep) {
+          const other = stepAt(st.requiresStep.task, st.requiresStep.step);
+          if (!other)
+            error(
+              f,
+              at("requiresStep"),
+              `Unknown step "${st.requiresStep.task}.${st.requiresStep.step}"`,
+            );
+          else if (st.requiresStep.task === task && st.requiresStep.step === st.id)
+            error(f, at("requiresStep"), "A step cannot require itself");
+        }
+        if (st.requiresTrust) {
+          refCheck(
+            characterIds,
+            "character id",
+            st.requiresTrust.character,
+            f,
+            at("requiresTrust"),
+          );
+          if (st.requiresTrust.min > 100)
+            error(f, at("requiresTrust"), "Minimum trust above 100 can never be met");
+        }
+        limit(
+          st.result,
+          TEXT_LIMITS.choiceResult,
+          f,
+          ["missionSteps", task, i, "result"],
+          "Step result",
+        );
+      });
+    }
+    // The earliest day each step can be done, following the order within a task and requiresStep.
+    // A step that follows a step pushed back by a setback needs one more day. A loop between steps
+    // can never be done at all.
+    const key = (task: string, id: string) => `${task}.${id}`;
+    const finishDays = (
+      redo: Map<string, number>,
+      baseline?: Map<string, number>,
+    ): Map<string, number> => {
+      const memo = new Map<string, number>();
+      const stack = new Set<string>();
+      const finishOf = (task: string, id: string): number => {
+        const k = key(task, id);
+        const known = memo.get(k);
+        if (known !== undefined) return known;
+        if (stack.has(k)) return Infinity;
+        stack.add(k);
+        const list = steps[task] ?? [];
+        const index = list.findIndex((x) => x.id === id);
+        const st = list[index];
+        let day = Math.max(st?.earliestDay ?? Infinity, redo.get(k) ?? 0);
+        const before = list[index - 1];
+        if (before) {
+          const prev = finishOf(task, before.id);
+          const pushed = baseline && prev > (baseline.get(key(task, before.id)) ?? 0);
+          day = Math.max(day, pushed ? prev + 1 : prev);
+        }
+        if (st?.requiresStep) {
+          const other = finishOf(st.requiresStep.task, st.requiresStep.step);
+          const pushed =
+            baseline &&
+            other > (baseline.get(key(st.requiresStep.task, st.requiresStep.step)) ?? 0);
+          day = Math.max(day, pushed ? other + 1 : other);
+        }
+        stack.delete(k);
+        memo.set(k, day);
+        return day;
+      };
+      for (const [task, list] of Object.entries(steps))
+        for (const st of list) finishOf(task, st.id);
+      return memo;
+    };
+    const baselineDays = finishDays(new Map());
+    for (const [task, list] of Object.entries(steps)) {
+      const last = list[list.length - 1];
+      if (!last) continue;
+      const day = baselineDays.get(key(task, last.id)) ?? Infinity;
+      if (!Number.isFinite(day))
+        error(
+          f,
+          pathOf(["missionSteps", task]),
+          `Task "${task}" can never be finished: its steps require each other in a loop`,
+        );
+      else if (days && day > days - 1)
+        error(
+          f,
+          pathOf(["missionSteps", task, list.length - 1, "earliestDay"]),
+          `The last step of "${task}" cannot be done before day ${day}, but the final day (${days}) is the arrival`,
+        );
+    }
+    // Setbacks.
+    duplicates(
+      manifest.setbacks ?? [],
+      (x) => x.id,
+      (i, id) => error(f, pathOf(["setbacks", i, "id"]), `Duplicate setback id "${id}"`),
+    );
+    (manifest.setbacks ?? []).forEach((sb, i) => {
+      const at = (...k: Part[]): string => pathOf(["setbacks", i, ...k]);
+      checkDay(sb.day, f, ["setbacks", i, "day"], "day");
+      const mail = emailById.get(sb.mail);
+      if (!mail) error(f, at("mail"), `Unknown email id "${sb.mail}"`);
+      else if (mail.day !== sb.day)
+        error(
+          f,
+          at("mail"),
+          `Email "${sb.mail}" arrives on day ${mail.day}, not on the setback's day ${sb.day}`,
+        );
+      limit(sb.text, TEXT_LIMITS.choiceResult, f, ["setbacks", i, "text"], "Setback text");
+      // Reopened steps must be redone in time, one step a day at worst.
+      const redo = new Map<string, number>();
+      sb.targets.forEach((t, j) => {
+        const st = stepAt(t.task, t.step);
+        if (!st) {
+          error(f, at("targets", j), `Unknown step "${t.task}.${t.step}"`);
+          return;
+        }
+        if (st.earliestDay <= sb.day) {
+          redo.set(key(t.task, t.step), sb.day);
+          if (st.cash || t.cashDelta)
+            error(
+              f,
+              at("targets", j),
+              `"${t.task}.${t.step}" can be reopened, so it must not cost cash`,
+            );
+        } else if (t.cashDelta !== undefined && t.cashDelta < 0)
+          error(f, at("targets", j, "cashDelta"), "A setback cannot make a step cheaper");
+      });
+      if (redo.size) {
+        const after = finishDays(redo, baselineDays);
+        for (const [task, list] of Object.entries(steps)) {
+          const last = list[list.length - 1];
+          if (!last) continue;
+          const day = after.get(key(task, last.id)) ?? Infinity;
+          if (days && day > days - 1)
+            error(
+              f,
+              at("targets"),
+              `After this setback, "${task}" cannot be finished before day ${day}; the player needs it done by day ${days - 1}`,
+            );
+        }
+      }
+    });
   }
 
   // Invitations.

@@ -32,6 +32,57 @@ export interface EndingRule {
   missionIncomplete?: boolean;
 }
 
+/** A reference to one step of one mission task. */
+export interface StepRef {
+  task: string;
+  step: string;
+}
+
+/**
+ * One step of a mission task. The steps of a task are done in order (a step needs the one before
+ * it); the task is confirmed when its last step is done. Every step can be done by the player in
+ * person (`dp`), by a colleague who has the skill (`skill`, default the task id) or, where a mail
+ * carries `confirmsStep`, by answering that mail.
+ */
+export interface MissionStep {
+  id: string;
+  /** What the step is, as shown on the dashboard and in the diary. */
+  label: string;
+  /** A short noun for "needs the ..." messages on other steps. */
+  short: string;
+  earliestDay: number;
+  /** Diplomatic Points the player spends doing it in person (default 2). */
+  dp?: number;
+  /** Skill a colleague needs to do it for the player (default: the task id). */
+  skill?: string;
+  /** Cash drawn from the ring-fenced mission reserve when the step is done. */
+  cash?: number;
+  requiresStep?: StepRef;
+  /** In person only: the player needs this much trust with the character. */
+  requiresTrust?: { character: string; min: number };
+  /** Result text, recorded when the step is done. */
+  result: string;
+}
+
+/** What a setback does to one step. A done step is reopened; a pending one only changes. */
+export interface SetbackTarget extends StepRef {
+  /** New label from the day the setback lands (also for a reopened step). */
+  label?: string;
+  /** Extra cash for a step that cannot have been done yet (earliestDay after the setback). */
+  cashDelta?: number;
+}
+
+/** A scripted setback: on `day` Capital or the host changes the arrangements. */
+export interface Setback {
+  id: string;
+  day: number;
+  /** Id of the mail that explains it (arrives on `day`). */
+  mail: string;
+  /** Line for the situation report and log when it lands. */
+  text: string;
+  targets: SetbackTarget[];
+}
+
 export interface ChapterEconomy {
   startFunds: number;
   visitReserves: Record<string, number>;
@@ -55,6 +106,9 @@ export interface ChapterManifest {
   days: number;
   blocks: [BlockDef, ...BlockDef[]];
   missionTasks: Record<string, string>;
+  /** Ordered steps for each mission task. */
+  missionSteps: Record<string, MissionStep[]>;
+  setbacks: Setback[];
   endings: Record<string, EndingText>;
   endingRules: EndingRule[];
   startMeters: Meters;

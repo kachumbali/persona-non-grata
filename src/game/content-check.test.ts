@@ -159,7 +159,7 @@ describe("content checker catches mistakes", () => {
     pack.campaign.events[0]!.location = "moon";
     pack.press.clippings[0]!.outlet = "gazette";
     pack.press.clippings[1]!.trigger = { outcome: { eventId: "no-event" } };
-    pack.emails[0]!.options.reply!.confirms = "no-task";
+    pack.emails[0]!.options.reply!.confirmsStep = "no-task.nothing";
     pack.manifest.startRoom = "no-room";
     const findings = check(pack);
     expect(has(findings, "error", "campaign.json", "events[0].location")).toHaveLength(1);
@@ -167,7 +167,7 @@ describe("content checker catches mistakes", () => {
     expect(
       has(findings, "error", "press.json", "clippings[1].trigger.outcome.eventId"),
     ).toHaveLength(1);
-    expect(has(findings, "error", "emails.json", "[0].options.reply.confirms")).toHaveLength(1);
+    expect(has(findings, "error", "emails.json", "[0].options.reply.confirmsStep")).toHaveLength(1);
     expect(has(findings, "error", "chapter.json", "startRoom")).toHaveLength(1);
   });
   it("text over the limit is a warning", () => {

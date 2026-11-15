@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { dueInvitations } from "./calendar";
 import { campaign, locationStories, type StoryChoice, type StoryEvent } from "./rules";
 import { inboxFor, useGame } from "./store";
+import { workOnMissionSteps } from "./test-support";
 
 const character = { title: "Mx", name: "Player", portrait: "diplomat-1", bio: "", traits: [] };
 const preferred: Record<string, string> = {
@@ -88,7 +89,7 @@ describe("full-posting paths", () => {
         );
       let momentsHit = 0;
       const errors: string[] = [];
-      for (let turn = 0; turn < 56; turn++) {
+      for (let turn = 0; turn < 60; turn++) {
         let s = useGame.getState();
         if (s.ending) break;
         const beforeTurn = s.turn;
@@ -130,22 +131,8 @@ describe("full-posting paths", () => {
             momentsHit++;
         }
         s = useGame.getState();
-        // The Day 8 coffee conflicts with a security fax; prepare that arrangement in advance.
-        if (approach === "attend" && s.day === 7 && s.block === 0 && !s.visit["security"]) {
-          if (
-            !s.queue({
-              id: "security-early",
-              kind: "work",
-              source: "Security and transport",
-              text: "The security route is confirmed in advance.",
-              effects: { confidence: 3 },
-              task: "security",
-              timeCost: 2,
-              cashCost: 400,
-            })
-          )
-            errors.push(`early security: ${useGame.getState().planError}`);
-        }
+        // The mission is worked step by step as each one opens, by colleagues with the skill.
+        workOnMissionSteps();
         s = useGame.getState();
         for (const invitation of dueInvitations(s.day, s.block, s.storyOutcomes)) {
           const choice = invitation.choices[approach];
