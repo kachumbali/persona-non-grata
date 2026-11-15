@@ -104,6 +104,21 @@ Finish every system inside the one chapter that exists, then test it with five p
   - Update the simulation thresholds: no bot completes the mission before Day 11, a careful bot still succeeds in at least 80% of runs, and an ignorer still fails.
 - Done when: In the simulation the mission stays open until the last days for every bot, and the number of blocks with nothing waiting drops clearly. Old saves still load.
 
+### B-02 Gatekeepers and routes: make the mission hard, not only long
+
+- Type: Rules and code · Size: M · Depends on: B-01
+- Goal: After B-01 the visit takes the whole chapter, but a careful player still never fails. Each key mission step should have a gatekeeper and several ways past them, each with its own price.
+- Work:
+  - Key mission steps get a gatekeeper (a named character) and two to four routes defined in the chapter pack: an official route that is slow but always open, a favour route, a money route and an EU route.
+  - Routes have requirements (trust, a favour owed to you, knowledge, cash, a language level later) and consequences (a favour you now owe, a press clipping, lost deniability, a banner on the lounge).
+  - A simple favours ledger: who owes you, whom you owe. People call favours in at awkward moments.
+  - Counter-demands: a gatekeeper may want something in return, and two gatekeepers can want opposite things.
+  - Knowledge as a key: some routes stay hidden as '?' until you learn of them from the press review, gossip or a colleague.
+  - Support that expires: backing can lapse on a set day or when a press story turns.
+  - Degrees of success: a step can be done well or adequately, and the difference shows in the ending.
+  - The guaranteed official route removes the dead end at Protocol's stamp. The simulation proves a steady player can always finish and that no single route is always best.
+- Done when: In the simulation a careful player no longer wins every game, every route is used by some bot, and no run is ever locked out of the mission.
+
 ### P-01 Portrait cleanup
 
 - Type: Art · Size: S · Depends on: none
