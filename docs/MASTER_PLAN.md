@@ -104,9 +104,8 @@ Finish every system inside the one chapter that exists, then test it with five p
   - Update the simulation thresholds: no bot completes the mission before Day 11, a careful bot still succeeds in at least 80% of runs, and an ignorer still fails.
 - Done when: In the simulation the mission stays open until the last days for every bot, and the number of blocks with nothing waiting drops clearly. Old saves still load.
 
-### B-02 Gatekeepers and routes: make the mission hard, not only long
+### B-02 Gatekeepers and routes: make the mission hard, not only long (done)
 
-- Status: done.
 - Type: Rules and code · Size: M · Depends on: B-01
 - Goal: After B-01 the visit takes the whole chapter, but a careful player still never fails. Each key mission step should have a gatekeeper and several ways past them, each with its own price.
 - Work:
@@ -141,7 +140,7 @@ Finish every system inside the one chapter that exists, then test it with five p
   - Mail from other missions: gossip that hints at the press story, favours asked, colleagues competing for the same promotion.
 - Done when: A 15-day run receives 25 or more circulars. A bot that ignores all of them still finishes the visit but loses goodwill for each missed buried instruction.
 
-### S-02 Démarche board — done
+### S-02 Démarche board (done)
 
 - Type: Rules and code · Size: M · Depends on: F-04
 - Goal: Capital instructs démarches. You deliver them yourself or assign them, and the choice of messenger is where the comedy is.
@@ -185,7 +184,7 @@ Finish every system inside the one chapter that exists, then test it with five p
   - Everything is stored in the career.
 - Done when: Two bots with the same build and different habits finish with visibly different personnel files.
 
-### S-06 The relationship web — done
+### S-06 The relationship web (done)
 
 - Type: Rules and code · Size: L · Depends on: F-04
 - Goal: You said the humour should come from the many characters and how they stand with each other. Today NPC pairs only have a hidden cooperation number.
