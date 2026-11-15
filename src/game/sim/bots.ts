@@ -54,9 +54,16 @@ function restedStaff(p: Player): string[] {
     .map((c) => c.id);
 }
 
-/** Attend if there is time and money, else send someone, else decline politely. */
-function attendInvitations(p: Player) {
+/**
+ * Attend if there is time and money, else send someone, else decline politely. `variety` is the
+ * chance of sending a colleague or declining outright instead of going.
+ */
+function attendInvitations(p: Player, variety = 0) {
   for (const inv of p.invitationsDue()) {
+    const roll = p.rng.next();
+    if (roll < variety / 2 && p.s.block !== 3) {
+      if (restedStaff(p).some((id) => p.respondInvitation(inv, "delegate", id))) continue;
+    } else if (roll < variety && p.respondInvitation(inv, "decline")) continue;
     if (p.respondInvitation(inv, "attend")) continue;
     if (p.s.block !== 3 && restedStaff(p).some((id) => p.respondInvitation(inv, "delegate", id)))
       continue;
@@ -145,8 +152,8 @@ export const socialiser: Bot = {
       p.travel(p.office);
     const event = p.currentEvent();
     if (event) p.respondEvent(event, "random");
-    attendInvitations(p);
-    p.answerMail("best");
+    attendInvitations(p, 0.4);
+    p.answerMail("random");
     for (const lead of p.leadsHere()) if (p.freeDP() >= 1) p.respondLead(lead, "random");
     // Wanders into town now and then: to a lead, or just to see who is at the bar.
     if (p.s.location === p.office && p.freeDP() >= 3 && p.rng.chance(0.35)) {

@@ -82,6 +82,15 @@ const stat = (xs: number[]): Stat => ({
   max: xs.length ? Math.max(...xs) : 0,
 });
 
+function idleByDay(rs: RunResult[]): number[] {
+  // A run played day d if it went past it, or ended during it (the last day itself is never played).
+  const played = (r: RunResult, day: number) => r.day > day || (r.day === day && r.endedEarly);
+  const days = Math.max(0, ...rs.map((r) => (r.endedEarly ? r.day : r.day - 1))) + 1;
+  return Array.from({ length: days }, (_, day) =>
+    day === 0 ? 0 : mean(rs.filter((r) => played(r, day)).map((r) => r.idleByDay[day] ?? 0)),
+  );
+}
+
 export interface Report {
   chapterId: string;
   runs: number;
@@ -120,6 +129,10 @@ export interface Report {
   /** The same, counting only runs that used the shipped game seed (what players actually get). */
   neverSeenShipped: Omit<ContentUniverse, "traitChoices">;
   idleBlocks: { byBot: Record<string, Stat>; overall: Stat };
+  /** Mean idle blocks (of 4) on each day, over the runs of the bots that play the chapter through. */
+  idleByDay: number[];
+  /** Days on which no block had anything waiting, per run. */
+  emptyDays: { byBot: Record<string, Stat>; overall: Stat };
   emptyPlans: { byBot: Record<string, Stat>; overall: Stat };
   conflictDays: { byBot: Record<string, Stat>; overall: Stat };
   conflictDaysWithMail: { byBot: Record<string, Stat>; overall: Stat };
@@ -232,6 +245,8 @@ export function aggregate(results: RunResult[]): Report {
     neverTaken: { choices: missing(universe.choices, takenAll) },
     neverSeenShipped: unseen(shipped),
     idleBlocks: statsBy((r) => r.idleBlocks),
+    idleByDay: idleByDay(results.filter((r) => COMPETENT.includes(r.bot))),
+    emptyDays: statsBy((r) => r.idleByDay.filter((n) => n >= 4).length),
     emptyPlans: statsBy((r) => r.emptyPlans),
     conflictDays: statsBy((r) => r.conflictDays),
     conflictDaysWithMail: statsBy((r) => r.conflictDaysWithMail),
@@ -385,6 +400,15 @@ export function formatReport(r: Report): string {
   );
   h("Blocks with nothing to decide per run (no mail, episode, invitation or lead waiting)");
   out.push(statTable("bot", r.idleBlocks.byBot, r.idleBlocks.overall));
+  out.push("\nDays on which nothing at all was waiting (all four blocks idle), per run:");
+  out.push(statTable("bot", r.emptyDays.byBot, r.emptyDays.overall));
+  out.push("\nIdle blocks (of 4) by day, careful / socialiser / press-reader runs:");
+  out.push(
+    table(
+      ["day", ...r.idleByDay.slice(1).map((_, i) => String(i + 1))],
+      [["idle", ...r.idleByDay.slice(1).map((n) => num(n))]],
+    ),
+  );
   out.push("\nBlocks in which the bot itself queued nothing:");
   out.push(statTable("bot", r.emptyPlans.byBot, r.emptyPlans.overall));
   h("Days with a scheduling conflict per run (two or more time-bound things in one block)");

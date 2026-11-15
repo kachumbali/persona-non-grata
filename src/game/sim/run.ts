@@ -69,6 +69,8 @@ export interface RunResult {
   taken: string[];
   /** Blocks in which no authored prompt (mail, episode, invitation, lead here) was waiting. */
   idleBlocks: number;
+  /** Idle blocks by day: index 1 is Day 1 (index 0 is unused). */
+  idleByDay: number[];
   /** Blocks in which the bot queued nothing at all. */
   emptyPlans: number;
   /** Days with at least one block where two or more time-bound things competed. */
@@ -124,6 +126,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
   const maxTurns = days * blocks().length + 8;
   const conflictDays = new Set<number>();
   const conflictDaysWithMail = new Set<number>();
+  const idleByDay: number[] = Array.from({ length: days + 1 }, () => 0);
   let conflictBlocks = 0,
     idleBlocks = 0,
     emptyPlans = 0,
@@ -195,7 +198,10 @@ function play(options: SimOptions, chapterId: string): RunResult {
       conflictBlocks++;
     }
     const answerable = player.openMail().filter(arrives);
-    if (!due.length && !event && !answerable.length && !player.leadsHere().length) idleBlocks++;
+    if (!due.length && !event && !answerable.length && !player.leadsHere().length) {
+      idleBlocks++;
+      idleByDay[s.day] = (idleByDay[s.day] ?? 0) + 1;
+    }
   }
 
   const s = useGame.getState();
@@ -230,6 +236,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     seen: [...tracker.seen].sort(),
     taken: [...tracker.taken].sort(),
     idleBlocks,
+    idleByDay,
     emptyPlans,
     conflictDays: conflictDays.size,
     conflictBlocks,

@@ -104,10 +104,18 @@ describe("simulated playthroughs", () => {
 
   it("no build is dominated by one ending across the bots", () => {
     // target: no build ends in the same ending in more than 70% of runs.
-    // Met today (all bots): at most 60% per build. NOT met if only the three bots that play the
-    // whole chapter are counted: namedrop and liver end "promoted" in 100% of those runs.
+    // Met today: at most 60% per build over all bots (about 40% in this reduced matrix), and at
+    // most 89% "promoted" per build when only the three bots that play the whole chapter are
+    // counted, which is NOT met for most builds: the ending is chosen by the bot, not the build.
     for (const [build, d] of Object.entries(report.dominantEnding))
-      expect(d.share, build).toBeLessThanOrEqual(0.75);
+      expect(d.share, build).toBeLessThanOrEqual(0.7);
+    for (const build of BUILD_IDS) {
+      const rs = competent().filter((r) => r.build === build);
+      const top = Math.max(
+        ...["promoted", "ambassador"].map((e) => share(rs, (r) => r.ending === e)),
+      );
+      expect(top, build).toBeLessThanOrEqual(0.9);
+    }
   });
 
   it("competent bots win, reckless and ignoring bots lose", () => {
