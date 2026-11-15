@@ -5,8 +5,8 @@ Use this prompt in an AI tool to turn one anecdote into a scene in the game's JS
 Before you run it, collect:
 
 - The filled-in anecdote from `docs/anecdotes/inbox/`.
-- The character ids: the `characters` array in `src/game/data/campaign.json` (field `id`; also the keys of `src/game/data/dialogues.json`).
-- The location ids: the `locations` array in `src/game/data/campaign.json` (field `id`).
+- The character ids: the `characters` array in `src/game/chapters/port-hesperia-2006/campaign.json` (field `id`; also the keys of `src/game/chapters/port-hesperia-2006/dialogues.json`).
+- The location ids: the `locations` array in `src/game/chapters/port-hesperia-2006/campaign.json` (field `id`).
 - Optionally the trait ids from `src/game/data/traits.json` and any existing flags you want the scene to read.
 
 ---
@@ -30,7 +30,7 @@ You write scenes for Persona Non Grata, a satirical diplomatic-career game. You 
 - Gates (any choice): `requiresTrait` (trait id), `blockedByTrait` (trait id), `requiresStat` as `{ "stat": "gravitas" | "charm" | "stamina" | "deniability" | "liver", "min": number }`.
 - Trait ids: liver, replyall, punctual, brussels, demarche, namedrop, cuisine, novelist, sideevents, eyesopen, ngo.
 
-## Format 1: story event (goes in `events` in src/game/data/campaign.json)
+## Format 1: story event (goes in `events` in src/game/chapters/port-hesperia-2006/campaign.json)
 
 ```json
 {
@@ -67,7 +67,7 @@ You write scenes for Persona Non Grata, a satirical diplomatic-career game. You 
 
 Required: `id`, `title`, `npc`, `text`, `minDay`, `choices` (each with `id`, `label`). Strongly expected: `location` and `result` on every choice. Optional on the event: `expiresDay`, `requires`, `requiresFlag`, `requiresChoice`, `onMiss`. Optional on choices: `effects`, `trust` (trust with the `npc`, about -5 to +6), `contact` plus `contactTrust` (trust with another character), `pair`, `pairTarget`, `score`, `flag`, `next`, `formal` (true for a formal diplomatic act), and the gates. Leave out `worker`, `staff`, `cashCost` and `replace` unless the anecdote needs them and you have been told how they work. Follow-up scenes use `requiresChoice` pointing at the parent event and choice. Day numbers run 1 to 15.
 
-## Format 2: dialogue topic (goes in the array under a character id in src/game/data/dialogues.json)
+## Format 2: dialogue topic (goes in the array under a character id in src/game/chapters/port-hesperia-2006/dialogues.json)
 
 ```json
 {
@@ -103,7 +103,7 @@ Required: `id`, `title`, `npc`, `text`, `minDay`, `choices` (each with `id`, `la
 
 Required: topic `id`, `start` (a node key), `nodes`. Each node has `text` and `choices`. Each choice has `label` plus either `next` (a node key, to continue) or `result` (to end the topic). Optional: `trust`, `pair`, `pairTarget`, `score`, `flag`, `formal`, `effects`, and the gates. Dialogue choices have no `id`. Keep topics to two or three nodes. Every node must offer at least one ungated choice.
 
-## Format 3: email (goes in src/game/data/emails.json)
+## Format 3: email (goes in src/game/chapters/port-hesperia-2006/emails.json)
 
 ```json
 {
@@ -131,7 +131,7 @@ Required: topic `id`, `start` (a node key), `nodes`. Each node has `text` and `c
 
 Required: `id`, `day`, `time` (game minutes from midnight; the day runs 480 to 1080), `from`, `subject`, `body`, `options`, `ignore` (with `text`, `effects`). Option keys, any subset: `reply`, `delegate`, `forward`, `note`, `replyall`, `trait`. Each option has `text` and `effects`; optional `label`, `formal`, `confirms` (a visit task: clearance, lounge, programme or security; leave out unless the mail is about the minister's visit), and the gates. Include at least `reply` and `note`. Emails have no `flag` field, so they cannot record consequences; say so in your note.
 
-## Format 4: press clipping (goes in `clippings` in src/game/data/press.json)
+## Format 4: press clipping (goes in `clippings` in src/game/chapters/port-hesperia-2006/press.json)
 
 ```json
 {

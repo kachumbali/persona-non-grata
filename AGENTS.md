@@ -1,4 +1,5 @@
 <!-- LOVABLE:BEGIN -->
+
 > [!IMPORTANT]
 > This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
 > published git history — force pushing, or rebasing/amending/squashing commits
@@ -27,10 +28,12 @@ use the editor.
   `LOVABLE_API_KEY`. When Lovable does not provide one, users can bring their
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
+
 <!-- LOVABLE:END -->
 
-- Game content (emails, traits, backgrounds) lives in JSON under src/game/data so it can be extended without code; rules are pure TS in src/game/rules.ts (tested), state in a persisted zustand store.
-- Embassy locations and personnel live in data/embassy.json; scene modules render a voxel diorama and nearest-filtered pixel sprites without changing gameplay rules.
+- Chapter content and constants live in src/game/chapters/<id>/ (chapter.json plus the content JSON); rules read the active chapter via activeChapter(), never a module-level constant. Career-level data (traits, backgrounds, portraits) stays in src/game/data.
+- Game content is JSON so it can be extended without code; rules are pure TS in src/game/rules.ts (tested), state in a persisted zustand store.
+- Embassy locations and personnel live in the chapter's embassy.json; scene modules render a voxel diorama and nearest-filtered pixel sprites without changing gameplay rules.
 - Embassy rendering uses CSS semantic palette tokens, a demand-rendered orthographic Canvas, and data-scene-ready on its wrapper so visual checks can wait for a drawn frame.
 
 - Player portraits use bundled low-resolution raster assets with nearest-neighbour display; the retro interface is themed centrally through semantic CSS tokens and shared button bevels so gameplay rules remain separate from presentation.

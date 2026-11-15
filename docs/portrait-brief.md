@@ -37,4 +37,4 @@ Create one unique portrait for each NPC, with a filename `npc-<id>.png`. Match t
 
 ## Integration
 
-Place each PNG in `src/assets/portraits/`, then add its stable ID, filename, gender, age (`young`, `mid`, or `senior`) and short look description to `src/game/data/portraits.json`. For an NPC-specific portrait, add `reservedFor` with the NPC ID and update that NPC's `portrait` in `campaign.json`. Reserved portraits are excluded from the player picker. The integrity tests check the assignments as the collection grows.
+Place each PNG in `src/assets/portraits/`, then add its stable ID, filename, gender, age (`young`, `mid`, or `senior`) and short look description to `src/game/data/portraits.json`. For an NPC-specific portrait, add `reservedFor` with the NPC ID and update that NPC's `portrait` in the chapter's `campaign.json`. Reserved portraits are excluded from the player picker. The integrity tests check the assignments as the collection grows.

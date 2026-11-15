@@ -27,4 +27,5 @@
 - [x] Character-specific, varied, funny dialogues for every NPC (no shared identical lines)
 - [x] Thread 0f8aa267-4891-48b0-8780-294eb3a9fef9: enlarge phone mail and add inbox/back navigation; verify reading and replying.
 - [x] F-01: checks on every commit (CI workflow, repository formatted, stat regression test).
+- [x] F-02: chapter packs (Port Hesperia moved to src/game/chapters/port-hesperia-2006, rules read the active chapter).
 - [x] F-06: anecdote pipeline (intake template, writing guide, scene-writer, punch-up and reviewer prompts).
