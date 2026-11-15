@@ -97,6 +97,7 @@ function buildSchemas(strict: boolean) {
     blockedByTrait: opt(str),
     requiresStat: opt(obj({ stat: z.enum(STATS), min: num })),
   };
+  const learning = { favour: opt(obj({ character: str, delta: int })), teaches: opt(str) };
   const storyChoice = obj({
     id: str,
     label: str,
@@ -116,8 +117,10 @@ function buildSchemas(strict: boolean) {
     cashCost: opt(num),
     formal: opt(z.boolean()),
     ...gate,
+    ...learning,
   });
   const event = obj({
+    callInFor: opt(str),
     id: str,
     title: str,
     npc: str,
@@ -165,6 +168,7 @@ function buildSchemas(strict: boolean) {
     formal: opt(z.boolean()),
     effects: opt(talkEffects),
     ...gate,
+    ...learning,
   });
   const dialogues = z.record(
     str,
@@ -177,6 +181,7 @@ function buildSchemas(strict: boolean) {
     ),
   );
   const outcome = obj({
+    ...learning,
     text: str,
     label: opt(str),
     effects,
@@ -244,6 +249,9 @@ function buildSchemas(strict: boolean) {
         trigger: opt(trigger),
         signal: opt(z.boolean()),
         once: opt(z.boolean()),
+        teaches: opt(str),
+        flagOnRead: opt(str),
+        background: opt(obj({ text: str, teaches: str })),
         capital: opt(obj({ confidence: num })),
         maxim: opt(obj({ headline: str, body: str })),
       }),
@@ -263,6 +271,8 @@ function buildSchemas(strict: boolean) {
     days: int.min(1),
     blocks: z.array(obj({ name: str, time: num, social: str })).min(1),
     missionTasks: z.record(str, str),
+    missionQualityTexts: opt(z.record(str, obj({ good: str, adequate: str }))),
+    adequateArrivalConfidence: opt(num),
     missionSteps: z.record(
       str,
       z.array(
@@ -276,6 +286,49 @@ function buildSchemas(strict: boolean) {
           cash: opt(num),
           requiresStep: opt(obj({ task: str, step: str })),
           requiresTrust: opt(obj({ character: str, min: num })),
+          gatekeeper: opt(str),
+          routes: opt(
+            z
+              .array(
+                obj({
+                  id: str,
+                  label: str,
+                  kind: z.enum(["official", "favour", "money", "eu", "knowledge"]),
+                  dp: int.min(1).max(4),
+                  cash: num.min(0),
+                  fromGeneralFunds: opt(z.boolean()),
+                  effects: opt(effects),
+                  requires: opt(
+                    obj({
+                      trust: opt(obj({ character: str, min: num })),
+                      trustOrFavour: opt(obj({ character: str, min: num })),
+                      favour: opt(str),
+                      fact: opt(str),
+                      flag: opt(str),
+                      outcome: opt(obj({ story: str, outcome: str })),
+                      expiresDay: opt(int),
+                      expiresOnFlag: opt(str),
+                      expiresOnFlags: opt(z.array(str)),
+                    }),
+                  ),
+                  days: int.min(0),
+                  quality: z.enum(["good", "adequate"]),
+                  consequences: opt(
+                    obj({
+                      oweFavour: opt(str),
+                      flag: opt(str),
+                      trust: opt(z.record(str, num)),
+                      delayed: opt(
+                        obj({ day: int, flag: opt(str), trust: opt(z.record(str, num)) }),
+                      ),
+                    }),
+                  ),
+                  result: str,
+                }),
+              )
+              .min(2)
+              .max(4),
+          ),
           result: str,
         }),
       ),
@@ -528,6 +581,20 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   const events = campaign?.events ?? [];
   const eventById = new Map(events.map((e) => [e.id, e]));
   const invitationById = new Map((invitations ?? []).map((i) => [i.id, i]));
+  const taughtFacts = new Set<string>();
+  for (const event of events)
+    for (const choice of event.choices) if (choice.teaches) taughtFacts.add(choice.teaches);
+  for (const topics of Object.values(dialogues ?? {}))
+    for (const topic of topics)
+      for (const node of Object.values(topic.nodes))
+        for (const choice of node.choices) if (choice.teaches) taughtFacts.add(choice.teaches);
+  for (const email of emails ?? [])
+    for (const choice of Object.values(email.options))
+      if (choice?.teaches) taughtFacts.add(choice.teaches);
+  for (const clipping of press?.clippings ?? []) {
+    if (clipping.teaches) taughtFacts.add(clipping.teaches);
+    if (clipping.background?.teaches) taughtFacts.add(clipping.background.teaches);
+  }
 
   const flagsSet = new Map<string, { file: string; path: string }>();
   const flagsRead: { flag: string; file: string; path: string }[] = [];
@@ -684,6 +751,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
     events.forEach((e, i) => {
       const at = (...k: Part[]) => pathOf(["events", i, ...k]);
       refCheck(characterIds, "character id", e.npc, f, at("npc"));
+      refCheck(characterIds, "character id", e.callInFor, f, at("callInFor"));
       if (e.location) refCheck(locationIds, "location id", e.location, f, at("location"));
       checkDay(e.minDay, f, ["events", i, "minDay"], "minDay");
       checkDay(e.expiresDay, f, ["events", i, "expiresDay"], "expiresDay");
@@ -771,6 +839,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
     refCheck(characterIds, "character id", c.staff, f, at("staff"));
     refCheck(characterIds, "character id", c.worker, f, at("worker"));
     refCheck(characterIds, "character id", c.pairTarget, f, at("pairTarget"));
+    refCheck(characterIds, "character id", c.favour?.character, f, at("favour.character"));
     if (c.next === undefined)
       needText(c.result, f, [...path, "result"], `result text for choice "${c.id}"`);
     limit(c.label, TEXT_LIMITS.choiceLabel, f, [...path, "label"], "Choice label");
@@ -811,6 +880,13 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
             checkGate(c, f, cp);
             setFlag(c.flag, f, pathOf([...cp, "flag"]));
             refCheck(characterIds, "character id", c.pairTarget, f, pathOf([...cp, "pairTarget"]));
+            refCheck(
+              characterIds,
+              "character id",
+              c.favour?.character,
+              f,
+              pathOf([...cp, "favour", "character"]),
+            );
             if (c.next !== undefined && !topic.nodes[c.next])
               error(
                 f,
@@ -865,6 +941,13 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
       for (const [action, o] of options) {
         const op: Part[] = [i, "options", action];
         checkGate(o, f, op);
+        refCheck(
+          characterIds,
+          "character id",
+          o.favour?.character,
+          f,
+          pathOf([...op, "favour", "character"]),
+        );
         needText(o.text, f, [...op, "text"], "result text");
         limit(o.text, TEXT_LIMITS.emailOptionText, f, [...op, "text"], "Email option text");
         if (o.confirmsStep) {
@@ -960,6 +1043,95 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
           if (st.requiresTrust.min > 100)
             error(f, at("requiresTrust"), "Minimum trust above 100 can never be met");
         }
+        if (st.gatekeeper)
+          refCheck(characterIds, "character id", st.gatekeeper, f, at("gatekeeper"));
+        if (st.gatekeeper && !st.routes) error(f, at("routes"), "A gatekeeper needs routes");
+        if (st.routes) {
+          if (!st.gatekeeper) error(f, at("gatekeeper"), "A routed step needs a gatekeeper");
+          duplicates(
+            st.routes,
+            (route) => route.id,
+            (j, id) =>
+              error(
+                f,
+                pathOf(["missionSteps", task, i, "routes", j, "id"]),
+                `Duplicate route id "${id}"`,
+              ),
+          );
+          const official = st.routes.filter((route) => route.kind === "official");
+          if (official.length !== 1)
+            error(f, at("routes"), "A routed step needs exactly one official route");
+          for (const [j, route] of st.routes.entries()) {
+            const path = pathOf(["missionSteps", task, i, "routes", j]);
+            limit(
+              route.label,
+              TEXT_LIMITS.choiceLabel,
+              f,
+              ["missionSteps", task, i, "routes", j, "label"],
+              "Route label",
+            );
+            limit(
+              route.result,
+              TEXT_LIMITS.choiceResult,
+              f,
+              ["missionSteps", task, i, "routes", j, "result"],
+              "Route result",
+            );
+            if (route.days > days) error(f, path, "Route delivery exceeds the chapter length");
+            if (
+              route.kind === "official" &&
+              (route.requires ||
+                route.cash ||
+                route.effects ||
+                route.consequences ||
+                route.days < 1)
+            )
+              error(f, path, "The official route must be unconditional and cost only time");
+            for (const id of [
+              route.requires?.trust?.character,
+              route.requires?.trustOrFavour?.character,
+              route.requires?.favour,
+              route.consequences?.oweFavour,
+            ])
+              if (id) refCheck(characterIds, "character id", id, f, path);
+            for (const id of Object.keys(route.consequences?.trust ?? {}))
+              refCheck(characterIds, "character id", id, f, path);
+            for (const id of Object.keys(route.consequences?.delayed?.trust ?? {}))
+              refCheck(characterIds, "character id", id, f, path);
+            if (route.requires?.fact && !taughtFacts.has(route.requires.fact))
+              error(f, path, `Fact "${route.requires.fact}" is never taught`);
+            if (route.requires?.outcome) {
+              const required = route.requires.outcome;
+              const event = eventById.get(required.story);
+              if (!event || !event.choices.some((choice) => choice.id === required.outcome))
+                error(f, path, `Unknown story outcome "${required.story}.${required.outcome}"`);
+            }
+            if (
+              route.consequences?.oweFavour &&
+              !events.some((e) => e.callInFor === route.consequences?.oweFavour)
+            )
+              error(f, path, `No call-in event for "${route.consequences.oweFavour}"`);
+            readFlag(route.requires?.flag, f, path);
+            readFlag(route.requires?.expiresOnFlag, f, path);
+            for (const flag of route.requires?.expiresOnFlags ?? []) readFlag(flag, f, path);
+            setFlag(route.consequences?.flag, f, path);
+            setFlag(route.consequences?.delayed?.flag, f, path);
+            if (route.requires?.expiresDay !== undefined)
+              checkDay(
+                route.requires.expiresDay,
+                f,
+                ["missionSteps", task, i, "routes", j, "requires", "expiresDay"],
+                "expiresDay",
+              );
+            if (route.consequences?.delayed)
+              checkDay(
+                route.consequences.delayed.day,
+                f,
+                ["missionSteps", task, i, "routes", j, "consequences", "delayed", "day"],
+                "delayed day",
+              );
+          }
+        }
         limit(
           st.result,
           TEXT_LIMITS.choiceResult,
@@ -992,16 +1164,14 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
         const before = list[index - 1];
         if (before) {
           const prev = finishOf(task, before.id);
-          const pushed = baseline && prev > (baseline.get(key(task, before.id)) ?? 0);
-          day = Math.max(day, pushed ? prev + 1 : prev);
+          day = Math.max(day, prev);
         }
         if (st?.requiresStep) {
           const other = finishOf(st.requiresStep.task, st.requiresStep.step);
-          const pushed =
-            baseline &&
-            other > (baseline.get(key(st.requiresStep.task, st.requiresStep.step)) ?? 0);
-          day = Math.max(day, pushed ? other + 1 : other);
+          day = Math.max(day, other);
         }
+        if (Number.isFinite(day) && day >= days) day = days + 1;
+        else day += st?.routes?.find((route) => route.kind === "official")?.days ?? 0;
         stack.delete(k);
         memo.set(k, day);
         return day;
@@ -1021,7 +1191,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
           pathOf(["missionSteps", task]),
           `Task "${task}" can never be finished: its steps require each other in a loop`,
         );
-      else if (days && day > days - 1)
+      else if (days && day > days)
         error(
           f,
           pathOf(["missionSteps", task, list.length - 1, "earliestDay"]),
@@ -1071,7 +1241,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
           const last = list[list.length - 1];
           if (!last) continue;
           const day = after.get(key(task, last.id)) ?? Infinity;
-          if (days && day > days - 1)
+          if (days && day > days)
             error(
               f,
               at("targets"),
@@ -1137,6 +1307,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
       );
     press.clippings.forEach((c, i) => {
       const at = (...k: Part[]) => pathOf(["clippings", i, ...k]);
+      setFlag(c.flagOnRead, f, at("flagOnRead"));
       refCheck(outlets, "outlet id", c.outlet, f, at("outlet"));
       checkDay(c.day, f, ["clippings", i, "day"], "day");
       checkDay(c.minDay, f, ["clippings", i, "minDay"], "minDay");

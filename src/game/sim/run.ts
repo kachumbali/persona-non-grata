@@ -14,7 +14,15 @@ import {
   startMeters,
   visitReady,
 } from "../rules";
-import { nextStep, stepContext, stepStatus, stepsOf } from "../mission";
+import {
+  nextStep,
+  routeContext,
+  routeStatus,
+  stepContext,
+  stepStatus,
+  stepsOf,
+  taskQuality,
+} from "../mission";
 import type { Meters } from "../rules";
 import { useGame } from "../store";
 import { botById, type Bot, type BotId } from "./bots";
@@ -101,6 +109,11 @@ export interface RunResult {
   stalls: number;
   workStalled: number;
   dutiesDisplaced: number;
+  routes: Record<string, number>;
+  favoursOwed: number;
+  quality: Record<string, "good" | "adequate">;
+  routeChanges: number;
+  routeLockouts: number;
 }
 
 /** Cash that is spoken for: the visit reserves and the mission steps still to do. */
@@ -126,7 +139,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
   const tracker = createTracker();
   const player = new Player(
     rng,
-    { traitBias: options.traitBias ?? bot.traitBias, overload: bot.overload },
+    { traitBias: options.traitBias ?? bot.traitBias, overload: bot.overload, botId: bot.id },
     tracker,
   );
   const gameSeed = gameSeedFor(options.seed);
@@ -155,6 +168,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     emptyPlans = 0,
     blocksPlayed = 0,
     stalls = 0;
+  let routeLockouts = 0;
   let lowestFunds = useGame.getState().economy.funds;
   let lowestAvailable = lowestFunds - reserved(useGame.getState().economy);
   const lowestMeters = zeroMeters();
@@ -201,6 +215,18 @@ function play(options: SimOptions, chapterId: string): RunResult {
   /** What the screens would put in front of a person at the start of the block. */
   function observe() {
     const s = useGame.getState();
+    for (const task of Object.keys(missionTasks())) {
+      const step = nextStep(s.missionSteps, task);
+      if (
+        step?.routes &&
+        !s.routeDeliveries[`${task}.${step.id}`] &&
+        stepStatus(stepContext(s), task, step.id).state === "available" &&
+        !step.routes.some(
+          (route) => routeStatus(route, routeContext(s, task, step.id)).state === "available",
+        )
+      )
+        routeLockouts++;
+    }
     const start = blocks()[s.block]?.time ?? 0;
     const end = blocks()[s.block + 1]?.time ?? 24 * 60;
     const arrives = (e: { day: number; time: number }) =>
@@ -288,6 +314,18 @@ function play(options: SimOptions, chapterId: string): RunResult {
     stalls,
     workStalled: s.log.filter((l) => l.text.includes("work stalled")).length,
     dutiesDisplaced: s.log.filter((l) => l.text.includes("routine duties displaced")).length,
+    routes: s.routeHistory.reduce<Record<string, number>>((counts, route) => {
+      counts[route.kind] = (counts[route.kind] ?? 0) + 1;
+      return counts;
+    }, {}),
+    favoursOwed: Object.values(s.favours.youOwe).reduce((a, b) => a + b, 0),
+    quality: Object.fromEntries(
+      Object.keys(missionTasks())
+        .filter((task) => s.visit[task])
+        .map((task) => [task, taskQuality(s.stepQualities, task)]),
+    ),
+    routeChanges: s.routeChanges,
+    routeLockouts,
   };
 }
 

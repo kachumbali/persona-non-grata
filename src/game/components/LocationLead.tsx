@@ -48,6 +48,8 @@ export function LocationLead() {
       eventId: event.id,
       eventChoice: choice.id,
       flag: choice.flag,
+      favour: choice.favour,
+      teaches: choice.teaches,
       score: choice.score,
       contact: choice.contact,
       contactTrust: choice.contactTrust,

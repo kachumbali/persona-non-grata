@@ -55,6 +55,8 @@ export function Conversation() {
       overload,
       dialogueTopic: topic ? `${npc.id}:${topic.id}` : undefined,
       flag: choice.flag,
+      favour: choice.favour,
+      teaches: choice.teaches,
       trust: choice.trust,
       pair: choice.pair,
       pairTarget: choice.pairTarget,

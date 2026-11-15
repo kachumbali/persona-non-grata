@@ -65,6 +65,29 @@ describe("sim building blocks", () => {
 });
 
 describe("simulated playthroughs", () => {
+  it("meets B-02 route and promotion targets in the full matrix", () => {
+    const full = runMatrix({ bots: BOTS, builds: allBuilds(), seeds: 3 });
+    const diligent = full.filter((run) => run.bot === "careful");
+    // Target: 60–90%; measured after raising official paperwork to 3 DP: 33/42.
+    const promotion = share(diligent, (run) => run.ending === "promoted");
+    expect(promotion).toBeGreaterThanOrEqual(0.6);
+    expect(promotion).toBeLessThanOrEqual(0.9);
+    for (const run of full)
+      expect(run.routeLockouts, `${run.bot} ${run.build} ${run.seed}`).toBe(0);
+    const totals: Record<string, number> = {};
+    for (const run of full)
+      for (const [kind, count] of Object.entries(run.routes))
+        totals[kind] = (totals[kind] ?? 0) + count;
+    for (const kind of ["official", "favour", "money", "eu", "knowledge"])
+      expect(totals[kind], kind).toBeGreaterThan(0);
+    const competentRoutes: Record<string, number> = {};
+    for (const run of full.filter((item) => COMPETENT.includes(item.bot)))
+      for (const [kind, count] of Object.entries(run.routes))
+        competentRoutes[kind] = (competentRoutes[kind] ?? 0) + count;
+    const count = Object.values(competentRoutes).reduce((a, b) => a + b, 0);
+    for (const amount of Object.values(competentRoutes))
+      expect(amount / count).toBeLessThanOrEqual(0.6);
+  }, 20000);
   it("is deterministic for a given seed", () => {
     const options = { bot: "socialiser" as const, traits: ["namedrop", "cuisine"], seed: 2 };
     expect(simulate(options)).toEqual(simulate(options));

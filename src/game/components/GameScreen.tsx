@@ -15,6 +15,7 @@ import { StoryRecord } from "./StoryRecord";
 import { PressReview } from "./PressReview";
 import { PostingBriefing } from "./PostingBriefing";
 import { MissionSteps } from "./MissionSteps";
+import { taskQuality } from "../mission";
 import {
   Dialog,
   DialogContent,
@@ -77,6 +78,18 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
                   : "Late buyers faced rationing and higher generator fuel charges."}
             </p>
           )}
+          {g.day >= lastDay() &&
+            Object.entries(missionTasks())
+              .filter(([id]) => g.visit[id])
+              .map(([id, label]) => (
+                <p key={id} className="mt-2 text-sm">
+                  {label}:{" "}
+                  {chapter.missionQualityTexts?.[id]?.[taskQuality(g.stepQualities, id)] ??
+                    (taskQuality(g.stepQualities, id) === "adequate"
+                      ? "confirmed, with qualifications."
+                      : "confirmed as agreed.")}
+                </p>
+              ))}
           <DiplomaticRecord outcomes={g.storyOutcomes} />
           <StoryRecord outcomes={g.storyOutcomes} completed={g.completedEvents} day={g.day} />
           <Button className="mt-8" onClick={newPosting}>

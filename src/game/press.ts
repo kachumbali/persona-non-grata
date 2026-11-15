@@ -21,6 +21,9 @@ export type Clipping = {
   trigger?: Trigger;
   signal?: boolean;
   once?: boolean;
+  teaches?: string;
+  flagOnRead?: string;
+  background?: { text: string; teaches: string };
   capital?: { confidence: number };
   maxim?: { headline: string; body: string };
 };

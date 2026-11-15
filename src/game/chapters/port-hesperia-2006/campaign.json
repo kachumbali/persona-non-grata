@@ -663,6 +663,7 @@
       "choices": [
         {
           "id": "accept",
+          "favour": { "character": "eu", "delta": 1 },
           "label": "Accept the Delegation-led announcement; fund collection planning",
           "staff": "development",
           "cashCost": 200,
@@ -690,6 +691,7 @@
         },
         {
           "id": "shared",
+          "favour": { "character": "eu", "delta": 1 },
           "label": "Negotiate shared credit and a practical work plan",
           "staff": "development",
           "cashCost": 150,
@@ -734,6 +736,7 @@
         },
         {
           "id": "deliver",
+          "favour": { "character": "port-officer", "delta": 1 },
           "label": "Keep the announcement and start collection",
           "trust": 1,
           "effects": {
@@ -758,6 +761,7 @@
       "choices": [
         {
           "id": "release",
+          "favour": { "character": "port-officer", "delta": 1 },
           "label": "Release the plan for the local crews to use",
           "trust": 3,
           "effects": {
@@ -792,6 +796,7 @@
       "choices": [
         {
           "id": "include",
+          "favour": { "character": "port-officer", "delta": 1 },
           "label": "Add the port crews to the public credit",
           "trust": 3,
           "effects": {
@@ -1311,6 +1316,7 @@
       "choices": [
         {
           "id": "compromise",
+          "favour": { "character": "protocol", "delta": 1 },
           "flag": "protocol-compromise",
           "label": "Move the Deputy Minister forward and explain to Capital",
           "effects": {
@@ -1349,6 +1355,7 @@
       "choices": [
         {
           "id": "compromise",
+          "favour": { "character": "protocol", "delta": 1 },
           "flag": "protocol-compromise",
           "label": "Accept Ndao's compromise and brief Capital",
           "effects": {
@@ -1695,6 +1702,7 @@
         },
         {
           "id": "coordinate",
+          "favour": { "character": "port-officer", "delta": 1 },
           "label": "Ask Mira for the inspection timetable",
           "contact": "port-officer",
           "contactTrust": 5,
@@ -1708,6 +1716,121 @@
         }
       ],
       "requiresFlag": "fuel-lead"
+    },
+    {
+      "id": "call-in-protocol",
+      "title": "Ndao calls in a favour",
+      "npc": "protocol",
+      "callInFor": "protocol",
+      "text": "Ndao would like you to review a seating chart. The request has acquired the status of a reminder.",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "honour",
+          "label": "Make time for the request",
+          "replace": true,
+          "result": "You give the request the time it was said not to require."
+        },
+        {
+          "id": "refuse",
+          "label": "Decline the request",
+          "trust": -8,
+          "flag": "refused-favour-protocol",
+          "result": "The request is withdrawn. The memory is retained."
+        }
+      ]
+    },
+    {
+      "id": "call-in-golf",
+      "title": "Bako calls in a favour",
+      "npc": "golf",
+      "callInFor": "golf",
+      "text": "Bako would like you to attend a constituency briefing. The request has acquired the status of a reminder.",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "honour",
+          "label": "Make time for the request",
+          "replace": true,
+          "result": "You give the request the time it was said not to require."
+        },
+        {
+          "id": "refuse",
+          "label": "Decline the request",
+          "trust": -8,
+          "flag": "refused-favour-golf",
+          "result": "The request is withdrawn. The memory is retained."
+        }
+      ]
+    },
+    {
+      "id": "call-in-fixer",
+      "title": "Marcel calls in a favour",
+      "npc": "fixer",
+      "callInFor": "fixer",
+      "text": "Marcel would like you to sit through a supplier meeting. The request has acquired the status of a reminder.",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "honour",
+          "label": "Make time for the request",
+          "replace": true,
+          "result": "You give the request the time it was said not to require."
+        },
+        {
+          "id": "refuse",
+          "label": "Decline the request",
+          "trust": -8,
+          "flag": "refused-favour-fixer",
+          "result": "The request is withdrawn. The memory is retained."
+        }
+      ]
+    },
+    {
+      "id": "call-in-eu",
+      "title": "Celeste calls in a favour",
+      "npc": "eu",
+      "callInFor": "eu",
+      "text": "Celeste would like you to review a joint announcement. The request has acquired the status of a reminder.",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "honour",
+          "label": "Make time for the request",
+          "replace": true,
+          "result": "You give the request the time it was said not to require."
+        },
+        {
+          "id": "refuse",
+          "label": "Decline the request",
+          "trust": -8,
+          "flag": "refused-favour-eu",
+          "result": "The request is withdrawn. The memory is retained."
+        }
+      ]
+    },
+    {
+      "id": "call-in-bianca",
+      "title": "Bianca calls in a favour",
+      "npc": "bianca",
+      "callInFor": "bianca",
+      "text": "Bianca would like you to review an exercise plan. The request has acquired the status of a reminder.",
+      "minDay": 1,
+      "choices": [
+        {
+          "id": "honour",
+          "label": "Make time for the request",
+          "replace": true,
+          "result": "You give the request the time it was said not to require."
+        },
+        {
+          "id": "refuse",
+          "label": "Decline the request",
+          "trust": -8,
+          "flag": "refused-favour-bianca",
+          "result": "The request is withdrawn. The memory is retained."
+        }
+      ]
     }
   ]
 }

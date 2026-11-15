@@ -774,6 +774,7 @@
             },
             {
               "label": "Work together. Bring the gradient AND the logistics.",
+              "favour": { "character": "bianca", "delta": 1 },
               "pairTarget": "press",
               "result": "Bianca and Lucien produce the first armoured pastel convoy plan in history.",
               "trust": -1,
@@ -1128,6 +1129,27 @@
                 "morale": 1,
                 "sanity": -1
               }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "port-background",
+      "start": "a",
+      "nodes": {
+        "a": {
+          "text": "Lucien has clipped the port coverage. The ministry signs the papers; Mira’s office controls the inspection timetable.",
+          "choices": [
+            {
+              "label": "Ask what Bako wants from the programme",
+              "result": "Lucien says Bako wants a constituency visit before the port announcement.",
+              "teaches": "bako-objection"
+            },
+            {
+              "label": "Ask who controls the inspection",
+              "result": "Mira controls the timetable, even when the minister controls the announcement.",
+              "teaches": "port-control"
             }
           ]
         }
@@ -1878,6 +1900,7 @@
             },
             {
               "label": "Let me carry your bag. Diplomatically.",
+              "favour": { "character": "golf", "delta": 1 },
               "result": "Bako hands you the bag. It weighs as much as a protocol file.",
               "trust": 6,
               "pair": 0,
@@ -1889,6 +1912,7 @@
             },
             {
               "label": "Thirty minutes, Minister. Tuesday?",
+              "teaches": "bako-objection",
               "result": "Bako chuckles. 'Nobody has Tuesday. Have a Thursday.'",
               "trust": 2,
               "pair": 0,
@@ -2388,6 +2412,7 @@
           "choices": [
             {
               "label": "Ask which route needs attention.",
+              "teaches": "collection-point",
               "result": "Mira identifies a blocked collection point and thanks you for asking.",
               "trust": 2,
               "effects": {

@@ -33,6 +33,10 @@ function missionWork(
     if (done >= o.max) break;
     const step = p.openStep(task);
     if (!step) continue;
+    if (step.routes) {
+      if (p.routedTask(task)) done++;
+      continue;
+    }
     if (o.skipMail && p.stepHasMail(task, step.id)) continue;
     const workers = o.suitable ? p.suitableStaff(task) : p.rng.shuffle(p.staff().map((c) => c.id));
     let ok = false;

@@ -16,6 +16,26 @@ export function workOnMissionSteps(): number {
     const step = nextStep(s.missionSteps, task);
     if (!step || stepStatus(stepContext(s), task, step.id).state !== "available") continue;
     if (s.pending.some((p) => p.task === task)) continue;
+    if (step.routes) {
+      const route = step.routes.find((item) => item.kind === "official");
+      if (
+        route &&
+        !s.routeDeliveries[`${task}.${step.id}`] &&
+        s.queue({
+          id: `route-${task}`,
+          kind: "work",
+          task,
+          step: step.id,
+          route: route.id,
+          source: `You · ${step.label}`,
+          text: route.result,
+          effects: {},
+          timeCost: route.dp,
+        })
+      )
+        queued++;
+      continue;
+    }
     const skill = step.skill ?? task;
     const worker = campaign().characters.find(
       (c) =>

@@ -27,6 +27,7 @@ You write scenes for Persona Non Grata, a satirical diplomatic-career game. You 
 ## Effects and gates (shared by all formats)
 
 - `effects`: object with any of `confidence`, `goodwill`, `morale`, `sanity` (integers, typically -5 to +5; story choices usually -3 to +4) and `budget` (small integer, legacy currency). May be `{}`.
+- Story, dialogue and email choices may grant `favour: { "character": "existing-id", "delta": 1 }` or teach `teaches: "fact-id"`; they take effect when the choice resolves. A clipping may use `teaches` when the review is read, and `background: { "text": "…", "teaches": "fact-id" }` for Lucien's optional briefing. Facts and favours open shortcuts, never the only route through a mission.
 - Gates (any choice): `requiresTrait` (trait id), `blockedByTrait` (trait id), `requiresStat` as `{ "stat": "gravitas" | "charm" | "stamina" | "deniability" | "liver", "min": number }`.
 - Trait ids: liver, replyall, punctual, brussels, demarche, namedrop, cuisine, novelist, sideevents, eyesopen, ngo.
 

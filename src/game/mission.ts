@@ -7,6 +7,7 @@ import { activeChapter } from "./chapters";
 import type {
   ChapterManifest,
   MissionStep,
+  MissionRoute,
   Setback,
   SetbackTarget,
   StepRef,
@@ -59,6 +60,13 @@ export function nextStep(
 export const stepsDone = (progress: MissionProgress, task: string): number =>
   stepsOf(task).filter((s) => stepDone(progress, task, s.id)).length;
 
+export function taskQuality(
+  qualities: Record<string, Record<string, "good" | "adequate">>,
+  task: string,
+): "good" | "adequate" {
+  return Object.values(qualities[task] ?? {}).includes("adequate") ? "adequate" : "good";
+}
+
 /** Setbacks that have landed and name this step, in the order they landed. */
 function landed(task: string, step: string, applied: string[], manifest: Manifest) {
   return (manifest.setbacks ?? [])
@@ -101,7 +109,10 @@ export function stepReserve(
     .flatMap((s) => s.targets)
     .filter((t) => t.task === task && t.step === step.id)
     .reduce((n, t) => n + Math.max(0, t.cashDelta ?? 0), 0);
-  return (step.cash ?? 0) + extras;
+  const base = step.routes
+    ? Math.max(step.cash ?? 0, ...step.routes.filter((r) => !r.fromGeneralFunds).map((r) => r.cash))
+    : (step.cash ?? 0);
+  return base + extras;
 }
 /** Cash ring-fenced for the mission steps still to do. */
 export function missionReserve(
@@ -151,6 +162,85 @@ export const characterName = (id: string): string =>
   activeChapter().campaign.characters.find((c) => c.id === id)?.name ?? id;
 const possessive = (name: string) => (name.endsWith("s") ? `${name}'` : `${name}'s`);
 
+export interface RouteContext {
+  day: number;
+  trust: Record<string, { trust: number }>;
+  owedToYou: Record<string, number>;
+  knownFacts: string[];
+  flags: string[];
+  outcomes: Record<string, { status: string; choice?: string }>;
+  spentRoutes: string[];
+}
+
+export interface RoutePosting {
+  day: number;
+  colleagues: RouteContext["trust"];
+  favours: { owedToYou: Record<string, number> };
+  knownFacts: string[];
+  storyFlags: string[];
+  storyOutcomes: RouteContext["outcomes"];
+  spentRoutes: Record<string, string[]>;
+}
+
+export function routeContext(s: RoutePosting, task: string, step: string): RouteContext {
+  return {
+    day: s.day,
+    trust: s.colleagues,
+    owedToYou: s.favours.owedToYou,
+    knownFacts: s.knownFacts,
+    flags: s.storyFlags,
+    outcomes: s.storyOutcomes,
+    spentRoutes: s.spentRoutes[`${task}.${step}`] ?? [],
+  };
+}
+
+export type RouteStatus =
+  | { state: "available" }
+  | { state: "undiscovered" }
+  | { state: "expired" }
+  | { state: "blocked"; reason: string };
+
+export function routeFavourToSpend(route: MissionRoute, ctx: RouteContext): string | undefined {
+  if (route.requires?.favour) return route.requires.favour;
+  const either = route.requires?.trustOrFavour;
+  if (either && (ctx.trust[either.character]?.trust ?? 0) < either.min) return either.character;
+  return undefined;
+}
+
+/** Evaluate a route without changing the posting. Expiry and spent routes take precedence. */
+export function routeStatus(route: MissionRoute, ctx: RouteContext): RouteStatus {
+  const req = route.requires;
+  if (
+    ctx.spentRoutes.includes(route.id) ||
+    (req?.expiresDay !== undefined && ctx.day > req.expiresDay) ||
+    (req?.expiresOnFlag && ctx.flags.includes(req.expiresOnFlag)) ||
+    req?.expiresOnFlags?.some((flag) => ctx.flags.includes(flag))
+  )
+    return { state: "expired" };
+  if (req?.fact && !ctx.knownFacts.includes(req.fact)) return { state: "undiscovered" };
+  if (req?.trust && (ctx.trust[req.trust.character]?.trust ?? 0) < req.trust.min)
+    return {
+      state: "blocked",
+      reason: `needs ${possessive(characterName(req.trust.character))} trust (${req.trust.min}+)`,
+    };
+  if (
+    req?.trustOrFavour &&
+    (ctx.trust[req.trustOrFavour.character]?.trust ?? 0) < req.trustOrFavour.min &&
+    (ctx.owedToYou[req.trustOrFavour.character] ?? 0) < 1
+  )
+    return {
+      state: "blocked",
+      reason: `needs ${possessive(characterName(req.trustOrFavour.character))} trust (${req.trustOrFavour.min}+) or a favour`,
+    };
+  if (req?.favour && (ctx.owedToYou[req.favour] ?? 0) < 1)
+    return { state: "blocked", reason: `needs a favour from ${characterName(req.favour)}` };
+  if (req?.flag && !ctx.flags.includes(req.flag))
+    return { state: "blocked", reason: "requires an earlier event" };
+  if (req?.outcome && ctx.outcomes[req.outcome.story]?.choice !== req.outcome.outcome)
+    return { state: "blocked", reason: "requires an earlier outcome" };
+  return { state: "available" };
+}
+
 /** Why the player cannot do the step in person (not enough trust), or null. */
 export function inPersonBlock(step: MissionStep, trust: StepContext["trust"]): string | null {
   const need = step.requiresTrust;
@@ -183,7 +273,7 @@ export function stepStatus(
     const needed = findStep(other.task, other.step, manifest);
     return { state: "blocked", reason: `needs ${needed?.short ?? other.step}` };
   }
-  const trustProblem = inPersonBlock(step, ctx.trust);
+  const trustProblem = step.routes ? null : inPersonBlock(step, ctx.trust);
   return trustProblem
     ? { state: "available", hint: `in person ${trustProblem}; a colleague can go instead` }
     : { state: "available" };

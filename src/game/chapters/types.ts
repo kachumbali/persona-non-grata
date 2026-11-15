@@ -38,6 +38,36 @@ export interface StepRef {
   step: string;
 }
 
+export interface MissionRoute {
+  id: string;
+  label: string;
+  kind: "official" | "favour" | "money" | "eu" | "knowledge";
+  dp: number;
+  cash: number;
+  fromGeneralFunds?: boolean;
+  effects?: Partial<Record<"confidence" | "goodwill" | "morale" | "sanity", number>>;
+  requires?: {
+    trust?: { character: string; min: number };
+    trustOrFavour?: { character: string; min: number };
+    favour?: string;
+    fact?: string;
+    flag?: string;
+    outcome?: { story: string; outcome: string };
+    expiresDay?: number;
+    expiresOnFlag?: string;
+    expiresOnFlags?: string[];
+  };
+  days: number;
+  quality: "good" | "adequate";
+  consequences?: {
+    oweFavour?: string;
+    flag?: string;
+    trust?: Record<string, number>;
+    delayed?: { day: number; flag?: string; trust?: Record<string, number> };
+  };
+  result: string;
+}
+
 /**
  * One step of a mission task. The steps of a task are done in order (a step needs the one before
  * it); the task is confirmed when its last step is done. Every step can be done by the player in
@@ -60,6 +90,8 @@ export interface MissionStep {
   requiresStep?: StepRef;
   /** In person only: the player needs this much trust with the character. */
   requiresTrust?: { character: string; min: number };
+  gatekeeper?: string;
+  routes?: MissionRoute[];
   /** Result text, recorded when the step is done. */
   result: string;
 }
@@ -106,6 +138,8 @@ export interface ChapterManifest {
   days: number;
   blocks: [BlockDef, ...BlockDef[]];
   missionTasks: Record<string, string>;
+  missionQualityTexts?: Record<string, { good: string; adequate: string }>;
+  adequateArrivalConfidence?: number;
   /** Ordered steps for each mission task. */
   missionSteps: Record<string, MissionStep[]>;
   setbacks: Setback[];

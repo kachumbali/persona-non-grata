@@ -36,6 +36,54 @@ describe("content checker on the real chapter", () => {
 });
 
 describe("content checker catches mistakes", () => {
+  it("rejects an untaught route fact and an owed favour without a call-in", () => {
+    const pack = fresh();
+    const route = pack.manifest.missionSteps["programme"]!.find(
+      (step) => step.id === "host-agreement",
+    )!.routes!.find((item) => item.kind === "knowledge")!;
+    route.requires = { fact: "never-taught" };
+    route.consequences = { oweFavour: "anselm" };
+    const errors = check(pack).filter((finding) => finding.level === "error");
+    expect(errors.some((finding) => finding.message.includes("never taught"))).toBe(true);
+    expect(errors.some((finding) => finding.message.includes("No call-in event"))).toBe(true);
+  });
+  it("rejects a favour granted by an unknown character", () => {
+    const pack = fresh();
+    pack.campaign.events[0]!.choices[0]!.favour = { character: "nobody", delta: 1 };
+    expect(
+      has(check(pack), "error", "campaign.json", "events[0].choices[0].favour.character"),
+    ).toHaveLength(1);
+  });
+  it("requires an unconditional official route and unique route ids", () => {
+    const pack = fresh();
+    const step = pack.manifest.missionSteps["clearance"]![0]!;
+    step.gatekeeper = "protocol";
+    step.routes = [
+      {
+        id: "same",
+        label: "Official",
+        kind: "official",
+        dp: 1,
+        cash: 100,
+        days: 3,
+        quality: "good",
+        result: "Filed.",
+      },
+      {
+        id: "same",
+        label: "Favour",
+        kind: "favour",
+        dp: 1,
+        cash: 0,
+        days: 0,
+        quality: "good",
+        result: "Filed.",
+      },
+    ];
+    const errors = check(pack).filter((finding) => finding.level === "error");
+    expect(errors.some((finding) => finding.message.includes("cost only time"))).toBe(true);
+    expect(errors.some((finding) => finding.message.includes("Duplicate route id"))).toBe(true);
+  });
   it("unknown character id", () => {
     const pack = fresh();
     pack.campaign.events[0]!.npc = "nobody";

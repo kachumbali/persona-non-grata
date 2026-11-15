@@ -26,7 +26,14 @@ import {
   type StoryChoice,
   type StoryEvent,
 } from "../rules";
-import { nextStep, stepContext, stepStatus, type MissionStep } from "../mission";
+import {
+  nextStep,
+  routeContext,
+  routeStatus,
+  stepContext,
+  stepStatus,
+  type MissionStep,
+} from "../mission";
 import { inboxFor, useGame, type GameState } from "../store";
 import type { Rng } from "./rng";
 
@@ -39,6 +46,7 @@ export interface PlayerOptions {
   /** Probability of taking a trait-gated option when one is offered. */
   traitBias: number;
   overload: OverloadMode;
+  botId?: string;
 }
 
 /** What the bot has seen and done; the runner turns it into a RunResult. */
@@ -251,10 +259,48 @@ export class Player {
     const s = this.s;
     const step = nextStep(s.missionSteps, task);
     if (!step) return undefined;
+    if (s.routeDeliveries[`${task}.${step.id}`]) return undefined;
     if (stepStatus(stepContext(s), task, step.id).state !== "available") return undefined;
     if (s.pending.some((p) => p.task === task && p.step === step.id && p.kind === "work"))
       return undefined;
     return step;
+  }
+  routedTask(task: string): boolean {
+    const step = this.openStep(task);
+    if (!step?.routes || this.s.block === 3) return false;
+    if (this.s.location !== this.office && !this.travel(this.office)) return false;
+    const preference =
+      this.options.botId === "socialiser"
+        ? "favour"
+        : this.options.botId === "reckless"
+          ? "money"
+          : this.options.botId === "press-reader"
+            ? "knowledge"
+            : "official";
+    const choices = step.routes.filter(
+      (route) => routeStatus(route, routeContext(this.s, task, step.id)).state === "available",
+    );
+    if (this.options.botId === "ignorer" && choices.some((item) => item.kind !== "official"))
+      return false;
+    const route =
+      choices.find((item) => item.kind === preference) ??
+      (this.options.botId === "socialiser" || this.options.botId === "press-reader"
+        ? choices.find((item) => item.kind === "eu")
+        : undefined) ??
+      choices.find((item) => item.kind === "official");
+    if (!route) return false;
+    return this.queue({
+      id: `route-${task}`,
+      kind: "work",
+      task,
+      step: step.id,
+      route: route.id,
+      source: `You · ${step.label}`,
+      text: route.result,
+      effects: {},
+      timeCost: route.dp,
+      playerSlot: true,
+    });
   }
   /** True when the step named "task.step" is neither done nor blocked. */
   stepOpen(ref: string): boolean {
@@ -458,6 +504,8 @@ export class Player {
           overload,
           dialogueTopic: topic ? topicKey : undefined,
           flag: choice.flag,
+          favour: choice.favour,
+          teaches: choice.teaches,
           trust: choice.trust,
           pair: choice.pair,
           pairTarget: choice.pairTarget,
@@ -518,6 +566,8 @@ export class Player {
           trust: c.trust,
           pair: c.pair,
           flag: c.flag,
+          favour: c.favour,
+          teaches: c.teaches,
           score: c.score,
           contact: c.contact,
           contactTrust: c.contactTrust,
@@ -571,6 +621,8 @@ export class Player {
         eventId: event.id,
         eventChoice: choice.id,
         flag: choice.flag,
+        favour: choice.favour,
+        teaches: choice.teaches,
         score: choice.score,
         contact: choice.contact,
         contactTrust: choice.contactTrust,

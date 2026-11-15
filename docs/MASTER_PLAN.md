@@ -106,6 +106,7 @@ Finish every system inside the one chapter that exists, then test it with five p
 
 ### B-02 Gatekeepers and routes: make the mission hard, not only long
 
+- Status: done.
 - Type: Rules and code · Size: M · Depends on: B-01
 - Goal: After B-01 the visit takes the whole chapter, but a careful player still never fails. Each key mission step should have a gatekeeper and several ways past them, each with its own price.
 - Work:

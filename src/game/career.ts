@@ -36,6 +36,7 @@ export interface ChapterResult {
   storyOutcomes: Record<string, { status: "chosen" | "missed"; choice?: string }>;
   /** Final trust per character id. */
   trust: Record<string, number>;
+  favours?: { owedToYou: Record<string, number>; youOwe: Record<string, number> };
   finishedAt: string;
 }
 export interface Career {
@@ -119,7 +120,7 @@ type ResultSource = Pick<
   | "storyFlags"
   | "storyOutcomes"
   | "colleagues"
->;
+> & { favours?: SavedGame["favours"] };
 
 export function chapterResultFrom(game: ResultSource, now: string): ChapterResult {
   return {
@@ -131,6 +132,7 @@ export function chapterResultFrom(game: ResultSource, now: string): ChapterResul
     flags: [...new Set(game.storyFlags.filter(isLegacyFlag))],
     storyOutcomes: structuredClone(game.storyOutcomes),
     trust: Object.fromEntries(Object.entries(game.colleagues).map(([id, c]) => [id, c.trust])),
+    favours: structuredClone(game.favours ?? { owedToYou: {}, youOwe: {} }),
     finishedAt: now,
   };
 }
@@ -155,8 +157,11 @@ export function resultRecorded(career: Career, game: ResultSource): boolean {
   const last = career.chapters.at(-1);
   if (!last || !game.ending) return false;
   const mine = chapterResultFrom(game, last.finishedAt);
+  const { finishedAt: _mineAt, favours: mineFavours, ...mineResult } = mine;
+  const { finishedAt: _lastAt, favours: lastFavours, ...lastResult } = last;
   return (
-    JSON.stringify({ ...mine, finishedAt: "" }) === JSON.stringify({ ...last, finishedAt: "" })
+    JSON.stringify(mineResult) === JSON.stringify(lastResult) &&
+    JSON.stringify(mineFavours) === JSON.stringify(lastFavours ?? { owedToYou: {}, youOwe: {} })
   );
 }
 
@@ -178,6 +183,7 @@ const chapterResultSchema = z.object({
   flags: z.array(id).max(2000),
   storyOutcomes: z.record(id, outcome),
   trust: z.record(id, num),
+  favours: z.object({ owedToYou: z.record(id, num), youOwe: z.record(id, num) }).optional(),
   finishedAt: z.string().max(64),
 });
 const backgroundIndex = z.number().int().min(0).max(1000).nullable();
@@ -217,6 +223,19 @@ const postingSchema = z
     score: num,
     storyFlags: z.array(z.string().max(500)).max(5000),
     storyOutcomes: z.record(id, outcome),
+    favours: z.object({ owedToYou: z.record(id, num), youOwe: z.record(id, num) }).optional(),
+    knownFacts: z.array(id).max(5000).optional(),
+    stepQualities: z.record(id, z.record(id, z.enum(["good", "adequate"]))).optional(),
+    taskQualities: z.record(id, z.enum(["good", "adequate"])).optional(),
+    usedRoutes: z.record(id, id).optional(),
+    spentRoutes: z.record(id, z.array(id)).optional(),
+    routeDeliveries: z.record(id, z.object({ route: id, dueDay: num })).optional(),
+    favourCalls: z.array(z.object({ character: id, dueDay: num })).optional(),
+    routeHistory: z.array(z.object({ task: id, step: id, route: id, kind: id })).optional(),
+    routeChanges: num.optional(),
+    delayedRouteEffects: z
+      .array(z.object({ dueDay: num, flag: id.optional(), trust: z.record(id, num).optional() }))
+      .optional(),
     colleagues: z.record(id, z.object({ trust: num, fatigue: num })),
     pending: z.array(z.record(z.unknown())),
     character: z

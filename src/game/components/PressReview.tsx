@@ -22,16 +22,18 @@ export function PressReview({ onClose }: { onClose: () => void }) {
         id: `press-background-${g.day}`,
         kind: "dialogue",
         source: "Lucien’s press background",
-        text: "Lucien explains the morning’s press coverage.",
+        text: signal?.background?.text ?? "Lucien explains the morning’s press coverage.",
+        teaches: signal?.background?.teaches,
         effects: {},
         timeCost: 1,
       })
     ) {
       g.readPress();
       setHint(
-        signal
-          ? `Lucien points to “${g.pressCompiler === "maxim" && signal.maxim ? signal.maxim.headline : signal.headline}”.`
-          : "Lucien says there is no developing fuel quay item today.",
+        signal?.background?.text ??
+          (signal
+            ? `Lucien points to “${g.pressCompiler === "maxim" && signal.maxim ? signal.maxim.headline : signal.headline}”.`
+            : "Lucien says there is no developing fuel quay item today."),
       );
     } else setHint(useGame.getState().planError);
   };

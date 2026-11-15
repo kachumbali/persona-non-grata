@@ -65,6 +65,13 @@ describe("newCareer", () => {
 });
 
 describe("chapter results", () => {
+  it("carries both sides of the favour ledger into the career result", () => {
+    const favours = { owedToYou: { protocol: 1 }, youOwe: { fixer: 2 } };
+    const result = chapterResultFrom(game({ favours }), LATER);
+    expect(result.favours).toEqual(favours);
+    favours.youOwe.fixer = 9;
+    expect(result.favours?.youOwe["fixer"]).toBe(2);
+  });
   it("filters internal flags and records final trust", () => {
     const r = chapterResultFrom(game(), LATER);
     expect(r.flags).toEqual(["fuel-bought", "trait:namedrop:a"]);

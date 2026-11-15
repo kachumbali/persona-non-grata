@@ -25,17 +25,17 @@ describe("mission steps list", () => {
     expect(stepRow(/Overflight and landing form/).dataset["state"]).toBe("available");
     const stamp = stepRow(/Protocol's stamped confirmation/);
     expect(stamp.dataset["state"]).toBe("blocked");
-    expect(within(stamp).getByText(/from Day 10/)).toBeTruthy();
+    expect(within(stamp).getAllByText(/from Day 10/).length).toBeGreaterThan(0);
     const deposit = stepRow(/Lounge deposit paid/);
     expect(deposit.dataset["state"]).toBe("available");
     expect(within(deposit).getByText(/available now · ƒ500/)).toBeTruthy();
     const print = stepRow(/Final printed programme/);
     expect(within(print).getByText(/from Day 13/)).toBeTruthy();
     expect(
-      within(stepRow(/Motorcade and escort/)).getByText(
+      within(stepRow(/Motorcade and escort/)).getAllByText(
         /needs the route reconnaissance|from Day 12/,
       ),
-    ).toBeTruthy();
+    ).not.toHaveLength(0);
   });
   it("names the day a step opens and the trust it needs", () => {
     useGame.setState({
@@ -45,7 +45,7 @@ describe("mission steps list", () => {
     });
     render(<MissionSteps />);
     expect(within(stepRow(/Final printed programme/)).getByText(/from Day 13|needs/)).toBeTruthy();
-    expect(screen.getByText(/in person needs Director Ndao's trust \(55\+\)/)).toBeTruthy();
+    expect(screen.getByText(/File the permit in order/)).toBeTruthy();
   });
   it("closes the steps on the arrival day", () => {
     useGame.setState({ day: 15 });

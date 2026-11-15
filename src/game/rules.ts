@@ -22,6 +22,8 @@ export interface Outcome extends ChoiceGate {
   /** Confirms one step of a mission task, written "task.step". */
   confirmsStep?: string;
   formal?: boolean;
+  favour?: { character: string; delta: number };
+  teaches?: string;
 }
 export interface GoodwillChange {
   day: number;
@@ -190,6 +192,7 @@ export interface PendingDecision {
   task?: VisitTask | undefined;
   /** The step of `task` this decision does; its cash comes from the mission reserve. */
   step?: string | undefined;
+  route?: string | undefined;
   /** The part of `cashCost` that is the step's own cost, paid from the mission reserve. */
   stepCost?: number | undefined;
   trust?: number | undefined;
@@ -219,6 +222,8 @@ export interface PendingDecision {
   eventId?: string | undefined;
   eventChoice?: string | undefined;
   playerSlot?: boolean | undefined;
+  favour?: { character: string; delta: number } | undefined;
+  teaches?: string | undefined;
 }
 export interface StoryChoice extends ChoiceGate {
   id: string;
@@ -238,12 +243,15 @@ export interface StoryChoice extends ChoiceGate {
   staff?: string;
   cashCost?: number;
   formal?: boolean;
+  favour?: { character: string; delta: number };
+  teaches?: string;
 }
 export type StoryOutcome = { status: "chosen" | "missed"; choice?: string };
 export type StoryEvent = {
   id: string;
   title: string;
   npc: string;
+  callInFor?: string;
   text: string;
   minDay: number;
   expiresDay?: number;
@@ -313,6 +321,7 @@ export function dailyEvents(
   const available = campaign().events.filter(
     (event) =>
       !event.location &&
+      !event.callInFor &&
       event.minDay <= day &&
       (event.expiresDay === undefined || day <= event.expiresDay) &&
       storyPrerequisitesMet(event, completed, outcomes) &&

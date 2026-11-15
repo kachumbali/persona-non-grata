@@ -92,6 +92,18 @@ function idleByDay(rs: RunResult[], pick: (r: RunResult) => number[]): number[] 
 }
 
 export interface Report {
+  qualityByTask: Record<string, Record<string, number>>;
+  routeLockouts: number;
+  routeStats: Record<
+    string,
+    {
+      routes: Record<string, number>;
+      favoursOwed: number;
+      good: number;
+      adequate: number;
+      changes: number;
+    }
+  >;
   chapterId: string;
   runs: number;
   bots: string[];
@@ -231,6 +243,34 @@ export function aggregate(results: RunResult[]): Report {
     for (const [msg, n] of Object.entries(r.planErrors)) errors[msg] = (errors[msg] ?? 0) + n;
 
   return {
+    routeLockouts: sum(results.map((run) => run.routeLockouts)),
+    qualityByTask: results.reduce<Record<string, Record<string, number>>>((all, run) => {
+      for (const [task, quality] of Object.entries(run.quality)) {
+        const counts = (all[task] ??= {});
+        counts[quality] = (counts[quality] ?? 0) + 1;
+      }
+      return all;
+    }, {}),
+    routeStats: Object.fromEntries(
+      Object.entries(byBot).map(([bot, runs]) => [
+        bot,
+        {
+          routes: runs.reduce<Record<string, number>>((acc, run) => {
+            for (const [kind, total] of Object.entries(run.routes))
+              acc[kind] = (acc[kind] ?? 0) + total;
+            return acc;
+          }, {}),
+          favoursOwed: sum(runs.map((run) => run.favoursOwed)),
+          good: sum(
+            runs.map((run) => Object.values(run.quality).filter((q) => q === "good").length),
+          ),
+          adequate: sum(
+            runs.map((run) => Object.values(run.quality).filter((q) => q === "adequate").length),
+          ),
+          changes: sum(runs.map((run) => run.routeChanges)),
+        },
+      ]),
+    ),
     chapterId,
     runs: results.length,
     bots,
@@ -386,6 +426,44 @@ export function formatReport(r: Report): string {
   );
   h("Endings per bot");
   out.push(endingTable(r.endingsByBot, r.endings, "bot"));
+  h("Mission routes and quality");
+  out.push(
+    table(
+      [
+        "bot",
+        "official",
+        "favour",
+        "money",
+        "eu",
+        "knowledge",
+        "favours owed",
+        "good tasks",
+        "adequate tasks",
+        "route changes",
+      ],
+      Object.entries(r.routeStats).map(([bot, stats]) => [
+        bot,
+        ...["official", "favour", "money", "eu", "knowledge"].map((kind) =>
+          String(stats.routes[kind] ?? 0),
+        ),
+        String(stats.favoursOwed),
+        String(stats.good),
+        String(stats.adequate),
+        String(stats.changes),
+      ]),
+    ),
+  );
+  out.push(`\nRoute lock-outs: ${r.routeLockouts}`);
+  out.push(
+    table(
+      ["task", "good", "adequate"],
+      Object.entries(r.qualityByTask).map(([task, counts]) => [
+        task,
+        String(counts["good"] ?? 0),
+        String(counts["adequate"] ?? 0),
+      ]),
+    ),
+  );
   h("Endings per trait build (all bots)");
   out.push(endingTable(r.endingsByBuild, r.endings, "build"));
   out.push(

@@ -77,6 +77,8 @@ export function Interruption() {
         trust: c.trust,
         pair: c.pair,
         flag: c.flag,
+        favour: c.favour,
+        teaches: c.teaches,
         score: c.score,
         contact: c.contact,
         contactTrust: c.contactTrust,

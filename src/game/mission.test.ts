@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { activeChapter } from "./chapters";
 import { availableFunds, initialEconomy } from "./economy";
 import {
@@ -15,7 +15,9 @@ import {
   stepStatus,
   taskComplete,
   findStep,
+  routeStatus,
 } from "./mission";
+import type { MissionRoute, MissionStep } from "./chapters/types";
 import { blocks, emails, startMeters, type PendingDecision } from "./rules";
 import { useGame } from "./store";
 
@@ -38,6 +40,93 @@ const work = (over: Partial<PendingDecision>): PendingDecision => ({
 });
 const status = (task: string, step: string) =>
   stepStatus(stepContext(useGame.getState()), task, step);
+
+describe("route requirements", () => {
+  const route: MissionRoute = {
+    id: "shortcut",
+    label: "Shortcut",
+    kind: "knowledge",
+    dp: 1,
+    cash: 0,
+    days: 0,
+    quality: "good",
+    result: "Done.",
+    requires: { fact: "objection", favour: "protocol", expiresDay: 6 },
+  };
+  const ctx = {
+    day: 6,
+    trust: {},
+    owedToYou: {},
+    knownFacts: [] as string[],
+    flags: [] as string[],
+    outcomes: {},
+    spentRoutes: [] as string[],
+  };
+  it("hides knowledge routes until learned, then explains other requirements", () => {
+    expect(routeStatus(route, ctx)).toEqual({ state: "undiscovered" });
+    expect(routeStatus(route, { ...ctx, knownFacts: ["objection"] }).state).toBe("blocked");
+    expect(
+      routeStatus(route, { ...ctx, knownFacts: ["objection"], owedToYou: { protocol: 1 } }),
+    ).toEqual({ state: "available" });
+  });
+  it("expires after the deadline or when already spent", () => {
+    expect(routeStatus(route, { ...ctx, day: 7 })).toEqual({ state: "expired" });
+    expect(routeStatus(route, { ...ctx, spentRoutes: ["shortcut"] })).toEqual({ state: "expired" });
+  });
+  it("accepts either trust or a favour for a contact route", () => {
+    const either: MissionRoute = {
+      ...route,
+      kind: "favour",
+      requires: { trustOrFavour: { character: "protocol", min: 55 } },
+    };
+    expect(routeStatus(either, ctx).state).toBe("blocked");
+    expect(routeStatus(either, { ...ctx, trust: { protocol: { trust: 55 } } }).state).toBe(
+      "available",
+    );
+    expect(routeStatus(either, { ...ctx, owedToYou: { protocol: 1 } }).state).toBe("available");
+  });
+});
+
+describe("route delivery", () => {
+  it("keeps a delayed route pending until its delivery day", () => {
+    const step = manifest().missionSteps["clearance"]![0]!;
+    const previous = step.routes;
+    step.routes = [
+      {
+        id: "official",
+        label: "File",
+        kind: "official",
+        dp: 1,
+        cash: 0,
+        days: 1,
+        quality: "good",
+        result: "Filed.",
+      },
+      {
+        id: "quick",
+        label: "Quick",
+        kind: "money",
+        dp: 1,
+        cash: 0,
+        days: 0,
+        quality: "adequate",
+        result: "Done.",
+      },
+    ];
+    try {
+      expect(useGame.getState().queue(work({ task: "clearance", route: "official" }))).toBe(true);
+      useGame.getState().advance();
+      expect(useGame.getState().missionSteps["clearance"]).not.toContain(step.id);
+      expect(useGame.getState().routeDeliveries[`clearance.${step.id}`]?.dueDay).toBe(2);
+      for (let i = 0; i < 3; i++) useGame.getState().advance();
+      expect(useGame.getState().missionSteps["clearance"]).toContain(step.id);
+      expect(useGame.getState().stepQualities["clearance"]?.[step.id]).toBe("good");
+    } finally {
+      if (previous) step.routes = previous;
+      else delete step.routes;
+    }
+  });
+});
 
 beforeEach(() => {
   useGame.getState().start(character);
@@ -109,35 +198,42 @@ describe("step availability", () => {
     expect(status("programme", "host-agreement")).toEqual({ state: "available" });
   });
   it("trust gates the step in person but not a colleague with the skill", () => {
-    useGame.setState({
-      day: 10,
-      missionSteps: { ...emptyProgress(), clearance: ["note-verbale", "landing-form"] },
-    });
-    const low = { ...useGame.getState().colleagues };
-    low["protocol"] = { trust: 40, fatigue: 0 };
-    useGame.setState({ colleagues: low });
-    const open = status("clearance", "protocol-stamp");
-    expect(open.state).toBe("available");
-    expect(open.state === "available" && open.hint).toContain("Director Ndao's trust");
-    // In person: refused with the reason. The Consul can go instead.
-    expect(useGame.getState().queue(work({ task: "clearance" }))).toBe(false);
-    expect(useGame.getState().planError).toContain("Director Ndao's trust (55+)");
-    expect(
-      useGame.getState().queue(
-        work({
-          id: "work-ines",
-          worker: "ines",
-          task: "clearance",
-          timeCost: 0,
-          overload: true,
-        }),
-      ),
-    ).toBe(true);
-    useGame.getState().removeDecision("work-ines");
-    low["protocol"] = { trust: 60, fatigue: 0 };
-    useGame.setState({ colleagues: { ...low } });
-    expect(status("clearance", "protocol-stamp")).toEqual({ state: "available" });
-    expect(useGame.getState().queue(work({ task: "clearance" }))).toBe(true);
+    const step = findStep("clearance", "protocol-stamp")!;
+    const routes = step.routes;
+    delete step.routes;
+    try {
+      useGame.setState({
+        day: 10,
+        missionSteps: { ...emptyProgress(), clearance: ["note-verbale", "landing-form"] },
+      });
+      const low = { ...useGame.getState().colleagues };
+      low["protocol"] = { trust: 40, fatigue: 0 };
+      useGame.setState({ colleagues: low });
+      const open = status("clearance", "protocol-stamp");
+      expect(open.state).toBe("available");
+      expect(open.state === "available" && open.hint).toContain("Director Ndao's trust");
+      // In person: refused with the reason. The Consul can go instead.
+      expect(useGame.getState().queue(work({ task: "clearance" }))).toBe(false);
+      expect(useGame.getState().planError).toContain("Director Ndao's trust (55+)");
+      expect(
+        useGame.getState().queue(
+          work({
+            id: "work-ines",
+            worker: "ines",
+            task: "clearance",
+            timeCost: 0,
+            overload: true,
+          }),
+        ),
+      ).toBe(true);
+      useGame.getState().removeDecision("work-ines");
+      low["protocol"] = { trust: 60, fatigue: 0 };
+      useGame.setState({ colleagues: { ...low } });
+      expect(status("clearance", "protocol-stamp")).toEqual({ state: "available" });
+      expect(useGame.getState().queue(work({ task: "clearance" }))).toBe(true);
+    } finally {
+      if (routes) step.routes = routes;
+    }
   });
   it("is closed on the arrival day", () => {
     useGame.setState({ day: 15, missionSteps: { ...emptyProgress(), programme: ["first-draft"] } });
@@ -158,6 +254,18 @@ describe("step availability", () => {
 });
 
 describe("confirming a task", () => {
+  const routed: { step: MissionStep; routes: NonNullable<MissionStep["routes"]> }[] = [];
+  beforeEach(() => {
+    for (const step of Object.values(manifest().missionSteps).flat()) {
+      if (step.routes) {
+        routed.push({ step, routes: step.routes });
+        delete step.routes;
+      }
+    }
+  });
+  afterEach(() => {
+    for (const item of routed.splice(0)) item.step.routes = item.routes;
+  });
   const doAll = (task: string) => {
     for (const step of manifest().missionSteps[task]!) {
       useGame.setState({ day: Math.max(useGame.getState().day, step.earliestDay), block: 0 });
@@ -298,14 +406,14 @@ describe("setbacks", () => {
 
 describe("the mission reserve", () => {
   it("holds the cash of every step still to do, plus what a setback could add", () => {
-    expect(missionReserve(emptyProgress())).toBe(1100);
-    expect(initialEconomy().missionReserve).toBe(1100);
+    expect(missionReserve(emptyProgress())).toBe(1900);
+    expect(initialEconomy().missionReserve).toBe(1900);
     // The deposit is paid.
-    expect(missionReserve({ ...emptyProgress(), lounge: ["reservation", "deposit"] })).toBe(600);
+    expect(missionReserve({ ...emptyProgress(), lounge: ["reservation", "deposit"] })).toBe(1200);
   });
   it("is out of reach of hospitality and other optional spending", () => {
     const e = initialEconomy();
-    expect(availableFunds(e, [])).toBe(3400);
+    expect(availableFunds(e, [])).toBe(2600);
     useGame.setState({ economy: { ...e, funds: e.ringFence + e.missionReserve! + 300 } });
     const q = useGame.getState().queue;
     expect(q(work({ id: "dinner", kind: "social", timeCost: 1, cashCost: 301 }))).toBe(false);
@@ -313,11 +421,12 @@ describe("the mission reserve", () => {
     expect(q(work({ id: "dinner", kind: "social", timeCost: 1, cashCost: 300 }))).toBe(true);
   });
   it("pays a step from the reserve even when nothing optional is left", () => {
-    const e = initialEconomy();
+    const progress = { ...emptyProgress(), lounge: ["reservation"] };
+    const e = { ...initialEconomy(), missionReserve: missionReserve(progress) };
     useGame.setState({
       day: 6,
       economy: { ...e, funds: e.ringFence + e.missionReserve! },
-      missionSteps: { ...emptyProgress(), lounge: ["reservation"] },
+      missionSteps: progress,
     });
     expect(useGame.getState().queue(work({ task: "lounge" }))).toBe(true);
     expect(useGame.getState().pending[0]).toMatchObject({ step: "deposit", stepCost: 500 });
@@ -325,7 +434,7 @@ describe("the mission reserve", () => {
     useGame.getState().advance();
     const after = useGame.getState().economy;
     expect(after.funds).toBe(e.ringFence + e.missionReserve! - 500);
-    expect(after.missionReserve).toBe(600);
+    expect(after.missionReserve).toBe(1200);
     expect(availableFunds(after, [])).toBe(0);
   });
   it("does not charge a stalled assignment", () => {
@@ -351,7 +460,7 @@ describe("the mission reserve", () => {
     const s = useGame.getState();
     expect(s.economy.ringFence).toBe(before.economy.ringFence - 500);
     expect(s.meters.confidence).toBe(startMeters().confidence - 5);
-    expect(s.economy.missionReserve).toBe(1100);
+    expect(s.economy.missionReserve).toBe(1900);
   });
   it("an old step cost never exceeds what was reserved for it", () => {
     for (const [task, steps] of Object.entries(manifest().missionSteps))
@@ -387,8 +496,11 @@ describe("saves from before the steps", () => {
     expect(migrated.missionSteps["lounge"]).toHaveLength(3);
     expect(migrated.missionSteps["programme"]).toEqual([]);
     expect(migrated.setbacksApplied).toEqual(["arrival-moves", "form-superseded"]);
-    expect(migrated.economy.missionReserve).toBe(1100 - 100 - 500);
-    expect(useGame.persist.getOptions().version).toBe(10);
+    expect(migrated.economy.missionReserve).toBe(700);
+    expect(useGame.persist.getOptions().version).toBe(11);
+    expect(migrated.favours).toEqual({ owedToYou: {}, youOwe: {} });
+    expect(migrated.knownFacts).toEqual([]);
+    expect(migrated.stepQualities["clearance"]?.["protocol-stamp"]).toBe("good");
   });
   it("merges a slot saved without steps the same way", () => {
     const merge = useGame.persist.getOptions().merge!;

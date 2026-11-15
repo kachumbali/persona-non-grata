@@ -20,6 +20,9 @@ import {
   nextStep,
   parseStepRef,
   progressFromVisit,
+  routeContext,
+  routeFavourToSpend,
+  routeStatus,
   setbacksBefore,
   stepCash,
   stepContext,
@@ -28,6 +31,7 @@ import {
   stepStatus,
   stepsOf,
   taskComplete,
+  taskQuality,
   type MissionProgress,
 } from "./mission";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -103,6 +107,17 @@ export interface GameState {
   visit: VisitStatus;
   /** Ids of the mission steps done, by task. `visit[task]` is true when all of a task's are. */
   missionSteps: MissionProgress;
+  favours: { owedToYou: Record<string, number>; youOwe: Record<string, number> };
+  knownFacts: string[];
+  stepQualities: Record<string, Record<string, "good" | "adequate">>;
+  taskQualities: Record<string, "good" | "adequate">;
+  usedRoutes: Record<string, string>;
+  spentRoutes: Record<string, string[]>;
+  routeDeliveries: Record<string, { route: string; dueDay: number }>;
+  favourCalls: { character: string; dueDay: number }[];
+  routeHistory: { task: string; step: string; route: string; kind: string }[];
+  routeChanges: number;
+  delayedRouteEffects: { dueDay: number; flag?: string; trust?: Record<string, number> }[];
   /** Ids of the setbacks that have already landed. */
   setbacksApplied: string[];
   ending: Ending | null;
@@ -194,6 +209,17 @@ const initialState = () => {
     goodwillHistory: [],
     visit: {},
     missionSteps: emptyProgress(),
+    favours: { owedToYou: {}, youOwe: {} },
+    knownFacts: [] as string[],
+    stepQualities: {} as Record<string, Record<string, "good" | "adequate">>,
+    taskQualities: {} as Record<string, "good" | "adequate">,
+    usedRoutes: {} as Record<string, string>,
+    spentRoutes: {} as Record<string, string[]>,
+    routeDeliveries: {} as Record<string, { route: string; dueDay: number }>,
+    favourCalls: [] as { character: string; dueDay: number }[],
+    routeHistory: [] as { task: string; step: string; route: string; kind: string }[],
+    routeChanges: 0,
+    delayedRouteEffects: [] as { dueDay: number; flag?: string; trust?: Record<string, number> }[],
     setbacksApplied: [] as string[],
     ending: null,
     location: m.startLocation,
@@ -231,10 +257,7 @@ export const TRAVEL_DP = 1;
  * names only the task works on its next step. Returns the decision with the step and its cash
  * filled in, or the reason it cannot be queued.
  */
-export function resolveStep(
-  s: Pick<GameState, "day" | "missionSteps" | "colleagues" | "setbacksApplied">,
-  decision: PendingDecision,
-): PendingDecision | string {
+export function resolveStep(s: GameState, decision: PendingDecision): PendingDecision | string {
   if (!decision.task) return decision;
   const step = decision.step
     ? findStep(decision.task, decision.step)
@@ -249,6 +272,29 @@ export function resolveStep(
     return rest;
   }
   if (status.state === "blocked") return `Not yet: ${label} (${status.reason}).`;
+  if (step.routes) {
+    if (decision.kind === "email" && !decision.route) {
+      const { task: _task, step: _step, ...rest } = decision;
+      return rest;
+    }
+    const key = `${decision.task}.${step.id}`;
+    if (s.routeDeliveries[key]) return `${label}: confirmation is already on its way.`;
+    const route = step.routes.find((r) => r.id === decision.route);
+    if (!route) return `${label}: choose a route.`;
+    const available = routeStatus(route, routeContext(s, decision.task, step.id));
+    if (available.state !== "available")
+      return `${label}: ${available.state === "blocked" ? available.reason : available.state}.`;
+    if (decision.worker) return `${label}: choose a route in person.`;
+    const cash = route.cash + (decision.cashCost ?? 0);
+    return {
+      ...decision,
+      step: step.id,
+      route: route.id,
+      timeCost: route.dp,
+      cashCost: cash,
+      stepCost: route.fromGeneralFunds ? 0 : route.cash,
+    };
+  }
   const inPerson =
     decision.kind === "work" ? !decision.worker : decision.emailAction !== "delegate";
   const trustBlock = inPerson ? inPersonBlock(step, s.colleagues) : null;
@@ -278,6 +324,10 @@ export const useGame = create<GameState>()(
         const s = get();
         if (s.block !== 0 || s.pressDay !== s.day) return;
         const flags = [...s.storyFlags];
+        for (const id of s.pressIds) {
+          const flag = clippings().find((c) => c.id === id)?.flagOnRead;
+          if (flag && !flags.includes(flag)) flags.push(flag);
+        }
         if (
           s.day >= 4 &&
           s.pressIds.some((id) => clippings().find((c) => c.id === id)?.signal) &&
@@ -286,6 +336,15 @@ export const useGame = create<GameState>()(
           flags.push("fuel-lead");
         set({
           pressRead: true,
+          knownFacts: [
+            ...new Set([
+              ...s.knownFacts,
+              ...s.pressIds.flatMap((id) => {
+                const fact = clippings().find((c) => c.id === id)?.teaches;
+                return fact ? [fact] : [];
+              }),
+            ]),
+          ],
           pressSeen: [...new Set([...s.pressSeen, ...s.pressIds])],
           storyFlags: flags,
         });
@@ -377,6 +436,59 @@ export const useGame = create<GameState>()(
             !(decision.kind === "social" && p.kind === "social") &&
             !(replacePlayer && playerTime(p) > 0 && !p.id.startsWith("travel-")),
         );
+        if (
+          decision.route &&
+          old.some((p) => p.task === decision.task && p.step === decision.step && p.route)
+        ) {
+          set({ planError: "A route for this step is already in the plan." });
+          return false;
+        }
+        if (decision.route && decision.task && decision.step) {
+          const route = findStep(decision.task, decision.step)?.routes?.find(
+            (r) => r.id === decision.route,
+          );
+          const who =
+            route && routeFavourToSpend(route, routeContext(s, decision.task, decision.step));
+          const reserved = who
+            ? old.filter(
+                (p) =>
+                  p.task &&
+                  p.step &&
+                  p.route &&
+                  (() => {
+                    const other = findStep(p.task!, p.step!)?.routes?.find((r) => r.id === p.route);
+                    return (
+                      other && routeFavourToSpend(other, routeContext(s, p.task!, p.step!)) === who
+                    );
+                  })(),
+              ).length
+            : 0;
+          if (who && reserved >= (s.favours.owedToYou[who] ?? 0)) {
+            set({ planError: "That favour is already promised to another route." });
+            return false;
+          }
+          const newFlag = route?.consequences?.flag;
+          const conflicts = old.some((p) => {
+            const other =
+              p.task && p.step && p.route
+                ? findStep(p.task, p.step)?.routes?.find((r) => r.id === p.route)
+                : undefined;
+            return (
+              (route?.requires?.expiresOnFlag &&
+                [p.flag, other?.consequences?.flag].includes(route.requires.expiresOnFlag)) ||
+              route?.requires?.expiresOnFlags?.some((flag) =>
+                [p.flag, other?.consequences?.flag].includes(flag),
+              ) ||
+              (newFlag &&
+                (other?.requires?.expiresOnFlag === newFlag ||
+                  other?.requires?.expiresOnFlags?.includes(newFlag)))
+            );
+          });
+          if (conflicts) {
+            set({ planError: "Those routes make conflicting commitments. Choose one." });
+            return false;
+          }
+        }
         const plan = [...old, decision];
         const error =
           decision.special === "supplement" && s.economy.supplementUsed
@@ -500,6 +612,8 @@ export const useGame = create<GameState>()(
           task: confirmed?.task,
           step: confirmed?.step,
           formal: actual.formal,
+          favour: actual.favour,
+          teaches: actual.teaches,
           traitChoice: actual.requiresTrait,
           emailId: id,
           emailAction: accident ? "replyall" : action,
@@ -521,6 +635,8 @@ export const useGame = create<GameState>()(
           stepCost: undefined,
           cashCost: undefined,
           formal: original.formal,
+          favour: original.favour,
+          teaches: original.teaches,
           traitChoice: original.requiresTrait,
           emailAction: "reply" as const,
           recall: undefined,
@@ -577,6 +693,16 @@ export const useGame = create<GameState>()(
           completedEvents = [...s.completedEvents],
           storyFlags = [...s.storyFlags],
           storyOutcomes = { ...s.storyOutcomes };
+        const favours = structuredClone(s.favours);
+        const knownFacts = [...s.knownFacts];
+        const stepQualities = structuredClone(s.stepQualities);
+        const usedRoutes = { ...s.usedRoutes };
+        const spentRoutes = structuredClone(s.spentRoutes);
+        const routeDeliveries = structuredClone(s.routeDeliveries);
+        const favourCalls = structuredClone(s.favourCalls);
+        const routeHistory = [...s.routeHistory];
+        let routeChanges = s.routeChanges;
+        let delayedRouteEffects = structuredClone(s.delayedRouteEffects);
         const record = (
           source: string,
           text: string,
@@ -595,6 +721,26 @@ export const useGame = create<GameState>()(
             }),
           );
           results.push({ day: s.day, time: s.minute, text });
+        };
+        const completeStep = (
+          task: string,
+          step: string,
+          quality: "good" | "adequate",
+          completedDay = s.day,
+        ) => {
+          if (stepDone(missionSteps, task, step)) return;
+          missionSteps[task] = [...(missionSteps[task] ?? []), step];
+          stepQualities[task] = { ...stepQualities[task], [step]: quality };
+          economy.missionReserve = missionReserve(missionSteps);
+          if (taskComplete(missionSteps, task)) {
+            if (!visit[task]) score += 10;
+            visit[task] = true;
+            results.push({
+              day: completedDay,
+              time: s.minute,
+              text: `${activeChapter().manifest.missionTasks[task] ?? task}: confirmed in full.`,
+            });
+          }
         };
         let ending: Ending | null = null;
         for (const row of capacityLedger(
@@ -630,6 +776,7 @@ export const useGame = create<GameState>()(
           }
           let success = true;
           const stepDef = p.task && p.step ? findStep(p.task, p.step) : undefined;
+          const route = p.route ? stepDef?.routes?.find((r) => r.id === p.route) : undefined;
           if (p.kind === "work" && p.worker && p.task)
             success = delegationSucceeds(
               p.worker,
@@ -642,14 +789,22 @@ export const useGame = create<GameState>()(
             );
           let text = success
             ? p.kind === "work" && stepDef
-              ? `${p.source}: ${stepDef.result}`
+              ? `${p.source}: ${route?.result ?? stepDef.result}`
               : p.text
             : `${p.source}: work stalled. Check skills, fatigue, trust and cooperation before reassigning.`;
           const formal = success && p.formal ? formalBonus(stats.gravitas) : 0;
+          const routeEffects: Effects = {};
+          for (const key of ["confidence", "goodwill", "morale", "sanity"] as const) {
+            const amount = route?.effects?.[key];
+            if (amount !== undefined) routeEffects[key] = (p.effects[key] ?? 0) + amount;
+          }
           const effects = success
             ? {
                 ...p.effects,
-                ...(formal ? { confidence: (p.effects.confidence ?? 0) + formal } : {}),
+                ...routeEffects,
+                ...(formal
+                  ? { confidence: (routeEffects.confidence ?? p.effects.confidence ?? 0) + formal }
+                  : {}),
               }
             : { confidence: -2, morale: -1 };
           if (formal) text += ` (Gravitas +${formal} HQ goodwill)`;
@@ -657,19 +812,47 @@ export const useGame = create<GameState>()(
           if (success && p.task && stepDef && p.step) {
             // A step is done once; a second decision on it (a mail after the work) changes nothing.
             if (!stepDone(missionSteps, p.task, p.step)) {
-              const paid = stepCash(stepDef, p.task, setbacksApplied);
+              const paid = route
+                ? route.fromGeneralFunds
+                  ? 0
+                  : route.cash
+                : stepCash(stepDef, p.task, setbacksApplied);
               economy.funds -= paid;
-              missionSteps[p.task] = [...(missionSteps[p.task] ?? []), p.step];
-              economy.missionReserve = missionReserve(missionSteps);
-              if (taskComplete(missionSteps, p.task)) {
-                if (!visit[p.task]) score += 10;
-                visit[p.task] = true;
-                results.push({
-                  day: s.day,
-                  time: s.minute,
-                  text: `${activeChapter().manifest.missionTasks[p.task] ?? p.task}: confirmed in full.`,
+              if (route) {
+                const key = `${p.task}.${p.step}`;
+                usedRoutes[key] = route.id;
+                routeHistory.push({
+                  task: p.task,
+                  step: p.step,
+                  route: route.id,
+                  kind: route.kind,
                 });
-              }
+                const whoToSpend = routeFavourToSpend(route, routeContext(s, p.task, p.step));
+                if (whoToSpend) {
+                  const who = whoToSpend;
+                  favours.owedToYou[who] = Math.max(0, (favours.owedToYou[who] ?? 0) - 1);
+                }
+                if (route.consequences?.oweFavour) {
+                  const who = route.consequences.oweFavour;
+                  favours.youOwe[who] = (favours.youOwe[who] ?? 0) + 1;
+                  favourCalls.push({ character: who, dueDay: Math.min(lastDay(), s.day + 2) });
+                }
+                if (route.consequences?.flag && !storyFlags.includes(route.consequences.flag))
+                  storyFlags.push(route.consequences.flag);
+                if (route.consequences?.delayed) {
+                  const delayed = route.consequences.delayed;
+                  delayedRouteEffects.push({
+                    dueDay: delayed.day,
+                    ...(delayed.flag ? { flag: delayed.flag } : {}),
+                    ...(delayed.trust ? { trust: delayed.trust } : {}),
+                  });
+                }
+                for (const [who, delta] of Object.entries(route.consequences?.trust ?? {}))
+                  if (colleagues[who]) colleagues[who].trust = clamp(colleagues[who].trust + delta);
+                if (route.days > 0)
+                  routeDeliveries[key] = { route: route.id, dueDay: s.day + route.days };
+                else completeStep(p.task, p.step, route.quality);
+              } else completeStep(p.task, p.step, "good");
             }
           } else if (success && p.task && !p.step) {
             // A decision queued before the steps existed: it confirmed the whole task.
@@ -778,6 +961,15 @@ export const useGame = create<GameState>()(
             storyFlags.push(
               `trait:${p.traitChoice}:${p.eventId ?? p.emailId ?? p.dialogueTopic ?? p.source}`,
             );
+          if (
+            success &&
+            p.favour &&
+            !(p.dialogueTopic && storyFlags.includes(`dialogue:${p.dialogueTopic}`))
+          ) {
+            const { character, delta } = p.favour;
+            favours.owedToYou[character] = Math.max(0, (favours.owedToYou[character] ?? 0) + delta);
+          }
+          if (success && p.teaches && !knownFacts.includes(p.teaches)) knownFacts.push(p.teaches);
           if (p.emailId && p.recall && p.emailAction === "replyall")
             storyFlags.push(`trait-accident:replyall:${p.emailId}`);
           if (
@@ -792,6 +984,14 @@ export const useGame = create<GameState>()(
               status: "chosen",
               ...(p.eventChoice ? { choice: p.eventChoice } : {}),
             };
+          }
+          if (p.eventId?.startsWith("call-in-") && success) {
+            const who = p.eventId.slice("call-in-".length);
+            favours.youOwe[who] = Math.max(0, (favours.youOwe[who] ?? 0) - 1);
+            const index = favourCalls.findIndex(
+              (call) => call.character === who && call.dueDay <= s.day,
+            );
+            if (index >= 0) favourCalls.splice(index, 1);
           }
           if (p.flag?.startsWith("menu-")) {
             for (let i = storyFlags.length - 1; i >= 0; i--)
@@ -881,11 +1081,46 @@ export const useGame = create<GameState>()(
         const block = s.block === 3 ? (finishing ? 3 : 0) : s.block + 1;
         const day = s.block === 3 && !finishing ? s.day + 1 : s.day;
         if (day !== s.day) {
+          for (const effect of delayedRouteEffects.filter((item) => item.dueDay <= day)) {
+            if (effect.flag && !storyFlags.includes(effect.flag)) storyFlags.push(effect.flag);
+            for (const [who, delta] of Object.entries(effect.trust ?? {}))
+              if (colleagues[who]) colleagues[who].trust = clamp(colleagues[who].trust + delta);
+          }
+          delayedRouteEffects = delayedRouteEffects.filter((item) => item.dueDay > day);
           // Capital and the host change the arrangements overnight.
           const landed = applySetbacks(day, missionSteps, setbacksApplied);
           setbacksApplied = landed.applied;
           for (const task of Object.keys(landed.progress)) {
             missionSteps[task] = landed.progress[task] ?? [];
+          }
+          for (const target of landed.reopened) {
+            const key = `${target.task}.${target.step}`;
+            const used = usedRoutes[key];
+            const route = findStep(target.task, target.step)?.routes?.find((r) => r.id === used);
+            if (route && route.kind !== "official") {
+              spentRoutes[key] = [...new Set([...(spentRoutes[key] ?? []), route.id])];
+              routeChanges++;
+            }
+            delete usedRoutes[key];
+            const qualities = stepQualities[target.task];
+            if (qualities) delete qualities[target.step];
+          }
+          for (const { id } of landed.texts) {
+            const setback = activeChapter().manifest.setbacks.find((item) => item.id === id);
+            for (const target of setback?.targets ?? []) {
+              const key = `${target.task}.${target.step}`;
+              const delivery = routeDeliveries[key];
+              if (!delivery) continue;
+              const route = findStep(target.task, target.step)?.routes?.find(
+                (item) => item.id === delivery.route,
+              );
+              if (route && route.kind !== "official") {
+                spentRoutes[key] = [...new Set([...(spentRoutes[key] ?? []), route.id])];
+                routeChanges++;
+              }
+              delete usedRoutes[key];
+              delete routeDeliveries[key];
+            }
           }
           for (const { id, text } of landed.texts) {
             const setback = activeChapter().manifest.setbacks.find((x) => x.id === id);
@@ -903,6 +1138,21 @@ export const useGame = create<GameState>()(
             });
           }
           economy.missionReserve = missionReserve(missionSteps);
+          for (const [key, delivery] of Object.entries(routeDeliveries)) {
+            if (delivery.dueDay > day) continue;
+            const ref = parseStepRef(key);
+            const route =
+              ref && findStep(ref.task, ref.step)?.routes?.find((r) => r.id === delivery.route);
+            if (ref && route) {
+              completeStep(ref.task, ref.step, route.quality, day);
+              results.push({
+                day,
+                time: blocks()[0]?.time ?? 480,
+                text: `${route.label}: confirmation has arrived.`,
+              });
+            }
+            delete routeDeliveries[key];
+          }
         }
         if (!ending && day !== s.day) {
           for (const event of expiredStories(
@@ -945,6 +1195,14 @@ export const useGame = create<GameState>()(
           );
         }
         if (day >= lastDay() && s.day < lastDay()) {
+          for (const task of Object.keys(activeChapter().manifest.missionTasks)) {
+            if (visit[task] && taskQuality(stepQualities, task) === "adequate")
+              record(
+                activeChapter().manifest.missionTasks[task] ?? task,
+                "The arrangement works, with qualifications that reach Capital before the Minister.",
+                { confidence: activeChapter().manifest.adequateArrivalConfidence ?? -2 },
+              );
+          }
           for (const payoff of activeChapter().conversationPayoffs) {
             if (!ending && visitReady(visit) && storyFlags.includes(payoff.flag))
               record(payoff.source, payoff.text, payoff.effects);
@@ -970,6 +1228,13 @@ export const useGame = create<GameState>()(
         }
         ending = ending ?? pickEnding(meters, finishing, visit);
         const todayPlans = { ...s.todayPlans, [s.block]: s.pending };
+        if (day !== s.day) {
+          for (const call of favourCalls.filter((item) => item.dueDay <= day)) {
+            const id = `call-in-${call.character}`;
+            const index = completedEvents.indexOf(id);
+            if (index >= 0) completedEvents.splice(index, 1);
+          }
+        }
         const carry = s.pending
           .filter((p) => (p.remainingBlocks ?? 0) > 1)
           .map((p) => ({ ...p, cashCost: 0, remainingBlocks: (p.remainingBlocks ?? 2) - 1 }));
@@ -986,6 +1251,19 @@ export const useGame = create<GameState>()(
           meters,
           visit,
           missionSteps,
+          favours,
+          knownFacts,
+          stepQualities,
+          taskQualities: Object.fromEntries(
+            Object.keys(missionSteps).map((task) => [task, taskQuality(stepQualities, task)]),
+          ),
+          usedRoutes,
+          spentRoutes,
+          routeDeliveries,
+          favourCalls,
+          routeHistory,
+          routeChanges,
+          delayedRouteEffects,
           setbacksApplied,
           score,
           energy,
@@ -1003,7 +1281,18 @@ export const useGame = create<GameState>()(
           storyOutcomes,
           ending,
           events:
-            s.block === 3 ? dailyEvents(day, s.seed, completedEvents, storyOutcomes) : s.events,
+            s.block === 3
+              ? [
+                  ...campaign().events.filter(
+                    (event) =>
+                      event.callInFor &&
+                      favourCalls.some(
+                        (call) => call.character === event.callInFor && call.dueDay <= day,
+                      ),
+                  ),
+                  ...dailyEvents(day, s.seed, completedEvents, storyOutcomes),
+                ].slice(0, blocks().length)
+              : s.events,
           selectedNpc: null,
         });
       },
@@ -1018,7 +1307,7 @@ export const useGame = create<GameState>()(
         setItem: () => {},
         removeItem: () => {},
       })),
-      version: 10,
+      version: 11,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = {
@@ -1071,6 +1360,26 @@ export const useGame = create<GameState>()(
           ...initialState(),
           ...old,
           missionSteps,
+          favours: old.favours ?? { owedToYou: {}, youOwe: {} },
+          knownFacts: old.knownFacts ?? [],
+          usedRoutes: old.usedRoutes ?? {},
+          spentRoutes: old.spentRoutes ?? {},
+          routeDeliveries: old.routeDeliveries ?? {},
+          favourCalls: old.favourCalls ?? [],
+          routeHistory: old.routeHistory ?? [],
+          routeChanges: old.routeChanges ?? 0,
+          delayedRouteEffects: old.delayedRouteEffects ?? [],
+          stepQualities:
+            old.stepQualities ??
+            Object.fromEntries(
+              Object.entries(missionSteps).map(([task, ids]) => [
+                task,
+                Object.fromEntries(ids.map((id) => [id, "good"])),
+              ]),
+            ),
+          taskQualities:
+            old.taskQualities ??
+            Object.fromEntries(Object.keys(missionSteps).map((task) => [task, "good"])),
           setbacksApplied: old.setbacksApplied ?? setbacksBefore(old.day ?? 1),
           chapterId: old.chapterId ?? DEFAULT_CHAPTER_ID,
           character: old.character
@@ -1119,6 +1428,26 @@ export const useGame = create<GameState>()(
           ...old,
           economy,
           missionSteps,
+          favours: old.favours ?? { owedToYou: {}, youOwe: {} },
+          knownFacts: old.knownFacts ?? [],
+          usedRoutes: old.usedRoutes ?? {},
+          spentRoutes: old.spentRoutes ?? {},
+          routeDeliveries: old.routeDeliveries ?? {},
+          favourCalls: old.favourCalls ?? [],
+          routeHistory: old.routeHistory ?? [],
+          routeChanges: old.routeChanges ?? 0,
+          delayedRouteEffects: old.delayedRouteEffects ?? [],
+          stepQualities:
+            old.stepQualities ??
+            Object.fromEntries(
+              Object.entries(missionSteps).map(([task, ids]) => [
+                task,
+                Object.fromEntries(ids.map((id) => [id, "good"])),
+              ]),
+            ),
+          taskQualities:
+            old.taskQualities ??
+            Object.fromEntries(Object.keys(missionSteps).map((task) => [task, "good"])),
           setbacksApplied: old.setbacksApplied ?? setbacksBefore(old.day ?? 1),
           colleagues: { ...initialColleagues(), ...(old.colleagues ?? {}) },
         };

@@ -69,15 +69,22 @@
     },
     {
       "id": "fuel-8",
+      "teaches": "port-control",
       "outlet": "wire",
       "headline": "Port officer declines comment",
-      "body": "Mira Sene declined to comment on the inspection timetable. She did, however, point at an actual timetable. Reporters described this unusually concrete gesture as a possible breakthrough.",
+      "body": "Mira Sene controls the inspection timetable, though the minister signs the portfolio papers. She declined to comment, but pointed at an actual timetable.",
       "day": 8,
       "priority": 100,
       "signal": true
     },
     {
       "id": "fuel-9",
+      "background": {
+        "text": "Lucien says Bako wants a constituency visit before the port announcement.",
+        "teaches": "bako-objection"
+      },
+      "flagOnRead": "reshuffle-public",
+      "teaches": "reshuffle-rumour",
       "outlet": "vale",
       "headline": "Port portfolio may move",
       "body": "A cabinet reshuffle may move responsibility for the port. No minister has volunteered to inherit the inspection. Three have volunteered to inherit the ribbon-cutting scissors.",
@@ -465,6 +472,19 @@
       "minDay": 1,
       "maxDay": 15,
       "priority": 0
+    },
+    {
+      "id": "expedited-stamp-report",
+      "outlet": "vale",
+      "headline": "A stamp finds its sponsor",
+      "body": "The expedited permit attracted a handling fee and a question about who received it. Protocol says its stamp has no opinion.",
+      "minDay": 10,
+      "maxDay": 15,
+      "priority": 60,
+      "trigger": {
+        "flag": "stamp-expedited"
+      },
+      "once": true
     }
   ],
   "scenario": {

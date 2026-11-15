@@ -29,12 +29,11 @@ beforeEach(() => {
   });
 });
 describe("Chapter 1 time and money", () => {
-  it("starts with ƒ10,000, reserves ƒ5,500 for the visit and ƒ1,100 for the mission steps", () => {
+  it("reserves money for the visit and the most expensive mission routes", () => {
     expect(initialEconomy().funds).toBe(10000);
     expect(initialEconomy().ringFence).toBe(5500);
-    // Stamp 100 + deposit 500 + motorcade 400, plus the 100 the arrival change may add.
-    expect(initialEconomy().missionReserve).toBe(1100);
-    expect(availableFunds(initialEconomy(), [])).toBe(3400);
+    expect(initialEconomy().missionReserve).toBe(1900);
+    expect(availableFunds(initialEconomy(), [])).toBe(2600);
   });
   it("travelling across town costs 1 DP and stops when DP run out", () => {
     const g = () => useGame.getState();
@@ -130,9 +129,9 @@ describe("Chapter 1 time and money", () => {
   });
   it("charges reserved spending once on resolution and frees it on removal", () => {
     useGame.getState().queue(action("bill", { cashCost: 280 }));
-    expect(availableFunds(useGame.getState().economy, useGame.getState().pending)).toBe(3120);
+    expect(availableFunds(useGame.getState().economy, useGame.getState().pending)).toBe(2320);
     useGame.getState().removeDecision("bill");
-    expect(availableFunds(useGame.getState().economy, [])).toBe(3400);
+    expect(availableFunds(useGame.getState().economy, [])).toBe(2600);
     useGame.getState().queue(action("bill", { cashCost: 280 }));
     useGame.getState().advance();
     expect(useGame.getState().economy.funds).toBe(9720);

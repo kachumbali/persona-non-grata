@@ -57,6 +57,28 @@ function replaceViaZeroGoodwill() {
 }
 
 describe("save slots", () => {
+  it("round-trips route deliveries, facts and favours through an export", () => {
+    beginNewCareer(0);
+    startCareer(ann, {});
+    useGame.setState({
+      favours: { owedToYou: { protocol: 1 }, youOwe: { fixer: 2 } },
+      knownFacts: ["port-control"],
+      routeDeliveries: { "clearance.protocol-stamp": { route: "official", dueDay: 13 } },
+      usedRoutes: { "clearance.protocol-stamp": "official" },
+      spentRoutes: { "security.route-recon": ["marcel"] },
+      stepQualities: { lounge: { reservation: "adequate" } },
+      taskQualities: { lounge: "adequate" },
+    });
+    const code = exportSlot(0)!;
+    expect(importIntoSlot(1, code).ok).toBe(true);
+    continueSlot(1);
+    const posting = useGame.getState();
+    expect(posting.favours).toEqual({ owedToYou: { protocol: 1 }, youOwe: { fixer: 2 } });
+    expect(posting.knownFacts).toEqual(["port-control"]);
+    expect(posting.routeDeliveries["clearance.protocol-stamp"]?.dueDay).toBe(13);
+    expect(posting.spentRoutes["security.route-recon"]).toEqual(["marcel"]);
+    expect(posting.taskQualities["lounge"]).toBe("adequate");
+  });
   it("starts empty and persists a structure under its own key", () => {
     expect(useSaves.getState().slots).toEqual([null, null, null]);
     beginNewCareer(0);

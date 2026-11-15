@@ -13,6 +13,8 @@ import {
 import { useGame } from "../store";
 import {
   nextStep,
+  routeContext,
+  routeStatus,
   stepCash,
   stepContext,
   stepLabel,
@@ -34,6 +36,7 @@ import {
 export function PlanningDesk() {
   const g = useGame();
   const [task, setTask] = useState<VisitTask>(Object.keys(missionTasks())[0] ?? "");
+  const [routeId, setRouteId] = useState("");
   const [worker, setWorker] = useState("self");
   const [partner, setPartner] = useState("");
   const [venue, setVenue] = useState("embassy");
@@ -65,11 +68,13 @@ export function PlanningDesk() {
         ? 1
         : 2;
   const step = nextStep(g.missionSteps, task);
+  const route =
+    step?.routes?.find((r) => r.id === routeId) ?? step?.routes?.find((r) => r.kind === "official");
   const stepState: StepStatus = step
     ? stepStatus(stepContext(g), task, step.id)
     : { state: "done" };
-  const stepDp = step?.dp ?? 2;
-  const workTime = service === "express" ? Math.max(1, stepDp - 1) : stepDp;
+  const stepDp = route?.dp ?? step?.dp ?? 2;
+  const workTime = route ? route.dp : service === "express" ? Math.max(1, stepDp - 1) : stepDp;
   const serviceCost = service === "express" ? 250 : service === "driver" ? 150 : 0;
   const addWork = () => {
     if (!location) return;
@@ -115,11 +120,12 @@ export function PlanningDesk() {
       partner: self ? undefined : partner || undefined,
       task,
       step: step.id,
+      route: route?.id,
       source: `${name} · ${stepLabel(step, task, g.setbacksApplied)}`,
       text: `${name} secured written confirmation: ${stepLabel(step, task, g.setbacksApplied)}.`,
       effects: { confidence: 3 },
       // The step's own cost is added by the store and drawn from the mission reserve.
-      cashCost: self ? serviceCost : 0,
+      cashCost: self && !route ? serviceCost : 0,
       timeCost: self ? workTime : 0,
       overload,
       score: 2,
@@ -223,6 +229,33 @@ export function PlanningDesk() {
             {worker === "self" && g.location !== "embassy" && (
               <p className="self-end text-sm">Local appointment: {location?.work}.</p>
             )}
+            {(worker !== "self" || g.location === "embassy") && step?.routes && (
+              <label className="text-sm sm:col-span-2">
+                Route
+                <select
+                  aria-label="Mission route"
+                  className="mt-1 w-full border border-input bg-muted p-2"
+                  value={route?.id ?? ""}
+                  onChange={(e) => setRouteId(e.target.value)}
+                >
+                  {step.routes.map((item) => {
+                    const state = routeStatus(item, routeContext(g, task, step.id));
+                    const text = state.state === "undiscovered" ? "?" : item.label;
+                    const detail =
+                      state.state === "available"
+                        ? `${item.dp} DP · ${money(item.cash)} · ${item.days} ${item.days === 1 ? "day" : "days"}`
+                        : state.state === "blocked"
+                          ? state.reason
+                          : state.state;
+                    return (
+                      <option key={item.id} value={item.id} disabled={state.state !== "available"}>
+                        {text} · {detail}
+                      </option>
+                    );
+                  })}
+                </select>
+              </label>
+            )}
             {(worker !== "self" || g.location === "embassy") && (
               <p className="text-xs sm:col-span-2" aria-label="Next step">
                 {step ? (
@@ -231,10 +264,11 @@ export function PlanningDesk() {
                     {stepState.state === "blocked"
                       ? stepState.reason
                       : `${worker === "self" ? `${workTime} DP` : "colleague with the skill"}${
-                          stepCash(step, task, g.setbacksApplied)
-                            ? ` · ${money(stepCash(step, task, g.setbacksApplied))} from the mission reserve`
+                          (route?.cash ?? stepCash(step, task, g.setbacksApplied))
+                            ? ` · ${money(route?.cash ?? stepCash(step, task, g.setbacksApplied))} from ${route?.fromGeneralFunds ? "general funds" : "the mission reserve"}`
                             : ""
                         }`}
+                    {step.routes && worker !== "self" ? " · Choose Do it myself for a route." : ""}
                     {stepState.state === "available" && stepState.hint
                       ? ` · ${stepState.hint}`
                       : ""}
@@ -304,7 +338,7 @@ export function PlanningDesk() {
               />
               Displace baseline duties (fatigue & backlog)
             </label>
-            {worker === "self" && (
+            {worker === "self" && !(route && g.location === "embassy") && (
               <label>
                 Service
                 <select

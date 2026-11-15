@@ -6,6 +6,155 @@ const character = { title: "Mr", name: "Test", portrait: "diplomat-1", bio: "", 
 beforeEach(() => useGame.getState().start(character));
 
 describe("scheduled game rounds", () => {
+  it("validates a replacement route against the plan it replaces", () => {
+    useGame.setState({ day: 2 });
+    const decision = {
+      id: "route",
+      kind: "work" as const,
+      task: "lounge",
+      step: "reservation",
+      source: "Lounge",
+      text: "",
+      effects: {},
+    };
+    expect(useGame.getState().queue({ ...decision, route: "official" })).toBe(true);
+    expect(useGame.getState().queue({ ...decision, route: "marcel" }, true)).toBe(true);
+    expect(useGame.getState().pending).toHaveLength(1);
+    expect(useGame.getState().pending[0]?.route).toBe("marcel");
+  });
+  it("charges arrival goodwill once per adequate completed task", () => {
+    useGame.setState({
+      day: 14,
+      block: 3,
+      events: [],
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
+      visit: { lounge: true, security: true },
+      stepQualities: { lounge: { reservation: "adequate" }, security: { "route-recon": "good" } },
+    });
+    const before = useGame.getState().meters.confidence;
+    useGame.getState().advance();
+    const s = useGame.getState();
+    const quality = s.goodwillHistory.filter((entry) => entry.text.includes("with qualifications"));
+    expect(quality).toHaveLength(1);
+    expect(quality[0]!.after.confidence - quality[0]!.before.confidence).toBe(-2);
+    expect(s.meters.confidence).toBeLessThanOrEqual(before - 2);
+  });
+  it("expires Bako's shortcut when the reshuffle clipping is read", () => {
+    useGame.setState({ day: 9, block: 0, pressDay: 9, pressIds: ["fuel-9"] });
+    useGame.getState().readPress();
+    const s = useGame.getState();
+    expect(s.storyFlags).toContain("reshuffle-public");
+    expect(s.knownFacts).toContain("reshuffle-rumour");
+  });
+  it("a setback spends an expedited route and leaves the official route open", () => {
+    useGame.setState({
+      day: 11,
+      block: 2,
+      events: [],
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
+      missionSteps: { clearance: [], lounge: [], programme: [], security: ["advance-team"] },
+      setbacksApplied: ["arrival-moves", "form-superseded", "delegation-grows"],
+    });
+    expect(
+      useGame.getState().queue({
+        id: "recon",
+        kind: "work",
+        task: "security",
+        step: "route-recon",
+        route: "marcel",
+        source: "Recon",
+        text: "",
+        effects: {},
+      }),
+    ).toBe(true);
+    useGame.getState().advance();
+    useGame.getState().advance();
+    const s = useGame.getState();
+    expect(s.missionSteps["security"]).not.toContain("route-recon");
+    expect(s.spentRoutes["security.route-recon"]).toContain("marcel");
+    expect(
+      s.queue({
+        id: "official",
+        kind: "work",
+        task: "security",
+        step: "route-recon",
+        route: "official",
+        source: "Recon",
+        text: "",
+        effects: {},
+      }),
+    ).toBe(true);
+  });
+  it("charges an expedited route once and presents its call-in two days later", () => {
+    useGame.setState({
+      day: 2,
+      events: [],
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
+    });
+    const before = useGame.getState();
+    expect(
+      before.queue({
+        id: "expedite",
+        kind: "work",
+        task: "lounge",
+        step: "reservation",
+        route: "marcel",
+        source: "Marcel",
+        text: "",
+        effects: {},
+      }),
+    ).toBe(true);
+    useGame.getState().advance();
+    let s = useGame.getState();
+    expect(s.economy.funds).toBe(before.economy.funds - 200);
+    expect(s.stepQualities["lounge"]?.["reservation"]).toBe("adequate");
+    expect(s.favours.youOwe["fixer"]).toBe(1);
+    expect(s.meters.goodwill).toBe(before.meters.goodwill - 2);
+    for (let i = 0; i < 7; i++) useGame.getState().advance();
+    s = useGame.getState();
+    expect(s.day).toBe(4);
+    expect(s.events.some((event) => event.id === "call-in-fixer")).toBe(true);
+    expect(
+      s.queue({
+        id: "call",
+        kind: "event",
+        eventId: "call-in-fixer",
+        eventChoice: "refuse",
+        worker: "fixer",
+        trust: -8,
+        flag: "refused-favour-fixer",
+        source: "Marcel",
+        text: "Declined.",
+        effects: {},
+      }),
+    ).toBe(true);
+    s.advance();
+    expect(useGame.getState().favours.youOwe["fixer"]).toBe(0);
+    expect(useGame.getState().storyFlags).toContain("refused-favour-fixer");
+    expect(useGame.getState().colleagues["fixer"]?.trust).toBe(42);
+  });
+  it("records a choice's favour and fact only when the round resolves", () => {
+    useGame.setState({
+      events: [],
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
+    });
+    expect(
+      useGame.getState().queue({
+        id: "learning",
+        source: "Conversation",
+        text: "Agreed.",
+        effects: {},
+        kind: "dialogue",
+        favour: { character: "protocol", delta: 1 },
+        teaches: "protocol-objection",
+      }),
+    ).toBe(true);
+    expect(useGame.getState().favours.owedToYou["protocol"]).toBeUndefined();
+    expect(useGame.getState().knownFacts).toEqual([]);
+    useGame.getState().advance();
+    expect(useGame.getState().favours.owedToYou["protocol"]).toBe(1);
+    expect(useGame.getState().knownFacts).toContain("protocol-objection");
+  });
   it("keeps goodwill unchanged until the player ends the round", () => {
     useGame.getState().answer("e1", "reply");
     expect(useGame.getState().meters.confidence).toBe(55);
@@ -442,7 +591,7 @@ describe("scheduled game rounds", () => {
         source: "Dinner",
         text: "Dinner",
         effects: {},
-        cashCost: 3000,
+        cashCost: 2200,
         timeCost: 1,
         kind: "social",
       }),
@@ -491,21 +640,21 @@ describe("scheduled game rounds", () => {
     expect(useGame.getState().report.some((r) => r.text.includes("work stalled"))).toBe(true);
   });
   it("competent independent delegation does the next step of a visit requirement", () => {
-    useGame.setState({ day: 2 });
+    useGame.setState({ day: 3 });
     useGame.getState().queue({
-      id: "lounge",
-      source: "Lounge",
-      text: "Lounge booked",
+      id: "security",
+      source: "Security",
+      text: "Security requested",
       effects: {},
       kind: "work",
       worker: "pavel",
-      task: "lounge",
+      task: "security",
       overload: true,
     });
     useGame.getState().advance();
-    expect(useGame.getState().missionSteps["lounge"]).toEqual(["reservation"]);
+    expect(useGame.getState().missionSteps["security"]).toEqual(["advance-team"]);
     // One step is not the task: the lounge is confirmed only when its last step is done.
-    expect(useGame.getState().visit["lounge"]).toBeUndefined();
+    expect(useGame.getState().visit["security"]).toBeUndefined();
     expect(useGame.getState().score).toBe(0);
   });
   it("replaces the player at zero HQ goodwill and prevents further rounds", () => {
