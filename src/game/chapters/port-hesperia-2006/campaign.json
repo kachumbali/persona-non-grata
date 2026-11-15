@@ -1909,5 +1909,127 @@
         }
       ]
     }
+  ],
+  "gossip": [
+    {
+      "id": "fuel-quay",
+      "text": "Mira reserved all the fuel for visiting delegations.",
+      "subject": "port-officer",
+      "knowers": ["press", "journalist"],
+      "sensitivity": 2,
+      "truth": "false",
+      "day": 3,
+      "source": "press"
+    },
+    {
+      "id": "reshuffle",
+      "text": "Ndao has already selected the next minister.",
+      "subject": "protocol",
+      "knowers": ["fixer", "journalist"],
+      "sensitivity": 3,
+      "truth": "false",
+      "day": 5,
+      "source": "press"
+    },
+    {
+      "id": "supplier",
+      "text": "The supplier invoices for chairs that have not arrived.",
+      "subject": "fixer",
+      "knowers": ["pavel", "press"],
+      "sensitivity": 2,
+      "truth": "true",
+      "day": 4,
+      "source": "conversation"
+    },
+    {
+      "id": "seating",
+      "text": "Bako objects to the chair beside the window.",
+      "subject": "golf",
+      "knowers": ["journalist", "ketu"],
+      "sensitivity": 2,
+      "truth": "half-true",
+      "day": 6,
+      "source": "reception"
+    },
+    {
+      "id": "letterhead",
+      "text": "Klaus keeps a template for the joint logo.",
+      "subject": "eu-germany",
+      "knowers": ["eu", "eu-france", "journalist"],
+      "sensitivity": 1,
+      "truth": "true",
+      "day": 5,
+      "source": "conversation"
+    },
+    {
+      "id": "protocol-apprentice",
+      "text": "Mira learned protocol from Ndao.",
+      "subject": "port-officer",
+      "knowers": ["protocol", "journalist"],
+      "sensitivity": 1,
+      "truth": "true",
+      "day": 4,
+      "source": "overheard"
+    },
+    {
+      "id": "office-cupboard",
+      "text": "Lucien has filed Pavel’s cupboard as a media asset.",
+      "subject": "press",
+      "knowers": ["ketu", "anselm"],
+      "sensitivity": 2,
+      "truth": "half-true",
+      "day": 5,
+      "source": "overheard"
+    },
+    {
+      "id": "receipts",
+      "text": "Pavel keeps a receipt for each lost receipt.",
+      "subject": "pavel",
+      "knowers": ["ketu", "press"],
+      "sensitivity": 1,
+      "truth": "true",
+      "day": 2,
+      "source": "conversation"
+    },
+    {
+      "id": "consular-queue",
+      "text": "Ines has issued a queue number to an ambassador.",
+      "subject": "ines",
+      "knowers": ["sola", "ketu"],
+      "sensitivity": 1,
+      "truth": "true",
+      "day": 7,
+      "source": "reception"
+    },
+    {
+      "id": "clean-port",
+      "text": "Mira cancelled the clean-port programme.",
+      "subject": "port-officer",
+      "knowers": ["journalist", "fixer"],
+      "sensitivity": 3,
+      "truth": "false",
+      "day": 8,
+      "source": "press"
+    },
+    {
+      "id": "team-europe",
+      "text": "Celeste has branded the rain as Team Europe.",
+      "subject": "eu",
+      "knowers": ["eu-malta", "journalist"],
+      "sensitivity": 1,
+      "truth": "half-true",
+      "day": 9,
+      "source": "reception"
+    },
+    {
+      "id": "briefing",
+      "text": "Anselm wrote the briefing before the meeting.",
+      "subject": "anselm",
+      "knowers": ["pavel", "press"],
+      "sensitivity": 2,
+      "truth": "true",
+      "day": 10,
+      "source": "overheard"
+    }
   ]
 }

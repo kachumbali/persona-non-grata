@@ -94,6 +94,17 @@ function idleByDay(rs: RunResult[], pick: (r: RunResult) => number[]): number[] 
 }
 
 export interface Report {
+  relationshipStats: Record<
+    string,
+    {
+      changes: number;
+      pairs: number;
+      learned: number;
+      passed: number;
+      held: number;
+      falseActed: number;
+    }
+  >;
   demarcheStats: Record<
     string,
     {
@@ -254,6 +265,19 @@ export function aggregate(results: RunResult[]): Report {
     for (const [msg, n] of Object.entries(r.planErrors)) errors[msg] = (errors[msg] ?? 0) + n;
 
   return {
+    relationshipStats: Object.fromEntries(
+      Object.entries(byBot).map(([bot, runs]) => [
+        bot,
+        {
+          changes: mean(runs.map((r) => r.relationshipChanges)),
+          pairs: mean(runs.map((r) => r.pairsChanged)),
+          learned: mean(runs.map((r) => r.gossipLearned)),
+          passed: mean(runs.map((r) => r.gossipPassed)),
+          held: mean(runs.map((r) => r.gossipHeld)),
+          falseActed: mean(runs.map((r) => r.falseGossipActed)),
+        },
+      ]),
+    ),
     demarcheStats: Object.fromEntries(
       Object.entries(byBot).map(([bot, runs]) => [
         bot,
@@ -456,6 +480,16 @@ export function formatReport(r: Report): string {
   );
   h("Endings per bot");
   out.push(endingTable(r.endingsByBot, r.endings, "bot"));
+  h("Relationships and gossip per run");
+  out.push(
+    table(
+      ["bot", "state changes", "pairs changed", "learned", "passed", "held", "false acted"],
+      Object.entries(r.relationshipStats).map(([bot, s]) => [
+        bot,
+        ...[s.changes, s.pairs, s.learned, s.passed, s.held, s.falseActed].map((n) => n.toFixed(1)),
+      ]),
+    ),
+  );
   h("Démarche deliveries and outcomes");
   out.push(
     table(

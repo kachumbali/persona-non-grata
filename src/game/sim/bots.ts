@@ -105,6 +105,7 @@ function carefulPlan(p: Player, extras: { press: boolean; leads: boolean }) {
   // Mission first. Delegating costs staff time, not the player's.
   missionWork(p, { suitable: true, max: 2, self: p.s.day >= 9 });
   p.handleDemarche("careful");
+  if (extras.press && p.freeDP() >= 1) p.passGossip();
   const event = p.currentEvent();
   if (event) p.respondEvent(event, "best");
   attendInvitations(p);
@@ -158,6 +159,7 @@ export const socialiser: Bot = {
     p.skipPress();
     if (p.s.day >= 6) missionWork(p, { suitable: true, max: 2, self: true });
     p.handleDemarche("eu");
+    if (p.freeDP() >= 1) p.passGossip();
     // A change of scenery is half the fun; the other half is being found at the embassy.
     if (s.location !== p.office && !p.leadsHere().length && p.rng.chance(0.5) && p.freeDP() >= 2)
       p.travel(p.office);
@@ -203,6 +205,7 @@ export const reckless: Bot = {
   plan: (p) => {
     const s = p.s;
     p.skipPress();
+    if (p.freeDP() >= 1) p.passGossip(true);
     p.handleDemarche("reckless");
     if (s.day >= 3 && p.available() < 1000 && s.economy.ringFence > 3000 && p.rng.chance(0.5))
       p.raidReserve();

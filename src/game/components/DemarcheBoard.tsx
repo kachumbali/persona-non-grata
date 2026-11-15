@@ -115,9 +115,12 @@ export function DemarcheBoard() {
                     ))}
                 </select>
               </label>
-              {chosen.traitOptions?.some((option) =>
+              {(chosen.traitOptions?.some((option) =>
                 g.character?.traits.includes(option.requiresTrait),
-              ) && (
+              ) ||
+                chosen.gossipOptions?.some((option) =>
+                  g.knownFacts.includes(option.requiresFact),
+                )) && (
                 <label className="block">
                   Approach{" "}
                   <select
@@ -127,8 +130,15 @@ export function DemarcheBoard() {
                     className="mt-1 w-full border border-input bg-muted p-2"
                   >
                     <option value="">Standard</option>
-                    {chosen.traitOptions
+                    {(chosen.traitOptions ?? [])
                       .filter((option) => g.character?.traits.includes(option.requiresTrait))
+                      .map((option) => (
+                        <option value={option.id} key={option.id}>
+                          {option.label}
+                        </option>
+                      ))}
+                    {(chosen.gossipOptions ?? [])
+                      .filter((option) => g.knownFacts.includes(option.requiresFact))
                       .map((option) => (
                         <option value={option.id} key={option.id}>
                           {option.label}

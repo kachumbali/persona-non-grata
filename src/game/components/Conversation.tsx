@@ -128,6 +128,42 @@ export function Conversation() {
           </div>
         )}
         <p className="my-2 font-serif">“{text}”</p>
+        {(campaign().gossip ?? [])
+          .filter(
+            (item) =>
+              g.knownFacts.includes(`gossip:${item.id}`) &&
+              !g.storyFlags.some((flag) => flag.startsWith(`gossip:${item.id}:`)),
+          )
+          .map((item) => (
+            <div key={item.id} className="mb-2 border border-border p-2 text-sm">
+              <p>{item.text}</p>
+              <p className="text-muted-foreground">
+                Keep this to yourself, or discuss it with {npc.name}.
+              </p>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  const action = item.subject === npc.id ? "deny" : "pass";
+                  const ok = g.queue({
+                    id: `gossip-${item.id}`,
+                    kind: "dialogue",
+                    source: "Gossip",
+                    text: item.text,
+                    effects: {},
+                    timeCost: 1,
+                    worker: npc.id,
+                    overload,
+                    gossipId: item.id,
+                    gossipAction: action,
+                  });
+                  setNotice(ok ? "Added to the current block." : useGame.getState().planError);
+                }}
+              >
+                {item.subject === npc.id ? "Deny hearing it" : "Pass it on"} · 1 DP
+              </Button>
+            </div>
+          ))}
         {notice ? (
           <p role="status" className="mt-2 text-sm">
             {notice}

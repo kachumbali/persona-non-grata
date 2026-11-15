@@ -137,6 +137,7 @@ export function planDemarche(
     block: number;
     location: string;
     character: { traits: string[] } | null;
+    knownFacts: string[];
     colleagues: Record<string, { trust: number }>;
     demarches: DemarcheProgress;
     pending: import("./rules").PendingDecision[];
@@ -156,6 +157,11 @@ export function planDemarche(
     return "This démarche is already in your diary.";
   if (s.demarches[d.id]?.deliveryPending) return "The joint note is already in transit.";
   const kind = decision.demarcheRoute;
+  if (decision.demarcheTrait) {
+    const gossipOption = d.gossipOptions?.find((option) => option.id === decision.demarcheTrait);
+    if (gossipOption && !s.knownFacts.includes(gossipOption.requiresFact))
+      return "You have not learned this gossip.";
+  }
   if (kind === "coordinate") {
     if (s.location !== "eu") return "Travel to the EU Delegation to coordinate.";
     if (s.demarches[d.id]?.coordinated) return "EU coordination is already complete.";
@@ -184,6 +190,10 @@ export function planDemarche(
     !d.traitOptions?.some(
       (option) =>
         option.id === decision.demarcheTrait && s.character!.traits.includes(option.requiresTrait),
+    ) &&
+    !d.gossipOptions?.some(
+      (option) =>
+        option.id === decision.demarcheTrait && s.knownFacts.includes(option.requiresFact),
     )
   )
     return "That trait option is unavailable.";

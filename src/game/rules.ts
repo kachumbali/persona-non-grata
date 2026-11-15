@@ -243,6 +243,8 @@ export interface PendingDecision {
   demarcheId?: string | undefined;
   demarcheRoute?: "self" | "colleague" | "eu" | "note" | "coordinate" | undefined;
   demarcheTrait?: string | undefined;
+  gossipId?: string | undefined;
+  gossipAction?: "pass" | "deny" | undefined;
 }
 export interface StoryChoice extends ChoiceGate {
   id: string;

@@ -1,5 +1,11 @@
 import { pressReview, clippings } from "./press";
-import { firstImpression, relationshipState, teamworkChange, trustModifier } from "./relationships";
+import {
+  firstImpression,
+  relationshipState,
+  teamworkChange,
+  trustModifier,
+  traitsOf,
+} from "./relationships";
 import {
   demarcheAt,
   demarches as chapterDemarches,
@@ -362,6 +368,9 @@ export const useGame = create<GameState>()(
           knownFacts: [
             ...new Set([
               ...s.knownFacts,
+              ...(campaign().gossip ?? [])
+                .filter((g) => g.source === "press" && g.day <= s.day)
+                .map((g) => `gossip:${g.id}`),
               ...s.pressIds.flatMap((id) => {
                 const fact = clippings().find((c) => c.id === id)?.teaches;
                 return fact ? [fact] : [];
@@ -437,14 +446,45 @@ export const useGame = create<GameState>()(
           energy: -3,
           location,
         });
-        if (ok) set({ location, selectedNpc: null });
+        if (ok) {
+          const people = campaign()
+            .characters.filter((c) => c.location === location)
+            .map((c) => c.id);
+          const overheard = (campaign().gossip ?? []).filter(
+            (g) =>
+              g.source === "overheard" &&
+              g.day <= s.day &&
+              people.includes(g.subject) &&
+              g.knowers.some((id) => people.includes(id)) &&
+              s.relationships[
+                pairKey(
+                  g.subject,
+                  g.knowers.find((id) => people.includes(id))!,
+                )
+              ] !== undefined,
+          );
+          set({
+            location,
+            selectedNpc: null,
+            knownFacts: [
+              ...new Set([...get().knownFacts, ...overheard.map((g) => `gossip:${g.id}`)]),
+            ],
+          });
+        }
         return ok;
       },
       moveRoom: (room) => set({ room }),
       selectNpc: (selectedNpc) =>
         set((s) => {
           const person = campaign().characters.find((c) => c.id === selectedNpc);
-          if (!person || !s.character || s.metPeople.includes(person.id)) return { selectedNpc };
+          if (!person || !s.character) return { selectedNpc };
+          const rumours = traitsOf(person).some((t) => t.gossips)
+            ? (campaign().gossip ?? [])
+                .filter((g) => g.day <= s.day && g.knowers.includes(person.id))
+                .map((g) => `gossip:${g.id}`)
+            : [];
+          const knownFacts = [...new Set([...s.knownFacts, ...rumours])];
+          if (s.metPeople.includes(person.id)) return { selectedNpc, knownFacts };
           const colleague = s.colleagues[person.id];
           const trust = clamp(
             (colleague?.trust ?? 50) +
@@ -452,6 +492,7 @@ export const useGame = create<GameState>()(
           );
           return {
             selectedNpc,
+            knownFacts,
             metPeople: [...s.metPeople, person.id],
             discoveredTraits: { ...s.discoveredTraits, [person.id]: person.traits.slice(0, 1) },
             colleagues: {
@@ -463,6 +504,18 @@ export const useGame = create<GameState>()(
       queue: (requested, replacePlayer = false) => {
         const s = get();
         if (!s.character || s.ending) return false;
+        if (
+          requested.gossipId &&
+          (!s.knownFacts.includes(`gossip:${requested.gossipId}`) ||
+            !campaign().gossip?.some((g) => g.id === requested.gossipId) ||
+            !requested.worker ||
+            !campaign().characters.some(
+              (c) => c.id === requested.worker && c.location === s.location,
+            ))
+        ) {
+          set({ planError: "That gossip or listener is not available here." });
+          return false;
+        }
         const stepped = resolveStep(s, requested);
         if (typeof stepped === "string") {
           set({ planError: stepped });
@@ -815,6 +868,65 @@ export const useGame = create<GameState>()(
           }
         }
         for (const p of s.pending) {
+          if (
+            p.eventId &&
+            p.eventChoice === "attend" &&
+            activeChapter().invitations.some((i) => i.id === p.eventId)
+          ) {
+            for (const item of campaign().gossip ?? [])
+              if (
+                item.source === "reception" &&
+                item.day <= s.day &&
+                !knownFacts.includes(`gossip:${item.id}`)
+              )
+                knownFacts.push(`gossip:${item.id}`);
+          }
+          if (p.gossipId && p.gossipAction && p.worker) {
+            const item = (campaign().gossip ?? []).find((g) => g.id === p.gossipId);
+            if (
+              item &&
+              knownFacts.includes(`gossip:${item.id}`) &&
+              !storyFlags.includes(`gossip:${item.id}:${p.gossipAction}`)
+            ) {
+              storyFlags.push(`gossip:${item.id}:${p.gossipAction}`);
+              if (p.gossipAction === "pass") {
+                const key = pairKey(p.worker, item.subject);
+                if (p.worker !== item.subject)
+                  relationships[key] = clamp(
+                    (relationships[key] ?? 50) + (item.truth === "true" ? 4 : -6),
+                  );
+                if (!knownRelationships.includes(key)) knownRelationships.push(key);
+                const listener = colleagues[p.worker];
+                if (listener) listener.trust = clamp(listener.trust + 2);
+                if (item.truth !== "true") {
+                  record("Gossip", "Capital receives a correction to the correction.", {
+                    confidence: -2 * item.sensitivity,
+                  });
+                  storyFlags.push(`gossip:false:${item.id}`);
+                }
+                delayedRouteEffects.push({
+                  dueDay: s.day + 1,
+                  trust: { [item.subject]: item.truth === "true" ? -1 : -3 },
+                  flag: `gossip-reached-${item.id}`,
+                });
+                results.push({
+                  day: s.day,
+                  time: s.minute,
+                  text:
+                    item.truth === "true"
+                      ? "The story travels faster than the minutes."
+                      : "The story proves unreliable. Capital receives a correction to the correction.",
+                });
+              } else {
+                const penalty = missedEffects({ confidence: -item.sensitivity }, stats.deniability);
+                record(
+                  "Gossip",
+                  "You deny hearing the story; the minutes record no denial.",
+                  penalty,
+                );
+              }
+            }
+          }
           if (p.kind === "dialogue" && p.worker) {
             const person = campaign().characters.find((c) => c.id === p.worker);
             if (person) discoveredTraits[person.id] = [...person.traits];
@@ -894,12 +1006,15 @@ export const useGame = create<GameState>()(
             const traitOption = instruction.traitOptions?.find(
               (option) => option.id === p.demarcheTrait,
             );
+            const gossipOption = instruction.gossipOptions?.find(
+              (option) => option.id === p.demarcheTrait,
+            );
             const incident = outcome.incident
               ? ` Protocol incident${worker === "maxim" ? ": Maxim reports from the wrong ministry" : ": the messenger was below the required level"}.`
               : "";
             record(
               instruction.subject,
-              `${outcome.text}${incident} ${instruction.report[outcome.quality]}${traitOption ? ` ${traitOption.result}` : ""}`,
+              `${outcome.text}${incident} ${instruction.report[outcome.quality]}${traitOption ? ` ${traitOption.result}` : ""}${gossipOption ? ` ${gossipOption.result}` : ""}`,
               { confidence: outcome.confidence, goodwill: outcome.goodwill },
             );
             const recipient = colleagues[instruction.recipient];

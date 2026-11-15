@@ -94,6 +94,7 @@ export interface Demarche {
   conflictsWith?: string;
   supersededBy?: { day: number; block: number; demarcheId: string };
   traitOptions?: { id: string; label: string; requiresTrait: string; result: string }[];
+  gossipOptions?: { id: string; label: string; requiresFact: string; result: string }[];
 }
 
 export interface DemarchePack {
@@ -229,6 +230,17 @@ export interface Campaign {
   locations: CampaignLocation[];
   dialogue: Record<string, { text: string; choices: StoryChoice[] }>;
   events: StoryEvent[];
+  gossip?: GossipItem[];
+}
+export interface GossipItem {
+  id: string;
+  text: string;
+  subject: string;
+  knowers: string[];
+  sensitivity: number;
+  truth: "true" | "false" | "half-true";
+  day: number;
+  source: "conversation" | "press" | "reception" | "overheard";
 }
 export interface PressData {
   outlets: { id: string; name: string; voice: string }[];

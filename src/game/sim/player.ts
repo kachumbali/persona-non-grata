@@ -528,6 +528,7 @@ export class Player {
     const s = this.s;
     const npc = campaign().characters.find((c) => c.id === npcId);
     if (!npc || npc.location !== s.location) return false;
+    this.s.selectNpc(npcId);
     const done = [
       ...s.storyFlags
         .filter((flag) => flag.startsWith("dialogue:"))
@@ -597,6 +598,36 @@ export class Player {
         return false;
       }
     }
+    return false;
+  }
+
+  /** Use the same conversation decision as the notebook UI. */
+  passGossip(sensitiveFirst = false): boolean {
+    const items = (campaign().gossip ?? []).filter(
+      (item) =>
+        this.s.knownFacts.includes(`gossip:${item.id}`) &&
+        !this.s.storyFlags.some((flag) => flag.startsWith(`gossip:${item.id}:`)) &&
+        !this.s.pending.some((p) => p.gossipId === item.id),
+    );
+    if (sensitiveFirst) items.sort((a, b) => b.sensitivity - a.sensitivity);
+    for (const item of items)
+      for (const listener of this.peopleHere().filter((id) => id !== item.subject)) {
+        if (
+          this.queueWithOverload((overload) => ({
+            id: `gossip-${item.id}`,
+            kind: "dialogue",
+            source: "Gossip",
+            text: item.text,
+            effects: {},
+            timeCost: 1,
+            worker: listener,
+            overload,
+            gossipId: item.id,
+            gossipAction: "pass",
+          }))
+        )
+          return true;
+      }
     return false;
   }
 

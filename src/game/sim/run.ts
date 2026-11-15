@@ -118,6 +118,12 @@ export interface RunResult {
   demarcheQuality: Record<string, number>;
   demarcheMissed: number;
   protocolIncidents: number;
+  relationshipChanges: number;
+  pairsChanged: number;
+  gossipLearned: number;
+  gossipPassed: number;
+  gossipHeld: number;
+  falseGossipActed: number;
 }
 
 /** Cash that is spoken for: the visit reserves and the mission steps still to do. */
@@ -158,6 +164,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
   });
   // The seed is plain store state; changing it varies the daily episode order and the press.
   useGame.setState({ seed: gameSeed, events: dailyEvents(1, gameSeed, [], {}) });
+  const initialRelationships = { ...useGame.getState().relationships };
 
   const days = lastDay();
   const maxTurns = days * blocks().length + 8;
@@ -355,6 +362,19 @@ function play(options: SimOptions, chapterId: string): RunResult {
     ),
     routeChanges: s.routeChanges,
     routeLockouts,
+    relationshipChanges: s.relationshipHistory.length,
+    pairsChanged: Object.entries(s.relationships).filter(
+      ([key, value]) => value !== (initialRelationships[key] ?? 50),
+    ).length,
+    gossipLearned: s.knownFacts.filter((f) => f.startsWith("gossip:")).length,
+    gossipPassed: s.storyFlags.filter((f) => /^gossip:[^:]+:pass$/.test(f)).length,
+    gossipHeld: s.knownFacts.filter(
+      (f) =>
+        f.startsWith("gossip:") &&
+        !s.storyFlags.includes(`${f}:pass`) &&
+        !s.storyFlags.includes(`${f}:deny`),
+    ).length,
+    falseGossipActed: s.storyFlags.filter((f) => f.startsWith("gossip:false:")).length,
     demarcheRoutes: Object.values(s.demarches).reduce<Record<string, number>>((counts, item) => {
       if (item.status === "delivered" && item.route)
         counts[item.route] = (counts[item.route] ?? 0) + 1;

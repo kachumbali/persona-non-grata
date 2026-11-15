@@ -128,6 +128,14 @@
           "requiresTrait": "liver",
           "result": "The toast is minuted after the last guest has left."
         }
+      ],
+      "gossipOptions": [
+        {
+          "id": "supplier-caution",
+          "label": "Ask for the supplier receipts",
+          "requiresFact": "gossip:supplier",
+          "result": "Mira asks the supplier for the receipts before counting the chairs."
+        }
       ]
     },
     {

@@ -165,6 +165,20 @@ function buildSchemas(strict: boolean) {
     ),
     dialogue: z.record(str, obj({ text: str, choices: z.array(storyChoice) })),
     events: z.array(event),
+    gossip: opt(
+      z.array(
+        obj({
+          id: str,
+          text: str,
+          subject: str,
+          knowers: z.array(str).min(1),
+          sensitivity: int.min(1).max(3),
+          truth: z.enum(["true", "false", "half-true"]),
+          day,
+          source: z.enum(["conversation", "press", "reception", "overheard"]),
+        }),
+      ),
+    ),
   });
   const talkChoice = obj({
     label: str,
@@ -449,6 +463,7 @@ function buildSchemas(strict: boolean) {
           conflictsWith: opt(str),
           supersededBy: opt(obj({ day, block: int.min(0).max(3), demarcheId: str })),
           traitOptions: opt(z.array(obj({ id: str, label: str, requiresTrait: str, result: str }))),
+          gossipOptions: opt(z.array(obj({ id: str, label: str, requiresFact: str, result: str }))),
         }),
       ),
       colleagueLines: z.record(str, str),
@@ -638,6 +653,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   const eventById = new Map(events.map((e) => [e.id, e]));
   const invitationById = new Map((invitations ?? []).map((i) => [i.id, i]));
   const taughtFacts = new Set<string>();
+  for (const gossip of campaign?.gossip ?? []) taughtFacts.add(`gossip:${gossip.id}`);
   for (const event of events)
     for (const choice of event.choices) if (choice.teaches) taughtFacts.add(choice.teaches);
   for (const topics of Object.values(dialogues ?? {}))
@@ -753,6 +769,9 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
       }
       if (d.fact && !taughtFacts.has(d.fact))
         error(f, at("fact"), `Fact "${d.fact}" is never taught`);
+      for (const [j, option] of (d.gossipOptions ?? []).entries())
+        if (!taughtFacts.has(option.requiresFact))
+          error(f, at("gossipOptions", j, "requiresFact"), "Gossip fact is never taught");
       for (const [j, option] of (d.traitOptions ?? []).entries())
         refCheck(
           traitIds,
@@ -872,6 +891,29 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
             `Portrait "${c.portrait}" is reserved for "${portrait.reservedFor}"`,
           );
       }
+    });
+    duplicates(
+      campaign.gossip ?? [],
+      (g) => g.id,
+      (i, id) => error(f, pathOf(["gossip", i, "id"]), `Duplicate gossip id "${id}"`),
+    );
+    (campaign.gossip ?? []).forEach((g, i) => {
+      refCheck(characterIds, "character id", g.subject, f, pathOf(["gossip", i, "subject"]));
+      g.knowers.forEach((id, j) =>
+        refCheck(characterIds, "character id", id, f, pathOf(["gossip", i, "knowers", j])),
+      );
+      checkDay(g.day, f, ["gossip", i, "day"], "gossip day");
+      if (
+        g.source === "conversation" &&
+        !g.knowers.some((id) =>
+          campaign.characters
+            .find((c) => c.id === id)
+            ?.traits.some((t) =>
+              npcTraits.find((trait) => trait.id === t && "gossips" in trait && trait.gossips),
+            ),
+        )
+      )
+        error(f, pathOf(["gossip", i, "knowers"]), "Conversation gossip needs a gossiping knower");
     });
     for (const gender of GENDERS) {
       const npcs = campaign.characters.filter((c) => c.gender === gender);
