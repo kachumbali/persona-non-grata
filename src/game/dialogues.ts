@@ -1,5 +1,6 @@
 import type { ChoiceGate } from "./character";
 import { activeChapter } from "./chapters";
+import { relationshipState } from "./relationships";
 
 export interface TalkChoice extends ChoiceGate {
   label: string;
@@ -46,9 +47,13 @@ export function pickTopic(
 }
 
 /** Trust colours how they greet you. */
-export function moodOpener(trust: number): string {
-  if (trust < 35) return "(Sighs.) ";
-  if (trust > 70) return "Ah, good — you. ";
+export function moodOpener(trust: number, traits: string[] = []): string {
+  const state = relationshipState(trust);
+  if (state === "feud" || state === "rival") return "(Sighs.) ";
+  if (state === "wary") return "(Checks the minutes.) ";
+  if (state === "ally" || state === "friendly") return "Ah, good — you. ";
+  if (traits.includes("template")) return "There is a form for this. ";
+  if (traits.includes("gossip")) return "Between ourselves, of course. ";
   return "";
 }
 

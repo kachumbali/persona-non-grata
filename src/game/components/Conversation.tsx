@@ -40,7 +40,8 @@ export function Conversation() {
     ? npc.refusalGreeting
     : undefined;
   const text =
-    (isStart ? (greeting ?? moodOpener(trust)) : "") + current.text.replace("{line}", npc.line);
+    (isStart ? (greeting ?? moodOpener(trust, npc.traits)) : "") +
+    current.text.replace("{line}", npc.line);
   const choose = (choice: TalkChoice) => {
     if (choice.next) {
       setNode(choice.next);

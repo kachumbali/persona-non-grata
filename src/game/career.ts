@@ -26,6 +26,8 @@ export interface CareerIdentity {
 export interface PersonRecord {
   trust: number;
   note?: string;
+  state?: string;
+  tags?: string[];
 }
 export interface ChapterResult {
   chapterId: string;
@@ -142,11 +144,16 @@ export function chapterResultFrom(game: ResultSource, now: string): ChapterResul
         {
           value: c.trust,
           state: relationshipState(c.trust),
-          tags: activeChapter()
-            .manifest.startRelationships.filter(
-              (r) => (r.a === "player" && r.b === id) || (r.b === "player" && r.a === id),
-            )
-            .flatMap((r) => r.tags ?? []),
+          tags: [
+            ...activeChapter()
+              .manifest.startRelationships.filter(
+                (r) => (r.a === "player" && r.b === id) || (r.b === "player" && r.a === id),
+              )
+              .flatMap((r) => r.tags ?? []),
+            ...((game.favours?.owedToYou[id] ?? 0) > 0 || (game.favours?.youOwe[id] ?? 0) > 0
+              ? ["owes-a-favour"]
+              : []),
+          ],
         },
       ]),
     ),
@@ -169,7 +176,12 @@ export function applyChapterResult(career: Career, result: ChapterResult): Caree
   const people = { ...career.people };
   for (const [id, trust] of Object.entries(result.trust)) {
     const before = people[id];
-    people[id] = { ...before, trust };
+    const relationship = result.relationshipStates?.[id];
+    people[id] = {
+      ...before,
+      trust,
+      ...(relationship ? { state: relationship.state, tags: [...relationship.tags] } : {}),
+    };
   }
   return {
     ...career,
@@ -253,7 +265,15 @@ const careerSchema = z.object({
   savings: num,
   property: z.array(id).max(500),
   reputations: z.array(id).max(500),
-  people: z.record(id, z.object({ trust: num, note: str.optional() })),
+  people: z.record(
+    id,
+    z.object({
+      trust: num,
+      note: str.optional(),
+      state: str.optional(),
+      tags: z.array(str).optional(),
+    }),
+  ),
   legacyFlags: z.array(id).max(5000),
   chapters: z.array(chapterResultSchema).max(200),
   createdAt: z.string().max(64),
@@ -274,6 +294,7 @@ const postingSchema = z
     metPeople: z.array(id).optional(),
     discoveredTraits: z.record(id, z.array(id)).optional(),
     knownRelationships: z.array(id).optional(),
+    playerPairChanges: z.array(id).optional(),
     relationshipHistory: z.array(z.object({ day: num, pair: str, from: str, to: str })).optional(),
     stepQualities: z.record(id, z.record(id, z.enum(["good", "adequate"]))).optional(),
     demarches: z

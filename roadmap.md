@@ -36,3 +36,5 @@
 - [x] B-02: gatekeepers, alternative routes, favours, knowledge and mission quality.
 
 - [x] S-02: démarche board, instructions, delivery consequences, saves and simulation.
+
+- [x] S-06: relationship web, gossip, relationship scenes and Who is who.

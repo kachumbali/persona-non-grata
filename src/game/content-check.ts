@@ -29,6 +29,7 @@ export type RawChapterPack = { [K in keyof ChapterPack]: unknown };
 export type ContentGlobals = {
   traits: unknown;
   portraits: unknown;
+  npcTraits?: unknown;
   /** Portrait file names that exist on disk. When omitted, file existence is not checked. */
   portraitFiles?: string[];
 };
@@ -138,7 +139,15 @@ function buildSchemas(strict: boolean) {
     requires: opt(str),
     requiresFlag: opt(str),
     requiresChoice: opt(obj({ eventId: str, choiceId: str })),
-    onMiss: opt(obj({ text: str, effects })),
+    relationshipGate: opt(
+      obj({
+        a: str,
+        b: str,
+        states: opt(z.array(z.enum(["ally", "friendly", "neutral", "wary", "rival", "feud"]))),
+        tag: opt(str),
+      }),
+    ),
+    onMiss: opt(obj({ text: str, effects, pair: opt(num), pairTarget: opt(str) })),
     choices: z.array(storyChoice),
   });
   const campaign = obj({
@@ -589,6 +598,28 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   // Global files.
   const traitsFile = "traits.json";
   const portraitsFile = "portraits.json";
+  const npcFile = "npc-traits.json";
+  const statHook = z.object({ stat: z.enum(STATS), min: z.number() }).strict();
+  const npcSchema = z.array(
+    z
+      .object({
+        id: z.string().min(1),
+        name: z.string().min(1),
+        description: z.string().min(1),
+        likesPlayerTrait: z.string().optional(),
+        dislikesPlayerTrait: z.string().optional(),
+        likesStat: statHook.optional(),
+        dislikesStat: statHook.optional(),
+        clashesWith: z.string().optional(),
+        clicksWith: z.string().optional(),
+        gossips: z.boolean().optional(),
+        holdsGrudges: z.boolean().optional(),
+      })
+      .strict(),
+  );
+  const npcData =
+    (parseWith(npcSchema, npcSchema, globals.npcTraits ?? npcTraits, npcFile, add) as
+      z.infer<typeof npcSchema> | undefined) ?? [];
   const traits =
     (parseWith(globalSchemas.traits, globalSchemas.traits, globals.traits, traitsFile, add) as
       { id: string }[] | undefined) ?? [];
@@ -605,6 +636,23 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
     (t) => t.id,
     (i, id) => error(traitsFile, pathOf([i, "id"]), `Duplicate trait id "${id}"`),
   );
+  duplicates(
+    npcData,
+    (t) => t.id,
+    (i, id) => error(npcFile, pathOf([i, "id"]), `Duplicate NPC trait id "${id}"`),
+  );
+  npcData.forEach((trait, i) => {
+    for (const key of ["likesPlayerTrait", "dislikesPlayerTrait"] as const) {
+      const value = trait[key];
+      if (value && !traits.some((t) => t.id === value))
+        error(npcFile, pathOf([i, key]), `Unknown player trait "${value}"`);
+    }
+    for (const key of ["clashesWith", "clicksWith"] as const) {
+      const value = trait[key];
+      if (value && !npcData.some((t) => t.id === value))
+        error(npcFile, pathOf([i, key]), `Unknown NPC trait "${value}"`);
+    }
+  });
   duplicates(
     portraits,
     (p) => p.id,
@@ -857,7 +905,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
       const at = (k: string) => pathOf(["characters", i, k]);
       c.traits.forEach((trait, j) =>
         refCheck(
-          new Set(npcTraits.map((t) => t.id)),
+          new Set(npcData.map((t) => t.id)),
           "NPC trait id",
           trait,
           f,
@@ -908,12 +956,34 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
         !g.knowers.some((id) =>
           campaign.characters
             .find((c) => c.id === id)
-            ?.traits.some((t) =>
-              npcTraits.find((trait) => trait.id === t && "gossips" in trait && trait.gossips),
-            ),
+            ?.traits.some((t) => npcData.find((trait) => trait.id === t && trait.gossips)),
         )
       )
         error(f, pathOf(["gossip", i, "knowers"]), "Conversation gossip needs a gossiping knower");
+      if (g.source === "overheard") {
+        const subject = campaign.characters.find((c) => c.id === g.subject);
+        if (
+          !g.knowers.some(
+            (id) =>
+              campaign.characters.find((c) => c.id === id)?.location === subject?.location &&
+              manifest?.startRelationships.some(
+                (r) => [r.a, r.b].sort().join(":") === [id, g.subject].sort().join(":"),
+              ),
+          )
+        )
+          error(
+            f,
+            pathOf(["gossip", i, "knowers"]),
+            "Overheard gossip needs a present knower with an authored relationship to its subject",
+          );
+      }
+      if (g.source === "reception" && !(invitations ?? []).some((inv) => inv.day >= g.day))
+        error(
+          f,
+          pathOf(["gossip", i, "day"]),
+          "No reception remains after this gossip becomes available",
+        );
+      limit(g.text, TEXT_LIMITS.dialogueText, f, ["gossip", i, "text"], "Gossip text");
     });
     for (const gender of GENDERS) {
       const npcs = campaign.characters.filter((c) => c.gender === gender);
@@ -952,6 +1022,31 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
     events.forEach((e, i) => {
       const at = (...k: Part[]) => pathOf(["events", i, ...k]);
       refCheck(characterIds, "character id", e.npc, f, at("npc"));
+      if (e.relationshipGate) {
+        const gate = e.relationshipGate;
+        refCheck(characterIds, "character id", gate.a, f, at("relationshipGate"));
+        refCheck(characterIds, "character id", gate.b, f, at("relationshipGate"));
+        if (
+          !manifest?.startRelationships.some(
+            (r) => [r.a, r.b].sort().join(":") === [gate.a, gate.b].sort().join(":"),
+          )
+        )
+          error(f, at("relationshipGate"), "Relationship gate must reference an authored pair");
+        if (
+          gate.tag &&
+          !manifest?.startRelationships.some(
+            (r) =>
+              [r.a, r.b].sort().join(":") === [gate.a, gate.b].sort().join(":") &&
+              r.tags?.includes(gate.tag!),
+          )
+        )
+          error(
+            f,
+            at("relationshipGate"),
+            "Relationship gate requires a tag that is never authored",
+          );
+      }
+      refCheck(characterIds, "character id", e.onMiss?.pairTarget, f, at("onMiss"));
       refCheck(characterIds, "character id", e.callInFor, f, at("callInFor"));
       if (e.location) refCheck(locationIds, "location id", e.location, f, at("location"));
       checkDay(e.minDay, f, ["events", i, "minDay"], "minDay");

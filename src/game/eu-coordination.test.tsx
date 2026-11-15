@@ -70,7 +70,9 @@ describe("EU coordination", () => {
         status: "chosen",
         choice,
       });
-      expect(useGame.getState().colleagues[contact]?.trust).toBe(trust);
+      expect(useGame.getState().colleagues[contact]?.trust).toBe(
+        trust + (contact === "eu-malta" ? 1 : 0),
+      ); // first impression
       act(() => {
         useGame.getState().advance();
         useGame.getState().advance();

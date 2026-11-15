@@ -99,7 +99,7 @@ describe("full-posting paths", () => {
           errors.push(`travel D${s.day}: ${useGame.getState().planError}`);
         s = useGame.getState();
         const event = s.events[s.block];
-        if (event && !s.completedEvents.includes(event.id)) {
+        if (event && !event.relationshipGate && !s.completedEvents.includes(event.id)) {
           const choice =
             event.choices.find((item) => item.id === preferred[event.id]) ?? event.choices[0];
           if (choice && !respondToStory(event, choice))
@@ -216,7 +216,9 @@ describe("full-posting paths", () => {
         ).toBe(true);
       expect(final.economy.funds).toBeGreaterThanOrEqual(0);
       expect(
-        campaign().events.filter((event) => final.storyOutcomes[event.id]?.status === "missed"),
+        campaign().events.filter(
+          (event) => !event.relationshipGate && final.storyOutcomes[event.id]?.status === "missed",
+        ),
       ).toEqual([]);
     },
   );

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { useGame } from "./store";
 import { campaign, emails, pairKey } from "./rules";
+import { planDemarche } from "./demarche";
 
 beforeEach(() => {
   useGame
@@ -53,5 +54,21 @@ describe("gossip", () => {
     expect(gossip).toHaveLength(12);
     expect(gossip.filter((g) => g.truth !== "true").length).toBeGreaterThanOrEqual(4);
     expect(new Set(gossip.map((g) => g.source)).size).toBe(4);
+  });
+  it("opens a démarche approach only after the relevant gossip is learned", () => {
+    const decision = {
+      id: "test-note",
+      kind: "work" as const,
+      source: "Clean port",
+      text: "",
+      effects: {},
+      demarcheId: "clean-port-note",
+      demarcheRoute: "note" as const,
+      demarcheTrait: "supplier-caution",
+      worker: "anselm",
+    };
+    expect(planDemarche(useGame.getState(), decision)).toBe("You have not learned this gossip.");
+    useGame.setState({ knownFacts: ["gossip:supplier"] });
+    expect(typeof planDemarche(useGame.getState(), decision)).toBe("object");
   });
 });

@@ -1,11 +1,23 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { GameScreen } from "./components/GameScreen";
+import { PressReview } from "./components/PressReview";
 import { useGame } from "./store";
 vi.mock("./components/CityMap", () => ({ CityMap: () => <div>City</div> }));
 vi.mock("./components/PlaceScene", () => ({ PlaceScene: () => <div>Place</div> }));
 vi.mock("./components/Interruption", () => ({ Interruption: () => <div>Interruption</div> }));
 describe("morning review interface", () => {
+  it("shows an unconfirmed press rumour before recording it as known", () => {
+    useGame
+      .getState()
+      .start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
+    useGame.setState({ day: 3, block: 0, pressDay: 3, pressIds: [] });
+    render(<PressReview onClose={() => {}} />);
+    expect(screen.getByText("Mira reserved all the fuel for visiting delegations.")).toBeTruthy();
+    expect(useGame.getState().knownFacts).not.toContain("gossip:fuel-quay");
+    fireEvent.click(screen.getByRole("button", { name: "Done reading" }));
+    expect(useGame.getState().knownFacts).toContain("gossip:fuel-quay");
+  });
   it("follows the welcome, can be skipped and reopened on the BlockBerry", () => {
     useGame
       .getState()

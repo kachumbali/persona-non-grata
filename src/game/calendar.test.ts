@@ -105,7 +105,7 @@ describe("diplomatic invitations", () => {
       }),
     ).toBe(true);
     useGame.getState().advance();
-    expect(useGame.getState().colleagues["amb-valdoria"]?.trust).toBe(54);
+    expect(useGame.getState().colleagues["amb-valdoria"]?.trust).toBe(56); // first meeting matches charm and gravitas
     useGame
       .getState()
       .start({ title: "Ms", name: "Tester", portrait: "diplomat-1", bio: "", traits: [] });

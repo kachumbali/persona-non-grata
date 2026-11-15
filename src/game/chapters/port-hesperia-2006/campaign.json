@@ -12,7 +12,7 @@
       "gender": "male",
       "portrait": "npc-anselm",
       "traits": ["credits", "social"],
-      "wants": "Credit for the visit programme."
+      "wants": "Get credit for the visit programme."
     },
     {
       "id": "pavel",
@@ -26,7 +26,7 @@
       "gender": "male",
       "portrait": "npc-pavel",
       "traits": ["receipt", "grudge"],
-      "wants": "A receipt for every expense."
+      "wants": "Keep every expense supported by a receipt."
     },
     {
       "id": "sola",
@@ -40,7 +40,7 @@
       "gender": "female",
       "portrait": "npc-sola",
       "traits": ["initiative", "service"],
-      "wants": "A successful chapter for Sola."
+      "wants": "Make the visit work with the staff available."
     },
     {
       "id": "development",
@@ -54,7 +54,7 @@
       "gender": "female",
       "portrait": "npc-development",
       "traits": ["service", "curious"],
-      "wants": "A successful chapter for Elise."
+      "wants": "Leave a project that local crews can maintain."
     },
     {
       "id": "bianca",
@@ -69,7 +69,7 @@
       "portrait": "npc-bianca",
       "refusalGreeting": "Bianca has recorded your refusal as an operational constraint. ",
       "traits": ["urgent", "seating"],
-      "wants": "A successful chapter for Bianca."
+      "wants": "Keep the motorcade under a clear chain of command."
     },
     {
       "id": "ines",
@@ -83,7 +83,7 @@
       "gender": "female",
       "portrait": "npc-ines",
       "traits": ["service", "process"],
-      "wants": "A successful chapter for Ines."
+      "wants": "Reduce the consular queue without losing its paperwork."
     },
     {
       "id": "press",
@@ -97,7 +97,7 @@
       "gender": "male",
       "portrait": "npc-press",
       "traits": ["social", "gossip"],
-      "wants": "A successful chapter for Lucien."
+      "wants": "Get the visit photographed from its best side."
     },
     {
       "id": "maxim",
@@ -111,7 +111,7 @@
       "gender": "male",
       "portrait": "npc-maxim",
       "traits": ["initiative", "curious"],
-      "wants": "A successful chapter for Maxim."
+      "wants": "Turn this internship into a recommendation."
     },
     {
       "id": "ketu",
@@ -125,7 +125,7 @@
       "gender": "female",
       "portrait": "npc-ketu",
       "traits": ["quiet", "gossip"],
-      "wants": "A successful chapter for Ketu."
+      "wants": "Serve dinner before the meeting overruns."
     },
     {
       "id": "protocol",
@@ -140,7 +140,7 @@
       "portrait": "npc-protocol",
       "refusalGreeting": "Ndao straightens the file you declined to help with. ",
       "traits": ["seating", "process"],
-      "wants": "A successful chapter for Director."
+      "wants": "Keep the visiting delegation in the approved order."
     },
     {
       "id": "eu",
@@ -155,7 +155,7 @@
       "portrait": "npc-eu",
       "refusalGreeting": "Celeste has put your refusal in the minutes. ",
       "traits": ["branding", "social"],
-      "wants": "A visible Team Europe success."
+      "wants": "Get Team Europe credit for a common initiative."
     },
     {
       "id": "fixer",
@@ -170,7 +170,7 @@
       "portrait": "npc-fixer",
       "refusalGreeting": "Marcel produces the unpaid favour as a receipt. ",
       "traits": ["gossip", "caution"],
-      "wants": "A successful chapter for Marcel."
+      "wants": "Be consulted before anyone finds an official shortcut."
     },
     {
       "id": "journalist",
@@ -184,7 +184,7 @@
       "gender": "female",
       "portrait": "npc-journalist",
       "traits": ["curious", "gossip"],
-      "wants": "A successful chapter for Ruth."
+      "wants": "Find the story behind the official statement."
     },
     {
       "id": "golf",
@@ -199,7 +199,7 @@
       "portrait": "npc-golf",
       "refusalGreeting": "Bako recalls the appointment you declined. ",
       "traits": ["seating", "grudge"],
-      "wants": "A successful chapter for Minister."
+      "wants": "Keep the reception on the proper course."
     },
     {
       "id": "un",
@@ -213,7 +213,7 @@
       "gender": "female",
       "portrait": "npc-un",
       "traits": ["process", "service"],
-      "wants": "A successful chapter for Dr."
+      "wants": "Publish a joint development plan."
     },
     {
       "id": "amb-valdoria",
@@ -227,7 +227,7 @@
       "gender": "female",
       "portrait": "npc-amb-valdoria",
       "traits": ["seating", "social"],
-      "wants": "A successful chapter for Ambassador."
+      "wants": "Secure a seat that confirms the mission’s importance."
     },
     {
       "id": "amb-asteria",
@@ -241,7 +241,7 @@
       "gender": "male",
       "portrait": "npc-amb-asteria",
       "traits": ["quiet", "process"],
-      "wants": "A successful chapter for Ambassador."
+      "wants": "Keep the Danish mission represented at every meeting."
     },
     {
       "id": "port-officer",
@@ -255,7 +255,7 @@
       "gender": "female",
       "portrait": "npc-port-officer",
       "traits": ["service", "initiative"],
-      "wants": "A practical clean port."
+      "wants": "Keep the port clean without overlooking its crews."
     },
     {
       "id": "bar-insurer",
@@ -269,7 +269,7 @@
       "gender": "female",
       "portrait": "npc-bar-insurer",
       "traits": ["receipt", "caution"],
-      "wants": "A successful chapter for Sofia."
+      "wants": "Make sure the quay and its cargo are insured."
     },
     {
       "id": "un-coordinator",
@@ -283,7 +283,7 @@
       "gender": "male",
       "portrait": "npc-un-coordinator",
       "traits": ["template", "process"],
-      "wants": "A successful chapter for Idra."
+      "wants": "Deliver the supplies before the coordination meeting."
     },
     {
       "id": "eu-germany",
@@ -297,7 +297,7 @@
       "gender": "male",
       "portrait": "npc-eu-germany",
       "traits": ["template", "process"],
-      "wants": "The approved template to be used."
+      "wants": "Use the approved template for every joint note."
     },
     {
       "id": "eu-france",
@@ -311,7 +311,7 @@
       "gender": "male",
       "portrait": "npc-eu-france",
       "traits": ["credits", "seating"],
-      "wants": "A successful chapter for Henri."
+      "wants": "Have the French signature recognised first."
     },
     {
       "id": "eu-malta",
@@ -325,7 +325,7 @@
       "gender": "female",
       "portrait": "npc-eu-malta",
       "traits": ["quiet", "curious"],
-      "wants": "A successful chapter for Tanya."
+      "wants": "Make sure the smaller missions are heard."
     },
     {
       "id": "eu-sweden",
@@ -339,7 +339,7 @@
       "gender": "male",
       "portrait": "npc-eu-sweden",
       "traits": ["service", "caution"],
-      "wants": "A successful chapter for Lars."
+      "wants": "Turn the discussion into an actual programme."
     }
   ],
   "venues": [
@@ -1908,6 +1908,407 @@
           "result": "The request is withdrawn. The memory is retained."
         }
       ]
+    },
+    {
+      "id": "web-joint",
+      "title": "A joint assignment",
+      "npc": "anselm",
+      "text": "The two officers must prepare one joint briefing. Each has already drafted a credit line.",
+      "minDay": 2,
+      "expiresDay": 2,
+      "relationshipGate": {
+        "a": "anselm",
+        "b": "pavel",
+        "states": ["feud", "rival", "wary", "neutral"]
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Announce both names",
+          "pair": 18,
+          "pairTarget": "pavel",
+          "result": "Both names fit on the cover. Pavel keeps the receipt for the ink.",
+          "effects": {
+            "confidence": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Put the receipts first",
+          "pair": -10,
+          "pairTarget": "pavel",
+          "result": "Anselm sends Pavel a copy marked for information only.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "The briefing arrives with two covers and no pages.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "pavel"
+      }
+    },
+    {
+      "id": "web-office",
+      "title": "The shared office",
+      "npc": "pavel",
+      "text": "Pavel finds that Lucien has described their shared cupboard as a communications platform.",
+      "minDay": 3,
+      "expiresDay": 3,
+      "relationshipGate": {
+        "a": "pavel",
+        "b": "press",
+        "states": ["feud", "rival", "wary", "neutral"],
+        "tag": "shares-an-office"
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Mark it as shared",
+          "pair": 18,
+          "pairTarget": "press",
+          "result": "The cupboard has two labels and one key.",
+          "effects": {
+            "confidence": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Call it an asset",
+          "pair": -10,
+          "pairTarget": "press",
+          "result": "Pavel files an objection to the asset register.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "The office acquires a queue for the cupboard.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "press"
+      }
+    },
+    {
+      "id": "web-team",
+      "title": "Two versions",
+      "npc": "anselm",
+      "text": "Anselm and Bianca have each sent a final version. Both say the other version is provisional.",
+      "minDay": 4,
+      "expiresDay": 4,
+      "relationshipGate": {
+        "a": "anselm",
+        "b": "bianca",
+        "states": ["neutral", "friendly", "ally"]
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Circulate both versions",
+          "pair": 18,
+          "pairTarget": "bianca",
+          "result": "Both drafts circulate under a single cover sheet.",
+          "effects": {
+            "confidence": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Choose the louder one",
+          "pair": -10,
+          "pairTarget": "bianca",
+          "result": "The quieter version is recirculated with a louder subject line.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "Two final versions are delivered to the Minister.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "bianca"
+      }
+    },
+    {
+      "id": "web-partners",
+      "title": "The separate signatures",
+      "npc": "eu-france",
+      "text": "The former couple must co-sign a common letter. Neither will hand the pen to the other.",
+      "minDay": 5,
+      "expiresDay": 5,
+      "relationshipGate": {
+        "a": "eu-france",
+        "b": "eu-germany",
+        "states": ["feud", "rival", "wary", "neutral"],
+        "tag": "former-couple"
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Provide two pens",
+          "pair": 18,
+          "pairTarget": "eu-germany",
+          "result": "Each signs with a different pen. The letterhead remains unsigned.",
+          "effects": {
+            "confidence": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Ask Celeste to sign",
+          "pair": -10,
+          "pairTarget": "eu-germany",
+          "result": "Celeste signs; the ambassadors agree only about their objection.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "The pens return to their respective missions.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "eu-germany"
+      }
+    },
+    {
+      "id": "web-side",
+      "title": "Take a side",
+      "npc": "sola",
+      "text": "Elise asks you to support her plan over Sola’s. Sola is standing behind the folder.",
+      "minDay": 6,
+      "expiresDay": 6,
+      "relationshipGate": {
+        "a": "sola",
+        "b": "development",
+        "states": ["feud", "rival", "wary", "neutral"]
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Give each a hearing",
+          "pair": 18,
+          "pairTarget": "development",
+          "result": "Sola and Elise agree to correct the same paragraph.",
+          "effects": {
+            "confidence": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Endorse the folder",
+          "pair": -10,
+          "pairTarget": "development",
+          "result": "Sola hears the endorsement before the folder closes.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "Both submit their plans without the shared budget.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "development"
+      }
+    },
+    {
+      "id": "web-repair",
+      "title": "A second draft",
+      "npc": "anselm",
+      "text": "Anselm and Pavel will revisit the briefing if the first draft can remain unsigned.",
+      "minDay": 7,
+      "expiresDay": 7,
+      "relationshipGate": {
+        "a": "anselm",
+        "b": "pavel",
+        "states": ["feud", "rival", "wary", "neutral"]
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Arrange a quiet review",
+          "pair": 18,
+          "pairTarget": "pavel",
+          "result": "Pavel accepts the draft. Anselm accepts the receipt.",
+          "effects": {
+            "confidence": 1
+          },
+          "favour": {
+            "character": "pavel",
+            "delta": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Publish both objections",
+          "pair": -10,
+          "pairTarget": "pavel",
+          "result": "Both objections become annexes to the revised briefing.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "The unsigned draft remains unsigned.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "pavel"
+      },
+      "requiresChoice": {
+        "eventId": "web-joint",
+        "choiceId": "repair"
+      }
+    },
+    {
+      "id": "web-seating",
+      "title": "The seating test",
+      "npc": "protocol",
+      "text": "The reception seating chart puts two officials who are not speaking beside one microphone.",
+      "minDay": 8,
+      "expiresDay": 8,
+      "relationshipGate": {
+        "a": "protocol",
+        "b": "golf",
+        "states": ["feud", "rival", "wary", "neutral"]
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Move the microphone",
+          "pair": 18,
+          "pairTarget": "golf",
+          "result": "The microphone moves; the seating chart remains valid.",
+          "effects": {
+            "confidence": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Keep the seating",
+          "pair": -10,
+          "pairTarget": "golf",
+          "result": "The officials address their remarks to opposite walls.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "The microphone is delivered without a seating chart.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "golf"
+      }
+    },
+    {
+      "id": "web-mentor",
+      "title": "The reluctant mentor",
+      "npc": "protocol",
+      "text": "Mira has asked Ndao to explain a protocol rule. He has brought the previous edition.",
+      "minDay": 9,
+      "expiresDay": 9,
+      "relationshipGate": {
+        "a": "protocol",
+        "b": "port-officer",
+        "states": ["neutral", "friendly", "ally"],
+        "tag": "mentor"
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Arrange a briefing",
+          "pair": 18,
+          "pairTarget": "port-officer",
+          "result": "Mira receives the old rule and its unwritten exception.",
+          "effects": {
+            "confidence": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Order another edition",
+          "pair": -10,
+          "pairTarget": "port-officer",
+          "result": "A new edition arrives; the exception remains verbal.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "Ndao makes the lesson an optional annex.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "port-officer"
+      }
+    },
+    {
+      "id": "web-allies",
+      "title": "An orderly queue",
+      "npc": "sola",
+      "text": "Ines and Sola have agreed to share a queue. Each has printed a different first number.",
+      "minDay": 10,
+      "expiresDay": 10,
+      "relationshipGate": {
+        "a": "sola",
+        "b": "ines",
+        "states": ["neutral", "friendly", "ally"]
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Use one list",
+          "pair": 18,
+          "pairTarget": "ines",
+          "result": "The queue starts at one, which everyone can locate.",
+          "effects": {
+            "confidence": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Give each a queue",
+          "pair": -10,
+          "pairTarget": "ines",
+          "result": "Each queue starts first according to its own sign.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "The visitors start a third queue.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "ines"
+      }
+    },
+    {
+      "id": "web-dinner",
+      "title": "Dinner for two",
+      "npc": "golf",
+      "text": "A dinner needs two signatures from people who disagree about where the signatures should sit.",
+      "minDay": 11,
+      "expiresDay": 11,
+      "relationshipGate": {
+        "a": "golf",
+        "b": "amb-valdoria",
+        "states": ["feud", "rival", "wary", "neutral"]
+      },
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Use a separate page",
+          "pair": 18,
+          "pairTarget": "amb-valdoria",
+          "result": "The signatures appear on separate pages of the same agreement.",
+          "effects": {
+            "confidence": 1
+          }
+        },
+        {
+          "id": "side",
+          "label": "Wait for agreement",
+          "pair": -10,
+          "pairTarget": "amb-valdoria",
+          "result": "Each side waits for the other to decide where to sign.",
+          "effects": {}
+        }
+      ],
+      "onMiss": {
+        "text": "The dinner proceeds without a signed seating plan.",
+        "effects": {},
+        "pair": -8,
+        "pairTarget": "amb-valdoria"
+      }
     }
   ],
   "gossip": [
@@ -1975,7 +2376,7 @@
       "id": "office-cupboard",
       "text": "Lucien has filed Pavel’s cupboard as a media asset.",
       "subject": "press",
-      "knowers": ["ketu", "anselm"],
+      "knowers": ["pavel", "anselm"],
       "sensitivity": 2,
       "truth": "half-true",
       "day": 5,

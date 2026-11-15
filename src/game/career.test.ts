@@ -65,6 +65,23 @@ describe("newCareer", () => {
 });
 
 describe("chapter results", () => {
+  it("records each final relationship state and favour tag", () => {
+    const result = chapterResultFrom(
+      game({ favours: { owedToYou: { pavel: 1 }, youOwe: {} } }),
+      LATER,
+    );
+    expect(result.relationshipStates?.["pavel"]).toEqual({
+      value: 70,
+      state: "friendly",
+      tags: ["owes-a-favour"],
+    });
+    const updated = applyChapterResult(newCareer(character, null, NOW), result);
+    expect(updated.people["pavel"]).toMatchObject({
+      trust: 70,
+      state: "friendly",
+      tags: ["owes-a-favour"],
+    });
+  });
   it("records delivered, failed and missed démarche counts", () => {
     const r = chapterResultFrom(
       game({
@@ -118,7 +135,12 @@ describe("chapter results", () => {
       people: { pavel: { trust: 1, note: "owes me" } },
     };
     const next = applyChapterResult(base, chapterResultFrom(game(), LATER));
-    expect(next.people["pavel"]).toEqual({ trust: 70, note: "owes me" });
+    expect(next.people["pavel"]).toEqual({
+      trust: 70,
+      note: "owes me",
+      state: "friendly",
+      tags: [],
+    });
   });
   it("detects an already recorded ending", () => {
     const c = applyChapterResult(newCareer(character, null, NOW), chapterResultFrom(game(), LATER));

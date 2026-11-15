@@ -3,6 +3,7 @@
  * Player (which mirrors what the screens offer) and queues decisions. The runner then advances.
  */
 import { campaign } from "../rules";
+import { traitsOf } from "../relationships";
 import { Player, type OverloadMode } from "./player";
 
 export type BotId = "careful" | "socialiser" | "reckless" | "ignorer" | "press-reader";
@@ -157,14 +158,14 @@ export const socialiser: Bot = {
   plan: (p) => {
     const s = p.s;
     p.skipPress();
-    if (p.s.day >= 6) missionWork(p, { suitable: true, max: 2, self: true });
+    if (p.s.day >= 5) missionWork(p, { suitable: true, max: 2, self: true });
     p.handleDemarche("eu");
     if (p.freeDP() >= 1) p.passGossip();
     // A change of scenery is half the fun; the other half is being found at the embassy.
     if (s.location !== p.office && !p.leadsHere().length && p.rng.chance(0.5) && p.freeDP() >= 2)
       p.travel(p.office);
     const event = p.currentEvent();
-    if (event) p.respondEvent(event, "random");
+    if (event) p.respondEvent(event, event.relationshipGate ? "best" : "random");
     attendInvitations(p, 0.4);
     p.answerMail("random");
     for (const lead of p.leadsHere()) if (p.freeDP() >= 1) p.respondLead(lead, "random");
@@ -205,8 +206,19 @@ export const reckless: Bot = {
   plan: (p) => {
     const s = p.s;
     p.skipPress();
-    if (p.freeDP() >= 1) p.passGossip(true);
     p.handleDemarche("reckless");
+    const source = (campaign().gossip ?? [])
+      .filter((item) => item.day <= p.s.day && !p.s.knownFacts.includes(`gossip:${item.id}`))
+      .sort((a, b) => b.sensitivity - a.sensitivity)
+      .flatMap((item) => item.knowers)
+      .find((id) => {
+        const person = campaign().characters.find((candidate) => candidate.id === id);
+        return (
+          !!person && p.peopleHere().includes(id) && traitsOf(person).some((trait) => trait.gossips)
+        );
+      });
+    if (source) p.s.selectNpc(source);
+    if (p.freeDP() >= 1) p.passGossip(true);
     if (s.day >= 3 && p.available() < 1000 && s.economy.ringFence > 3000 && p.rng.chance(0.5))
       p.raidReserve();
     if (p.available() < 300 && !s.economy.supplementUsed) p.supplement();

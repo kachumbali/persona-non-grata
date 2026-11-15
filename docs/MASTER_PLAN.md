@@ -185,7 +185,7 @@ Finish every system inside the one chapter that exists, then test it with five p
   - Everything is stored in the career.
 - Done when: Two bots with the same build and different habits finish with visibly different personnel files.
 
-### S-06 The relationship web
+### S-06 The relationship web — done
 
 - Type: Rules and code · Size: L · Depends on: F-04
 - Goal: You said the humour should come from the many characters and how they stand with each other. Today NPC pairs only have a hidden cooperation number.

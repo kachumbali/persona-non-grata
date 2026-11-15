@@ -103,6 +103,7 @@ export interface Report {
       passed: number;
       held: number;
       falseActed: number;
+      scenes: number;
     }
   >;
   demarcheStats: Record<
@@ -275,6 +276,7 @@ export function aggregate(results: RunResult[]): Report {
           passed: mean(runs.map((r) => r.gossipPassed)),
           held: mean(runs.map((r) => r.gossipHeld)),
           falseActed: mean(runs.map((r) => r.falseGossipActed)),
+          scenes: mean(runs.map((r) => r.relationshipScenesSeen)),
         },
       ]),
     ),
@@ -483,10 +485,21 @@ export function formatReport(r: Report): string {
   h("Relationships and gossip per run");
   out.push(
     table(
-      ["bot", "state changes", "pairs changed", "learned", "passed", "held", "false acted"],
+      [
+        "bot",
+        "state changes",
+        "pairs changed",
+        "learned",
+        "passed",
+        "held",
+        "false acted",
+        "scenes",
+      ],
       Object.entries(r.relationshipStats).map(([bot, s]) => [
         bot,
-        ...[s.changes, s.pairs, s.learned, s.passed, s.held, s.falseActed].map((n) => n.toFixed(1)),
+        ...[s.changes, s.pairs, s.learned, s.passed, s.held, s.falseActed, s.scenes].map((n) =>
+          n.toFixed(1),
+        ),
       ]),
     ),
   );

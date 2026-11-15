@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { clippings, outlets } from "../press";
 import { useGame } from "../store";
+import { campaign } from "../rules";
 
 export function PressReview({ onClose }: { onClose: () => void }) {
   const g = useGame();
@@ -69,6 +70,18 @@ export function PressReview({ onClose }: { onClose: () => void }) {
           );
         })}
       </div>
+      {(campaign().gossip ?? []).some((item) => item.source === "press" && item.day <= g.day) && (
+        <div className="mt-3 border-t border-border pt-2">
+          <h3 className="font-bold">Unconfirmed reports</h3>
+          <ul className="list-disc pl-5 text-sm">
+            {(campaign().gossip ?? [])
+              .filter((item) => item.source === "press" && item.day <= g.day)
+              .map((item) => (
+                <li key={item.id}>{item.text}</li>
+              ))}
+          </ul>
+        </div>
+      )}
       <div className="mt-3 flex flex-wrap gap-2">
         <Button
           size="sm"

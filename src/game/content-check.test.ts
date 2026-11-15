@@ -3,6 +3,7 @@ import { portHesperia2006 } from "./chapters";
 import type { ChapterPack } from "./chapters";
 import portraits from "./data/portraits.json";
 import traits from "./data/traits.json";
+import npcTraits from "./data/npc-traits.json";
 import {
   CODE_SET_FLAGS,
   TEXT_LIMITS,
@@ -36,6 +37,34 @@ describe("content checker on the real chapter", () => {
 });
 
 describe("content checker catches mistakes", () => {
+  it("rejects unknown NPC traits, duplicate pairs, and unreachable gossip", () => {
+    const pack = fresh();
+    pack.campaign.characters[0]!.traits = ["not-a-trait", "process"];
+    pack.manifest.startRelationships.push({ ...pack.manifest.startRelationships[0]! });
+    pack.campaign.gossip![0]!.subject = "nobody";
+    pack.campaign.gossip!.find((item) => item.id === "office-cupboard")!.knowers = ["golf"];
+    const errors = check(pack).filter((f) => f.level === "error");
+    expect(errors.some((f) => f.message.includes("not-a-trait"))).toBe(true);
+    expect(errors.some((f) => f.message.includes("Duplicate or self relationship"))).toBe(true);
+    expect(errors.some((f) => f.message.includes("nobody"))).toBe(true);
+    expect(errors.some((f) => f.message.includes("Overheard gossip"))).toBe(true);
+  });
+  it("rejects unknown hooks and missing NPC trait references", () => {
+    const bad = structuredClone(npcTraits) as Array<Record<string, unknown>>;
+    bad[0]!["clashesWith"] = "missing-trait";
+    const errors = checkChapter(fresh(), { ...globals, npcTraits: bad }).filter(
+      (f) => f.level === "error",
+    );
+    expect(
+      errors.some((f) => f.file === "npc-traits.json" && f.message.includes("missing-trait")),
+    ).toBe(true);
+    bad[1]!["typoHook"] = true;
+    expect(
+      checkChapter(fresh(), { ...globals, npcTraits: bad }).some(
+        (f) => f.file === "npc-traits.json" && f.message.includes("typoHook"),
+      ),
+    ).toBe(true);
+  });
   it("rejects invalid démarche recipients, dates and missing guaranteed routes", () => {
     const pack = fresh();
     const d = pack.demarches.instructions[0]!;

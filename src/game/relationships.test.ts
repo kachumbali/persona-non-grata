@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { activeChapter } from "./chapters";
 import { firstImpression, relationshipState, teamworkChange } from "./relationships";
-import { computeStats, pairKey } from "./rules";
+import { computeStats, pairKey, relationshipGateMet } from "./rules";
 import { useGame } from "./store";
 
 describe("relationship web", () => {
@@ -14,6 +14,14 @@ describe("relationship web", () => {
       "friendly",
       "ally",
     ]);
+  });
+  it("offers authored scenes only when the pair and tag match", () => {
+    const scene = activeChapter().campaign.events.find((event) => event.id === "web-partners")!;
+    expect(relationshipGateMet(scene, { [pairKey("eu-france", "eu-germany")]: 25 })).toBe(true);
+    expect(relationshipGateMet(scene, { [pairKey("eu-france", "eu-germany")]: 90 })).toBe(false);
+    expect(activeChapter().campaign.events.filter((event) => event.relationshipGate)).toHaveLength(
+      10,
+    );
   });
   it("applies an affinity and a clash from authored traits", () => {
     const people = activeChapter().campaign.characters;
@@ -44,5 +52,55 @@ describe("relationship web", () => {
     useGame.getState().selectNpc("eu-germany");
     expect(useGame.getState().colleagues["eu-germany"]!.trust).toBe(trust);
     expect(useGame.getState().discoveredTraits["eu-germany"]).toHaveLength(1);
+  });
+});
+
+describe("relationship scenes", () => {
+  it("records a choice changing a pair and the resulting state in the report", () => {
+    useGame
+      .getState()
+      .start({ title: "Mx", name: "Tester", portrait: "diplomat-1", bio: "", traits: [] });
+    const scene = activeChapter().campaign.events.find((e) => e.id === "web-joint")!;
+    useGame.setState({
+      events: [scene],
+      handled: Object.fromEntries(activeChapter().emails.map((e) => [e.id, "reply"])),
+    });
+    expect(
+      useGame.getState().queue({
+        id: "test-web",
+        kind: "event",
+        source: scene.title,
+        text: "The names fit.",
+        effects: {},
+        eventId: scene.id,
+        eventChoice: "repair",
+        worker: "anselm",
+        pair: 18,
+        pairTarget: "pavel",
+        timeCost: 1,
+        overload: true,
+      }),
+    ).toBe(true);
+    useGame.getState().advance();
+    const s = useGame.getState();
+    expect(s.relationships[pairKey("anselm", "pavel")]).toBe(38);
+    expect(s.playerPairChanges).toContain(pairKey("anselm", "pavel"));
+    expect(s.relationshipHistory).toContainEqual(
+      expect.objectContaining({ pair: pairKey("anselm", "pavel"), from: "rival", to: "wary" }),
+    );
+    expect(s.report.some((entry) => entry.text.includes("rival has become wary"))).toBe(true);
+  });
+  it("worsens a dispute when its scene is ignored", () => {
+    useGame
+      .getState()
+      .start({ title: "Mx", name: "Tester", portrait: "diplomat-1", bio: "", traits: [] });
+    const scene = activeChapter().campaign.events.find((e) => e.id === "web-joint")!;
+    useGame.setState({
+      events: [scene],
+      handled: Object.fromEntries(activeChapter().emails.map((e) => [e.id, "reply"])),
+    });
+    useGame.getState().advance();
+    expect(useGame.getState().relationships[pairKey("anselm", "pavel")]).toBe(12);
+    expect(useGame.getState().playerPairChanges).toEqual([]);
   });
 });

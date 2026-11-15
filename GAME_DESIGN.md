@@ -25,6 +25,12 @@ Capital sends time-bound instructions to the secure fax and the embassy desk's d
 
 The contradictory umbrella instructions demonstrate supersession: the earlier fax remains visible and can be delivered, but doing so after the correction fails. The compulsive démarche trait adds one seeded, unrequested note per trip to the ministry, drawn from four authored outcomes. Failed or missed instructions can affect goodwill; leaks appear in later press. Posting saves retain board progress and old saves silently skip instructions whose deadlines have already passed.
 
+## Relationships and gossip
+
+Each person has two or three authored NPC traits and a chapter-specific want. A first meeting applies affinities to the player's trust; later positive gains can be modified by compatible or incompatible player traits. Pair cooperation remains numeric for delegation, with named states derived from shared thresholds. Working together can strengthen a click or worsen a clash. Authored tags include a former couple, mentorship and a shared office. A state transition appears in the situation report. The Who is who notebook shows only met people, revealed traits and known ties, alongside favours. Career results retain each person's final state, value and tags.
+
+Gossip is stored as known facts, with authored sources, subjects, knowers, sensitivity and reliability. Conversation, receptions, press and overhearing can reveal it. The player can keep it, pass it to a listener or deny it to its subject; false or half-true items cost Capital goodwill when passed. A subject can hear about a disclosure later. The supplier rumour opens an additional clean-port démarche approach. Relationship-gated episodes can change ties between other people, including a two-step repair; ignoring a dispute can worsen it. These side stories never gate the visit mission.
+
 ## Diplomatic calendar
 
 Daily side stories can arise from the wider diplomatic community: other countries' national-day receptions, EU coordination meetings, UN and other multilateral meetings, and invitations from diplomats at other missions. These are opportunities for relationships, information and diplomacy as well as competing demands on the player's time. Depending on the event, the player may attend, send a colleague or decline, with consequences appropriate to the host and circumstances. Some encounters can lead to follow-up stories or affect the chapter mission.

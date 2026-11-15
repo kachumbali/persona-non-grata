@@ -57,6 +57,25 @@ function replaceViaZeroGoodwill() {
 }
 
 describe("save slots", () => {
+  it("round-trips relationship discoveries and gossip facts", () => {
+    beginNewCareer(0);
+    startCareer(ann, {});
+    useGame.setState({
+      metPeople: ["anselm"],
+      discoveredTraits: { anselm: ["credits"] },
+      knownRelationships: ["anselm:pavel"],
+      playerPairChanges: ["anselm:pavel"],
+      knownFacts: ["gossip:supplier"],
+      relationships: { "anselm:pavel": 38 },
+      relationshipHistory: [{ day: 2, pair: "anselm:pavel", from: "rival", to: "wary" }],
+    });
+    reloadSaves();
+    continueSlot(0);
+    expect(useGame.getState().knownFacts).toContain("gossip:supplier");
+    expect(useGame.getState().discoveredTraits["anselm"]).toEqual(["credits"]);
+    expect(useGame.getState().relationships["anselm:pavel"]).toBe(38);
+    expect(useGame.getState().relationshipHistory).toHaveLength(1);
+  });
   it("round-trips a coordinated and a delivered démarche", () => {
     beginNewCareer(0);
     startCareer(ann, {});

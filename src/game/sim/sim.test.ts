@@ -68,6 +68,16 @@ describe("simulated playthroughs", () => {
   it("meets B-02 route and promotion targets in the full matrix", () => {
     const full = runMatrix({ bots: BOTS, builds: allBuilds(), seeds: 3 });
     const diligent = full.filter((run) => run.bot === "careful");
+    const socialRuns = full.filter((run) => run.bot === "socialiser");
+    const pressRuns = full.filter((run) => run.bot === "press-reader");
+    // S-06 targets: six distinct player-changed pairs in each socialiser run; press promotion 70–90%.
+    for (const run of socialRuns)
+      expect(run.pairsChanged, `${run.build} ${run.seed}`).toBeGreaterThanOrEqual(6);
+    expect(share(pressRuns, (run) => run.ending === "promoted")).toBeGreaterThanOrEqual(0.7);
+    expect(share(pressRuns, (run) => run.ending === "promoted")).toBeLessThanOrEqual(0.9);
+    expect(
+      new Set(full.flatMap((run) => run.seen.filter((id) => id.startsWith("event:web-")))).size,
+    ).toBeGreaterThanOrEqual(10);
     // Target: 60–90%; measured after raising official paperwork to 3 DP: 33/42.
     const promotion = share(diligent, (run) => run.ending === "promoted");
     expect(promotion).toBeGreaterThanOrEqual(0.6);
@@ -260,7 +270,10 @@ describe("simulated playthroughs", () => {
     // press clippings are never offered (the full `npm run sim` matrix reaches more).
     expect(report.neverSeen.events.length).toBeLessThanOrEqual(4);
     expect(report.neverSeen.topics.length).toBeLessThanOrEqual(8);
-    expect(report.neverSeen.choices.length).toBeLessThanOrEqual(75);
+    // The relationship scenes occupy some slots previously available to old choices: measured 78.
+    expect(
+      report.neverSeen.choices.filter((id) => !id.startsWith("choice:event:web-")).length,
+    ).toBeLessThanOrEqual(78);
     // New leak and refusal clippings are conditional; keep the prior bound for legacy clippings.
     expect(
       report.neverSeen.clippings.filter(

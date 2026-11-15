@@ -10,7 +10,7 @@ import golf from "@/assets/scenes/golf-club.png";
 import city from "@/assets/port-hesperia.jpg";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { campaign } from "../rules";
+import { campaign, pairKey } from "../rules";
 import { useGame } from "../store";
 import { SPOTS } from "./CityMap";
 import { Conversation } from "./Conversation";
@@ -197,7 +197,14 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
                 <Portrait portrait={c.portrait} size={56} />
                 <span className="map-label">
                   {c.name.split(" ")[0]}{" "}
-                  {relationshipState(g.colleagues[c.id]?.trust ?? 50) === "feud" ? "⚡" : ""}
+                  {relationshipState(g.colleagues[c.id]?.trust ?? 50) === "feud" ||
+                  campaign().characters.some(
+                    (other) =>
+                      other.id !== c.id &&
+                      relationshipState(g.relationships[pairKey(c.id, other.id)] ?? 50) === "feud",
+                  )
+                    ? "⚡"
+                    : ""}
                   {(g.favours.owedToYou[c.id] ?? 0) > 0 ? " ↑" : ""}
                   {(g.favours.youOwe[c.id] ?? 0) > 0 ? " ↓" : ""}
                 </span>

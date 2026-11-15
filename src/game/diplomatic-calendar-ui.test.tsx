@@ -41,6 +41,6 @@ describe("diplomatic diary", () => {
       status: "chosen",
       choice: "attend",
     });
-    expect(useGame.getState().colleagues["amb-asteria"]?.trust).toBe(54);
+    expect(useGame.getState().colleagues["amb-asteria"]?.trust).toBe(55); // first impression
   });
 });

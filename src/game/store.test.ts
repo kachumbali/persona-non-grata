@@ -131,7 +131,7 @@ describe("scheduled game rounds", () => {
     s.advance();
     expect(useGame.getState().favours.youOwe["fixer"]).toBe(0);
     expect(useGame.getState().storyFlags).toContain("refused-favour-fixer");
-    expect(useGame.getState().colleagues["fixer"]?.trust).toBe(42);
+    expect(useGame.getState().colleagues["fixer"]?.trust).toBe(41); // first impression before the refusal
   });
   it("records a choice's favour and fact only when the round resolves", () => {
     useGame.setState({

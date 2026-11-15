@@ -2,6 +2,7 @@ import type { ChoiceGate } from "./character";
 import { activeChapter } from "./chapters";
 import type { ChapterManifest, EndingText } from "./chapters/types";
 import traitsData from "./data/traits.json";
+import { relationshipState, type RelationshipState } from "./relationships";
 
 export type MeterKey = "confidence" | "goodwill" | "morale" | "sanity";
 export type StatKey = "gravitas" | "charm" | "stamina" | "deniability" | "liver";
@@ -280,7 +281,8 @@ export type StoryEvent = {
   requires?: string;
   requiresFlag?: string;
   requiresChoice?: { eventId: string; choiceId: string };
-  onMiss?: { text: string; effects: Effects };
+  relationshipGate?: { a: string; b: string; states?: RelationshipState[]; tag?: string };
+  onMiss?: { text: string; effects: Effects; pair?: number; pairTarget?: string };
   choices: StoryChoice[];
 };
 /** A prerequisite must have succeeded; missed episodes cannot unlock continuations. */
@@ -338,11 +340,15 @@ export function dailyEvents(
   seed: number,
   completed: string[],
   outcomes: Record<string, StoryOutcome> = {},
+  relationships: Relationships = Object.fromEntries(
+    activeChapter().manifest.startRelationships.map((r) => [pairKey(r.a, r.b), r.value]),
+  ),
 ): StoryEvent[] {
   const available = campaign().events.filter(
     (event) =>
       !event.location &&
       !event.callInFor &&
+      relationshipGateMet(event, relationships) &&
       event.minDay <= day &&
       (event.expiresDay === undefined || day <= event.expiresDay) &&
       storyPrerequisitesMet(event, completed, outcomes) &&
@@ -355,7 +361,23 @@ export function dailyEvents(
       Number(Boolean(b.requires || b.requiresChoice)) -
         Number(Boolean(a.requires || a.requiresChoice)) || hash(a.id) - hash(b.id),
   );
-  return available.slice(0, 1 + Math.abs((seed + day) % 3));
+  const relationshipScene = available.find((event) => event.relationshipGate);
+  const ordinary = available
+    .filter((event) => !event.relationshipGate)
+    .slice(0, 1 + Math.abs((seed + day) % 3));
+  return relationshipScene ? [relationshipScene, ...ordinary].slice(0, 3) : ordinary;
+}
+export function relationshipGateMet(event: StoryEvent, relationships: Relationships): boolean {
+  const gate = event.relationshipGate;
+  if (!gate) return true;
+  const key = pairKey(gate.a, gate.b);
+  const authored = activeChapter().manifest.startRelationships.find(
+    (r) => pairKey(r.a, r.b) === key,
+  );
+  return (
+    (!gate.states || gate.states.includes(relationshipState(relationships[key] ?? 50))) &&
+    (!gate.tag || !!authored?.tags?.includes(gate.tag))
+  );
 }
 export function hospitalityCost(venueId: string, guestCount: number, block: number): number {
   const venue = campaign().venues.find((v) => v.id === venueId);
