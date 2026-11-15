@@ -1,4 +1,5 @@
 import { pressReview, clippings } from "./press";
+import { firstImpression, relationshipState, teamworkChange, trustModifier } from "./relationships";
 import {
   demarcheAt,
   demarches as chapterDemarches,
@@ -138,6 +139,10 @@ export interface GameState {
   selectedNpc: string | null;
   colleagues: Record<string, ColleagueState>;
   relationships: Relationships;
+  metPeople: string[];
+  discoveredTraits: Record<string, string[]>;
+  knownRelationships: string[];
+  relationshipHistory: { day: number; pair: string; from: string; to: string }[];
   pending: PendingDecision[];
   report: LogEntry[];
   score: number;
@@ -243,6 +248,10 @@ const initialState = () => {
     relationships: Object.fromEntries(
       m.startRelationships.map((r) => [pairKey(r.a, r.b), r.value]),
     ) as Relationships,
+    metPeople: [] as string[],
+    discoveredTraits: {} as Record<string, string[]>,
+    knownRelationships: [] as string[],
+    relationshipHistory: [] as { day: number; pair: string; from: string; to: string }[],
     pending: [],
     report: [],
     score: 0,
@@ -432,7 +441,25 @@ export const useGame = create<GameState>()(
         return ok;
       },
       moveRoom: (room) => set({ room }),
-      selectNpc: (selectedNpc) => set({ selectedNpc }),
+      selectNpc: (selectedNpc) =>
+        set((s) => {
+          const person = campaign().characters.find((c) => c.id === selectedNpc);
+          if (!person || !s.character || s.metPeople.includes(person.id)) return { selectedNpc };
+          const colleague = s.colleagues[person.id];
+          const trust = clamp(
+            (colleague?.trust ?? 50) +
+              firstImpression(person, s.character.traits, computeStats(s.character.traits)),
+          );
+          return {
+            selectedNpc,
+            metPeople: [...s.metPeople, person.id],
+            discoveredTraits: { ...s.discoveredTraits, [person.id]: person.traits.slice(0, 1) },
+            colleagues: {
+              ...s.colleagues,
+              [person.id]: { fatigue: colleague?.fatigue ?? 0, trust },
+            },
+          };
+        }),
       queue: (requested, replacePlayer = false) => {
         const s = get();
         if (!s.character || s.ending) return false;
@@ -713,6 +740,8 @@ export const useGame = create<GameState>()(
         const colleagues = structuredClone(s.colleagues),
           relationships = { ...s.relationships },
           handled = { ...s.handled };
+        const discoveredTraits = { ...s.discoveredTraits };
+        const knownRelationships = [...s.knownRelationships];
         const history = [...s.goodwillHistory],
           results: LogEntry[] = [],
           completedEvents = [...s.completedEvents],
@@ -786,6 +815,14 @@ export const useGame = create<GameState>()(
           }
         }
         for (const p of s.pending) {
+          if (p.kind === "dialogue" && p.worker) {
+            const person = campaign().characters.find((c) => c.id === p.worker);
+            if (person) discoveredTraits[person.id] = [...person.traits];
+            if (p.pairTarget) {
+              const key = pairKey(p.worker, p.pairTarget);
+              if (!knownRelationships.includes(key)) knownRelationships.push(key);
+            }
+          }
           economy.funds -= decisionCash(p) - (p.stepCost ?? 0);
           if ((p.effects.budget ?? 0) > 0) economy.funds += (p.effects.budget ?? 0) * 100;
           if (p.remainingBlocks && p.remainingBlocks > 1) {
@@ -1003,7 +1040,14 @@ export const useGame = create<GameState>()(
             const socialRepeat = p.kind === "social" && storyFlags.includes(`social:${p.worker}`);
             if (c) {
               const base = socialRepeat && (p.trust ?? 0) > 0 ? 1 : (p.trust ?? 0);
-              const scaled = p.kind === "social" ? charmGain(base, stats.charm) : base;
+              const person = campaign().characters.find((item) => item.id === p.worker);
+              const scaled = person
+                ? trustModifier(
+                    person,
+                    p.kind === "social" ? charmGain(base, stats.charm) : base,
+                    s.character.traits,
+                  )
+                : base;
               const host = ["protocol", "golf", "port-officer"].includes(p.worker);
               const namedrop =
                 host &&
@@ -1034,6 +1078,12 @@ export const useGame = create<GameState>()(
           if (p.kind === "work" && p.task && p.partner && p.partner !== p.worker) {
             const teammate = colleagues[p.partner];
             if (teammate) teammate.fatigue = clamp(teammate.fatigue + 18);
+            const a = campaign().characters.find((person) => person.id === p.worker);
+            const b = campaign().characters.find((person) => person.id === p.partner);
+            if (a && b) {
+              const key = pairKey(a.id, b.id);
+              relationships[key] = clamp((relationships[key] ?? 50) + teamworkChange(a, b));
+            }
           }
           if (p.contact && colleagues[p.contact]) {
             const contact = colleagues[p.contact];
@@ -1402,6 +1452,33 @@ export const useGame = create<GameState>()(
             timeCost: p.demarcheId ? 0 : p.timeCost,
             remainingBlocks: (p.remainingBlocks ?? 2) - 1,
           }));
+        const relationshipHistory = [...s.relationshipHistory];
+        for (const [key, value] of Object.entries(relationships)) {
+          const before = relationshipState(s.relationships[key] ?? 50),
+            after = relationshipState(value);
+          if (before === after) continue;
+          relationshipHistory.push({ day: s.day, pair: key, from: before, to: after });
+          const names = key
+            .split(":")
+            .map((id) => campaign().characters.find((c) => c.id === id)?.name ?? id);
+          results.push({
+            day: s.day,
+            time: s.minute,
+            text: `${names.join(" and ")}: ${before} has become ${after}.`,
+          });
+        }
+        for (const [id, person] of Object.entries(colleagues)) {
+          const before = relationshipState(s.colleagues[id]?.trust ?? 50),
+            after = relationshipState(person.trust);
+          if (before === after) continue;
+          relationshipHistory.push({ day: s.day, pair: `player:${id}`, from: before, to: after });
+          const name = campaign().characters.find((c) => c.id === id)?.name ?? id;
+          results.push({
+            day: s.day,
+            time: s.minute,
+            text: `Your relationship with ${name}: ${before} has become ${after}.`,
+          });
+        }
         set({
           hangover,
           economy,
@@ -1437,6 +1514,9 @@ export const useGame = create<GameState>()(
           alcohol,
           colleagues,
           relationships,
+          relationshipHistory,
+          discoveredTraits,
+          knownRelationships,
           handled,
           goodwillHistory: history,
           pending: ending ? [] : carry,
@@ -1473,7 +1553,7 @@ export const useGame = create<GameState>()(
         setItem: () => {},
         removeItem: () => {},
       })),
-      version: 12,
+      version: 13,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = {
@@ -1574,6 +1654,7 @@ export const useGame = create<GameState>()(
           minute: blocks()[block]?.time ?? 480,
           pending: error ? [] : pending,
           colleagues: old.colleagues ?? initialColleagues(),
+          relationships: { ...initialState().relationships, ...(old.relationships ?? {}) },
           storyOutcomes,
           events:
             old.events ??
@@ -1620,6 +1701,7 @@ export const useGame = create<GameState>()(
             Object.fromEntries(Object.keys(missionSteps).map((task) => [task, "good"])),
           setbacksApplied: old.setbacksApplied ?? setbacksBefore(old.day ?? 1),
           colleagues: { ...initialColleagues(), ...(old.colleagues ?? {}) },
+          relationships: { ...current.relationships, ...(old.relationships ?? {}) },
         };
       },
       partialize: (s) =>

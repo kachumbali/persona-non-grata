@@ -6,6 +6,7 @@ import { activeChapter } from "../chapters";
 import { newPosting } from "../saves";
 import { useGame } from "../store";
 import { Portrait } from "./Portrait";
+import { WhoIsWho } from "./WhoIsWho";
 import { CityMap } from "./CityMap";
 import { PlaceScene } from "./PlaceScene";
 import { BlackBerry } from "./BlackBerry";
@@ -26,6 +27,7 @@ import {
 
 export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const g = useGame();
+  const [peopleOpen, setPeopleOpen] = useState(false);
   const [briefingOpen, setBriefingOpen] = useState(g.day === 1 && g.block === 0);
   const [view, setView] = useState<"city" | "place">("city");
   const [reopened, setReopened] = useState(false);
@@ -113,6 +115,9 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
             {chapter.playerRank} · {chapter.post}
           </p>
         </div>
+        <Button variant="outline" onClick={() => setPeopleOpen(true)}>
+          Who is who
+        </Button>
         {onMenu && (
           <Button variant="outline" className="retro-button" onClick={onMenu}>
             Menu
@@ -129,6 +134,15 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
         </div>
       </header>
 
+      <Dialog open={peopleOpen} onOpenChange={setPeopleOpen}>
+        <DialogContent className="max-h-[85dvh] max-w-[calc(100vw-1rem)] overflow-y-auto bg-card sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Who is who</DialogTitle>
+            <DialogDescription>Your notebook of people and their relationships.</DialogDescription>
+          </DialogHeader>
+          <WhoIsWho />
+        </DialogContent>
+      </Dialog>
       <Dialog open={briefingOpen} onOpenChange={setBriefingOpen}>
         <DialogContent className="max-h-[85dvh] overflow-y-auto bg-card sm:max-w-2xl">
           <DialogHeader>

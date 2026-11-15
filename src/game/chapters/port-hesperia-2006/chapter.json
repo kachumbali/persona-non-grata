@@ -141,6 +141,90 @@
       "a": "sola",
       "b": "development",
       "value": 35
+    },
+    {
+      "a": "pavel",
+      "b": "press",
+      "value": 35,
+      "tags": ["shares-an-office"]
+    },
+    {
+      "a": "anselm",
+      "b": "bianca",
+      "value": 65,
+      "tags": []
+    },
+    {
+      "a": "sola",
+      "b": "ines",
+      "value": 70,
+      "tags": []
+    },
+    {
+      "a": "development",
+      "b": "ines",
+      "value": 65,
+      "tags": []
+    },
+    {
+      "a": "maxim",
+      "b": "pavel",
+      "value": 30,
+      "tags": []
+    },
+    {
+      "a": "ketu",
+      "b": "sola",
+      "value": 75,
+      "tags": []
+    },
+    {
+      "a": "protocol",
+      "b": "port-officer",
+      "value": 65,
+      "tags": ["mentor"]
+    },
+    {
+      "a": "protocol",
+      "b": "golf",
+      "value": 30,
+      "tags": []
+    },
+    {
+      "a": "port-officer",
+      "b": "fixer",
+      "value": 30,
+      "tags": []
+    },
+    {
+      "a": "eu-france",
+      "b": "eu-germany",
+      "value": 25,
+      "tags": ["former-couple"]
+    },
+    {
+      "a": "eu",
+      "b": "eu-france",
+      "value": 70,
+      "tags": []
+    },
+    {
+      "a": "eu",
+      "b": "eu-germany",
+      "value": 65,
+      "tags": []
+    },
+    {
+      "a": "eu-malta",
+      "b": "eu-sweden",
+      "value": 70,
+      "tags": []
+    },
+    {
+      "a": "golf",
+      "b": "amb-valdoria",
+      "value": 30,
+      "tags": []
     }
   ],
   "openingLog": "The Ambassador is absent. You are the Deputy, now acting head of mission. Plan your first morning.",

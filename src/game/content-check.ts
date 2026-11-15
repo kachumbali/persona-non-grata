@@ -15,6 +15,7 @@ import type {
   PressData,
 } from "./chapters/types";
 import { parseStepRef } from "./mission";
+import npcTraits from "./data/npc-traits.json";
 
 export type Finding = {
   level: "error" | "warning";
@@ -152,6 +153,8 @@ function buildSchemas(strict: boolean) {
         skills: z.array(str),
         line: str,
         refusalGreeting: opt(str),
+        traits: z.array(str).min(2).max(3),
+        wants: str,
         gender: z.enum(GENDERS),
         portrait: str,
       }),
@@ -366,7 +369,16 @@ function buildSchemas(strict: boolean) {
     startLocation: str,
     officeLocation: str,
     startRoom: str,
-    startRelationships: z.array(obj({ a: str, b: str, value: num })),
+    startRelationships: z.array(
+      obj({
+        a: str,
+        b: str,
+        value: num,
+        tags: opt(
+          z.array(z.enum(["mentor", "owes-a-favour", "former-couple", "shares-an-office"])),
+        ),
+      }),
+    ),
     openingLog: str,
     economy: obj({
       startFunds: num,
@@ -780,6 +792,13 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
     manifest.startRelationships.forEach((r, i) => {
       refCheck(characterIds, "character id", r.a, f, pathOf(["startRelationships", i, "a"]));
       refCheck(characterIds, "character id", r.b, f, pathOf(["startRelationships", i, "b"]));
+      if (
+        r.a === r.b ||
+        manifest.startRelationships
+          .slice(0, i)
+          .some((item) => [item.a, item.b].sort().join(":") === [r.a, r.b].sort().join(":"))
+      )
+        error(f, pathOf(["startRelationships", i]), "Duplicate or self relationship");
     });
     manifest.endingRules.forEach((r, i) =>
       refCheck(
@@ -817,6 +836,15 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
     );
     campaign.characters.forEach((c, i) => {
       const at = (k: string) => pathOf(["characters", i, k]);
+      c.traits.forEach((trait, j) =>
+        refCheck(
+          new Set(npcTraits.map((t) => t.id)),
+          "NPC trait id",
+          trait,
+          f,
+          pathOf(["characters", i, "traits", j]),
+        ),
+      );
       if (c.refusalGreeting) readFlag(`refused-favour-${c.id}`, f, at("refusalGreeting"));
       refCheck(locationIds, "location id", c.location, f, at("location"));
       c.likes.forEach((v, j) =>

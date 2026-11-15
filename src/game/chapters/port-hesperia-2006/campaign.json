@@ -10,7 +10,9 @@
       "skills": ["programme"],
       "line": "I could brief Capital myself. They remember me from training.",
       "gender": "male",
-      "portrait": "npc-anselm"
+      "portrait": "npc-anselm",
+      "traits": ["credits", "social"],
+      "wants": "Credit for the visit programme."
     },
     {
       "id": "pavel",
@@ -22,7 +24,9 @@
       "skills": ["lounge", "security"],
       "line": "I have seen six ambassadors. Five also thought a promise was a reservation.",
       "gender": "male",
-      "portrait": "npc-pavel"
+      "portrait": "npc-pavel",
+      "traits": ["receipt", "grudge"],
+      "wants": "A receipt for every expense."
     },
     {
       "id": "sola",
@@ -34,7 +38,9 @@
       "skills": ["clearance", "programme"],
       "line": "I can make the calls. But I am not everybody’s translator and emergency exit.",
       "gender": "female",
-      "portrait": "npc-sola"
+      "portrait": "npc-sola",
+      "traits": ["initiative", "service"],
+      "wants": "A successful chapter for Sola."
     },
     {
       "id": "development",
@@ -46,7 +52,9 @@
       "skills": ["programme"],
       "line": "The Minister could visit our project. Provided we remember the people, not just the photograph.",
       "gender": "female",
-      "portrait": "npc-development"
+      "portrait": "npc-development",
+      "traits": ["service", "curious"],
+      "wants": "A successful chapter for Elise."
     },
     {
       "id": "bianca",
@@ -59,7 +67,9 @@
       "line": "A convoy needs vehicles, not a beautifully formatted spreadsheet.",
       "gender": "female",
       "portrait": "npc-bianca",
-      "refusalGreeting": "Bianca has recorded your refusal as an operational constraint. "
+      "refusalGreeting": "Bianca has recorded your refusal as an operational constraint. ",
+      "traits": ["urgent", "seating"],
+      "wants": "A successful chapter for Bianca."
     },
     {
       "id": "ines",
@@ -71,7 +81,9 @@
       "skills": ["clearance"],
       "line": "Four hundred people in the queue. No, they do not disappear when the Minister arrives.",
       "gender": "female",
-      "portrait": "npc-ines"
+      "portrait": "npc-ines",
+      "traits": ["service", "process"],
+      "wants": "A successful chapter for Ines."
     },
     {
       "id": "press",
@@ -83,7 +95,9 @@
       "skills": ["programme"],
       "line": "A good photograph is worth a thousand words. Legal would prefer zero.",
       "gender": "male",
-      "portrait": "npc-press"
+      "portrait": "npc-press",
+      "traits": ["social", "gossip"],
+      "wants": "A successful chapter for Lucien."
     },
     {
       "id": "maxim",
@@ -95,7 +109,9 @@
       "skills": [],
       "line": "I made a checklist of the checklists. Is that useful?",
       "gender": "male",
-      "portrait": "npc-maxim"
+      "portrait": "npc-maxim",
+      "traits": ["initiative", "curious"],
+      "wants": "A successful chapter for Maxim."
     },
     {
       "id": "ketu",
@@ -107,7 +123,9 @@
       "skills": ["lounge"],
       "line": "I can feed the delegation. I cannot feed its ego.",
       "gender": "female",
-      "portrait": "npc-ketu"
+      "portrait": "npc-ketu",
+      "traits": ["quiet", "gossip"],
+      "wants": "A successful chapter for Ketu."
     },
     {
       "id": "protocol",
@@ -120,7 +138,9 @@
       "line": "Permission has three stamps. You have submitted two and a coffee stain.",
       "gender": "male",
       "portrait": "npc-protocol",
-      "refusalGreeting": "Ndao straightens the file you declined to help with. "
+      "refusalGreeting": "Ndao straightens the file you declined to help with. ",
+      "traits": ["seating", "process"],
+      "wants": "A successful chapter for Director."
     },
     {
       "id": "eu",
@@ -133,7 +153,9 @@
       "line": "Yes, Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework. No, that is not your biscuit quota.",
       "gender": "female",
       "portrait": "npc-eu",
-      "refusalGreeting": "Celeste has put your refusal in the minutes. "
+      "refusalGreeting": "Celeste has put your refusal in the minutes. ",
+      "traits": ["branding", "social"],
+      "wants": "A visible Team Europe success."
     },
     {
       "id": "fixer",
@@ -146,7 +168,9 @@
       "line": "Everything is possible. The question is who owes whom afterwards.",
       "gender": "male",
       "portrait": "npc-fixer",
-      "refusalGreeting": "Marcel produces the unpaid favour as a receipt. "
+      "refusalGreeting": "Marcel produces the unpaid favour as a receipt. ",
+      "traits": ["gossip", "caution"],
+      "wants": "A successful chapter for Marcel."
     },
     {
       "id": "journalist",
@@ -158,7 +182,9 @@
       "skills": ["programme"],
       "line": "Off the record is an agreement, not something you say after the quote.",
       "gender": "female",
-      "portrait": "npc-journalist"
+      "portrait": "npc-journalist",
+      "traits": ["curious", "gossip"],
+      "wants": "A successful chapter for Ruth."
     },
     {
       "id": "golf",
@@ -171,7 +197,9 @@
       "line": "An appointment? My secretary says I am unavailable. My caddie disagrees.",
       "gender": "male",
       "portrait": "npc-golf",
-      "refusalGreeting": "Bako recalls the appointment you declined. "
+      "refusalGreeting": "Bako recalls the appointment you declined. ",
+      "traits": ["seating", "grudge"],
+      "wants": "A successful chapter for Minister."
     },
     {
       "id": "un",
@@ -183,7 +211,9 @@
       "skills": ["programme"],
       "line": "We can support the programme. We cannot promise six agencies will agree on one logo.",
       "gender": "female",
-      "portrait": "npc-un"
+      "portrait": "npc-un",
+      "traits": ["process", "service"],
+      "wants": "A successful chapter for Dr."
     },
     {
       "id": "amb-valdoria",
@@ -195,7 +225,9 @@
       "skills": [],
       "line": "My national-day speech was eight minutes. The applause was longer because the exit was locked.",
       "gender": "female",
-      "portrait": "npc-amb-valdoria"
+      "portrait": "npc-amb-valdoria",
+      "traits": ["seating", "social"],
+      "wants": "A successful chapter for Ambassador."
     },
     {
       "id": "amb-asteria",
@@ -207,7 +239,9 @@
       "skills": [],
       "line": "Denmark supports consensus, provided someone else writes the first draft.",
       "gender": "male",
-      "portrait": "npc-amb-asteria"
+      "portrait": "npc-amb-asteria",
+      "traits": ["quiet", "process"],
+      "wants": "A successful chapter for Ambassador."
     },
     {
       "id": "port-officer",
@@ -219,7 +253,9 @@
       "skills": [],
       "line": "The port needs a working waste collection, not another photograph of an empty bin.",
       "gender": "female",
-      "portrait": "npc-port-officer"
+      "portrait": "npc-port-officer",
+      "traits": ["service", "initiative"],
+      "wants": "A practical clean port."
     },
     {
       "id": "bar-insurer",
@@ -231,7 +267,9 @@
       "skills": [],
       "line": "I can introduce you to the insurers. First tell me who actually maintains the harbour.",
       "gender": "female",
-      "portrait": "npc-bar-insurer"
+      "portrait": "npc-bar-insurer",
+      "traits": ["receipt", "caution"],
+      "wants": "A successful chapter for Sofia."
     },
     {
       "id": "un-coordinator",
@@ -243,7 +281,9 @@
       "skills": [],
       "line": "The donor reports say the bins have arrived. The bins say they are still in customs.",
       "gender": "male",
-      "portrait": "npc-un-coordinator"
+      "portrait": "npc-un-coordinator",
+      "traits": ["template", "process"],
+      "wants": "A successful chapter for Idra."
     },
     {
       "id": "eu-germany",
@@ -255,7 +295,9 @@
       "skills": [],
       "line": "The coordination table is in Annex IV. The chairs have their own annex.",
       "gender": "male",
-      "portrait": "npc-eu-germany"
+      "portrait": "npc-eu-germany",
+      "traits": ["template", "process"],
+      "wants": "The approved template to be used."
     },
     {
       "id": "eu-france",
@@ -267,7 +309,9 @@
       "skills": [],
       "line": "The draft is acceptable in principle. In French, the principle is considerably more elegant.",
       "gender": "male",
-      "portrait": "npc-eu-france"
+      "portrait": "npc-eu-france",
+      "traits": ["credits", "seating"],
+      "wants": "A successful chapter for Henri."
     },
     {
       "id": "eu-malta",
@@ -279,7 +323,9 @@
       "skills": [],
       "line": "I have Malta's brief and, with permission for this meeting, the briefs from Cyprus and Luxembourg. They agree on the biscuits, at least.",
       "gender": "female",
-      "portrait": "npc-eu-malta"
+      "portrait": "npc-eu-malta",
+      "traits": ["quiet", "curious"],
+      "wants": "A successful chapter for Tanya."
     },
     {
       "id": "eu-sweden",
@@ -291,7 +337,9 @@
       "skills": [],
       "line": "Before we decide who speaks, perhaps we should ask who has not been invited.",
       "gender": "male",
-      "portrait": "npc-eu-sweden"
+      "portrait": "npc-eu-sweden",
+      "traits": ["service", "caution"],
+      "wants": "A successful chapter for Lars."
     }
   ],
   "venues": [

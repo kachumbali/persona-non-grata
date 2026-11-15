@@ -188,7 +188,7 @@ export interface ChapterManifest {
   /** Where the staff work; delegation and baseline duties only apply there. */
   officeLocation: string;
   startRoom: string;
-  startRelationships: { a: string; b: string; value: number }[];
+  startRelationships: { a: string; b: string; value: number; tags?: string[] }[];
   openingLog: string;
   economy: ChapterEconomy;
 }
@@ -203,6 +203,8 @@ export interface CampaignCharacter {
   skills: string[];
   line: string;
   refusalGreeting?: string;
+  traits: string[];
+  wants: string;
   gender: string;
   portrait: string;
 }

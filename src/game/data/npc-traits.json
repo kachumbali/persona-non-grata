@@ -1,0 +1,126 @@
+[
+  {
+    "id": "template",
+    "name": "Template enthusiast",
+    "description": "Believes all ideas improve inside a template.",
+    "likesPlayerTrait": "brussels",
+    "clashesWith": "initiative"
+  },
+  {
+    "id": "seating",
+    "name": "Keeper of the seating plan",
+    "description": "Remembers the order of every chair.",
+    "likesStat": {
+      "stat": "gravitas",
+      "min": 2
+    },
+    "clashesWith": "initiative"
+  },
+  {
+    "id": "initiative",
+    "name": "Allergic to delay",
+    "description": "Finds a way around a stalled process.",
+    "likesPlayerTrait": "punctual",
+    "clashesWith": "template"
+  },
+  {
+    "id": "grudge",
+    "name": "Remembers everything",
+    "description": "Keeps a careful record of slights.",
+    "holdsGrudges": true,
+    "clashesWith": "credits"
+  },
+  {
+    "id": "credits",
+    "name": "Credits self",
+    "description": "Treats a shared success as a drafting opportunity.",
+    "likesPlayerTrait": "namedrop",
+    "clashesWith": "grudge"
+  },
+  {
+    "id": "loyal",
+    "name": "Loyal to the previous ambassador",
+    "description": "Compares every novelty with the old arrangement.",
+    "dislikesPlayerTrait": "namedrop",
+    "clashesWith": "credits"
+  },
+  {
+    "id": "process",
+    "name": "Believes in the process",
+    "description": "Trusts a procedure to outlast its purpose.",
+    "likesPlayerTrait": "brussels",
+    "clicksWith": "template"
+  },
+  {
+    "id": "gossip",
+    "name": "Knows everyone",
+    "description": "Passes news along with impeccable discretion.",
+    "gossips": true,
+    "clicksWith": "social"
+  },
+  {
+    "id": "social",
+    "name": "Reception regular",
+    "description": "Can find common ground beside a buffet.",
+    "likesStat": {
+      "stat": "charm",
+      "min": 2
+    },
+    "clicksWith": "gossip"
+  },
+  {
+    "id": "receipt",
+    "name": "Guards receipts",
+    "description": "Can prove that a discussion occurred.",
+    "likesPlayerTrait": "punctual",
+    "clashesWith": "credits"
+  },
+  {
+    "id": "branding",
+    "name": "Team Europe enthusiast",
+    "description": "Knows where the joint logo should go.",
+    "likesPlayerTrait": "brussels",
+    "clashesWith": "seating"
+  },
+  {
+    "id": "service",
+    "name": "Public servant",
+    "description": "Asks whom the plan will help.",
+    "likesPlayerTrait": "ngo",
+    "clicksWith": "initiative"
+  },
+  {
+    "id": "caution",
+    "name": "Cautious operator",
+    "description": "Reads the small print before reading the headline.",
+    "dislikesStat": {
+      "stat": "charm",
+      "min": 3
+    },
+    "holdsGrudges": true
+  },
+  {
+    "id": "curious",
+    "name": "Incurably curious",
+    "description": "Asks a second question after the meeting.",
+    "gossips": true,
+    "clicksWith": "service"
+  },
+  {
+    "id": "urgent",
+    "name": "Everything is urgent",
+    "description": "Has marked the reminder urgent too.",
+    "likesPlayerTrait": "punctual",
+    "clashesWith": "process"
+  },
+  {
+    "id": "quiet",
+    "name": "Quiet observer",
+    "description": "Notices what the minutes omit.",
+    "likesStat": {
+      "stat": "deniability",
+      "min": 2
+    },
+    "gossips": true
+  }
+]

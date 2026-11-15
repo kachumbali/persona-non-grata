@@ -73,6 +73,8 @@ const fixture: ChapterPack = {
         dislikes: [],
         skills: ["t1"],
         line: "Hello.",
+        traits: ["process", "quiet"],
+        wants: "A quiet office.",
         gender: "female",
         portrait: "npc-none",
       },
@@ -171,7 +173,7 @@ describe("chapter packs", () => {
     const migrate = useGame.persist.getOptions().migrate!;
     const migrated = (await migrate({ day: 3 }, 8)) as { chapterId: string };
     expect(migrated.chapterId).toBe("port-hesperia-2006");
-    expect(useGame.persist.getOptions().version).toBe(12);
+    expect(useGame.persist.getOptions().version).toBe(13);
   });
 
   it("rejects unknown chapters", () => {

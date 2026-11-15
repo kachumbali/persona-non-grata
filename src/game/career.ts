@@ -1,5 +1,7 @@
 import { z } from "zod";
 import type { SavedGame } from "./store";
+import { activeChapter } from "./chapters";
+import { relationshipState } from "./relationships";
 
 /**
  * The career: everything about the diplomat that outlives one posting.
@@ -38,6 +40,7 @@ export interface ChapterResult {
   trust: Record<string, number>;
   favours?: { owedToYou: Record<string, number>; youOwe: Record<string, number> };
   demarcheCounts?: { delivered: number; failed: number; missed: number };
+  relationshipStates?: Record<string, { value: number; state: string; tags: string[] }>;
   finishedAt: string;
 }
 export interface Career {
@@ -133,6 +136,20 @@ export function chapterResultFrom(game: ResultSource, now: string): ChapterResul
     flags: [...new Set(game.storyFlags.filter(isLegacyFlag))],
     storyOutcomes: structuredClone(game.storyOutcomes),
     trust: Object.fromEntries(Object.entries(game.colleagues).map(([id, c]) => [id, c.trust])),
+    relationshipStates: Object.fromEntries(
+      Object.entries(game.colleagues).map(([id, c]) => [
+        id,
+        {
+          value: c.trust,
+          state: relationshipState(c.trust),
+          tags: activeChapter()
+            .manifest.startRelationships.filter(
+              (r) => (r.a === "player" && r.b === id) || (r.b === "player" && r.a === id),
+            )
+            .flatMap((r) => r.tags ?? []),
+        },
+      ]),
+    ),
     favours: structuredClone(game.favours ?? { owedToYou: {}, youOwe: {} }),
     demarcheCounts: Object.values(game.demarches ?? {}).reduce(
       (counts, entry) => {
@@ -171,19 +188,22 @@ export function resultRecorded(career: Career, game: ResultSource): boolean {
     finishedAt: _mineAt,
     favours: mineFavours,
     demarcheCounts: mineCounts,
+    relationshipStates: mineRelationships,
     ...mineResult
   } = mine;
   const {
     finishedAt: _lastAt,
     favours: lastFavours,
     demarcheCounts: lastCounts,
+    relationshipStates: lastRelationships,
     ...lastResult
   } = last;
   return (
     JSON.stringify(mineResult) === JSON.stringify(lastResult) &&
     JSON.stringify(mineFavours) === JSON.stringify(lastFavours ?? { owedToYou: {}, youOwe: {} }) &&
     JSON.stringify(mineCounts) ===
-      JSON.stringify(lastCounts ?? { delivered: 0, failed: 0, missed: 0 })
+      JSON.stringify(lastCounts ?? { delivered: 0, failed: 0, missed: 0 }) &&
+    (!lastRelationships || JSON.stringify(mineRelationships) === JSON.stringify(lastRelationships))
   );
 }
 
@@ -207,6 +227,9 @@ const chapterResultSchema = z.object({
   trust: z.record(id, num),
   favours: z.object({ owedToYou: z.record(id, num), youOwe: z.record(id, num) }).optional(),
   demarcheCounts: z.object({ delivered: num, failed: num, missed: num }).optional(),
+  relationshipStates: z
+    .record(id, z.object({ value: num, state: str, tags: z.array(str) }))
+    .optional(),
   finishedAt: z.string().max(64),
 });
 const backgroundIndex = z.number().int().min(0).max(1000).nullable();
@@ -248,6 +271,10 @@ const postingSchema = z
     storyOutcomes: z.record(id, outcome),
     favours: z.object({ owedToYou: z.record(id, num), youOwe: z.record(id, num) }).optional(),
     knownFacts: z.array(id).max(5000).optional(),
+    metPeople: z.array(id).optional(),
+    discoveredTraits: z.record(id, z.array(id)).optional(),
+    knownRelationships: z.array(id).optional(),
+    relationshipHistory: z.array(z.object({ day: num, pair: str, from: str, to: str })).optional(),
     stepQualities: z.record(id, z.record(id, z.enum(["good", "adequate"]))).optional(),
     demarches: z
       .record(

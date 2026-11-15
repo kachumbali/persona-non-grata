@@ -21,6 +21,7 @@ import { PlanningDesk } from "./PlanningDesk";
 import { DemarcheBoard } from "./DemarcheBoard";
 import { Portrait } from "./Portrait";
 import { activeChapter } from "../chapters";
+import { relationshipState } from "../relationships";
 
 type Win = null | "pc" | "fax" | "appointment";
 const PC_TABS = [
@@ -194,7 +195,12 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
                 aria-label={`Talk to ${c.name}`}
               >
                 <Portrait portrait={c.portrait} size={56} />
-                <span className="map-label">{c.name.split(" ")[0]}</span>
+                <span className="map-label">
+                  {c.name.split(" ")[0]}{" "}
+                  {relationshipState(g.colleagues[c.id]?.trust ?? 50) === "feud" ? "⚡" : ""}
+                  {(g.favours.owedToYou[c.id] ?? 0) > 0 ? " ↑" : ""}
+                  {(g.favours.youOwe[c.id] ?? 0) > 0 ? " ↓" : ""}
+                </span>
               </button>
             ))}
           </div>
