@@ -11,7 +11,7 @@ import {
 } from "./character";
 import { computeStats, TRAITS } from "./rules";
 import { topicsFor } from "./dialogues";
-import { CAMPAIGN } from "./rules";
+import { campaign } from "./rules";
 
 describe("character modifiers", () => {
   it("scales only positive relationship gains without reversing them", () => {
@@ -68,7 +68,7 @@ describe("character modifiers", () => {
   });
   it("provides at least five authored dialogue moments for each trait", () => {
     for (const trait of TRAITS) {
-      const choices = CAMPAIGN.characters.flatMap((person) =>
+      const choices = campaign().characters.flatMap((person) =>
         topicsFor(person.id).flatMap((topic) =>
           Object.values(topic.nodes).flatMap((node) => node.choices),
         ),

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { PlaceScene } from "./components/PlaceScene";
-import { CAMPAIGN, EMAILS, locationStories } from "./rules";
+import { campaign, emails, locationStories } from "./rules";
 import { topicsFor } from "./dialogues";
 import { useGame } from "./store";
 
@@ -13,7 +13,7 @@ beforeEach(() => {
     day: 2,
     location: "eu",
     events: [],
-    handled: Object.fromEntries(EMAILS.map((email) => [email.id, "reply"])),
+    handled: Object.fromEntries(emails().map((email) => [email.id, "reply"])),
   });
 });
 afterEach(cleanup);
@@ -89,7 +89,7 @@ describe("clean-port coordination", () => {
       ["bar-insurer", "bar"],
       ["un-coordinator", "un"],
     ] as const) {
-      expect(CAMPAIGN.characters.find((person) => person.id === id)?.location).toBe(location);
+      expect(campaign().characters.find((person) => person.id === id)?.location).toBe(location);
       expect(topicsFor(id)).toHaveLength(2);
     }
   });

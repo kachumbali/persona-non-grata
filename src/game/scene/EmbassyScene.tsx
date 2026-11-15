@@ -4,12 +4,13 @@ import { Billboard, Environment, Lightformer } from "@react-three/drei";
 import { CanvasTexture, NearestFilter, SRGBColorSpace } from "three";
 import { Building2, ChevronLeft, ChevronRight, Minus, Plus, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import data from "../data/embassy.json";
+import { activeChapter, type EmbassyRoom, type EmbassyStaff } from "../chapters";
 import { useGame } from "../store";
 import { characterTexture, floorTexture, readPalette, type Palette } from "./pixel-art";
 
-type Room = (typeof data.rooms)[number];
-type Staff = (typeof data.staff)[number];
+type Room = EmbassyRoom;
+type Staff = EmbassyStaff;
+const embassyData = () => activeChapter().embassy;
 type Point = [number, number, number];
 
 function Block({ at, size, color }: { at: Point; size: Point; color: string }) {
@@ -258,7 +259,7 @@ function Person({
   selected: boolean;
   onSelect: () => void;
 }) {
-  const room = data.rooms.find((r) => r.id === staff.room);
+  const room = embassyData().rooms.find((r) => r.id === staff.room);
   const map = useMemo(
     () => characterTexture(staff.face, p, staff.animal),
     [staff.face, staff.animal, p],
@@ -325,8 +326,8 @@ export const EmbassyScene = memo(function EmbassyScene() {
   useEffect(() => {
     setPalette(readPalette());
   }, []);
-  const room = data.rooms.find((r) => r.id === roomId) ?? data.rooms[0];
-  const staff = data.staff.find((s) => s.id === staffId);
+  const room = embassyData().rooms.find((r) => r.id === roomId) ?? embassyData().rooms[0];
+  const staff = embassyData().staff.find((s) => s.id === staffId);
   const chooseStaff = (s: Staff) => {
     setStaffId(s.id);
     setRoomId(s.room);
@@ -455,7 +456,7 @@ export const EmbassyScene = memo(function EmbassyScene() {
                   <Block at={[x, 1.25, -6]} size={[0.07, 1.1, 0.04]} color={p.paper} />
                 </group>
               ))}
-              {data.rooms.map((r) => (
+              {embassyData().rooms.map((r) => (
                 <RoomFloor
                   key={r.id}
                   room={r}
@@ -464,7 +465,7 @@ export const EmbassyScene = memo(function EmbassyScene() {
                   onSelect={() => chooseRoom(r.id)}
                 />
               ))}
-              {data.staff.map((s) => (
+              {embassyData().staff.map((s) => (
                 <Person
                   key={s.id}
                   staff={s}
@@ -494,7 +495,7 @@ export const EmbassyScene = memo(function EmbassyScene() {
         <div className="min-w-0 p-4">
           <h3 className="mb-2 text-sm font-bold">Locations</h3>
           <div className="flex flex-wrap gap-1.5">
-            {data.rooms.map((r) => (
+            {embassyData().rooms.map((r) => (
               <Button
                 key={r.id}
                 size="sm"
@@ -519,7 +520,7 @@ export const EmbassyScene = memo(function EmbassyScene() {
       <div className="border-t border-border px-4 py-3">
         <h3 className="mb-2 text-sm font-bold">Personnel</h3>
         <div className="flex flex-wrap gap-1.5">
-          {data.staff.map((s) => (
+          {embassyData().staff.map((s) => (
             <Button
               key={s.id}
               variant={staffId === s.id ? "secondary" : "ghost"}

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { PlaceScene } from "./components/PlaceScene";
-import { delegationSucceeds, EMAILS, initialColleagues, locationStories, pairKey } from "./rules";
+import { delegationSucceeds, emails, initialColleagues, locationStories, pairKey } from "./rules";
 import { useGame } from "./store";
 
 beforeEach(() => {
@@ -12,7 +12,7 @@ beforeEach(() => {
     day: 2,
     location: "embassy",
     events: [],
-    handled: Object.fromEntries(EMAILS.map((email) => [email.id, "reply"])),
+    handled: Object.fromEntries(emails().map((email) => [email.id, "reply"])),
   });
 });
 afterEach(cleanup);
@@ -99,7 +99,7 @@ describe("embassy relationships", () => {
     ).toBe(true);
     useGame.getState().advance();
     const state = useGame.getState();
-    expect(state.visit.security).toBe(true);
+    expect(state.visit["security"]).toBe(true);
     expect(state.colleagues["maxim"]?.fatigue).toBeGreaterThanOrEqual(18);
     expect(state.colleagues["bianca"]?.fatigue).toBeGreaterThanOrEqual(18);
   });

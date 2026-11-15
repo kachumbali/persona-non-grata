@@ -7,7 +7,7 @@ export function PressReview({ onClose }: { onClose: () => void }) {
   const g = useGame();
   const [hint, setHint] = useState("");
   const items = g.pressIds
-    .map((id) => clippings.find((c) => c.id === id))
+    .map((id) => clippings().find((c) => c.id === id))
     .filter((c) => c !== undefined);
   const signal = items.find((c) => c.signal);
   const away =
@@ -47,7 +47,7 @@ export function PressReview({ onClose }: { onClose: () => void }) {
           return (
             <article key={c.id} className="border-b border-border pb-2">
               <p className="font-mono text-xs uppercase text-muted-foreground">
-                {outlets.find((o) => o.id === c.outlet)?.name}
+                {outlets().find((o) => o.id === c.outlet)?.name}
               </p>
               <h3 className="font-bold">{copy.headline}</h3>
               <p className="text-sm">{copy.body}</p>

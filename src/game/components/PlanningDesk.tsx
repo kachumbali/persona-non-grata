@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { MapPin, Plus, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  BLOCKS,
-  CAMPAIGN,
+  blocks,
+  campaign,
   hospitalityCost,
   pairKey,
   socialTrust,
-  VISIT_TASKS,
+  missionTasks,
   type VisitTask,
 } from "../rules";
 import { useGame } from "../store";
@@ -24,7 +24,7 @@ import {
 
 export function PlanningDesk() {
   const g = useGame();
-  const [task, setTask] = useState<VisitTask>("clearance");
+  const [task, setTask] = useState<VisitTask>(Object.keys(missionTasks())[0] ?? "");
   const [worker, setWorker] = useState("self");
   const [partner, setPartner] = useState("");
   const [venue, setVenue] = useState("embassy");
@@ -37,8 +37,8 @@ export function PlanningDesk() {
   useEffect(() => {
     setNotice("");
   }, [g.block, g.day]);
-  const block = BLOCKS[g.block] ?? BLOCKS[0];
-  const location = CAMPAIGN.locations.find((l) => l.id === g.location) ?? CAMPAIGN.locations[0];
+  const block = blocks()[g.block] ?? blocks()[0];
+  const location = campaign().locations.find((l) => l.id === g.location) ?? campaign().locations[0];
   const usedTime = g.pending.reduce((n, p) => n + playerTime(p), 0);
   const officeClosed = g.block === 3 && ["embassy", "ministry", "eu", "un"].includes(g.location);
   const scheduledWork =
@@ -82,7 +82,9 @@ export function PlanningDesk() {
       setNotice(ok ? "Appointment scheduled." : useGame.getState().planError);
       return;
     }
-    const name = self ? "You" : (CAMPAIGN.characters.find((c) => c.id === worker)?.name ?? worker);
+    const name = self
+      ? "You"
+      : (campaign().characters.find((c) => c.id === worker)?.name ?? worker);
     const ok = g.queue({
       id: self ? "player-work" : `work-${worker}`,
       kind: "work",
@@ -90,8 +92,8 @@ export function PlanningDesk() {
       worker: self ? undefined : worker,
       partner: self ? undefined : partner || undefined,
       task,
-      source: `${name} · ${VISIT_TASKS[task]}`,
-      text: `${name} secured written confirmation: ${VISIT_TASKS[task]}.`,
+      source: `${name} · ${missionTasks()[task]}`,
+      text: `${name} secured written confirmation: ${missionTasks()[task]}.`,
       effects: { confidence: 3 },
       cashCost:
         (task === "lounge" ? 500 : task === "security" ? 400 : 0) + (self ? serviceCost : 0),
@@ -114,7 +116,7 @@ export function PlanningDesk() {
       </div>
       <ResourceDesk />
       <div className="grid border-b border-border sm:grid-cols-4">
-        {BLOCKS.map((b, i) => (
+        {blocks().map((b, i) => (
           <div
             key={b.name}
             className={`border-r border-border px-3 py-2 ${g.block === i ? "bg-accent text-accent-foreground" : "text-muted-foreground"}`}
@@ -163,8 +165,8 @@ export function PlanningDesk() {
                 className="mt-1 w-full border border-input bg-muted p-2"
               >
                 <option value="self">Do it myself</option>
-                {CAMPAIGN.characters
-                  .filter((c) => c.location === "embassy")
+                {campaign()
+                  .characters.filter((c) => c.location === "embassy")
                   .map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name}
@@ -181,7 +183,7 @@ export function PlanningDesk() {
                   onChange={(e) => setTask(e.target.value as VisitTask)}
                   className="mt-1 w-full border border-input bg-muted p-2"
                 >
-                  {(Object.entries(VISIT_TASKS) as [VisitTask, string][]).map(([id, label]) => (
+                  {(Object.entries(missionTasks()) as [VisitTask, string][]).map(([id, label]) => (
                     <option key={id} value={id}>
                       {label}
                       {g.visit[id] ? " ✓" : ""}
@@ -203,8 +205,8 @@ export function PlanningDesk() {
                   className="mt-1 w-full border border-input bg-muted p-2"
                 >
                   <option value="">Work independently</option>
-                  {CAMPAIGN.characters
-                    .filter((c) => c.location === "embassy" && c.id !== worker)
+                  {campaign()
+                    .characters.filter((c) => c.location === "embassy" && c.id !== worker)
                     .map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name} · cooperation {g.relationships[pairKey(worker, c.id)] ?? 50}
@@ -220,16 +222,16 @@ export function PlanningDesk() {
                 ? "Off duty."
                 : `Routine: ${staffDuty(worker)} (${workerLedger?.baseline ?? 0} DP); ${workerLedger?.used ?? 0} DP already planned; ${workerLedger?.free ?? 0} DP free. A 2-DP assignment may displace routine work.`}{" "}
               Expertise:{" "}
-              {CAMPAIGN.characters
-                .find((c) => c.id === worker)
-                ?.skills.map((sk) => VISIT_TASKS[sk as VisitTask])
+              {campaign()
+                .characters.find((c) => c.id === worker)
+                ?.skills.map((sk) => missionTasks()[sk as VisitTask])
                 .join(", ") || "No visit specialism"}
               .{" "}
               {partner &&
                 `Partner expertise: ${
-                  CAMPAIGN.characters
-                    .find((c) => c.id === partner)
-                    ?.skills.map((sk) => VISIT_TASKS[sk as VisitTask])
+                  campaign()
+                    .characters.find((c) => c.id === partner)
+                    ?.skills.map((sk) => missionTasks()[sk as VisitTask])
                     .join(", ") || "No visit specialism"
                 }. Either colleague can supply the needed expertise; both need trust 25+, fatigue below 80 and cooperation 25+. Each uses 2 staff DP.`}{" "}
               {g.block === 3
@@ -320,7 +322,7 @@ export function PlanningDesk() {
                 onChange={(e) => setGuest(e.target.value)}
               >
                 <option value="">Alone</option>
-                {CAMPAIGN.characters.map((c) => (
+                {campaign().characters.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
                   </option>
@@ -332,7 +334,7 @@ export function PlanningDesk() {
                 value={venue}
                 onChange={(e) => setVenue(e.target.value)}
               >
-                {CAMPAIGN.venues.map((v) => (
+                {campaign().venues.map((v) => (
                   <option key={v.id} value={v.id}>
                     {v.name} · {v.cost ? `${money(v.cost)} / person` : "staff provisions"}
                   </option>
@@ -340,12 +342,18 @@ export function PlanningDesk() {
               </select>
             </div>
             <p className="mt-2 text-xs">
-              {CAMPAIGN.venues.find((v) => v.id === venue)?.description}
+              {campaign().venues.find((v) => v.id === venue)?.description}
             </p>
             {guest && (
               <p className="mt-1 text-xs">
-                Likes: {CAMPAIGN.characters.find((c) => c.id === guest)?.likes.join(", ")} ·
-                Dislikes: {CAMPAIGN.characters.find((c) => c.id === guest)?.dislikes.join(", ")}
+                Likes:{" "}
+                {campaign()
+                  .characters.find((c) => c.id === guest)
+                  ?.likes.join(", ")}{" "}
+                · Dislikes:{" "}
+                {campaign()
+                  .characters.find((c) => c.id === guest)
+                  ?.dislikes.join(", ")}
               </p>
             )}
             {venue !== "embassy" && (
@@ -373,13 +381,13 @@ export function PlanningDesk() {
               variant="outline"
               onClick={() => {
                 const trust = socialTrust(guest, venue, workDinner && g.block === 3);
-                const name = CAMPAIGN.characters.find((c) => c.id === guest)?.name;
+                const name = campaign().characters.find((c) => c.id === guest)?.name;
                 const ok = g.queue({
                   id: "social",
                   kind: "social",
                   source: block.social,
                   text: guest
-                    ? `${block.social} with ${name} at ${CAMPAIGN.venues.find((v) => v.id === venue)?.name}: ${trust > 0 ? "a warmer relationship" : "an uncomfortable outing"}. Hospitality cost ${money(cost)}.`
+                    ? `${block.social} with ${name} at ${campaign().venues.find((v) => v.id === venue)?.name}: ${trust > 0 ? "a warmer relationship" : "an uncomfortable outing"}. Hospitality cost ${money(cost)}.`
                     : `${block.social} alone. Some welcome quiet.`,
                   effects: {},
                   cashCost: cost,

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ACTION_LABELS, formatClock, type Action } from "../rules";
 import { inboxFor, useGame } from "../store";
 import { decisionCash, money } from "../economy";
-import choiceLabels from "../data/mail-choices.json";
+import { activeChapter } from "../chapters";
 
 /** Capital's instructions only arrive on the secure fax in the embassy office. */
 export const isFax = (from: string) => from.startsWith("Capital");
@@ -114,9 +114,7 @@ export function Mailbox({
                         effects: outcome.effects,
                       });
                       const label =
-                        (choiceLabels as Record<string, Partial<Record<Action, string>>>)[
-                          open.id
-                        ]?.[a] ??
+                        activeChapter().mailChoices[open.id]?.[a] ??
                         outcome.label ??
                         ACTION_LABELS[a];
                       return (

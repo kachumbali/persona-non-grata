@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { capacityLedger, decisionCash, money, staffDuty } from "../economy";
-import { CAMPAIGN, locationStories, type StoryChoice } from "../rules";
+import { campaign, locationStories, type StoryChoice } from "../rules";
 import { useGame } from "../store";
 
 /** An active lead is encountered at its location and resolves with the block. */
@@ -18,7 +18,7 @@ export function LocationLead() {
     g.day,
     g.completedEvents,
     g.storyOutcomes,
-    CAMPAIGN.events as import("../rules").StoryEvent[],
+    campaign().events as import("../rules").StoryEvent[],
     g.storyFlags,
   ).filter(
     (lead) =>
@@ -30,7 +30,7 @@ export function LocationLead() {
   const staffIds = [
     ...new Set([
       ...event.choices.flatMap((choice) => (choice.staff ? [choice.staff] : [])),
-      ...(CAMPAIGN.characters.some(
+      ...(campaign().characters.some(
         (person) => person.id === event.npc && person.location === "embassy",
       )
         ? [event.npc]
@@ -133,7 +133,7 @@ export function LocationLead() {
               <div className="mb-3 text-xs">
                 {staffIds.map((id) => {
                   const row = capacityLedger(g.pending, g.block).find((entry) => entry.id === id);
-                  const person = CAMPAIGN.characters.find((entry) => entry.id === id);
+                  const person = campaign().characters.find((entry) => entry.id === id);
                   return (
                     <p key={id}>
                       {person?.name ?? id}: {staffDuty(id)} · {row?.baseline ?? 0} routine,{" "}
@@ -189,7 +189,7 @@ export function LocationLead() {
                         ]
                           .map(
                             (id) =>
-                              ` · ${CAMPAIGN.characters.find((person) => person.id === id)?.name ?? id}: 2 staff DP`,
+                              ` · ${campaign().characters.find((person) => person.id === id)?.name ?? id}: 2 staff DP`,
                           )
                           .join("")}
                         {cost > 0 ? ` · ${money(cost)}` : ""}

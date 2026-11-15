@@ -1,5 +1,5 @@
 import type { ChoiceGate } from "./character";
-import DIALOGUES from "./data/dialogues.json";
+import { activeChapter } from "./chapters";
 
 export interface TalkChoice extends ChoiceGate {
   label: string;
@@ -23,11 +23,9 @@ export interface Topic {
   nodes: Record<string, TalkNode>;
 }
 
-const ALL = DIALOGUES as Record<string, Topic[]>;
-
 /** Topics a character can raise; empty when none are authored. */
 export function topicsFor(npcId: string): Topic[] {
-  return ALL[npcId] ?? [];
+  return activeChapter().dialogues[npcId] ?? [];
 }
 
 /** Each character raises a different topic as blocks pass, skipping ones already finished when possible. */

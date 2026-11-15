@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { PlaceScene } from "./components/PlaceScene";
-import { EMAILS } from "./rules";
+import { emails } from "./rules";
 import { useGame } from "./store";
 
 beforeEach(() => {
@@ -11,7 +11,7 @@ beforeEach(() => {
   useGame.setState({
     location: "eu",
     events: [],
-    handled: Object.fromEntries(EMAILS.map((email) => [email.id, "reply"])),
+    handled: Object.fromEntries(emails().map((email) => [email.id, "reply"])),
   });
 });
 afterEach(cleanup);

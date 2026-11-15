@@ -1,21 +1,19 @@
 import type { ChoiceGate } from "./character";
-import emailsData from "./data/emails.json";
+import { activeChapter } from "./chapters";
+import type { ChapterManifest, EndingText } from "./chapters/types";
 import traitsData from "./data/traits.json";
-import campaignData from "./data/campaign.json";
 
 export type MeterKey = "confidence" | "goodwill" | "morale" | "sanity";
 export type StatKey = "gravitas" | "charm" | "stamina" | "deniability" | "liver";
 export type Action = "reply" | "delegate" | "forward" | "note" | "replyall" | "trait";
 export type Meters = Record<MeterKey, number>;
 
-export type VisitTask = "clearance" | "lounge" | "programme" | "security";
-export type VisitStatus = Partial<Record<VisitTask, boolean>>;
-export const VISIT_TASKS: Record<VisitTask, string> = {
-  clearance: "Plane landing clearance",
-  lounge: "VIP lounge reservation",
-  programme: "Confirmed visit programme",
-  security: "Security and transport",
-};
+/** A mission task id; the active chapter defines which exist (today's visit tasks). */
+export type MissionTask = string;
+export type VisitTask = MissionTask;
+export type VisitStatus = Partial<Record<MissionTask, boolean>>;
+export const missionTasks = (): Record<MissionTask, string> =>
+  activeChapter().manifest.missionTasks;
 export type Effects = Partial<Meters> & { budget?: number };
 export interface Outcome extends ChoiceGate {
   text: string;
@@ -44,8 +42,11 @@ export function recordGoodwillChange(
     after: { confidence: after.confidence, goodwill: after.goodwill },
   };
 }
-export function visitReady(visit: VisitStatus): boolean {
-  return (Object.keys(VISIT_TASKS) as VisitTask[]).every((key) => visit[key] === true);
+export function visitReady(
+  visit: VisitStatus,
+  tasks: Record<string, string> = missionTasks(),
+): boolean {
+  return Object.keys(tasks).every((key) => visit[key] === true);
 }
 export function goodwillRisk(value: number): "critical" | "warning" | "stable" {
   return value <= 10 ? "critical" : value <= 25 ? "warning" : "stable";
@@ -69,16 +70,16 @@ export interface Trait {
   stats: Partial<Record<StatKey, number>>;
 }
 
-export const EMAILS = emailsData as Email[];
+export const emails = (): Email[] => activeChapter().emails;
 export const TRAITS = traitsData as Trait[];
 
 export const DAY_START = 8 * 60;
 export const DAY_END = 18 * 60;
-export const LAST_DAY = 15;
+export const lastDay = (): number => activeChapter().manifest.days;
 export const TRAIT_POINTS = 3;
 export const ESCALATE_AFTER = 150; // game minutes before an unanswered email escalates
 export const MINUTES_PER_SECOND = 6.5; // at 1x
-export const START_METERS: Meters = { confidence: 55, goodwill: 50, morale: 50, sanity: 70 };
+export const startMeters = (): Meters => ({ ...activeChapter().manifest.startMeters });
 
 export const ACTION_LABELS: Record<Action, string> = {
   reply: "Reply",
@@ -129,52 +130,39 @@ export function formatClock(minute: number) {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
-export type Ending = "png" | "replaced" | "cancelled" | "retired" | "ambassador" | "promoted";
-export const ENDINGS: Record<Ending, { title: string; text: string }> = {
-  png: {
-    title: "Persona Non Grata",
-    text: "Ombrazia declares you unwelcome, with compliments. Your farewell is a stamped form in an order nobody can document.",
-  },
-  replaced: {
-    title: "Replaced by Capital",
-    text: "HQ goodwill has reached zero. Capital recalls you and appoints a replacement. Please leave the office keys; your successor will need the same drawer of unsolved problems.",
-  },
-  cancelled: {
-    title: "Ministerial Visit Cancelled",
-    text: "Arrival day has come, but essential arrangements are still unconfirmed. The Minister cancels the visit. Capital describes this as a scheduling adjustment. Your career receives one too.",
-  },
-  retired: {
-    title: "Quietly Retired to Brussels",
-    text: "The Capital has lost confidence. You are given a window office overlooking another window.",
-  },
-  ambassador: {
-    title: "The Ambassador Returns and Takes Credit",
-    text: "Everything worked. The Ambassador reappears tanned, shakes the Minister's hand and thanks 'the team'.",
-  },
-  promoted: {
-    title: "Promoted Sideways",
-    text: "The Minister notices nothing, which is the highest compliment. You are promoted to a post with a longer title and the same desk.",
-  },
-};
+export type Ending = string;
+export const endings = (): Record<Ending, EndingText> => activeChapter().manifest.endings;
 
-/** Game over early if a meter hits zero; otherwise judged at the end of Day 15. */
-export function pickEnding(m: Meters, finalDay: boolean, visit: VisitStatus = {}): Ending | null {
-  if (m.goodwill <= 0) return "png";
-  if (m.confidence <= 0) return "replaced";
-  if (m.sanity <= 0) return "retired";
-  if (!finalDay) return null;
-  if (!visitReady(visit)) return "cancelled";
-  if (m.confidence >= 65 && m.goodwill >= 50) return "promoted";
-  return "ambassador";
+/**
+ * Game over early if an early rule matches (a meter at zero); otherwise judged on the final day.
+ * The chapter's ordered endingRules decide; the first matching rule wins.
+ */
+export function pickEnding(
+  m: Meters,
+  finalDay: boolean,
+  visit: VisitStatus = {},
+  manifest: ChapterManifest = activeChapter().manifest,
+): Ending | null {
+  for (const rule of manifest.endingRules) {
+    if (rule.finalDay && !finalDay) continue;
+    if (
+      rule.meterAtMost &&
+      !(Object.entries(rule.meterAtMost) as [MeterKey, number][]).every(([k, v]) => m[k] <= v)
+    )
+      continue;
+    if (
+      rule.meterAtLeast &&
+      !(Object.entries(rule.meterAtLeast) as [MeterKey, number][]).every(([k, v]) => m[k] >= v)
+    )
+      continue;
+    if (rule.missionIncomplete && visitReady(visit, manifest.missionTasks)) continue;
+    return rule.ending;
+  }
+  return null;
 }
 
-export const CAMPAIGN = campaignData;
-export const BLOCKS = [
-  { name: "Morning", time: 8 * 60, social: "Coffee break I" },
-  { name: "Midday", time: 12 * 60, social: "Lunch" },
-  { name: "Afternoon", time: 15 * 60, social: "Coffee break II" },
-  { name: "Evening", time: 19 * 60, social: "Dinner" },
-] as const;
+export const campaign = () => activeChapter().campaign;
+export const blocks = () => activeChapter().manifest.blocks;
 export interface ColleagueState {
   trust: number;
   fatigue: number;
@@ -182,7 +170,12 @@ export interface ColleagueState {
 export type Relationships = Record<string, number>;
 export const pairKey = (a: string, b: string) => [a, b].sort().join(":");
 export function initialColleagues(): Record<string, ColleagueState> {
-  return Object.fromEntries(CAMPAIGN.characters.map((c) => [c.id, { trust: 50, fatigue: 0 }]));
+  return Object.fromEntries(
+    campaign().characters.map((c) => [
+      c.id,
+      { trust: activeChapter().manifest.startTrust, fatigue: 0 },
+    ]),
+  );
 }
 export interface PendingDecision {
   id: string;
@@ -292,7 +285,7 @@ export function locationStories(
   day: number,
   completed: string[],
   outcomes: Record<string, StoryOutcome>,
-  events: StoryEvent[] = CAMPAIGN.events as StoryEvent[],
+  events: StoryEvent[] = campaign().events,
   flags: string[] = [],
 ): StoryEvent[] {
   return events.filter(
@@ -312,7 +305,7 @@ export function dailyEvents(
   completed: string[],
   outcomes: Record<string, StoryOutcome> = {},
 ): StoryEvent[] {
-  const available = (CAMPAIGN.events as StoryEvent[]).filter(
+  const available = campaign().events.filter(
     (event) =>
       !event.location &&
       event.minDay <= day &&
@@ -330,15 +323,15 @@ export function dailyEvents(
   return available.slice(0, 1 + Math.abs((seed + day) % 3));
 }
 export function hospitalityCost(venueId: string, guestCount: number, block: number): number {
-  const venue = CAMPAIGN.venues.find((v) => v.id === venueId);
+  const venue = campaign().venues.find((v) => v.id === venueId);
   if (!venue) return 0;
   const coffee = block === 0 || block === 2;
   const price = coffee ? (venueId === "embassy" ? 5 : 15) : venue.cost;
   return price * (guestCount + 1);
 }
 export function socialTrust(npc: string, venueId: string, workAtDinner: boolean): number {
-  const c = CAMPAIGN.characters.find((x) => x.id === npc);
-  const venue = CAMPAIGN.venues.find((x) => x.id === venueId);
+  const c = campaign().characters.find((x) => x.id === npc);
+  const venue = campaign().venues.find((x) => x.id === venueId);
   if (!c || !venue) return 0;
   return (
     (c.likes.includes(venue.setting) ? 6 : c.dislikes.includes(venue.setting) ? -5 : 2) -
@@ -353,20 +346,21 @@ export function delegationSucceeds(
   partner?: string,
   block = 0,
 ): boolean {
-  const c = CAMPAIGN.characters.find((x) => x.id === worker);
+  const c = campaign().characters.find((x) => x.id === worker);
   const state = colleagues[worker];
   if (
     !c ||
     !state ||
     block === 3 ||
-    c.location !== "embassy" ||
+    c.location !== activeChapter().manifest.officeLocation ||
     state.trust < 25 ||
     state.fatigue >= 80
   )
     return false;
   if (!partner) return c.skills.includes(task);
-  const teammate = CAMPAIGN.characters.find(
-    (person) => person.id === partner && person.location === "embassy",
+  const teammate = campaign().characters.find(
+    (person) =>
+      person.id === partner && person.location === activeChapter().manifest.officeLocation,
   );
   const teammateState = colleagues[partner];
   if (

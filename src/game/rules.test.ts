@@ -4,8 +4,8 @@ import { playerCapacity } from "./economy";
 import { TRAITS, type StatKey } from "./rules";
 import {
   applyEffects,
-  BLOCKS,
-  CAMPAIGN,
+  blocks,
+  campaign,
   dailyEvents,
   expiredStories,
   goodwillRisk,
@@ -15,7 +15,7 @@ import {
   pointsLeft,
   recordGoodwillChange,
   socialTrust,
-  START_METERS,
+  startMeters,
   visitReady,
 } from "./rules";
 
@@ -61,17 +61,17 @@ describe("game rules", () => {
     });
   });
   it("meters stay between 0 and 100", () => {
-    expect(applyEffects(START_METERS, { confidence: -500 }).confidence).toBe(0);
-    expect(applyEffects(START_METERS, { sanity: 500 }).sanity).toBe(100);
+    expect(applyEffects(startMeters(), { confidence: -500 }).confidence).toBe(0);
+    expect(applyEffects(startMeters(), { sanity: 500 }).sanity).toBe(100);
   });
   it("zero host goodwill ends the game as persona non grata", () => {
-    expect(pickEnding({ ...START_METERS, goodwill: 0 }, false)).toBe("png");
+    expect(pickEnding({ ...startMeters(), goodwill: 0 }, false)).toBe("png");
   });
   it("no ending before day 15 while meters are above zero", () => {
-    expect(pickEnding(START_METERS, false)).toBeNull();
+    expect(pickEnding(startMeters(), false)).toBeNull();
   });
   it("high confidence and goodwill on day 15 is Promoted Sideways", () => {
-    expect(pickEnding({ ...START_METERS, confidence: 70, goodwill: 60 }, true, ready)).toBe(
+    expect(pickEnding({ ...startMeters(), confidence: 70, goodwill: 60 }, true, ready)).toBe(
       "promoted",
     );
   });
@@ -80,17 +80,17 @@ describe("game rules", () => {
     expect(pointsLeft(["liver", "eyesopen"])).toBe(-1);
   });
   it("zero HQ goodwill replaces the player", () => {
-    expect(pickEnding({ ...START_METERS, confidence: 0 }, false)).toBe("replaced");
+    expect(pickEnding({ ...startMeters(), confidence: 0 }, false)).toBe("replaced");
   });
   it("an unconfirmed programme cancels the visit on arrival", () => {
-    expect(pickEnding(START_METERS, true, { ...ready, programme: false })).toBe("cancelled");
+    expect(pickEnding(startMeters(), true, { ...ready, programme: false })).toBe("cancelled");
   });
   it("other missing essential arrangements also fail the visit", () => {
     expect(visitReady({ ...ready, clearance: false })).toBe(false);
-    expect(pickEnding(START_METERS, true, { ...ready, clearance: false })).toBe("cancelled");
+    expect(pickEnding(startMeters(), true, { ...ready, clearance: false })).toBe("cancelled");
   });
   it("positive goodwill does not trigger replacement or PNG at arrival", () => {
-    expect(pickEnding({ ...START_METERS, confidence: 1, goodwill: 1 }, true, ready)).toBe(
+    expect(pickEnding({ ...startMeters(), confidence: 1, goodwill: 1 }, true, ready)).toBe(
       "ambassador",
     );
   });
@@ -100,7 +100,7 @@ describe("game rules", () => {
     expect(goodwillRisk(26)).toBe("stable");
   });
   it("records actual clamped goodwill changes rather than nominal penalties", () => {
-    const before = { ...START_METERS, confidence: 4 };
+    const before = { ...startMeters(), confidence: 4 };
     const after = applyEffects(before, { confidence: -12, goodwill: 3 });
     const entry = recordGoodwillChange(before, after, {
       day: 1,
@@ -113,9 +113,9 @@ describe("game rules", () => {
     expect(entry.after.goodwill - entry.before.goodwill).toBe(3);
   });
   it("has two coffee occasions, one lunch and one dinner daily", () => {
-    expect(BLOCKS.filter((b) => b.social.startsWith("Coffee")).length).toBe(2);
-    expect(BLOCKS.filter((b) => b.social === "Lunch").length).toBe(1);
-    expect(BLOCKS.filter((b) => b.social === "Dinner").length).toBe(1);
+    expect(blocks().filter((b) => b.social.startsWith("Coffee")).length).toBe(2);
+    expect(blocks().filter((b) => b.social === "Lunch").length).toBe(1);
+    expect(blocks().filter((b) => b.social === "Dinner").length).toBe(1);
   });
   it("charges actual restaurant prices for host and guest, including solo meals", () => {
     expect(hospitalityCost("bling", 1, 1)).toBe(900);
@@ -134,7 +134,7 @@ describe("game rules", () => {
     expect(socialTrust("pavel", "classic", false)).toBe(6);
   });
   it("does not repeat completed events when no story is eligible", () => {
-    const all = CAMPAIGN.events.map((event) => event.id);
+    const all = campaign().events.map((event) => event.id);
     expect(dailyEvents(15, 23, all)).toEqual([]);
   });
   it("expires an eligible timed story only once and never expires a locked branch", () => {

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { BLOCKS, CAMPAIGN, EMAILS, locationStories, START_METERS } from "./rules";
+import { blocks, campaign, emails, locationStories, startMeters } from "./rules";
 import { inboxFor, useGame } from "./store";
 const character = { title: "Mr", name: "Test", portrait: "diplomat-1", bio: "", traits: [] };
 beforeEach(() => useGame.getState().start(character));
@@ -44,10 +44,10 @@ describe("scheduled game rounds", () => {
     ).toBe(true);
   });
   it("persists a story choice only on resolution and records missed stories once", () => {
-    const supplier = CAMPAIGN.events.find((event) => event.id === "supplier")!;
+    const supplier = campaign().events.find((event) => event.id === "supplier")!;
     useGame.setState({
       events: [supplier],
-      handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
     });
     useGame.getState().queue({
       id: "event-supplier",
@@ -70,7 +70,7 @@ describe("scheduled game rounds", () => {
     useGame.getState().start(character);
     useGame.setState({
       events: [supplier],
-      handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
     });
     useGame.getState().advance();
     expect(useGame.getState().storyOutcomes["supplier"]).toEqual({ status: "missed" });
@@ -101,11 +101,11 @@ describe("scheduled game rounds", () => {
   ])(
     "resolves the supplier $initial branch at the bar and pays it off at the visit",
     ({ initial, lead, choice, flag }) => {
-      const allMail = Object.fromEntries(EMAILS.map((email) => [email.id, "reply"]));
+      const allMail = Object.fromEntries(emails().map((email) => [email.id, "reply"]));
       useGame.setState({
         day: 2,
         block: 0,
-        minute: BLOCKS[0].time,
+        minute: blocks()[0]!.time,
         events: [],
         handled: allMail,
         completedEvents: ["supplier"],
@@ -143,7 +143,7 @@ describe("scheduled game rounds", () => {
       useGame.setState({
         day: 14,
         block: 3,
-        minute: BLOCKS[3].time,
+        minute: blocks()[3]!.time,
         events: [],
         visit: { clearance: true, lounge: true, programme: true, security: true },
       });
@@ -176,9 +176,9 @@ describe("scheduled game rounds", () => {
       useGame.setState({
         day: 4,
         block: 0,
-        minute: BLOCKS[0].time,
+        minute: blocks()[0]!.time,
         events: [],
-        handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+        handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
         completedEvents: ["seating-complaint"],
         storyOutcomes: { "seating-complaint": { status: "chosen", choice: initial } },
       });
@@ -207,7 +207,7 @@ describe("scheduled game rounds", () => {
       useGame.setState({
         day: 14,
         block: 3,
-        minute: BLOCKS[3].time,
+        minute: blocks()[3]!.time,
         events: [],
         visit: { clearance: true, lounge: true, programme: true, security: true },
       });
@@ -239,9 +239,9 @@ describe("scheduled game rounds", () => {
       useGame.setState({
         day: 2,
         block: 0,
-        minute: BLOCKS[0].time,
+        minute: blocks()[0]!.time,
         events: [],
-        handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+        handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
         completedEvents: ["press"],
         storyOutcomes: { press: { status: "chosen", choice: initial } },
       });
@@ -270,7 +270,7 @@ describe("scheduled game rounds", () => {
       useGame.setState({
         day: 14,
         block: 3,
-        minute: BLOCKS[3].time,
+        minute: blocks()[3]!.time,
         events: [],
         visit: { clearance: true, lounge: true, programme: true, security: true },
       });
@@ -302,9 +302,9 @@ describe("scheduled game rounds", () => {
       useGame.setState({
         day: 3,
         block: 0,
-        minute: BLOCKS[0].time,
+        minute: blocks()[0]!.time,
         events: [],
-        handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+        handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
         completedEvents: ["elise"],
         storyOutcomes: { elise: { status: "chosen", choice: initial } },
       });
@@ -333,7 +333,7 @@ describe("scheduled game rounds", () => {
       useGame.setState({
         day: 14,
         block: 3,
-        minute: BLOCKS[3].time,
+        minute: blocks()[3]!.time,
         events: [],
         visit: { clearance: true, lounge: true, programme: true, security: true },
       });
@@ -353,9 +353,9 @@ describe("scheduled game rounds", () => {
       useGame.setState({
         day: 9,
         block: 0,
-        minute: BLOCKS[0].time,
+        minute: blocks()[0]!.time,
         events: [],
-        handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+        handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
         completedEvents: ["asteria-coffee"],
         storyOutcomes: { "asteria-coffee": { status: "chosen", choice: response } },
       });
@@ -384,10 +384,10 @@ describe("scheduled game rounds", () => {
     },
   );
   it("does not auto-expire a location lead still present in a pre-update day's schedule", () => {
-    const lead = CAMPAIGN.events.find((event) => event.id === "supplier-followup")!;
+    const lead = campaign().events.find((event) => event.id === "supplier-followup")!;
     useGame.setState({
       events: [lead],
-      handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
       completedEvents: ["supplier"],
       storyOutcomes: { supplier: { status: "chosen", choice: "check" } },
     });
@@ -398,7 +398,7 @@ describe("scheduled game rounds", () => {
   it("records conversation completion only when resolved and pays off the menu at the visit", () => {
     useGame.setState({
       events: [],
-      handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
     });
     const choice = {
       id: "talk",
@@ -421,7 +421,7 @@ describe("scheduled game rounds", () => {
     useGame.setState({
       day: 14,
       block: 3,
-      minute: BLOCKS[3].time,
+      minute: blocks()[3]!.time,
       events: [],
       visit: { clearance: true, lounge: true, programme: true, security: true },
     });
@@ -486,7 +486,7 @@ describe("scheduled game rounds", () => {
       overload: true,
     });
     useGame.getState().advance();
-    expect(useGame.getState().visit.programme).toBeUndefined();
+    expect(useGame.getState().visit["programme"]).toBeUndefined();
     expect(useGame.getState().report.some((r) => r.text.includes("work stalled"))).toBe(true);
   });
   it("competent independent delegation confirms a visit requirement", () => {
@@ -501,11 +501,11 @@ describe("scheduled game rounds", () => {
       overload: true,
     });
     useGame.getState().advance();
-    expect(useGame.getState().visit.lounge).toBe(true);
+    expect(useGame.getState().visit["lounge"]).toBe(true);
     expect(useGame.getState().score).toBe(10);
   });
   it("replaces the player at zero HQ goodwill and prevents further rounds", () => {
-    useGame.setState({ meters: { ...START_METERS, confidence: 6 } });
+    useGame.setState({ meters: { ...startMeters(), confidence: 6 } });
     useGame.getState().answer("e1", "note");
     useGame.getState().advance();
     expect(useGame.getState().ending).toBe("replaced");
@@ -516,7 +516,7 @@ describe("scheduled game rounds", () => {
     expect(useGame.getState().block).toBe(block);
   });
   it("zero host goodwill causes PNG on resolution", () => {
-    useGame.setState({ meters: { ...START_METERS, goodwill: 4 }, handled: { e1: "reply" } });
+    useGame.setState({ meters: { ...startMeters(), goodwill: 4 }, handled: { e1: "reply" } });
     useGame.getState().queue({
       id: "loss",
       source: "Incident",
@@ -531,9 +531,9 @@ describe("scheduled game rounds", () => {
     useGame.setState({
       day: 14,
       block: 3,
-      minute: BLOCKS[3].time,
+      minute: blocks()[3]!.time,
       events: [],
-      handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
       visit: { clearance: true, lounge: true, security: true },
     });
     useGame.getState().advance();
@@ -543,7 +543,7 @@ describe("scheduled game rounds", () => {
   it("four blocks make one working day", () => {
     useGame.setState({
       events: [],
-      handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
     });
     for (let i = 0; i < 4; i++) useGame.getState().advance();
     expect(useGame.getState().day).toBe(2);
@@ -573,13 +573,13 @@ describe("scheduled game rounds", () => {
       if (useGame.getState().ending) break;
     }
     expect(useGame.getState().day).toBe(15);
-    expect(useGame.getState().visit.programme).toBe(true);
+    expect(useGame.getState().visit["programme"]).toBe(true);
     expect(["promoted", "ambassador"]).toContain(useGame.getState().ending);
   });
   it("repeated diplomatic outcomes cannot farm Mission Standing", () => {
     useGame.setState({
       events: [],
-      handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
     });
     for (let i = 0; i < 2; i++) {
       useGame.getState().queue({

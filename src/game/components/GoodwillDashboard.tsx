@@ -1,9 +1,9 @@
-import { formatClock, goodwillRisk, LAST_DAY, VISIT_TASKS, type VisitTask } from "../rules";
+import { formatClock, goodwillRisk, lastDay, missionTasks, type VisitTask } from "../rules";
 import { useGame } from "../store";
 
 export function GoodwillDashboard() {
   const { meters, goodwillHistory, visit, day } = useGame();
-  const confirmed = Object.keys(VISIT_TASKS).filter((key) => visit[key as VisitTask]).length;
+  const confirmed = Object.keys(missionTasks()).filter((key) => visit[key as VisitTask]).length;
   return (
     <section aria-label="Goodwill dashboard" className="mb-4 border-y-2 border-border bg-card py-3">
       <h2 className="retro-titlebar">Mission Watch · Capital & Host Country</h2>
@@ -61,10 +61,10 @@ export function GoodwillDashboard() {
         <div>
           <h3 className="text-xl">Ministerial visit · {confirmed}/4 confirmed</h3>
           <p className="mb-2 text-sm text-muted-foreground">
-            Arrival: Day {LAST_DAY} · {Math.max(0, LAST_DAY - day)} days remaining
+            Arrival: Day {lastDay()} · {Math.max(0, lastDay() - day)} days remaining
           </p>
           <ul className="space-y-1 text-sm">
-            {(Object.entries(VISIT_TASKS) as [VisitTask, string][]).map(([key, label]) => (
+            {(Object.entries(missionTasks()) as [VisitTask, string][]).map(([key, label]) => (
               <li key={key} className={visit[key] ? "text-primary" : "text-destructive"}>
                 {visit[key] ? "✓" : "!"} {label} — {visit[key] ? "confirmed" : "unconfirmed"}
               </li>

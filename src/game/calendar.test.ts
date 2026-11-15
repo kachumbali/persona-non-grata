@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { dueInvitations, INVITATIONS, visibleInvitations } from "./calendar";
-import { BLOCKS, CAMPAIGN, EMAILS } from "./rules";
+import { dueInvitations, allInvitations, visibleInvitations } from "./calendar";
+import { blocks, campaign, emails } from "./rules";
 import { useGame } from "./store";
 
-const invitation = INVITATIONS[0]!;
+const invitation = allInvitations()[0]!;
 beforeEach(() => {
   useGame
     .getState()
@@ -11,25 +11,25 @@ beforeEach(() => {
   useGame.setState({
     day: invitation.day,
     block: invitation.block,
-    minute: BLOCKS[invitation.block]!.time,
+    minute: blocks()[invitation.block]!.time,
     events: [],
-    handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+    handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
   });
 });
 describe("diplomatic invitations", () => {
   it("uses unique ids, valid locations, contacts and scheduled blocks", () => {
     const ids = [
-      ...CAMPAIGN.events.map((event) => event.id),
-      ...INVITATIONS.map((event) => event.id),
+      ...campaign().events.map((event) => event.id),
+      ...allInvitations().map((event) => event.id),
     ];
     expect(new Set(ids).size).toBe(ids.length);
-    for (const event of INVITATIONS) {
-      expect(CAMPAIGN.locations.some((place) => place.id === event.location)).toBe(true);
+    for (const event of allInvitations()) {
+      expect(campaign().locations.some((place) => place.id === event.location)).toBe(true);
       expect(
-        event.contact ? CAMPAIGN.characters.some((person) => person.id === event.contact) : true,
+        event.contact ? campaign().characters.some((person) => person.id === event.contact) : true,
       ).toBe(true);
       expect(event.announceDay).toBeLessThanOrEqual(event.day);
-      expect(BLOCKS[event.block]).toBeDefined();
+      expect(blocks()[event.block]).toBeDefined();
     }
   });
   it("shows announced future invitations but hides past and resolved ones", () => {
@@ -81,8 +81,12 @@ describe("diplomatic invitations", () => {
     expect(useGame.getState().meters.confidence).toBe(confidence);
   });
   it("changes the host relationship when attending or missing an invitation", () => {
-    const dinner = INVITATIONS.find((item) => item.id === "valdoria-national-day")!;
-    useGame.setState({ day: dinner.day, block: dinner.block, minute: BLOCKS[dinner.block]!.time });
+    const dinner = allInvitations().find((item) => item.id === "valdoria-national-day")!;
+    useGame.setState({
+      day: dinner.day,
+      block: dinner.block,
+      minute: blocks()[dinner.block]!.time,
+    });
     const choice = dinner.choices.attend;
     expect(
       useGame.getState().queue({
@@ -107,9 +111,9 @@ describe("diplomatic invitations", () => {
     useGame.setState({
       day: dinner.day,
       block: dinner.block,
-      minute: BLOCKS[dinner.block]!.time,
+      minute: blocks()[dinner.block]!.time,
       events: [],
-      handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])),
+      handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
     });
     useGame.getState().advance();
     expect(useGame.getState().colleagues["amb-valdoria"]?.trust).toBe(47);

@@ -1,7 +1,8 @@
-import briefing from "../data/posting-briefing.json";
-import { LAST_DAY } from "../rules";
+import { activeChapter } from "../chapters";
+import { lastDay } from "../rules";
 
 export function PostingBriefing() {
+  const briefing = activeChapter().postingBriefing;
   return (
     <article className="space-y-4 text-sm" aria-label="Posting briefing email">
       <div className="border-b border-border pb-3 font-mono text-xs">
@@ -10,7 +11,9 @@ export function PostingBriefing() {
         <p>Received: Day 1 · Morning</p>
       </div>
       <p>{briefing.intro}</p>
-      <p className="font-bold">The Minister arrives on Day {LAST_DAY}.</p>
+      <p className="font-bold">
+        The {activeChapter().manifest.missionActor} arrives on Day {lastDay()}.
+      </p>
       {briefing.sections.map((section) => (
         <section key={section.title}>
           <h3 className="mb-1 font-bold">{section.title}</h3>

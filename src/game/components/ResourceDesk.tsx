@@ -6,11 +6,13 @@ import {
   decisionCash,
   money,
   playerCapacity,
+  reserveRelease,
   staffDuty,
-  SUPPLEMENT,
-  VISIT_RESERVES,
+  startRingFence,
+  supplement,
+  visitReserves,
 } from "../economy";
-import { CAMPAIGN } from "../rules";
+import { campaign } from "../rules";
 import { useGame } from "../store";
 
 export function ResourceDesk() {
@@ -45,11 +47,11 @@ export function ResourceDesk() {
           .filter(
             (r) =>
               r.id !== "self" &&
-              CAMPAIGN.characters.find((c) => c.id === r.id)?.location === "embassy",
+              campaign().characters.find((c) => c.id === r.id)?.location === "embassy",
           )
           .map((r) => (
             <div key={r.id} className={r.displaced ? "text-destructive" : "text-muted-foreground"}>
-              {CAMPAIGN.characters.find((c) => c.id === r.id)?.name}:{" "}
+              {campaign().characters.find((c) => c.id === r.id)?.name}:{" "}
               {g.block === 3
                 ? "off duty"
                 : `${r.baseline} baseline · ${r.used} planned · ${r.free} free DP`}
@@ -69,16 +71,16 @@ export function ResourceDesk() {
       <details className="mt-2 text-xs">
         <summary className="cursor-pointer">Visit costs & Capital funding</summary>
         <div className="mt-2 flex flex-wrap gap-3">
-          {Object.entries(VISIT_RESERVES).map(([name, amount]) => (
+          {Object.entries(visitReserves()).map(([name, amount]) => (
             <span key={name}>
               {name} {money(amount)}
             </span>
           ))}
         </div>
-        {g.economy.ringFence < 5500 && (
+        {g.economy.ringFence < startRingFence() && (
           <p className="my-2 text-destructive">
-            Visit underfunded by {money(5500 - g.economy.ringFence)}. Arrival-day procurement will
-            charge the shortfall and damage HQ goodwill.
+            Visit underfunded by {money(startRingFence() - g.economy.ringFence)}. Arrival-day
+            procurement will charge the shortfall and damage HQ goodwill.
           </p>
         )}
         <div className="mt-2 flex flex-wrap gap-2">
@@ -89,22 +91,23 @@ export function ResourceDesk() {
             onClick={g.requestSupplement}
           >
             <Banknote className="size-4" />
-            Request {money(SUPPLEMENT.amount)} · 1 DP · HQ −{SUPPLEMENT.goodwillCost}
+            Request {money(supplement().amount)} · 1 DP · HQ −{supplement().goodwillCost}
           </Button>
           <Button
             size="sm"
             variant="outline"
-            disabled={g.economy.ringFence < 500}
+            disabled={g.economy.ringFence < reserveRelease().amount}
             onClick={() => {
               if (
                 confirm(
-                  "Release ƒ500 from visit costs? HQ goodwill −5 immediately. The underfunded visit will incur emergency procurement on arrival.",
+                  `Release ${money(reserveRelease().amount)} from visit costs? HQ goodwill −${reserveRelease().goodwillCost} immediately. The underfunded visit will incur emergency procurement on arrival.`,
                 )
               )
                 g.raidReserve();
             }}
           >
-            Release ƒ500 visit reserve · HQ −5
+            Release {money(reserveRelease().amount)} visit reserve · HQ −
+            {reserveRelease().goodwillCost}
           </Button>
         </div>
         <p className="mt-2">

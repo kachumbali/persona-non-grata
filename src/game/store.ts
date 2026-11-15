@@ -9,26 +9,26 @@ import {
   socialBonus,
 } from "./character";
 import { create } from "zustand";
-import conversationPayoffs from "./data/conversation-payoffs.json";
+import { activeChapter, activeChapterId, DEFAULT_CHAPTER_ID } from "./chapters";
 import { dueInvitations } from "./calendar";
 import { persist } from "zustand/middleware";
 import {
   absTime,
   applyEffects,
-  BLOCKS,
-  CAMPAIGN,
+  blocks,
+  campaign,
   clamp,
   computeStats,
   dailyEvents,
   delegationSucceeds,
-  EMAILS,
+  emails,
   expiredStories,
   initialColleagues,
-  LAST_DAY,
+  lastDay,
   pairKey,
   pickEnding,
   recordGoodwillChange,
-  START_METERS,
+  startMeters,
   visitReady,
   type Effects,
   type Action,
@@ -47,10 +47,13 @@ import {
   capacityLedger,
   decisionCash,
   initialEconomy,
+  lateFuel,
+  money,
   playerCapacity,
   playerTime,
-  START_RING_FENCE,
-  SUPPLEMENT,
+  reserveRelease,
+  startRingFence,
+  supplement,
   validatePlan,
   type Economy,
 } from "./economy";
@@ -68,6 +71,8 @@ export interface LogEntry {
   text: string;
 }
 interface GameState {
+  /** Which chapter pack this save belongs to. */
+  chapterId: string;
   character: Character | null;
   day: number;
   minute: number;
@@ -146,46 +151,52 @@ type SavedGame = Omit<
   | "requestSupplement"
   | "raidReserve"
 >;
-const initial = {
-  hangover: false,
-  economy: initialEconomy(),
-  turn: 0,
-  planError: "",
-  yesterday: {},
-  todayPlans: {},
-  character: null,
-  day: 1,
-  minute: 480,
-  block: 0,
-  meters: START_METERS,
-  handled: {},
-  log: [],
-  goodwillHistory: [],
-  visit: {},
-  ending: null,
-  location: "embassy",
-  room: "office",
-  selectedNpc: null,
-  colleagues: initialColleagues(),
-  relationships: { [pairKey("anselm", "pavel")]: 20, [pairKey("sola", "development")]: 35 },
-  pending: [],
-  report: [],
-  score: 0,
-  energy: 80,
-  composure: 75,
-  alcohol: 0,
-  seed,
-  events: dailyEvents(1, seed, []),
-  completedEvents: [],
-  storyFlags: [],
-  pressSeen: [],
-  pressDay: 0,
-  pressIds: [],
-  pressCompiler: "press" as const,
-  pressRead: false,
-  pressDismissedDay: 0,
-  pressClippedDay: 0,
-  storyOutcomes: {},
+const initialState = () => {
+  const m = activeChapter().manifest;
+  return {
+    chapterId: activeChapterId(),
+    hangover: false,
+    economy: initialEconomy(),
+    turn: 0,
+    planError: "",
+    yesterday: {},
+    todayPlans: {},
+    character: null,
+    day: 1,
+    minute: m.blocks[0].time,
+    block: 0,
+    meters: startMeters(),
+    handled: {},
+    log: [],
+    goodwillHistory: [],
+    visit: {},
+    ending: null,
+    location: m.startLocation,
+    room: m.startRoom,
+    selectedNpc: null,
+    colleagues: initialColleagues(),
+    relationships: Object.fromEntries(
+      m.startRelationships.map((r) => [pairKey(r.a, r.b), r.value]),
+    ) as Relationships,
+    pending: [],
+    report: [],
+    score: 0,
+    energy: m.startEnergy,
+    composure: m.startComposure,
+    alcohol: 0,
+    seed,
+    events: dailyEvents(1, seed, []),
+    completedEvents: [],
+    storyFlags: [],
+    pressSeen: [],
+    pressDay: 0,
+    pressIds: [],
+    pressCompiler: "press" as const,
+    pressRead: false,
+    pressDismissedDay: 0,
+    pressClippedDay: 0,
+    storyOutcomes: {},
+  };
 };
 /** Diplo-Points spent on every trip across town. */
 export const TRAVEL_DP = 1;
@@ -193,7 +204,7 @@ export const TRAVEL_DP = 1;
 export const useGame = create<GameState>()(
   persist<GameState, [], [], SavedGame>(
     (set, get) => ({
-      ...initial,
+      ...initialState(),
       dismissPress: () => set((s) => ({ pressDismissedDay: s.day })),
       preparePress: () => {
         const s = get();
@@ -212,7 +223,7 @@ export const useGame = create<GameState>()(
         const flags = [...s.storyFlags];
         if (
           s.day >= 4 &&
-          s.pressIds.some((id) => clippings.find((c) => c.id === id)?.signal) &&
+          s.pressIds.some((id) => clippings().find((c) => c.id === id)?.signal) &&
           !flags.includes("fuel-lead")
         )
           flags.push("fuel-lead");
@@ -231,7 +242,7 @@ export const useGame = create<GameState>()(
           !s.pressIds.includes(id)
         )
           return;
-        const clipping = clippings.find((c) => c.id === id);
+        const clipping = clippings().find((c) => c.id === id);
         if (!clipping) return;
         const useful = clipping.signal || clipping.capital;
         const text = useful
@@ -256,20 +267,20 @@ export const useGame = create<GameState>()(
       },
       start: (character) =>
         set({
-          ...initial,
+          ...initialState(),
           character,
           log: [
             {
               day: 1,
-              time: 480,
-              text: "The Ambassador is absent. You are the Deputy, now acting head of mission. Plan your first morning.",
+              time: activeChapter().manifest.blocks[0].time,
+              text: activeChapter().manifest.openingLog,
             },
           ],
         }),
-      reset: () => set({ ...initial }),
+      reset: () => set({ ...initialState() }),
       move: (location) => {
         const s = get();
-        const place = CAMPAIGN.locations.find((l) => l.id === location);
+        const place = campaign().locations.find((l) => l.id === location);
         if (s.ending || !place || location === s.location) return false;
         if (s.pending.some((p) => p.location && playerTime(p) > 0)) {
           set({
@@ -349,24 +360,25 @@ export const useGame = create<GameState>()(
         set({ pending: structuredClone(plan), planError: "" });
       },
       requestSupplement: () => {
+        const grant = supplement();
         get().queue({
           id: "supplement",
           source: "Capital supplement paperwork",
-          text: "Capital approves ƒ1,500; funds arrive after two further blocks. HQ goodwill −5.",
+          text: `Capital approves ${money(grant.amount)}; funds arrive after ${grant.delay === 2 ? "two" : grant.delay} further blocks. HQ goodwill −${grant.goodwillCost}.`,
           kind: "work",
           timeCost: 1,
           special: "supplement",
-          effects: { confidence: -SUPPLEMENT.goodwillCost },
+          effects: { confidence: -grant.goodwillCost },
         });
       },
       raidReserve: () => {
         const s = get();
-        if (!s.character || s.ending || s.economy.ringFence < 500) return;
-        const meters = applyEffects(s.meters, { confidence: -5 });
-        const text =
-          "Released ƒ500 from visit reserves. Arrival procurement is underfunded; HQ goodwill −5.";
+        const release = reserveRelease();
+        if (!s.character || s.ending || s.economy.ringFence < release.amount) return;
+        const meters = applyEffects(s.meters, { confidence: -release.goodwillCost });
+        const text = `Released ${money(release.amount)} from visit reserves. Arrival procurement is underfunded; HQ goodwill −${release.goodwillCost}.`;
         set({
-          economy: { ...s.economy, ringFence: s.economy.ringFence - 500 },
+          economy: { ...s.economy, ringFence: s.economy.ringFence - release.amount },
           meters,
           ending: pickEnding(meters, false, s.visit),
           goodwillHistory: [
@@ -392,9 +404,9 @@ export const useGame = create<GameState>()(
         ),
       answer: (id, action) => {
         const s = get();
-        const e = EMAILS.find((x) => x.id === id);
+        const e = emails().find((x) => x.id === id);
         const o = e?.options[action];
-        const cutoff = BLOCKS[s.block + 1]?.time ?? 24 * 60;
+        const cutoff = blocks()[s.block + 1]?.time ?? 24 * 60;
         if (
           !e ||
           !o ||
@@ -530,7 +542,7 @@ export const useGame = create<GameState>()(
           if ((p.effects.budget ?? 0) > 0) economy.funds += (p.effects.budget ?? 0) * 100;
           if (p.special === "supplement") {
             economy.supplementUsed = true;
-            economy.supplementDue = s.turn + 1 + SUPPLEMENT.delay;
+            economy.supplementDue = s.turn + 1 + supplement().delay;
           }
           if (p.remainingBlocks && p.remainingBlocks > 1) {
             results.push({
@@ -630,7 +642,8 @@ export const useGame = create<GameState>()(
               const change = contact.trust - before;
               if (change) {
                 const name =
-                  CAMPAIGN.characters.find((person) => person.id === p.contact)?.name ?? p.contact;
+                  campaign().characters.find((person) => person.id === p.contact)?.name ??
+                  p.contact;
                 results.push({
                   day: s.day,
                   time: s.minute,
@@ -697,7 +710,8 @@ export const useGame = create<GameState>()(
           // Older saves may still contain a follow-up that is now a location lead.
           const event =
             scheduled &&
-            !(CAMPAIGN.events as StoryEvent[]).find((entry) => entry.id === scheduled.id)?.location
+            !(campaign().events as StoryEvent[]).find((entry) => entry.id === scheduled.id)
+              ?.location
               ? scheduled
               : undefined;
           if (event && !s.pending.some((p) => p.eventId === event.id)) {
@@ -727,8 +741,8 @@ export const useGame = create<GameState>()(
                 const change = contact.trust - before;
                 if (change) {
                   const name =
-                    CAMPAIGN.characters.find((person) => person.id === invitation.contact)?.name ??
-                    invitation.contact;
+                    campaign().characters.find((person) => person.id === invitation.contact)
+                      ?.name ?? invitation.contact;
                   results.push({
                     day: s.day,
                     time: s.minute,
@@ -746,9 +760,9 @@ export const useGame = create<GameState>()(
             ending = pickEnding(meters, false, visit);
             if (ending) break;
           }
-          for (const e of EMAILS) {
+          for (const e of emails()) {
             if (ending) break;
-            const cutoff = BLOCKS[s.block + 1]?.time ?? 24 * 60;
+            const cutoff = blocks()[s.block + 1]?.time ?? 24 * 60;
             if (handled[e.id] || absTime(e.day, e.time) >= absTime(s.day, cutoff)) continue;
             handled[e.id] = "ignored";
             const missed = missedEffects(e.ignore.effects, stats.deniability);
@@ -767,7 +781,7 @@ export const useGame = create<GameState>()(
         const day = s.block === 3 ? s.day + 1 : s.day;
         if (!ending && day !== s.day) {
           for (const event of expiredStories(
-            CAMPAIGN.events as StoryEvent[],
+            campaign().events as StoryEvent[],
             day,
             completedEvents,
             storyOutcomes,
@@ -782,7 +796,7 @@ export const useGame = create<GameState>()(
             );
           }
         }
-        const minute = BLOCKS[block]?.time ?? 480;
+        const minute = blocks()[block]?.time ?? 480;
         if (s.block === 3) {
           const recovery = overnightRecovery(stats.stamina);
           energy = clamp(energy + recovery);
@@ -797,20 +811,29 @@ export const useGame = create<GameState>()(
         }
         const turn = s.turn + 1;
         if (economy.supplementDue !== null && turn >= economy.supplementDue) {
-          economy.funds += SUPPLEMENT.amount;
+          economy.funds += supplement().amount;
           economy.supplementDue = null;
-          record("Capital supplement", "ƒ1,500 arrived in the representation account.", {});
+          record(
+            "Capital supplement",
+            `${money(supplement().amount)} arrived in the representation account.`,
+            {},
+          );
         }
-        if (day >= LAST_DAY && s.day < LAST_DAY) {
-          for (const payoff of conversationPayoffs) {
+        if (day >= lastDay() && s.day < lastDay()) {
+          for (const payoff of activeChapter().conversationPayoffs) {
             if (!ending && visitReady(visit) && storyFlags.includes(payoff.flag))
               record(payoff.source, payoff.text, payoff.effects);
           }
-          if (!storyFlags.includes("fuel-protected")) {
-            economy.funds -= 400;
-            record("Fuel quay", "Late generator fuel costs an extra ƒ400 at procurement.", {});
+          const fuel = lateFuel();
+          if (!storyFlags.includes(fuel.protectedFlag)) {
+            economy.funds -= fuel.cost;
+            record(
+              "Fuel quay",
+              `Late generator fuel costs an extra ${money(fuel.cost)} at procurement.`,
+              {},
+            );
           }
-          const shortfall = START_RING_FENCE - economy.ringFence;
+          const shortfall = startRingFence() - economy.ringFence;
           if (shortfall > 0) {
             economy.funds -= shortfall;
             record(
@@ -820,7 +843,7 @@ export const useGame = create<GameState>()(
             );
           }
         }
-        ending = ending ?? pickEnding(meters, day >= LAST_DAY, visit);
+        ending = ending ?? pickEnding(meters, day >= lastDay(), visit);
         const todayPlans = { ...s.todayPlans, [s.block]: s.pending };
         const carry = s.pending
           .filter((p) => (p.remainingBlocks ?? 0) > 1)
@@ -860,13 +883,13 @@ export const useGame = create<GameState>()(
     }),
     {
       name: "persona-non-grata-save",
-      version: 8,
+      version: 9,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = old.economy ?? {
           ...initialEconomy(),
           funds: Math.max(
-            START_RING_FENCE,
+            startRingFence(),
             Math.round(
               (((old.meters as (Meters & { budget?: number }) | undefined)?.budget ?? 60) / 60) *
                 10000,
@@ -905,8 +928,9 @@ export const useGame = create<GameState>()(
           ).total,
         );
         return {
-          ...initial,
+          ...initialState(),
           ...old,
+          chapterId: old.chapterId ?? DEFAULT_CHAPTER_ID,
           character: old.character
             ? (() => {
                 const legacy = old.character as Character & { face?: number };
@@ -925,10 +949,10 @@ export const useGame = create<GameState>()(
           economy,
           turn: old.turn ?? ((old.day ?? 1) - 1) * 4 + block,
           planError: error
-            ? "Your old plan exceeded Chapter 1 limits and was cleared without spending funds. Please replan this block."
+            ? `Your old plan exceeded ${activeChapter().manifest.label} limits and was cleared without spending funds. Please replan this block.`
             : "",
           block,
-          minute: BLOCKS[block]?.time ?? 480,
+          minute: blocks()[block]?.time ?? 480,
           pending: error ? [] : pending,
           colleagues: old.colleagues ?? initialColleagues(),
           storyOutcomes,
@@ -954,9 +978,11 @@ export const useGame = create<GameState>()(
   ),
 );
 export function inboxFor(day: number, minute: number, handled: Record<string, string>) {
-  const cutoff = BLOCKS.find((b) => b.time > minute)?.time ?? 24 * 60;
-  return EMAILS.filter((e) => absTime(e.day, e.time) < absTime(day, cutoff)).map((e) => ({
-    ...e,
-    status: handled[e.id],
-  }));
+  const cutoff = blocks().find((b) => b.time > minute)?.time ?? 24 * 60;
+  return emails()
+    .filter((e) => absTime(e.day, e.time) < absTime(day, cutoff))
+    .map((e) => ({
+      ...e,
+      status: handled[e.id],
+    }));
 }

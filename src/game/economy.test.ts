@@ -7,7 +7,7 @@ import {
   playerCapacity,
   validatePlan,
 } from "./economy";
-import { EMAILS, type PendingDecision } from "./rules";
+import { emails, type PendingDecision } from "./rules";
 import { useGame } from "./store";
 
 const action = (id: string, overrides: Partial<PendingDecision> = {}): PendingDecision => ({
@@ -23,7 +23,10 @@ beforeEach(() => {
   useGame
     .getState()
     .start({ title: "Dr", name: "Economist", portrait: "diplomat-1", bio: "", traits: [] });
-  useGame.setState({ events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });
+  useGame.setState({
+    events: [],
+    handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
+  });
 });
 describe("Chapter 1 time and money", () => {
   it("starts with ƒ10,000 and reserves ƒ5,500, leaving ƒ4,500", () => {

@@ -1,7 +1,7 @@
 import { topicsFor } from "./dialogues";
 import { describe, expect, it } from "vitest";
 import { dueInvitations } from "./calendar";
-import { CAMPAIGN, locationStories, type StoryChoice, type StoryEvent } from "./rules";
+import { campaign, locationStories, type StoryChoice, type StoryEvent } from "./rules";
 import { inboxFor, useGame } from "./store";
 
 const character = { title: "Mx", name: "Player", portrait: "diplomat-1", bio: "", traits: [] };
@@ -75,8 +75,8 @@ describe("full-posting paths", () => {
           : (traits as readonly string[]).includes("liver")
             ? "liver"
             : undefined;
-      const moments = CAMPAIGN.characters
-        .filter((person) => person.location === "embassy")
+      const moments = campaign()
+        .characters.filter((person) => person.location === "embassy")
         .flatMap((person) =>
           topicsFor(person.id).flatMap((topic) =>
             Object.values(topic.nodes).flatMap((node) =>
@@ -131,7 +131,7 @@ describe("full-posting paths", () => {
         }
         s = useGame.getState();
         // The Day 8 coffee conflicts with a security fax; prepare that arrangement in advance.
-        if (approach === "attend" && s.day === 7 && s.block === 0 && !s.visit.security) {
+        if (approach === "attend" && s.day === 7 && s.block === 0 && !s.visit["security"]) {
           if (
             !s.queue({
               id: "security-early",
@@ -229,7 +229,7 @@ describe("full-posting paths", () => {
         ).toBe(true);
       expect(final.economy.funds).toBeGreaterThanOrEqual(0);
       expect(
-        CAMPAIGN.events.filter((event) => final.storyOutcomes[event.id]?.status === "missed"),
+        campaign().events.filter((event) => final.storyOutcomes[event.id]?.status === "missed"),
       ).toEqual([]);
     },
   );

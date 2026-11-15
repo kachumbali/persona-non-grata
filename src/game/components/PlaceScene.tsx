@@ -10,7 +10,7 @@ import golf from "@/assets/scenes/golf-club.png";
 import city from "@/assets/port-hesperia.jpg";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CAMPAIGN } from "../rules";
+import { campaign } from "../rules";
 import { useGame } from "../store";
 import { SPOTS } from "./CityMap";
 import { Conversation } from "./Conversation";
@@ -19,7 +19,7 @@ import { GoodwillDashboard } from "./GoodwillDashboard";
 import { Mailbox } from "./Mailbox";
 import { PlanningDesk } from "./PlanningDesk";
 import { Portrait } from "./Portrait";
-import euRepresentation from "../data/eu-representation.json";
+import { activeChapter } from "../chapters";
 
 type Win = null | "pc" | "fax" | "appointment";
 const PC_TABS = [
@@ -33,11 +33,11 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
   const [win, setWin] = useState<Win>(null);
   const rosterRef = useRef<HTMLElement>(null);
   const [tab, setTab] = useState<(typeof PC_TABS)[number][0]>("mail");
-  const place = CAMPAIGN.locations.find((l) => l.id === g.location) ?? CAMPAIGN.locations[0];
+  const place = campaign().locations.find((l) => l.id === g.location) ?? campaign().locations[0];
   const atEmbassy = g.location === "embassy";
   const atEu = g.location === "eu";
-  const representation = euRepresentation as Record<string, string>;
-  const people = CAMPAIGN.characters.filter((c) => c.location === g.location);
+  const representation = activeChapter().euRepresentation;
+  const people = campaign().characters.filter((c) => c.location === g.location);
   const spot = SPOTS[g.location] ?? { x: 50, y: 50 };
   return (
     <section className="embassy-window bg-card" aria-label={place?.name}>
@@ -268,7 +268,9 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
       </Dialog>
       <Dialog open={win === "fax"} onOpenChange={(o) => !o && setWin(null)}>
         <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto bg-card p-0 text-card-foreground">
-          <DialogTitle className="retro-titlebar">SECURE FAX · Capital → Port Hesperia</DialogTitle>
+          <DialogTitle className="retro-titlebar">
+            SECURE FAX · Capital → {activeChapter().manifest.city}
+          </DialogTitle>
           <Mailbox channel="fax" />
         </DialogContent>
       </Dialog>

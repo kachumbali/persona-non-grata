@@ -1,12 +1,15 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { clippingTriggered, clippings, pressReview } from "./press";
-import { EMAILS, BLOCKS } from "./rules";
+import { emails, blocks } from "./rules";
 import { accidentalReplyAll } from "./character";
 import { useGame } from "./store";
 const character = { title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] };
 beforeEach(() => {
   useGame.getState().start(character);
-  useGame.setState({ events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });
+  useGame.setState({
+    events: [],
+    handled: Object.fromEntries(emails().map((e) => [e.id, "reply"])),
+  });
 });
 describe("morning press", () => {
   it("selects deterministically with a scenario on each story day", () => {
@@ -41,7 +44,7 @@ describe("morning press", () => {
       ],
     ];
     for (const [id, patch] of cases) {
-      const c = clippings.find((c) => c.id === id)!;
+      const c = clippings().find((c) => c.id === id)!;
       expect(clippingTriggered(c, { ...s, ...patch })).toBe(true);
       expect(
         pressReview({ ...s, ...patch, pressSeen: [id] }, 4).clippings.some((x) => x.id === id),
@@ -83,7 +86,7 @@ describe("morning press", () => {
     });
     useGame.getState().advance();
     expect(useGame.getState().storyFlags).toContain("trait:namedrop:meeting");
-    const email = EMAILS.find(
+    const email = emails().find(
       (e) => e.day === 1 && e.options.reply && accidentalReplyAll(23, 1, e.id),
     )!;
     for (const recalled of [true, false]) {
@@ -130,7 +133,7 @@ describe("morning press", () => {
     useGame.setState({
       day: 14,
       block: 3,
-      minute: BLOCKS[3].time,
+      minute: blocks()[3]!.time,
       events: [],
       visit: { clearance: true, lounge: true, programme: true, security: true },
     });

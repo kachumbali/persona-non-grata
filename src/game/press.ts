@@ -1,4 +1,4 @@
-import data from "./data/press.json";
+import { activeChapter } from "./chapters";
 import type { ColleagueState, Meters, PendingDecision, StoryOutcome } from "./rules";
 
 type Trigger = {
@@ -33,8 +33,8 @@ export type PressState = {
   yesterday: Record<number, PendingDecision[]>;
   pressSeen: string[];
 };
-export const outlets = data.outlets;
-export const clippings = data.clippings as Clipping[];
+export const outlets = () => activeChapter().press.outlets;
+export const clippings = (): Clipping[] => activeChapter().press.clippings;
 export function clippingTriggered(c: Clipping, s: PressState): boolean {
   const t = c.trigger;
   if (!t) return true;
@@ -67,7 +67,8 @@ export function pressReview(
     (s.seed * 31 + day * 17) % 5 === 0
       ? "maxim"
       : "press";
-  const valid = clippings.filter(
+  const all = clippings();
+  const valid = all.filter(
     (c) =>
       (c.day === undefined || c.day === day) &&
       (c.minDay === undefined || day >= c.minDay) &&
@@ -75,7 +76,7 @@ export function pressReview(
       (!c.once || !s.pressSeen.includes(c.id)) &&
       clippingTriggered(c, s),
   );
-  const scenarioIds = (data.scenario as Record<string, string[]>)[String(day)] ?? [];
+  const scenarioIds = activeChapter().press.scenario[String(day)] ?? [];
   const scenario = valid.find((c) => scenarioIds.includes(c.id));
   const rank = (c: Clipping) => {
     let h = s.seed + day * 997;
@@ -90,7 +91,7 @@ export function pressReview(
     .sort((a, b) => rank(a) - rank(b));
   const count = compiler === "maxim" ? 3 : 4;
   const selected = [...(scenario ? [scenario] : []), ...consequences, ...filler].slice(0, count);
-  if (compiler === "maxim") selected.push(clippings.find((c) => c.id === "horoscope")!);
+  if (compiler === "maxim") selected.push(all.find((c) => c.id === "horoscope")!);
   return {
     compiler,
     clippings: selected.map((c) =>

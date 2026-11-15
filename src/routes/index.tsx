@@ -3,28 +3,25 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CharacterBuilder } from "@/game/components/CharacterBuilder";
 import { TitleScreen } from "@/game/components/TitleScreen";
 import { GameScreen } from "@/game/components/GameScreen";
+import { activeChapter } from "@/game/chapters";
 import { useGame } from "@/game/store";
 
 export const Route = createFileRoute("/")({
   ssr: false, // the game reads its save from the browser
-  head: () => ({
-    meta: [
-      { title: "Persona Non Grata — Chapter 1" },
-      {
-        name: "description",
-        content:
-          "Chapter 1: The Minister’s Visit. Manage limited time, embassy funds and diplomatic relationships as acting head of mission.",
-      },
-      { property: "og:title", content: "Persona Non Grata — Chapter 1" },
-      {
-        property: "og:description",
-        content:
-          "Chapter 1: The Minister’s Visit. Manage limited time, embassy funds and diplomatic relationships as acting head of mission.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => {
+    const chapter = activeChapter().manifest;
+    const description = `${chapter.label}: ${chapter.title}. Manage limited time, embassy funds and diplomatic relationships as acting head of mission.`;
+    return {
+      meta: [
+        { title: `Persona Non Grata — ${chapter.label}` },
+        { name: "description", content: description },
+        { property: "og:title", content: `Persona Non Grata — ${chapter.label}` },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+    };
+  },
   component: Index,
 });
 

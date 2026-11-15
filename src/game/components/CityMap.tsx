@@ -12,7 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { BLOCKS, CAMPAIGN, locationStories } from "../rules";
+import { blocks, campaign, locationStories } from "../rules";
+import { activeChapter } from "../chapters";
 import { playerTime, playerCapacity } from "../economy";
 import { visibleInvitations } from "../calendar";
 import { TRAVEL_DP, useGame } from "../store";
@@ -37,7 +38,7 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
     g.pending.reduce((n, p) => n + playerTime(p), 0);
   const invitations = visibleInvitations(g.day, g.block, g.storyOutcomes);
   const leads = locationStories(g.day, g.completedEvents, g.storyOutcomes);
-  const dest = CAMPAIGN.locations.find((l) => l.id === target);
+  const dest = campaign().locations.find((l) => l.id === target);
   const travel = () => {
     if (!target) return;
     if (g.move(target)) {
@@ -48,7 +49,7 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
   return (
     <section className="embassy-window bg-card" aria-label="Town map">
       <div className="retro-titlebar justify-between">
-        <h2>Port Hesperia</h2>
+        <h2>{activeChapter().manifest.city}</h2>
         <span className="font-mono">{left} DP left this block</span>
       </div>
       <div className="relative">
@@ -56,10 +57,10 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
           src={city}
           width={1536}
           height={768}
-          alt="Painted map of Port Hesperia"
+          alt={`Painted map of ${activeChapter().manifest.city}`}
           className="block aspect-[2/1] w-full object-cover"
         />
-        {CAMPAIGN.locations.map((l) => {
+        {campaign().locations.map((l) => {
           const spot = SPOTS[l.id];
           if (!spot) return null;
           const here = g.location === l.id;
@@ -73,7 +74,7 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
               className="map-spot"
               data-here={here}
               style={{ left: `${spot.x}%`, top: `${spot.y}%` }}
-              aria-label={`${here ? `Enter ${l.name} (you are here)` : `Travel to ${l.name}`}${invitation ? ` · invitation Day ${invitation.day} ${BLOCKS[invitation.block]?.name}` : ""}${lead ? ` · story lead: ${lead.title}` : ""}`}
+              aria-label={`${here ? `Enter ${l.name} (you are here)` : `Travel to ${l.name}`}${invitation ? ` · invitation Day ${invitation.day} ${blocks()[invitation.block]?.name}` : ""}${lead ? ` · story lead: ${lead.title}` : ""}`}
             >
               {here && <MapPin className="map-pin size-9" aria-hidden />}
               <span className="map-label">
@@ -87,7 +88,7 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
         })}
       </div>
       <div className="map-destinations" aria-label="Destinations">
-        {CAMPAIGN.locations.map((location) => {
+        {campaign().locations.map((location) => {
           const here = g.location === location.id;
           const invitation = invitations.find((item) => item.location === location.id);
           const lead = leads.find((item) => item.location === location.id);
@@ -103,7 +104,7 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
                 {here ? "Enter" : "Travel to"} {location.name}
                 {here ? " · you are here" : ""}
                 {invitation
-                  ? ` · invitation Day ${invitation.day} ${BLOCKS[invitation.block]?.name}`
+                  ? ` · invitation Day ${invitation.day} ${blocks()[invitation.block]?.name}`
                   : ""}
                 {lead ? " · story lead" : ""}
               </span>

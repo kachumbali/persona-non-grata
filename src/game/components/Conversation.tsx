@@ -2,7 +2,7 @@ import { eligible, gateLabel } from "../character";
 import { computeStats } from "../rules";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CAMPAIGN, type StoryChoice } from "../rules";
+import { campaign, type StoryChoice } from "../rules";
 import { moodOpener, pickTopic, splitEffects, type TalkChoice } from "../dialogues";
 import { useGame } from "../store";
 import { capacityLedger, staffDuty, STAFF_DP } from "../economy";
@@ -19,7 +19,7 @@ export function Conversation() {
     setNotice("");
     setOverload(false);
   }, [g.selectedNpc, g.block]);
-  const npc = CAMPAIGN.characters.find((c) => c.id === g.selectedNpc);
+  const npc = campaign().characters.find((c) => c.id === g.selectedNpc);
   if (!npc) return null;
   const done = [
     ...g.storyFlags
@@ -28,7 +28,7 @@ export function Conversation() {
     ...g.pending.flatMap((p) => (p.dialogueTopic ? [p.dialogueTopic] : [])),
   ];
   const topic = pickTopic(npc.id, g.day, g.block, done);
-  const generic = CAMPAIGN.dialogue as Record<string, { text: string; choices: StoryChoice[] }>;
+  const generic = campaign().dialogue as Record<string, { text: string; choices: StoryChoice[] }>;
   const current = topic ? topic.nodes[node || topic.start] : generic[node || "opening"];
   if (!current) return null;
   const trust = g.colleagues[npc.id]?.trust ?? 50;

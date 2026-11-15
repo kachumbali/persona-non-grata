@@ -1,9 +1,9 @@
 import portraits from "../data/portraits.json";
-import campaignData from "../data/campaign.json";
+import { campaign } from "../rules";
 
 if (import.meta.env.DEV) {
   const assigned = new Map<string, string[]>();
-  for (const npc of campaignData.characters) {
+  for (const npc of campaign().characters) {
     const names = assigned.get(npc.portrait) ?? [];
     names.push(npc.id);
     assigned.set(npc.portrait, names);

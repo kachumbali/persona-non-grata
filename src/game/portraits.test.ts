@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import campaign from "./data/campaign.json";
+import { campaign as activeCampaign } from "./rules";
 import portraitData from "./data/portraits.json";
 import { useGame } from "./store";
 
 type PortraitEntry = { id: string; file: string; gender: string; reservedFor?: string };
 const portraits: PortraitEntry[] = portraitData;
+const campaign = activeCampaign();
 const files = import.meta.glob("@/assets/portraits/*.png", { eager: true, import: "default" });
 
 describe("portrait manifest", () => {

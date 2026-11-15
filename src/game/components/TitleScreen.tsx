@@ -1,11 +1,13 @@
 import city from "@/assets/port-hesperia.jpg";
 import { Button } from "@/components/ui/button";
-import { BLOCKS } from "../rules";
+import { blocks } from "../rules";
+import { activeChapter } from "../chapters";
 import { useGame } from "../store";
 import { Portrait } from "./Portrait";
 
 export function TitleScreen({ onNew, onLoad }: { onNew: () => void; onLoad: () => void }) {
   const g = useGame();
+  const chapter = activeChapter().manifest;
   const save = g.character && !g.ending ? g.character : null;
   const newGame = () => {
     if (
@@ -25,7 +27,9 @@ export function TitleScreen({ onNew, onLoad }: { onNew: () => void; onLoad: () =
             Republic of Bellaluxe presents
           </p>
           <h1 className="game-logo my-2">Persona Non Grata</h1>
-          <p className="font-mono text-2xl">Chapter 1 · The Minister’s Visit</p>
+          <p className="font-mono text-2xl">
+            {chapter.label} · {chapter.title}
+          </p>
           <div className="mt-6 flex flex-col gap-3">
             <Button size="lg" className="retro-button" onClick={newGame}>
               New game
@@ -43,7 +47,7 @@ export function TitleScreen({ onNew, onLoad }: { onNew: () => void; onLoad: () =
                   <span>
                     Load game
                     <span className="block text-xs">
-                      {save.title} {save.name} · Day {g.day}, {BLOCKS[g.block]?.name}
+                      {save.title} {save.name} · Day {g.day}, {blocks()[g.block]?.name}
                     </span>
                   </span>
                 </span>

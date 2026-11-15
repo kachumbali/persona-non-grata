@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import bg from "../data/backgrounds.json";
 import portraits from "../data/portraits.json";
 import { computeStats, pointsLeft, TRAITS, TRAIT_POINTS } from "../rules";
+import { activeChapter } from "../chapters";
 import { useGame } from "../store";
 import { playerCapacity } from "../economy";
 import { Portrait } from "./Portrait";
@@ -19,6 +20,7 @@ const rand = (n: number) => Math.floor(Math.random() * n);
 
 export function CharacterBuilder() {
   const start = useGame((s) => s.start);
+  const chapter = activeChapter().manifest;
   const [title, setTitle] = useState<string>("Mr");
   const [name, setName] = useState("");
   const [portrait, setPortrait] = useState(portraits[0]!.id);
@@ -41,11 +43,11 @@ export function CharacterBuilder() {
         </p>
         <h1 className="game-logo mt-1">Persona Non Grata</h1>
         <p className="mt-1 font-mono text-2xl text-primary-foreground">
-          Chapter 1 · The Minister’s Visit
+          {chapter.label} · {chapter.title}
         </p>
         <p className="mt-2 text-sm text-primary-foreground">
-          Personnel file of the incoming Chargé d'Affaires <i>ad interim</i>, Embassy in Port
-          Hesperia
+          Personnel file of the incoming Chargé d'Affaires <i>ad interim</i>, Embassy in{" "}
+          {chapter.city}
         </p>
       </header>
 

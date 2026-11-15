@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BellRing, Phone, Printer, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { CAMPAIGN, type StoryChoice, type StoryEvent } from "../rules";
+import { campaign, type StoryChoice, type StoryEvent } from "../rules";
 import { useGame } from "../store";
 import { capacityLedger, staffDuty } from "../economy";
 import { Portrait } from "./Portrait";
@@ -33,11 +33,11 @@ export function Interruption() {
   }, [event?.id, g.block, g.day]);
   if (
     !event ||
-    (CAMPAIGN.events as StoryEvent[]).find((entry) => entry.id === event.id)?.location ||
+    (campaign().events as StoryEvent[]).find((entry) => entry.id === event.id)?.location ||
     g.completedEvents.includes(event.id)
   )
     return null;
-  const npc = CAMPAIGN.characters.find((c) => c.id === event.npc);
+  const npc = campaign().characters.find((c) => c.id === event.npc);
   const colleague = npc?.location === "embassy";
   const fromCapital = npc?.role?.toLowerCase().includes("capital");
   const how = colleague
@@ -53,7 +53,9 @@ export function Interruption() {
         .filter(
           (id): id is string =>
             !!id &&
-            CAMPAIGN.characters.some((person) => person.id === id && person.location === "embassy"),
+            campaign().characters.some(
+              (person) => person.id === id && person.location === "embassy",
+            ),
         ),
     ),
   ];
@@ -118,7 +120,8 @@ export function Interruption() {
                 <div className="mb-2 text-xs">
                   {participants.map((id) => {
                     const row = ledger.find((entry) => entry.id === id);
-                    const name = CAMPAIGN.characters.find((person) => person.id === id)?.name ?? id;
+                    const name =
+                      campaign().characters.find((person) => person.id === id)?.name ?? id;
                     return (
                       <p key={id}>
                         {name}: {staffDuty(id)} · {row?.baseline ?? 0} routine, {row?.used ?? 0}{" "}

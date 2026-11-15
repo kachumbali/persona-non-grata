@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { accidentalReplyAll } from "./character";
-import { EMAILS } from "./rules";
+import { emails } from "./rules";
 import { playerCapacity } from "./economy";
 import { useGame } from "./store";
 
@@ -15,7 +15,7 @@ beforeEach(() => {
   useGame.getState().start(character([]));
   useGame.setState({
     events: [],
-    handled: Object.fromEntries(EMAILS.map((email) => [email.id, "reply"])),
+    handled: Object.fromEntries(emails().map((email) => [email.id, "reply"])),
   });
 });
 describe("character effects during a posting", () => {
@@ -31,7 +31,7 @@ describe("character effects during a posting", () => {
   });
   it("allows an accidental reply-all to be recalled atomically for one additional DP", () => {
     useGame.setState({ character: character(["replyall"]), handled: {}, day: 1 });
-    const email = EMAILS.find(
+    const email = emails().find(
       (e) => e.day === 1 && e.options.reply && accidentalReplyAll(23, 1, e.id),
     );
     expect(email).toBeDefined();

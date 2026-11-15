@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { INVITATIONS } from "./calendar";
+import { allInvitations } from "./calendar";
 import { DiplomaticCalendar } from "./components/DiplomaticCalendar";
-import { BLOCKS, EMAILS } from "./rules";
+import { blocks, emails } from "./rules";
 import { useGame } from "./store";
 
-const meeting = INVITATIONS.find((item) => item.id === "asteria-coffee")!;
+const meeting = allInvitations().find((item) => item.id === "asteria-coffee")!;
 beforeEach(() => {
   useGame
     .getState()
@@ -13,9 +13,9 @@ beforeEach(() => {
   useGame.setState({
     day: meeting.day,
     block: meeting.block,
-    minute: BLOCKS[meeting.block]!.time,
+    minute: blocks()[meeting.block]!.time,
     events: [],
-    handled: Object.fromEntries(EMAILS.map((email) => [email.id, "reply"])),
+    handled: Object.fromEntries(emails().map((email) => [email.id, "reply"])),
   });
 });
 afterEach(cleanup);

@@ -1,5 +1,5 @@
-import { CAMPAIGN, computeStats, type PendingDecision } from "./rules";
-import duties from "./data/staff-duties.json";
+import { activeChapter } from "./chapters";
+import { campaign, computeStats, type PendingDecision } from "./rules";
 
 export const PLAYER_DP = 4;
 export const STAFF_DP = 2;
@@ -40,18 +40,14 @@ export function playerCapacity(
   return { total: Math.max(2, Math.min(5, capacity)), factors };
 }
 export const staffDuty = (id: string) =>
-  (duties as Record<string, string>)[id] ?? "Routine embassy duties";
+  activeChapter().staffDuties[id] ?? "Routine embassy duties";
 
-export const START_FUNDS = 10_000;
-export const VISIT_RESERVES = {
-  Reception: 1800,
-  Hotel: 1600,
-  Transport: 1200,
-  Gifts: 400,
-  "Generator fuel": 500,
-};
-export const START_RING_FENCE = Object.values(VISIT_RESERVES).reduce((a, b) => a + b, 0);
-export const SUPPLEMENT = { amount: 1500, goodwillCost: 5, delay: 2 };
+export const startFunds = () => activeChapter().manifest.economy.startFunds;
+export const visitReserves = () => activeChapter().manifest.economy.visitReserves;
+export const startRingFence = () => Object.values(visitReserves()).reduce((a, b) => a + b, 0);
+export const supplement = () => activeChapter().manifest.economy.supplement;
+export const reserveRelease = () => activeChapter().manifest.economy.reserveRelease;
+export const lateFuel = () => activeChapter().manifest.economy.lateFuel;
 export const money = (n: number) => `ƒ${n.toLocaleString("en-US")}`;
 export interface Economy {
   funds: number;
@@ -60,8 +56,8 @@ export interface Economy {
   supplementUsed: boolean;
 }
 export const initialEconomy = (): Economy => ({
-  funds: START_FUNDS,
-  ringFence: START_RING_FENCE,
+  funds: startFunds(),
+  ringFence: startRingFence(),
   supplementDue: null,
   supplementUsed: false,
 });
@@ -87,14 +83,14 @@ export function participantTime(p: PendingDecision, id: string, block: number): 
 }
 // Four baseline DP daily, with two free DP distributed across office blocks.
 export function baselineTime(id: string, block: number): number {
-  const index = CAMPAIGN.characters
-    .filter((c) => c.location === "embassy")
+  const index = campaign()
+    .characters.filter((c) => c.location === activeChapter().manifest.officeLocation)
     .findIndex((c) => c.id === id);
   if (index < 0 || block === 3) return 0;
   return block === index % 3 ? 2 : 1;
 }
 export function capacityLedger(plan: PendingDecision[], block: number, playerDP = PLAYER_DP) {
-  return ["self", ...CAMPAIGN.characters.map((c) => c.id)].map((id) => {
+  return ["self", ...campaign().characters.map((c) => c.id)].map((id) => {
     const used = plan.reduce((n, p) => n + participantTime(p, id, block), 0);
     const baseline = baselineTime(id, block);
     const capacity = id === "self" ? playerDP : STAFF_DP;
@@ -129,7 +125,9 @@ export function validatePlan(
     if (row.used > capacity)
       return `${row.id === "self" ? "You have" : row.id + " has"} only ${capacity} DP this block.`;
     if (row.id === "self") continue;
-    const colleague = CAMPAIGN.characters.find((c) => c.id === row.id)?.location === "embassy";
+    const colleague =
+      campaign().characters.find((c) => c.id === row.id)?.location ===
+      activeChapter().manifest.officeLocation;
     if (colleague && block === 3 && row.used > 0)
       return "Colleagues are off duty; dinner is social, not an extra work shift.";
     let scheduled = 0;

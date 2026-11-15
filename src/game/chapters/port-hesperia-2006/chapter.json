@@ -1,0 +1,87 @@
+{
+  "id": "port-hesperia-2006",
+  "label": "Chapter 1",
+  "title": "The Minister’s Visit",
+  "year": 2006,
+  "era": "2006",
+  "city": "Port Hesperia",
+  "post": "Embassy of Bellaluxe, Port Hesperia",
+  "playerRank": "Chargé d'Affaires a.i.",
+  "missionActor": "Minister",
+  "days": 15,
+  "blocks": [
+    { "name": "Morning", "time": 480, "social": "Coffee break I" },
+    { "name": "Midday", "time": 720, "social": "Lunch" },
+    { "name": "Afternoon", "time": 900, "social": "Coffee break II" },
+    { "name": "Evening", "time": 1140, "social": "Dinner" }
+  ],
+  "missionTasks": {
+    "clearance": "Plane landing clearance",
+    "lounge": "VIP lounge reservation",
+    "programme": "Confirmed visit programme",
+    "security": "Security and transport"
+  },
+  "endings": {
+    "png": {
+      "title": "Persona Non Grata",
+      "text": "Ombrazia declares you unwelcome, with compliments. Your farewell is a stamped form in an order nobody can document."
+    },
+    "replaced": {
+      "title": "Replaced by Capital",
+      "text": "HQ goodwill has reached zero. Capital recalls you and appoints a replacement. Please leave the office keys; your successor will need the same drawer of unsolved problems."
+    },
+    "cancelled": {
+      "title": "Ministerial Visit Cancelled",
+      "text": "Arrival day has come, but essential arrangements are still unconfirmed. The Minister cancels the visit. Capital describes this as a scheduling adjustment. Your career receives one too."
+    },
+    "retired": {
+      "title": "Quietly Retired to Brussels",
+      "text": "The Capital has lost confidence. You are given a window office overlooking another window."
+    },
+    "ambassador": {
+      "title": "The Ambassador Returns and Takes Credit",
+      "text": "Everything worked. The Ambassador reappears tanned, shakes the Minister's hand and thanks 'the team'."
+    },
+    "promoted": {
+      "title": "Promoted Sideways",
+      "text": "The Minister notices nothing, which is the highest compliment. You are promoted to a post with a longer title and the same desk."
+    }
+  },
+  "endingRules": [
+    { "ending": "png", "meterAtMost": { "goodwill": 0 } },
+    { "ending": "replaced", "meterAtMost": { "confidence": 0 } },
+    { "ending": "retired", "meterAtMost": { "sanity": 0 } },
+    { "ending": "cancelled", "finalDay": true, "missionIncomplete": true },
+    {
+      "ending": "promoted",
+      "finalDay": true,
+      "meterAtLeast": { "confidence": 65, "goodwill": 50 }
+    },
+    { "ending": "ambassador", "finalDay": true }
+  ],
+  "startMeters": { "confidence": 55, "goodwill": 50, "morale": 50, "sanity": 70 },
+  "startEnergy": 80,
+  "startComposure": 75,
+  "startTrust": 50,
+  "startLocation": "embassy",
+  "officeLocation": "embassy",
+  "startRoom": "office",
+  "startRelationships": [
+    { "a": "anselm", "b": "pavel", "value": 20 },
+    { "a": "sola", "b": "development", "value": 35 }
+  ],
+  "openingLog": "The Ambassador is absent. You are the Deputy, now acting head of mission. Plan your first morning.",
+  "economy": {
+    "startFunds": 10000,
+    "visitReserves": {
+      "Reception": 1800,
+      "Hotel": 1600,
+      "Transport": 1200,
+      "Gifts": 400,
+      "Generator fuel": 500
+    },
+    "supplement": { "amount": 1500, "goodwillCost": 5, "delay": 2 },
+    "reserveRelease": { "amount": 500, "goodwillCost": 5 },
+    "lateFuel": { "protectedFlag": "fuel-protected", "cost": 400 }
+  }
+}

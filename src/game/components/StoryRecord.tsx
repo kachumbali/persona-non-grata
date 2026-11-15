@@ -1,4 +1,4 @@
-import { CAMPAIGN, locationStories, type StoryEvent, type StoryOutcome } from "../rules";
+import { campaign, locationStories, type StoryEvent, type StoryOutcome } from "../rules";
 
 /** Report only recorded decisions, without inventing outcomes for older saves. */
 export function StoryRecord({
@@ -10,7 +10,7 @@ export function StoryRecord({
   completed: string[];
   day: number;
 }) {
-  const entries = (CAMPAIGN.events as StoryEvent[]).flatMap((event) => {
+  const entries = (campaign().events as StoryEvent[]).flatMap((event) => {
     const outcome = outcomes[event.id];
     if (!outcome) return [];
     const choice = event.choices.find((item) => item.id === outcome.choice);

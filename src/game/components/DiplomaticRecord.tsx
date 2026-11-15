@@ -1,9 +1,9 @@
-import { INVITATIONS } from "../calendar";
+import { allInvitations } from "../calendar";
 import type { StoryOutcome } from "../rules";
 
 /** Summarise only invitations for which the posting recorded an outcome. */
 export function DiplomaticRecord({ outcomes }: { outcomes: Record<string, StoryOutcome> }) {
-  const entries = INVITATIONS.flatMap((invitation) => {
+  const entries = allInvitations().flatMap((invitation) => {
     const outcome = outcomes[invitation.id];
     if (!outcome) return [];
     const response =

@@ -1,4 +1,4 @@
-import invitationsData from "./data/invitations.json";
+import { activeChapter } from "./chapters";
 import type { Effects, StoryOutcome } from "./rules";
 
 export type InvitationResponse = "attend" | "delegate" | "decline";
@@ -23,12 +23,12 @@ export interface Invitation {
   choices: Record<InvitationResponse, InvitationChoice>;
   onMiss: { text: string; effects: Effects; contactTrust?: number };
 }
-export const INVITATIONS = invitationsData as Invitation[];
+export const allInvitations = (): Invitation[] => activeChapter().invitations;
 export function visibleInvitations(
   day: number,
   block: number,
   outcomes: Record<string, StoryOutcome>,
-  invitations: Invitation[] = INVITATIONS,
+  invitations: Invitation[] = activeChapter().invitations,
 ): Invitation[] {
   return invitations.filter(
     (invitation) =>
@@ -41,7 +41,7 @@ export function dueInvitations(
   day: number,
   block: number,
   outcomes: Record<string, StoryOutcome>,
-  invitations: Invitation[] = INVITATIONS,
+  invitations: Invitation[] = activeChapter().invitations,
 ): Invitation[] {
   return invitations.filter(
     (invitation) =>

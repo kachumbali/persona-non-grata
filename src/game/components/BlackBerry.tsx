@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Mail, Smartphone, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BLOCKS } from "../rules";
+import { blocks } from "../rules";
 import { dueInvitations } from "../calendar";
 import { availableFunds, decisionCash, money, playerTime, playerCapacity } from "../economy";
 import { useGame } from "../store";
@@ -30,7 +30,7 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
   const capacity = playerCapacity(g.character, g.energy, g.composure, g.alcohol, g.hangover);
   const used = g.pending.reduce((n, p) => n + playerTime(p), 0);
   const left = Math.max(0, capacity.total - used);
-  const block = BLOCKS[g.block] ?? BLOCKS[0];
+  const block = blocks()[g.block] ?? blocks()[0];
   const due = dueInvitations(g.day, g.block, g.storyOutcomes).some(
     (invitation) => !g.pending.some((p) => p.eventId === invitation.id),
   );

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  INVITATIONS,
+  allInvitations,
   visibleInvitations,
   type Invitation,
   type InvitationResponse,
 } from "../calendar";
 import { capacityLedger, money, playerCapacity, staffDuty } from "../economy";
-import { BLOCKS, CAMPAIGN, locationStories, type StoryEvent } from "../rules";
+import { blocks, campaign, locationStories, type StoryEvent } from "../rules";
 import { useGame } from "../store";
 
 export function DiplomaticCalendar() {
@@ -18,7 +18,7 @@ export function DiplomaticCalendar() {
   const scheduled = g.events[g.block];
   const currentStory =
     scheduled &&
-    !(CAMPAIGN.events as StoryEvent[]).find((event) => event.id === scheduled.id)?.location
+    !(campaign().events as StoryEvent[]).find((event) => event.id === scheduled.id)?.location
       ? scheduled
       : undefined;
   const leads = locationStories(g.day, g.completedEvents, g.storyOutcomes);
@@ -84,7 +84,7 @@ export function DiplomaticCalendar() {
           {leads.map((lead) => (
             <p key={lead.id}>
               {lead.title} ·{" "}
-              {CAMPAIGN.locations.find((place) => place.id === lead.location)?.name ??
+              {campaign().locations.find((place) => place.id === lead.location)?.name ??
                 lead.location}
               {g.pending.some((p) => p.eventId === lead.id)
                 ? " · response scheduled"
@@ -106,7 +106,7 @@ export function DiplomaticCalendar() {
         const now = invitation.day === g.day && invitation.block === g.block;
         const queued = g.pending.some((p) => p.eventId === invitation.id);
         const location =
-          CAMPAIGN.locations.find((place) => place.id === invitation.location)?.name ??
+          campaign().locations.find((place) => place.id === invitation.location)?.name ??
           invitation.location;
         return (
           <article key={invitation.id} className="border border-border p-2">
@@ -115,7 +115,7 @@ export function DiplomaticCalendar() {
               {invitation.host} · {location}
             </p>
             <p className="font-mono text-xs">
-              Day {invitation.day} · {BLOCKS[invitation.block]?.name}
+              Day {invitation.day} · {blocks()[invitation.block]?.name}
               {now ? " · happening now" : ""}
             </p>
             <p className="my-1">{invitation.description}</p>
@@ -134,8 +134,8 @@ export function DiplomaticCalendar() {
                     }}
                   >
                     <option value="">Choose a colleague to delegate</option>
-                    {CAMPAIGN.characters
-                      .filter((c) => c.location === "embassy")
+                    {campaign()
+                      .characters.filter((c) => c.location === "embassy")
                       .map((c) => (
                         <option key={c.id} value={c.id}>
                           {c.name}
@@ -205,7 +205,7 @@ export function DiplomaticCalendar() {
           {notice}
         </p>
       )}
-      {INVITATIONS.length > 0 && (
+      {allInvitations().length > 0 && (
         <p className="text-xs text-muted-foreground">
           Resolved invitations are recorded in the round report.
         </p>
