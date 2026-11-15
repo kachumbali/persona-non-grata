@@ -21,7 +21,7 @@ Source of truth for work packages. Each coding tool takes one package, follows A
 
 Make the game ready for more than one chapter and more than one coding tool. Nothing here changes how Port Hesperia plays.
 
-### F-01 Checks on every commit
+### F-01 Checks on every commit (done)
 
 - Type: Rules and code · Size: S · Depends on: none
 - Goal: Several tools will commit to the same repository, so every commit must be checked automatically.
@@ -32,7 +32,7 @@ Make the game ready for more than one chapter and more than one coding tool. Not
   - Add a 'Work packages' section to AGENTS.md: one package per commit series, package id in every commit message, tests green before pushing, tick the package in roadmap.md.
 - Done when: A push with a failing test shows a red check on GitHub. Lint passes. The stat test fails if a stat stops being read.
 
-### F-02 Chapter packs
+### F-02 Chapter packs (done)
 
 - Type: Rules and code · Size: L · Depends on: F-01
 - Goal: Everything specific to Port Hesperia is hard-coded today (15 days, the four visit tasks, the six endings, starting meters, one campaign.json). A second chapter is impossible until a chapter is data.
@@ -76,7 +76,7 @@ Make the game ready for more than one chapter and more than one coding tool. Not
   - Add npm run sim and a test with thresholds, for example no build wins more than 70% of runs and every build sees at least 10 trait moments.
 - Done when: One command prints the report for Port Hesperia. The thresholds run as a test.
 
-### F-06 Anecdote pipeline and writing guide
+### F-06 Anecdote pipeline and writing guide (done)
 
 - Type: Writing and content · Size: S · Depends on: none
 - Goal: Your real stories are the game's advantage. They need a fixed route from a few lines of text to an anonymised, exaggerated scene in JSON.
@@ -193,6 +193,31 @@ Finish every system inside the one chapter that exists, then test it with five p
   - A payslip that itemises the jokes, including the language allowance.
 - Done when: Two different runs produce clearly different debrief screens. Players can copy the debrief as text to share.
 
+### S-15 The world file: background events for each chapter
+
+- Type: Writing and content · Size: M · Depends on: F-04
+- Goal: The press review needs a believable world behind it. Each chapter gets a file of background events and running stories that connect to each other, so the setting feels like a real place with its own politics.
+- Work:
+  - A world file per chapter pack: the host country's government and opposition, the economy, three or four national obsessions (a football cup run, a drought, a royal wedding, a pension reform), the neighbours, and a calendar of public events across the chapter's days.
+  - Four to six background threads that run through the whole chapter and cross each other: the reshuffle rumour affects the port portfolio, the cup run empties the ministry on match days, the drought raises the price of the reception.
+  - Press clippings, filler included, are drawn from these threads, so every item belongs to a story the player can follow.
+  - NPC small talk, calendar events and prices refer to the same threads. A match day closes offices. A ministerial resignation changes who receives you.
+  - A template for the world file in docs/, used by every chapter design package.
+  - For Port Hesperia: write the Ombrazia world file and rework the existing filler clippings to fit it. The fuel quay story becomes one of the threads.
+- Done when: Every press clipping in Port Hesperia belongs to a named thread, and at least three threads change something in play beyond the press review.
+
+### A-01 Story arc: the cultural institute
+
+- Type: Writing and content · Size: M · Depends on: F-04, S-06
+- Goal: A cultural institute that answers to your government but listens to nobody, run by a very strange director. It creates its own problems, and they land on your desk.
+- Work:
+  - A director with strong traits and a vision, plus two or three staff with their own feuds.
+  - An arc of four to six episodes over the chapter: an exhibition the host finds offensive, a poetry evening that becomes a diplomatic incident, a budget spent on something indefensible, an artist who will not leave.
+  - Each episode offers ways to manage it: back the director, rein the director in, blame Capital, or look away and read about it in the press.
+  - Consequences for host goodwill, HQ goodwill, the press threads and your relationship with the director.
+  - Built as a reusable kit, so a different institute with a different director can appear in another chapter.
+- Done when: The arc plays in Port Hesperia from first episode to a resolution with at least three different outcomes, and never blocks the Minister's visit.
+
 ### P-02 Port Hesperia balance and first playtest
 
 - Type: Writing and content · Size: M · Depends on: S-01, S-02, S-03, S-04, S-05, S-06, S-07, S-08, F-05
@@ -251,6 +276,29 @@ Link chapters into one career and build the intern chapter as the new beginning.
   - Legacy flags from earlier chapters trigger scenes: the intern you were kind to is now your desk officer, the rival got the posting you wanted.
   - Portraits for returning people at different ages.
 - Done when: At least five people from one chapter can appear in the next with their relationship to you intact.
+
+### A-02 Spies, secrets and honeypots
+
+- Type: Rules and code · Size: M · Depends on: S-06, S-12
+- Goal: Someone is always after what you know. A light counter-intelligence layer played for comedy.
+- Work:
+  - Secrets as items: instructions, gossip, the Minister's dietary file. Each has a sensitivity level.
+  - A discretion check on what you say, to whom and where: the bar, the golf course and the taxi all listen.
+  - Agents among the cast, not all of them competent: the too-friendly new acquaintance, the journalist with perfect timing, the honeypot whose cover story has gaps you can notice.
+  - Ways to respond: report it to security, feed false information, play along for information of your own, or miss it entirely.
+  - Consequences later: a leak in the press, a security interview, a commendation, or a file note that follows you to the next posting.
+  - A security officer character who distrusts everyone, especially you.
+- Done when: A chapter can stage two or three approaches. The player can spot one from clues before it is revealed, and each response leads somewhere different.
+
+### A-03 Story arc: the zoo deal
+
+- Type: Writing and content · Size: M · Depends on: F-04
+- Goal: A zoo back home wants animals from the host country. You negotiate the deal, and then the transport goes wrong.
+- Work:
+  - Episodes: the request from a persistent zoo director, the negotiation with a ministry that has no form for this, veterinary and customs paperwork, the transport, the incident, the press.
+  - Things that can go wrong, chosen by the player's earlier shortcuts: the wrong species, a quarantine, an escape at the airport, a diplomatic bag that is moving.
+  - A good home for the intern chapter, where you are the one holding the crate, or for Port Hesperia as a side story.
+- Done when: The arc runs over at least five days with a transport finale that depends on earlier choices.
 
 ### E-01 Eras
 
@@ -325,6 +373,43 @@ Add the 2013 chapter and the systems that make decades and old choices matter.
   - Your residence as a place: spend your salary on furniture and comforts that restore needs faster and impress guests. This links to the house back home.
   - Keep it light. Needs must create comic situations and choices, not chores. The simulation checks that looking after needs never takes more than about one block a day.
 - Done when: In a normal day at least three things happen between NPCs without the player causing them, and the player can change someone's mood through free interactions. Testers describe the staff as characters, not menus.
+
+### A-04 Story arc: the national day
+
+- Type: Writing and content · Size: L · Depends on: S-07, S-13, A-02
+- Goal: Your own national day reception: the biggest logistical event of a posting, and a chapter-long side arc.
+- Work:
+  - Guests of honour: get a senior host official to come, and a politician or television personality from home who then has demands.
+  - The programme: find artists, agree the speeches, and settle the order of the anthems.
+  - Imports: beer, sausages, cheese and wine have to arrive through customs in time. Something is always stuck, spoiled or missing.
+  - The guest list and the seating plan, using the relationship web and the seating game.
+  - The day itself as a sequence of quick decisions: the guest of honour is late, the generator fails, the wrong anthem plays, a spy works the room.
+  - Rank changes your part: as an intern you carry the sausages, as ambassador you give the speech.
+  - Aftermath in the press, with Capital, and in the next year's budget.
+- Done when: The reception day plays as a finale whose problems come from earlier planning choices, with at least four clearly different outcomes.
+
+### A-05 Story arc: the school abroad
+
+- Type: Writing and content · Size: M · Depends on: F-04, S-06
+- Goal: A school financed by your government, with you or your cultural attaché on the board. Parents, teachers and the head each believe the embassy works for them.
+- Work:
+  - Board meetings as scenes with votes, where every member has an agenda.
+  - Episodes: a fee increase, a headteacher appointment, a parent who is also a minister, a school play with a political problem, a building that fails inspection.
+  - The choice to sit on the board yourself or send the cultural attaché, with different information and different blame.
+  - Links to host goodwill, the press and your own family if you have children at the school.
+- Done when: The arc gives at least four board meetings with outcomes that carry into the next one.
+
+### A-06 Story arc: posts that go horribly wrong
+
+- Type: Writing and content · Size: M · Depends on: E-01
+- Goal: In the social media eras, an ambassador or the embassy account posts something that should never have been posted.
+- Work:
+  - Available from the 2013 era: the embassy account, your own account and your ambassador's account.
+  - Disasters: the wrong photo, a private message sent in public, a hashtag with a second meaning, a like at two in the morning, a post scheduled before the news changed.
+  - A reaction that spreads over the following blocks, and a choice between deleting, explaining, doubling down, blaming the intern or waiting for the next scandal.
+  - As a junior you clean up after your ambassador. As ambassador the account is yours.
+  - The Reply-All Reflex trait carries over naturally.
+- Done when: At least five different post disasters, each with a spread over several blocks and three ways to handle it.
 
 ### C-03 Design the 2013 chapter
 
