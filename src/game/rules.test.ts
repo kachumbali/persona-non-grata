@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { USED_STATS } from "./character";
+import { charmGain, formalBonus, missedEffects, overnightRecovery, socialBonus } from "./character";
+import { playerCapacity } from "./economy";
 import { TRAITS, type StatKey } from "./rules";
 import {
   applyEffects,
@@ -21,11 +22,43 @@ import {
 const ready = { clearance: true, lounge: true, programme: true, security: true };
 
 describe("game rules", () => {
-  it("does not offer traits affecting only unused statistics", () => {
-    for (const trait of TRAITS)
-      expect(Object.keys(trait.stats).some((stat) => USED_STATS.includes(stat as StatKey))).toBe(
-        true,
+  describe("every statistic changes a rule result", () => {
+    const proven = new Set<StatKey>();
+    it("gravitas raises the formal bonus", () => {
+      expect(formalBonus(5)).not.toBe(formalBonus(1));
+      proven.add("gravitas");
+    });
+    it("charm raises gains from positive effects", () => {
+      expect(charmGain(2, 5)).not.toBe(charmGain(2, 1));
+      proven.add("charm");
+    });
+    it("stamina changes overnight recovery and player capacity", () => {
+      expect(overnightRecovery(5)).not.toBe(overnightRecovery(1));
+      // "eyesopen" gives stamina 5, "sideevents" gives stamina 1
+      expect(playerCapacity({ traits: ["eyesopen"] }, 80, 80, 0).total).not.toBe(
+        playerCapacity({ traits: ["sideevents"] }, 80, 80, 0).total,
       );
+      proven.add("stamina");
+    });
+    it("deniability softens the cost of missed instructions", () => {
+      const effects = { goodwill: -10 };
+      expect(missedEffects(effects, 5)).not.toEqual(missedEffects(effects, 1));
+      proven.add("deniability");
+    });
+    it("liver changes social bonuses and alcohol tolerance", () => {
+      expect(socialBonus(5, true)).not.toBe(socialBonus(1, true));
+      // "eyesopen" gives stamina 5; adding "liver" gives liver 6 and stamina 4, so both keep the
+      // stamina bonus but only the liver trait tolerates two drinks.
+      expect(playerCapacity({ traits: ["eyesopen", "liver"] }, 80, 80, 2).total).not.toBe(
+        playerCapacity({ traits: ["eyesopen"] }, 80, 80, 2).total,
+      );
+      proven.add("liver");
+    });
+    it("proves all five statistics, and every trait modifies a proven one", () => {
+      expect([...proven].sort()).toEqual(["charm", "deniability", "gravitas", "liver", "stamina"]);
+      for (const trait of TRAITS)
+        expect(Object.keys(trait.stats).some((stat) => proven.has(stat as StatKey))).toBe(true);
+    });
   });
   it("meters stay between 0 and 100", () => {
     expect(applyEffects(START_METERS, { confidence: -500 }).confidence).toBe(0);

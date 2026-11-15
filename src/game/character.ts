@@ -7,13 +7,6 @@ export interface ChoiceGate {
   requiresStat?: { stat: StatKey; min: number };
 }
 export type Stats = Record<StatKey, number>;
-export const USED_STATS: readonly StatKey[] = [
-  "gravitas",
-  "charm",
-  "stamina",
-  "deniability",
-  "liver",
-];
 export function eligible(gate: ChoiceGate, traits: string[], stats: Stats): boolean {
   return (
     (!gate.requiresTrait || traits.includes(gate.requiresTrait)) &&
