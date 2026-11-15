@@ -31,3 +31,4 @@
 - [x] F-06: anecdote pipeline (intake template, writing guide, scene-writer, punch-up and reviewer prompts).
 - [x] F-04: content checker (schemas, cross-references, flags, gating, lengths; npm run content:check in CI).
 - [x] F-03: career record, three save slots, export and import of a career code.
+- [x] F-05: simulated playthroughs (bots, npm run sim, balance report, regression thresholds).

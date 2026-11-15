@@ -65,7 +65,7 @@ Make the game ready for more than one chapter and more than one coding tool. Not
   - Print a per-chapter content count: scenes, choices, tagged choices per trait, clippings, emails.
 - Done when: Breaking an id in any JSON file fails the check with the file and the id named. Port Hesperia passes.
 
-### F-05 Simulated playthroughs
+### F-05 Simulated playthroughs (done)
 
 - Type: Rules and code · Size: M · Depends on: F-02
 - Goal: Balance and pacing cannot be judged by reading JSON. Bots that play whole chapters give numbers.
