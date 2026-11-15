@@ -7,6 +7,15 @@ import { ACTION_LABELS, formatClock, type Action } from "../rules";
 import { inboxFor, useGame } from "../store";
 import { decisionCash, money } from "../economy";
 import { activeChapter } from "../chapters";
+import {
+  findStep,
+  inPersonBlock,
+  parseStepRef,
+  stepCash,
+  stepContext,
+  stepLabel,
+  stepStatus,
+} from "../mission";
 
 /** Capital's instructions only arrive on the secure fax in the embassy office. */
 export const isFax = (from: string) => from.startsWith("Capital");
@@ -106,13 +115,28 @@ export function Mailbox({
                         )
                       )
                         return null;
-                      const cost = decisionCash({
-                        id: open.id,
-                        kind: "email",
-                        source: open.subject,
-                        text: outcome.text,
-                        effects: outcome.effects,
-                      });
+                      const ref = parseStepRef(outcome.confirmsStep);
+                      const step = ref ? findStep(ref.task, ref.step) : undefined;
+                      const status =
+                        ref && step ? stepStatus(stepContext(g), ref.task, step.id) : null;
+                      // A step that cannot be done yet, or that needs trust you do not have in person.
+                      const blocked =
+                        status?.state === "blocked"
+                          ? status.reason
+                          : status?.state === "available" && step && a !== "delegate"
+                            ? inPersonBlock(step, g.colleagues)
+                            : null;
+                      const cost =
+                        decisionCash({
+                          id: open.id,
+                          kind: "email",
+                          source: open.subject,
+                          text: outcome.text,
+                          effects: outcome.effects,
+                        }) +
+                        (ref && step && status?.state !== "done"
+                          ? stepCash(step, ref.task, g.setbacksApplied)
+                          : 0);
                       const label =
                         activeChapter().mailChoices[open.id]?.[a] ??
                         outcome.label ??
@@ -120,7 +144,7 @@ export function Mailbox({
                       return (
                         <Button
                           key={a}
-                          disabled={scheduled(open.id)}
+                          disabled={scheduled(open.id) || !!blocked}
                           variant="outline"
                           className="h-auto whitespace-normal py-2 text-left"
                           onClick={() => {
@@ -130,6 +154,9 @@ export function Mailbox({
                         >
                           {gateLabel(outcome)}
                           {label} · 1 DP{cost > 0 ? ` · ${money(cost)}` : ""}
+                          {blocked && ref && step
+                            ? ` · ${stepLabel(step, ref.task, g.setbacksApplied)}: ${blocked}`
+                            : ""}
                         </Button>
                       );
                     })}

@@ -11,6 +11,15 @@ import {
   type VisitTask,
 } from "../rules";
 import { useGame } from "../store";
+import {
+  nextStep,
+  stepCash,
+  stepContext,
+  stepLabel,
+  stepStatus,
+  taskComplete,
+  type StepStatus,
+} from "../mission";
 import { ResourceDesk } from "./ResourceDesk";
 import {
   availableFunds,
@@ -55,7 +64,12 @@ export function PlanningDesk() {
       : g.block === 1 && !guest && venue === "embassy"
         ? 1
         : 2;
-  const workTime = service === "express" ? 1 : 2;
+  const step = nextStep(g.missionSteps, task);
+  const stepState: StepStatus = step
+    ? stepStatus(stepContext(g), task, step.id)
+    : { state: "done" };
+  const stepDp = step?.dp ?? 2;
+  const workTime = service === "express" ? Math.max(1, stepDp - 1) : stepDp;
   const serviceCost = service === "express" ? 250 : service === "driver" ? 150 : 0;
   const addWork = () => {
     if (!location) return;
@@ -85,6 +99,14 @@ export function PlanningDesk() {
     const name = self
       ? "You"
       : (campaign().characters.find((c) => c.id === worker)?.name ?? worker);
+    if (!step || stepState.state !== "available") {
+      setNotice(
+        step && stepState.state === "blocked"
+          ? `${stepLabel(step, task, g.setbacksApplied)}: ${stepState.reason}.`
+          : "That arrangement is complete.",
+      );
+      return;
+    }
     const ok = g.queue({
       id: self ? "player-work" : `work-${worker}`,
       kind: "work",
@@ -92,11 +114,12 @@ export function PlanningDesk() {
       worker: self ? undefined : worker,
       partner: self ? undefined : partner || undefined,
       task,
-      source: `${name} · ${missionTasks()[task]}`,
-      text: `${name} secured written confirmation: ${missionTasks()[task]}.`,
+      step: step.id,
+      source: `${name} · ${stepLabel(step, task, g.setbacksApplied)}`,
+      text: `${name} secured written confirmation: ${stepLabel(step, task, g.setbacksApplied)}.`,
       effects: { confidence: 3 },
-      cashCost:
-        (task === "lounge" ? 500 : task === "security" ? 400 : 0) + (self ? serviceCost : 0),
+      // The step's own cost is added by the store and drawn from the mission reserve.
+      cashCost: self ? serviceCost : 0,
       timeCost: self ? workTime : 0,
       overload,
       score: 2,
@@ -183,17 +206,43 @@ export function PlanningDesk() {
                   onChange={(e) => setTask(e.target.value as VisitTask)}
                   className="mt-1 w-full border border-input bg-muted p-2"
                 >
-                  {(Object.entries(missionTasks()) as [VisitTask, string][]).map(([id, label]) => (
-                    <option key={id} value={id}>
-                      {label}
-                      {g.visit[id] ? " ✓" : ""}
-                    </option>
-                  ))}
+                  {(Object.entries(missionTasks()) as [VisitTask, string][]).map(([id, label]) => {
+                    const next = nextStep(g.missionSteps, id);
+                    const state = next ? stepStatus(stepContext(g), id, next.id) : undefined;
+                    return (
+                      <option key={id} value={id}>
+                        {label}
+                        {taskComplete(g.missionSteps, id) ? " ✓" : ""}
+                        {next && state?.state === "blocked" ? ` (${state.reason})` : ""}
+                      </option>
+                    );
+                  })}
                 </select>
               </label>
             )}
             {worker === "self" && g.location !== "embassy" && (
               <p className="self-end text-sm">Local appointment: {location?.work}.</p>
+            )}
+            {(worker !== "self" || g.location === "embassy") && (
+              <p className="text-xs sm:col-span-2" aria-label="Next step">
+                {step ? (
+                  <>
+                    <strong>Next step:</strong> {stepLabel(step, task, g.setbacksApplied)} ·{" "}
+                    {stepState.state === "blocked"
+                      ? stepState.reason
+                      : `${worker === "self" ? `${workTime} DP` : "colleague with the skill"}${
+                          stepCash(step, task, g.setbacksApplied)
+                            ? ` · ${money(stepCash(step, task, g.setbacksApplied))} from the mission reserve`
+                            : ""
+                        }`}
+                    {stepState.state === "available" && stepState.hint
+                      ? ` · ${stepState.hint}`
+                      : ""}
+                  </>
+                ) : (
+                  "Every step of this arrangement is done."
+                )}
+              </p>
             )}
             {worker !== "self" && (
               <label className="text-sm sm:col-span-2">
@@ -282,9 +331,13 @@ export function PlanningDesk() {
             <Button
               onClick={addWork}
               disabled={
-                worker === "self"
+                (worker === "self" &&
+                  g.location === "embassy" &&
+                  stepState.state !== "available") ||
+                (worker !== "self" && stepState.state !== "available") ||
+                (worker === "self"
                   ? scheduledWork || officeClosed || (g.block === 3 && g.location === "golf")
-                  : g.block === 3
+                  : g.block === 3)
               }
             >
               <Plus className="size-4" />

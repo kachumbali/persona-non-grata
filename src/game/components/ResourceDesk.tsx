@@ -65,11 +65,17 @@ export function ResourceDesk() {
       >
         <span>Funds {money(g.economy.funds)}</span>
         <span>Visit reserve {money(g.economy.ringFence)}</span>
+        <span>Mission steps {money(g.economy.missionReserve ?? 0)}</span>
         <span>Pending {money(reserved)}</span>
         <strong>Available {money(availableFunds(g.economy, g.pending))}</strong>
       </div>
       <details className="mt-2 text-xs">
         <summary className="cursor-pointer">Visit costs & Capital funding</summary>
+        <p className="mt-2">
+          Mission steps reserve: cash for the steps still to do (
+          {money(g.economy.missionReserve ?? 0)}), including what a setback could add. Steps are
+          paid from it; hospitality and other optional spending cannot touch it.
+        </p>
         <div className="mt-2 flex flex-wrap gap-3">
           {Object.entries(visitReserves()).map(([name, amount]) => (
             <span key={name}>

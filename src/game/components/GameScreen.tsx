@@ -14,6 +14,7 @@ import { DiplomaticRecord } from "./DiplomaticRecord";
 import { StoryRecord } from "./StoryRecord";
 import { PressReview } from "./PressReview";
 import { PostingBriefing } from "./PostingBriefing";
+import { MissionSteps } from "./MissionSteps";
 import {
   Dialog,
   DialogContent,
@@ -107,7 +108,10 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
         <div className="clock text-right font-mono">
           <div className="text-2xl">{blocks()[g.block]?.name}</div>
           <div className="text-xs text-muted-foreground">
-            Day {g.day} / {lastDay()} · {chapter.missionActor} in {lastDay() - g.day} days
+            Day {g.day} / {lastDay()} ·{" "}
+            {g.day >= lastDay()
+              ? `${chapter.missionActor} arrives today`
+              : `${chapter.missionActor} in ${lastDay() - g.day} days`}
           </div>
         </div>
       </header>
@@ -138,13 +142,9 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
           {Object.keys(missionTasks()).filter((key) => g.visit[key as VisitTask]).length}/
           {Object.keys(missionTasks()).length} confirmed · Day {lastDay()} arrival
         </summary>
-        <ul className="mt-2 grid gap-1 text-sm sm:grid-cols-2">
-          {(Object.entries(missionTasks()) as [VisitTask, string][]).map(([key, label]) => (
-            <li key={key}>
-              {g.visit[key] ? "✓" : "○"} {label} — {g.visit[key] ? "confirmed" : "unconfirmed"}
-            </li>
-          ))}
-        </ul>
+        <div className="mt-2">
+          <MissionSteps compact />
+        </div>
         <p className="mt-2 text-xs text-muted-foreground">
           Watch your mail and secure fax for arrangements. Mission Watch on the embassy PC has the
           full record.

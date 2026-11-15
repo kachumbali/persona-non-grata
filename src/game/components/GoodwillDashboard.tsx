@@ -1,8 +1,11 @@
 import { formatClock, goodwillRisk, lastDay, missionTasks, type VisitTask } from "../rules";
+import { missionReserve } from "../mission";
+import { money } from "../economy";
 import { useGame } from "../store";
+import { MissionSteps } from "./MissionSteps";
 
 export function GoodwillDashboard() {
-  const { meters, goodwillHistory, visit, day } = useGame();
+  const { meters, goodwillHistory, visit, day, missionSteps } = useGame();
   const confirmed = Object.keys(missionTasks()).filter((key) => visit[key as VisitTask]).length;
   return (
     <section aria-label="Goodwill dashboard" className="mb-4 border-y-2 border-border bg-card py-3">
@@ -59,18 +62,17 @@ export function GoodwillDashboard() {
           );
         })}
         <div>
-          <h3 className="text-xl">Ministerial visit · {confirmed}/4 confirmed</h3>
+          <h3 className="text-xl">
+            Ministerial visit · {confirmed}/{Object.keys(missionTasks()).length} confirmed
+          </h3>
           <p className="mb-2 text-sm text-muted-foreground">
-            Arrival: Day {lastDay()} · {Math.max(0, lastDay() - day)} days remaining
+            {day >= lastDay()
+              ? `Arrival: today, Day ${lastDay()}`
+              : `Arrival: Day ${lastDay()} · ${Math.max(0, lastDay() - day)} days remaining`}{" "}
+            · Mission steps reserve {money(missionReserve(missionSteps))}
           </p>
-          <ul className="space-y-1 text-sm">
-            {(Object.entries(missionTasks()) as [VisitTask, string][]).map(([key, label]) => (
-              <li key={key} className={visit[key] ? "text-primary" : "text-destructive"}>
-                {visit[key] ? "✓" : "!"} {label} — {visit[key] ? "confirmed" : "unconfirmed"}
-              </li>
-            ))}
-          </ul>
-          {confirmed < 4 && (
+          <MissionSteps />
+          {confirmed < Object.keys(missionTasks()).length && (
             <p className="mt-2 text-sm font-bold text-destructive">
               Cancellation risk: essential arrangements incomplete.
             </p>
