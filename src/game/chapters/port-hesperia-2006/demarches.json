@@ -1,0 +1,555 @@
+{
+  "instructions": [
+    {
+      "id": "fuel-quay-note",
+      "subject": "Fuel inspection",
+      "instruction": "Request an inspection timetable and ask that fuel for diplomatic premises remain available.",
+      "issuedDay": 2,
+      "issuedBlock": 0,
+      "deadlineDay": 4,
+      "deadlineBlock": 2,
+      "level": "director",
+      "recipient": "port-officer",
+      "talkingPoints": [
+        "Ask for the inspection timetable.",
+        "Keep diplomatic fuel deliveries in view."
+      ],
+      "routes": [
+        {
+          "id": "self",
+          "label": "Deliver personally",
+          "kind": "self",
+          "dp": 2,
+          "days": 0
+        },
+        {
+          "id": "colleague",
+          "label": "Assign a colleague",
+          "kind": "colleague",
+          "dp": 0,
+          "days": 0
+        },
+        {
+          "id": "eu",
+          "label": "Joint EU démarche",
+          "kind": "eu",
+          "dp": 1,
+          "days": 0
+        },
+        {
+          "id": "note",
+          "label": "Send a note verbale",
+          "kind": "note",
+          "dp": 0,
+          "days": 0
+        }
+      ],
+      "report": {
+        "good": "Capital notes the successful delivery and requests a shorter report next time.",
+        "adequate": "Capital accepts the report and asks whether anyone attended in person.",
+        "failed": "Capital regrets the outcome and requests an explanation before the explanation arrives."
+      },
+      "fact": "port-control",
+      "traitOptions": [
+        {
+          "id": "punctual-approach",
+          "label": "Bring a timetable of your own",
+          "requiresTrait": "punctual",
+          "result": "Your timetable arrives early. The ministry notes that its own has not yet been approved."
+        },
+        {
+          "id": "liver-toast",
+          "label": "Offer a toast to the procedure",
+          "requiresTrait": "liver",
+          "result": "The toast is minuted after the last guest has left."
+        }
+      ]
+    },
+    {
+      "id": "clean-port-note",
+      "subject": "The clean port",
+      "instruction": "Ask the port authority to identify practical collection routes and acknowledge local crews.",
+      "issuedDay": 4,
+      "issuedBlock": 0,
+      "deadlineDay": 6,
+      "deadlineBlock": 2,
+      "level": "desk",
+      "recipient": "port-officer",
+      "talkingPoints": [
+        "Ask which collection route needs attention.",
+        "Name the crews doing the work."
+      ],
+      "routes": [
+        {
+          "id": "self",
+          "label": "Deliver personally",
+          "kind": "self",
+          "dp": 2,
+          "days": 0
+        },
+        {
+          "id": "colleague",
+          "label": "Assign a colleague",
+          "kind": "colleague",
+          "dp": 0,
+          "days": 0
+        },
+        {
+          "id": "eu",
+          "label": "Joint EU démarche",
+          "kind": "eu",
+          "dp": 1,
+          "days": 0
+        },
+        {
+          "id": "note",
+          "label": "Send a note verbale",
+          "kind": "note",
+          "dp": 0,
+          "days": 0
+        }
+      ],
+      "report": {
+        "good": "Capital notes the successful delivery and requests a shorter report next time.",
+        "adequate": "Capital accepts the report and asks whether anyone attended in person.",
+        "failed": "Capital regrets the outcome and requests an explanation before the explanation arrives."
+      },
+      "fact": "collection-point",
+      "traitOptions": [
+        {
+          "id": "ngo-approach",
+          "label": "Ask the local NGO for context",
+          "requiresTrait": "ngo",
+          "result": "The NGO supplies a practical contact. Procurement asks for the contact in triplicate."
+        },
+        {
+          "id": "liver-toast",
+          "label": "Offer a toast to the procedure",
+          "requiresTrait": "liver",
+          "result": "The toast is minuted after the last guest has left."
+        }
+      ]
+    },
+    {
+      "id": "letterhead-note",
+      "subject": "Joint European letterhead",
+      "instruction": "Deliver a joint request on port safety. France and Germany have not agreed which logo goes first.",
+      "issuedDay": 6,
+      "issuedBlock": 0,
+      "deadlineDay": 6,
+      "deadlineBlock": 1,
+      "level": "director",
+      "recipient": "protocol",
+      "talkingPoints": ["Request a safety briefing.", "Leave room for both logos."],
+      "routes": [
+        {
+          "id": "self",
+          "label": "Deliver personally",
+          "kind": "self",
+          "dp": 2,
+          "days": 0
+        },
+        {
+          "id": "colleague",
+          "label": "Assign a colleague",
+          "kind": "colleague",
+          "dp": 0,
+          "days": 0
+        },
+        {
+          "id": "eu",
+          "label": "Joint EU démarche",
+          "kind": "eu",
+          "dp": 1,
+          "days": 0
+        },
+        {
+          "id": "note",
+          "label": "Send a note verbale",
+          "kind": "note",
+          "dp": 0,
+          "days": 0
+        }
+      ],
+      "report": {
+        "good": "Capital notes the successful delivery and requests a shorter report next time.",
+        "adequate": "Capital accepts the report and asks whether anyone attended in person.",
+        "failed": "Capital regrets the outcome and requests an explanation before the explanation arrives."
+      },
+      "traitOptions": [
+        {
+          "id": "brussels-approach",
+          "label": "Offer a non-paper about the letterhead",
+          "requiresTrait": "brussels",
+          "result": "The non-paper clarifies the letterhead dispute by giving it three annexes."
+        },
+        {
+          "id": "liver-toast",
+          "label": "Offer a toast to the procedure",
+          "requiresTrait": "liver",
+          "result": "The toast is minuted after the last guest has left."
+        }
+      ]
+    },
+    {
+      "id": "umbrella-first",
+      "subject": "Umbrella protocol",
+      "instruction": "Protest the proposed removal of umbrellas from the reception. Capital considers them essential to visibility.",
+      "issuedDay": 7,
+      "issuedBlock": 1,
+      "deadlineDay": 8,
+      "deadlineBlock": 2,
+      "level": "director",
+      "recipient": "protocol",
+      "talkingPoints": ["Defend the umbrella provision.", "Request a written reply."],
+      "routes": [
+        {
+          "id": "self",
+          "label": "Deliver personally",
+          "kind": "self",
+          "dp": 2,
+          "days": 0
+        },
+        {
+          "id": "colleague",
+          "label": "Assign a colleague",
+          "kind": "colleague",
+          "dp": 0,
+          "days": 0
+        },
+        {
+          "id": "eu",
+          "label": "Joint EU démarche",
+          "kind": "eu",
+          "dp": 1,
+          "days": 0
+        },
+        {
+          "id": "note",
+          "label": "Send a note verbale",
+          "kind": "note",
+          "dp": 0,
+          "days": 0
+        }
+      ],
+      "report": {
+        "good": "Capital notes the successful delivery and requests a shorter report next time.",
+        "adequate": "Capital accepts the report and asks whether anyone attended in person.",
+        "failed": "Capital regrets the outcome and requests an explanation before the explanation arrives."
+      },
+      "absurd": true,
+      "conflictsWith": "umbrella-second",
+      "supersededBy": {
+        "day": 7,
+        "block": 2,
+        "demarcheId": "umbrella-second"
+      },
+      "traitOptions": [
+        {
+          "id": "novelist-approach",
+          "label": "Present an allegory about umbrellas",
+          "requiresTrait": "novelist",
+          "result": "The umbrella allegory is circulated as a weather forecast."
+        },
+        {
+          "id": "liver-toast",
+          "label": "Offer a toast to the procedure",
+          "requiresTrait": "liver",
+          "result": "The toast is minuted after the last guest has left."
+        }
+      ],
+      "issuedMinute": 720
+    },
+    {
+      "id": "umbrella-second",
+      "subject": "Umbrella correction",
+      "instruction": "Withdraw the umbrella protest. Capital now considers umbrellas an unnecessary public expense.",
+      "issuedDay": 7,
+      "issuedBlock": 2,
+      "deadlineDay": 9,
+      "deadlineBlock": 2,
+      "level": "director",
+      "recipient": "protocol",
+      "talkingPoints": ["Withdraw the protest.", "Avoid discussing the previous instruction."],
+      "routes": [
+        {
+          "id": "self",
+          "label": "Deliver personally",
+          "kind": "self",
+          "dp": 2,
+          "days": 0
+        },
+        {
+          "id": "colleague",
+          "label": "Assign a colleague",
+          "kind": "colleague",
+          "dp": 0,
+          "days": 0
+        },
+        {
+          "id": "eu",
+          "label": "Joint EU démarche",
+          "kind": "eu",
+          "dp": 1,
+          "days": 0
+        },
+        {
+          "id": "note",
+          "label": "Send a note verbale",
+          "kind": "note",
+          "dp": 0,
+          "days": 0
+        }
+      ],
+      "report": {
+        "good": "Capital notes the successful delivery and requests a shorter report next time.",
+        "adequate": "Capital accepts the report and asks whether anyone attended in person.",
+        "failed": "Capital regrets the outcome and requests an explanation before the explanation arrives."
+      },
+      "absurd": true,
+      "conflictsWith": "umbrella-first",
+      "traitOptions": [
+        {
+          "id": "replyall-approach",
+          "label": "Copy the correction to the EU list",
+          "requiresTrait": "replyall",
+          "result": "The correction reaches the EU list, including the person who drafted the protest."
+        },
+        {
+          "id": "liver-toast",
+          "label": "Offer a toast to the procedure",
+          "requiresTrait": "liver",
+          "result": "The toast is minuted after the last guest has left."
+        }
+      ],
+      "issuedMinute": 780
+    },
+    {
+      "id": "un-resolution",
+      "subject": "An unfamiliar resolution",
+      "instruction": "Ask the ministry to support the UN resolution on standardising the order of meeting agendas.",
+      "issuedDay": 7,
+      "issuedBlock": 2,
+      "deadlineDay": 10,
+      "deadlineBlock": 2,
+      "level": "desk",
+      "recipient": "protocol",
+      "talkingPoints": ["Request support for the resolution.", "Explain what an agenda is."],
+      "routes": [
+        {
+          "id": "self",
+          "label": "Deliver personally",
+          "kind": "self",
+          "dp": 2,
+          "days": 0
+        },
+        {
+          "id": "colleague",
+          "label": "Assign a colleague",
+          "kind": "colleague",
+          "dp": 0,
+          "days": 0
+        },
+        {
+          "id": "eu",
+          "label": "Joint EU démarche",
+          "kind": "eu",
+          "dp": 1,
+          "days": 0
+        },
+        {
+          "id": "note",
+          "label": "Send a note verbale",
+          "kind": "note",
+          "dp": 0,
+          "days": 0
+        }
+      ],
+      "report": {
+        "good": "Capital notes the successful delivery and requests a shorter report next time.",
+        "adequate": "Capital accepts the report and asks whether anyone attended in person.",
+        "failed": "Capital regrets the outcome and requests an explanation before the explanation arrives."
+      },
+      "traitOptions": [
+        {
+          "id": "demarche-approach",
+          "label": "Offer a second copy without being asked",
+          "requiresTrait": "demarche",
+          "result": "A second copy is delivered. Nobody can identify the first."
+        }
+      ]
+    },
+    {
+      "id": "counter-protest",
+      "subject": "Protest the protest",
+      "instruction": "Protest Valdoria’s démarche about the proposed reception seating plan. Do not discuss the seating plan itself.",
+      "issuedDay": 10,
+      "issuedBlock": 0,
+      "deadlineDay": 12,
+      "deadlineBlock": 2,
+      "level": "deputy-minister",
+      "recipient": "golf",
+      "talkingPoints": ["Object to the other protest.", "Do not mention the chairs."],
+      "routes": [
+        {
+          "id": "self",
+          "label": "Deliver personally",
+          "kind": "self",
+          "dp": 2,
+          "days": 0
+        },
+        {
+          "id": "colleague",
+          "label": "Assign a colleague",
+          "kind": "colleague",
+          "dp": 0,
+          "days": 0
+        },
+        {
+          "id": "eu",
+          "label": "Joint EU démarche",
+          "kind": "eu",
+          "dp": 1,
+          "days": 0
+        },
+        {
+          "id": "note",
+          "label": "Send a note verbale",
+          "kind": "note",
+          "dp": 0,
+          "days": 0
+        }
+      ],
+      "report": {
+        "good": "Capital notes the successful delivery and requests a shorter report next time.",
+        "adequate": "Capital accepts the report and asks whether anyone attended in person.",
+        "failed": "Capital regrets the outcome and requests an explanation before the explanation arrives."
+      },
+      "fact": "bako-objection",
+      "traitOptions": [
+        {
+          "id": "namedrop-approach",
+          "label": "Invoke the Commissioner",
+          "requiresTrait": "namedrop",
+          "result": "The Commissioner’s name appears in the minutes, although the Commissioner does not."
+        },
+        {
+          "id": "liver-toast",
+          "label": "Offer a toast to the procedure",
+          "requiresTrait": "liver",
+          "result": "The toast is minuted after the last guest has left."
+        }
+      ]
+    },
+    {
+      "id": "complete-agreement",
+      "subject": "A point of complete agreement",
+      "instruction": "Ask the Deputy Minister to agree that the visit should proceed smoothly. Capital provides no next step.",
+      "issuedDay": 13,
+      "issuedBlock": 1,
+      "deadlineDay": 14,
+      "deadlineBlock": 2,
+      "level": "deputy-minister",
+      "recipient": "golf",
+      "talkingPoints": ["Seek agreement on a smooth visit.", "Record the agreement carefully."],
+      "routes": [
+        {
+          "id": "self",
+          "label": "Deliver personally",
+          "kind": "self",
+          "dp": 2,
+          "days": 0
+        },
+        {
+          "id": "colleague",
+          "label": "Assign a colleague",
+          "kind": "colleague",
+          "dp": 0,
+          "days": 0
+        },
+        {
+          "id": "eu",
+          "label": "Joint EU démarche",
+          "kind": "eu",
+          "dp": 1,
+          "days": 0
+        },
+        {
+          "id": "note",
+          "label": "Send a note verbale",
+          "kind": "note",
+          "dp": 0,
+          "days": 0
+        }
+      ],
+      "report": {
+        "good": "Capital notes the successful delivery and requests a shorter report next time.",
+        "adequate": "Capital accepts the report and asks whether anyone attended in person.",
+        "failed": "Capital regrets the outcome and requests an explanation before the explanation arrives."
+      },
+      "traitOptions": [
+        {
+          "id": "cuisine-approach",
+          "label": "Offer a working lunch",
+          "requiresTrait": "cuisine",
+          "result": "The working lunch is agreed; the agenda arrives after dessert."
+        },
+        {
+          "id": "liver-toast",
+          "label": "Offer a toast to the procedure",
+          "requiresTrait": "liver",
+          "result": "The toast is minuted after the last guest has left."
+        }
+      ]
+    }
+  ],
+  "colleagueLines": {
+    "anselm": "Anselm delivers an improved version, credited to Anselm.",
+    "ines": "Ines adds a consular angle and a queue number.",
+    "bianca": "Bianca makes the request sound like an ultimatum.",
+    "maxim": "Maxim visits the wrong ministry and files a detailed account.",
+    "sola": "Sola obtains a signature without explaining the route.",
+    "pavel": "Pavel produces a receipt for the discussion.",
+    "development": "Elise asks who will actually benefit."
+  },
+  "unrequested": [
+    {
+      "id": "extra-lanyards",
+      "text": "You request extra lanyards. Protocol has an entire cupboard.",
+      "effects": {
+        "goodwill": 1
+      }
+    },
+    {
+      "id": "extra-minutes",
+      "text": "You request meeting minutes. The ministry supplies the previous meeting’s.",
+      "effects": {
+        "confidence": 1
+      }
+    },
+    {
+      "id": "old-parade",
+      "text": "You protest a parade that ended last week. The ministry promises to investigate.",
+      "effects": {
+        "goodwill": -2
+      }
+    },
+    {
+      "id": "old-umbrellas",
+      "text": "You object to an umbrella ban that was never adopted.",
+      "effects": {
+        "confidence": -2
+      }
+    }
+  ],
+  "colleagueLevels": {
+    "anselm": "director",
+    "ines": "director",
+    "bianca": "director",
+    "sola": "desk",
+    "pavel": "desk",
+    "development": "director",
+    "maxim": "desk",
+    "press": "desk"
+  }
+}

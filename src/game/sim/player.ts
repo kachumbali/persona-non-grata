@@ -7,6 +7,7 @@
 import { eligible, type ChoiceGate } from "../character";
 import { dueInvitations, type Invitation, type InvitationResponse } from "../calendar";
 import { activeChapter } from "../chapters";
+import { demarches, statusOf, tick } from "../demarche";
 import { pickTopic, splitEffects, topicsFor, type TalkChoice, type Topic } from "../dialogues";
 import { availableFunds, capacityLedger, playerCapacity, playerTime, STAFF_DP } from "../economy";
 import { clippings, type Clipping } from "../press";
@@ -150,6 +151,75 @@ export class Player {
   /** Mission tasks not yet confirmed, in the chapter's order. */
   openTasks(): string[] {
     return Object.keys(missionTasks()).filter((t) => !this.s.visit[t]);
+  }
+  openDemarches() {
+    const s = this.s;
+    return demarches()
+      .filter((d) => {
+        const status = statusOf(d, s.demarches, s.day, s.block);
+        return (
+          (status === "new" || status === "in-progress") &&
+          !s.pending.some((p) => p.demarcheId === d.id)
+        );
+      })
+      .sort((a, b) => tick(a.deadlineDay, a.deadlineBlock) - tick(b.deadlineDay, b.deadlineBlock));
+  }
+  handleDemarche(style: "careful" | "eu" | "reckless"): boolean {
+    const instruction = this.openDemarches()[0];
+    if (!instruction) return false;
+    let route: PendingDecision["demarcheRoute"] =
+      style === "reckless"
+        ? "colleague"
+        : style === "eu"
+          ? "eu"
+          : instruction.level === "desk"
+            ? "note"
+            : instruction.level === "director"
+              ? "colleague"
+              : "self";
+    if (route === "eu") {
+      if (this.s.location !== "eu" && !this.travel("eu")) return false;
+      if (!this.s.demarches[instruction.id]?.coordinated) route = "coordinate";
+    }
+    if (route === "self") {
+      const location = campaign().characters.find(
+        (person) => person.id === instruction.recipient,
+      )?.location;
+      if (!location || (this.s.location !== location && !this.travel(location))) return false;
+    }
+    const eligibleOptions =
+      route === "coordinate"
+        ? []
+        : (instruction.traitOptions ?? []).filter((item) =>
+            this.traits.includes(item.requiresTrait),
+          );
+    for (const item of eligibleOptions) {
+      const key = `choice:demarche:${instruction.id}:${item.id}`;
+      if (!this.tracker.seen.has(key))
+        this.tracker.traitOffers[item.requiresTrait] =
+          (this.tracker.traitOffers[item.requiresTrait] ?? 0) + 1;
+      this.see(key);
+    }
+    const option = eligibleOptions[0];
+    const chosen = option && this.rng.chance(this.options.traitBias) ? option.id : undefined;
+    const worker = style === "reckless" ? "maxim" : "anselm";
+    const ok = this.queueWithOverload((overload) => ({
+      id: `demarche-${instruction.id}`,
+      kind: "work",
+      source: instruction.subject,
+      text: "",
+      effects: {},
+      demarcheId: instruction.id,
+      demarcheRoute: route,
+      demarcheTrait: chosen,
+      worker: route === "note" || route === "colleague" ? worker : undefined,
+      overload,
+    }));
+    if (ok) {
+      this.take(`demarche:${instruction.id}:${route}`);
+      if (chosen) this.take(`choice:demarche:${instruction.id}:${chosen}`);
+    }
+    return ok;
   }
 
   // ---- bookkeeping ------------------------------------------------------------------------
@@ -709,7 +779,10 @@ export class Player {
   openMail() {
     const s = this.s;
     return inboxFor(s.day, s.minute, s.handled).filter(
-      (e) => !e.status && (s.location === this.office || !e.from.startsWith("Capital")),
+      (e) =>
+        !("demarcheId" in e && e.demarcheId) &&
+        !e.status &&
+        (s.location === this.office || !e.from.startsWith("Capital")),
     );
   }
   answerMail(style: Style, limit = Infinity): number {

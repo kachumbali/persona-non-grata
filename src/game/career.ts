@@ -37,6 +37,7 @@ export interface ChapterResult {
   /** Final trust per character id. */
   trust: Record<string, number>;
   favours?: { owedToYou: Record<string, number>; youOwe: Record<string, number> };
+  demarcheCounts?: { delivered: number; failed: number; missed: number };
   finishedAt: string;
 }
 export interface Career {
@@ -120,7 +121,7 @@ type ResultSource = Pick<
   | "storyFlags"
   | "storyOutcomes"
   | "colleagues"
-> & { favours?: SavedGame["favours"] };
+> & { favours?: SavedGame["favours"]; demarches?: SavedGame["demarches"] };
 
 export function chapterResultFrom(game: ResultSource, now: string): ChapterResult {
   return {
@@ -133,6 +134,15 @@ export function chapterResultFrom(game: ResultSource, now: string): ChapterResul
     storyOutcomes: structuredClone(game.storyOutcomes),
     trust: Object.fromEntries(Object.entries(game.colleagues).map(([id, c]) => [id, c.trust])),
     favours: structuredClone(game.favours ?? { owedToYou: {}, youOwe: {} }),
+    demarcheCounts: Object.values(game.demarches ?? {}).reduce(
+      (counts, entry) => {
+        if (entry.status === "missed") counts.missed++;
+        else if (entry.status === "delivered" && entry.quality === "failed") counts.failed++;
+        else if (entry.status === "delivered") counts.delivered++;
+        return counts;
+      },
+      { delivered: 0, failed: 0, missed: 0 },
+    ),
     finishedAt: now,
   };
 }
@@ -157,11 +167,23 @@ export function resultRecorded(career: Career, game: ResultSource): boolean {
   const last = career.chapters.at(-1);
   if (!last || !game.ending) return false;
   const mine = chapterResultFrom(game, last.finishedAt);
-  const { finishedAt: _mineAt, favours: mineFavours, ...mineResult } = mine;
-  const { finishedAt: _lastAt, favours: lastFavours, ...lastResult } = last;
+  const {
+    finishedAt: _mineAt,
+    favours: mineFavours,
+    demarcheCounts: mineCounts,
+    ...mineResult
+  } = mine;
+  const {
+    finishedAt: _lastAt,
+    favours: lastFavours,
+    demarcheCounts: lastCounts,
+    ...lastResult
+  } = last;
   return (
     JSON.stringify(mineResult) === JSON.stringify(lastResult) &&
-    JSON.stringify(mineFavours) === JSON.stringify(lastFavours ?? { owedToYou: {}, youOwe: {} })
+    JSON.stringify(mineFavours) === JSON.stringify(lastFavours ?? { owedToYou: {}, youOwe: {} }) &&
+    JSON.stringify(mineCounts) ===
+      JSON.stringify(lastCounts ?? { delivered: 0, failed: 0, missed: 0 })
   );
 }
 
@@ -184,6 +206,7 @@ const chapterResultSchema = z.object({
   storyOutcomes: z.record(id, outcome),
   trust: z.record(id, num),
   favours: z.object({ owedToYou: z.record(id, num), youOwe: z.record(id, num) }).optional(),
+  demarcheCounts: z.object({ delivered: num, failed: num, missed: num }).optional(),
   finishedAt: z.string().max(64),
 });
 const backgroundIndex = z.number().int().min(0).max(1000).nullable();
@@ -226,6 +249,23 @@ const postingSchema = z
     favours: z.object({ owedToYou: z.record(id, num), youOwe: z.record(id, num) }).optional(),
     knownFacts: z.array(id).max(5000).optional(),
     stepQualities: z.record(id, z.record(id, z.enum(["good", "adequate"]))).optional(),
+    demarches: z
+      .record(
+        id,
+        z.object({
+          status: z.enum(["new", "in-progress", "delivered", "missed", "superseded", "skipped"]),
+          coordinated: z.boolean().optional(),
+          deliveryPending: z.boolean().optional(),
+          quality: z.enum(["good", "adequate", "failed"]).optional(),
+          route: z.enum(["self", "colleague", "eu", "note"]).optional(),
+          worker: id.optional(),
+          incident: z.boolean().optional(),
+          resolvedDay: num.optional(),
+          resolvedBlock: num.optional(),
+        }),
+      )
+      .optional(),
+    unrequestedDemarches: num.optional(),
     taskQualities: z.record(id, z.enum(["good", "adequate"])).optional(),
     usedRoutes: z.record(id, id).optional(),
     spentRoutes: z.record(id, z.array(id)).optional(),

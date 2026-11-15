@@ -9,6 +9,7 @@ import type {
   EmbassyData,
   PostingBriefingData,
   PressData,
+  DemarchePack,
 } from "./types";
 import campaign from "./port-hesperia-2006/campaign.json";
 import chapter from "./port-hesperia-2006/chapter.json";
@@ -22,6 +23,7 @@ import mailChoices from "./port-hesperia-2006/mail-choices.json";
 import postingBriefing from "./port-hesperia-2006/posting-briefing.json";
 import press from "./port-hesperia-2006/press.json";
 import staffDuties from "./port-hesperia-2006/staff-duties.json";
+import demarches from "./port-hesperia-2006/demarches.json";
 
 export type * from "./types";
 
@@ -40,6 +42,7 @@ export const portHesperia2006: ChapterPack = {
   embassy: embassy as EmbassyData,
   euRepresentation: euRepresentation as Record<string, string>,
   mailChoices: mailChoices as Record<string, Partial<Record<Action, string>>>,
+  demarches: demarches as DemarchePack,
 };
 
 const registry = new Map<string, ChapterPack>([[portHesperia2006.manifest.id, portHesperia2006]]);

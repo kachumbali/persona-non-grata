@@ -485,6 +485,188 @@
         "flag": "stamp-expedited"
       },
       "once": true
+    },
+    {
+      "id": "report-lounge-expedited",
+      "outlet": "vale",
+      "headline": "Lounge acquired quickly",
+      "body": "The lounge booking arrived with an expedited invoice. The airport says the queue is a matter of perspective.",
+      "minDay": 3,
+      "maxDay": 15,
+      "priority": 60,
+      "trigger": {
+        "flag": "lounge-expedited"
+      },
+      "once": true
+    },
+    {
+      "id": "report-lounge-guest-list-expedited",
+      "outlet": "vale",
+      "headline": "Consultant counts the chairs",
+      "body": "A consultant has reconciled the guest list with the furniture. The furniture remains in the minority.",
+      "minDay": 10,
+      "maxDay": 15,
+      "priority": 60,
+      "trigger": {
+        "flag": "lounge-guest-list-expedited"
+      },
+      "once": true
+    },
+    {
+      "id": "report-security-route-recon-expedited",
+      "outlet": "vale",
+      "headline": "A driver surveys the route",
+      "body": "An independent driver has surveyed the motorcade route. The route declined to confirm the terms of the contract.",
+      "minDay": 9,
+      "maxDay": 15,
+      "priority": 60,
+      "trigger": {
+        "flag": "security-route-recon-expedited"
+      },
+      "once": true
+    },
+    {
+      "id": "report-security-motorcade-expedited",
+      "outlet": "vale",
+      "headline": "Escort arrives with invoice",
+      "body": "An escort has been hired for the visit. The invoice arrived first and received its own escort.",
+      "minDay": 13,
+      "maxDay": 15,
+      "priority": 60,
+      "trigger": {
+        "flag": "security-motorcade-expedited"
+      },
+      "once": true
+    },
+    {
+      "id": "report-programme-background",
+      "outlet": "vale",
+      "headline": "Programme finds its audience",
+      "body": "The revised visit programme includes a constituency stop. The ministry says the change had always been under consideration.",
+      "minDay": 13,
+      "maxDay": 15,
+      "priority": 60,
+      "trigger": {
+        "flag": "programme-background-used"
+      },
+      "once": true
+    },
+    {
+      "id": "press-fuel-quay-note",
+      "outlet": "vale",
+      "headline": "A question for the quay",
+      "body": "Bellaluxe requested an inspection timetable. The quay confirmed that its timetable has a timetable.",
+      "minDay": 3,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "flag": "demarche-fuel-quay-note-leak"
+      },
+      "once": true
+    },
+    {
+      "id": "press-clean-port-note",
+      "outlet": "vale",
+      "headline": "Crews enter the announcement",
+      "body": "The clean-port note mentioned the crews. A donor has asked where to place the plaque.",
+      "minDay": 5,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "flag": "demarche-clean-port-note-leak"
+      },
+      "once": true
+    },
+    {
+      "id": "press-letterhead-note",
+      "outlet": "vale",
+      "headline": "A common letterhead",
+      "body": "The joint safety request carries two logos. Both delegations describe the other logo as provisional.",
+      "minDay": 7,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "flag": "demarche-letterhead-note-leak"
+      },
+      "once": true
+    },
+    {
+      "id": "press-umbrella-first",
+      "outlet": "vale",
+      "headline": "Umbrellas become a priority",
+      "body": "Bellaluxe has raised the umbrella question. The ministry is seeking an authoritative forecast.",
+      "minDay": 8,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "flag": "demarche-umbrella-first-leak"
+      },
+      "once": true
+    },
+    {
+      "id": "press-umbrella-second",
+      "outlet": "vale",
+      "headline": "Umbrella protest withdrawn",
+      "body": "The umbrella protest has been withdrawn. Protocol will keep the umbrellas until the withdrawal is dry.",
+      "minDay": 8,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "flag": "demarche-umbrella-second-leak"
+      },
+      "once": true
+    },
+    {
+      "id": "press-un-resolution",
+      "outlet": "vale",
+      "headline": "An agenda for agendas",
+      "body": "A UN resolution about agendas has reached the ministry. Officials have placed it on the agenda.",
+      "minDay": 9,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "flag": "demarche-un-resolution-leak"
+      },
+      "once": true
+    },
+    {
+      "id": "press-counter-protest",
+      "outlet": "vale",
+      "headline": "A protest about a protest",
+      "body": "Bellaluxe objected to Valdoria’s démarche. The disputed chairs have not been consulted.",
+      "minDay": 11,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "flag": "demarche-counter-protest-leak"
+      },
+      "once": true
+    },
+    {
+      "id": "press-complete-agreement",
+      "outlet": "vale",
+      "headline": "Smooth visit agreed",
+      "body": "Both sides agree that the visit should go smoothly. Neither side has been assigned the next step.",
+      "minDay": 14,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "flag": "demarche-complete-agreement-leak"
+      },
+      "once": true
+    },
+    {
+      "id": "press-unrequested-demarche",
+      "outlet": "today",
+      "headline": "Another note arrives",
+      "body": "Bellaluxe has delivered an unsolicited note. The ministry is deciding which earlier note it might answer.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "flag": "trait:demarche:old-parade"
+      },
+      "once": true
     }
   ],
   "scenario": {

@@ -152,6 +152,10 @@ Required: `id`, `day`, `time` (game minutes from midnight; the day runs 480 to 1
 
 Required: `id`, `outlet`, `headline`, `body`, `priority` (50 for consequence clippings, 1 for filler, 100 for scripted scenario items). Timing: `day` (exact) or `minDay`/`maxDay`. Outlet ids: `herald` (government-friendly, flattering), `today` (photographs and excitement), `vale` (Ruth Vale's column, dry and precise), `wire` (brief and factual), `digest` (embassy cable gossip). `trigger` is optional and takes one of: `{ "flag": "..." }`, `{ "notFlag": "..." }`, `{ "outcome": { "eventId": "...", "choice": "...", "status": "chosen" | "missed" } }`, `{ "trait": "..." }`, `{ "meterBelow": { "key": "goodwill", "value": 25 } }`, `{ "trustBelow": { "id": "<character id>", "value": 30 } }`. Optional: `once`, `capital`, `maxim`, `signal`. Clippings are the place where the world reacts to a player's earlier choice, so read a flag that an event sets whenever you can.
 
+## Format 5: démarche (one object in `instructions` in the chapter's `demarches.json`)
+
+Use a unique `id`, `subject`, `instruction` (at most 40 words), `issuedDay`, `issuedBlock`, `deadlineDay`, `deadlineBlock`, `level` (`desk`, `director`, or `deputy-minister`), existing character `recipient`, two or three `talkingPoints`, and `report` with nonempty `good`, `adequate`, and `failed` texts. Supply exactly one route of each kind, with unique ids and labels: `self` (2 DP), `colleague` (0 player DP), `eu` (1 DP), and `note` (0 player DP); each has `days: 0`. Staff routes consume staff capacity. Optional `fact` must already be taught; `traitOptions` contain unique `id`, `label`, existing `requiresTrait`, and visible `result`. `absurd`, `conflictsWith`, and `supersededBy: { day, block, demarcheId }` are optional; point to an existing instruction, and issue the replacement in the supersession block. Use `issuedMinute` only for a fax timestamp inside its issue block. A leak is available as `demarche-<id>-leak` for a next-morning clipping. Do not make a mission step depend on the démarche.
+
 ## Output (all four parts required)
 
 1. **JSON.** One valid JSON object (or array of objects if the anecdote needs a follow-up scene and a press clipping), in the target format only. No comments.
@@ -161,7 +165,7 @@ Required: `id`, `outlet`, `headline`, `body`, `priority` (50 for consequence cli
 
 ## Input
 
-**Target format:** [story event / dialogue topic / email / press clipping]
+**Target format:** [story event / dialogue topic / email / press clipping / démarche]
 
 **Character ids available:** [paste the list]
 

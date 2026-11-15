@@ -7,7 +7,13 @@ import { z } from "zod";
 import type { Invitation } from "./calendar";
 import type { Topic } from "./dialogues";
 import type { Email, StoryChoice, StoryEvent } from "./rules";
-import type { Campaign, ChapterManifest, ChapterPack, PressData } from "./chapters/types";
+import type {
+  Campaign,
+  ChapterManifest,
+  ChapterPack,
+  DemarchePack,
+  PressData,
+} from "./chapters/types";
 import { parseStepRef } from "./mission";
 
 export type Finding = {
@@ -145,6 +151,7 @@ function buildSchemas(strict: boolean) {
         dislikes: z.array(str),
         skills: z.array(str),
         line: str,
+        refusalGreeting: opt(str),
         gender: z.enum(GENDERS),
         portrait: str,
       }),
@@ -401,6 +408,41 @@ function buildSchemas(strict: boolean) {
     }),
     euRepresentation: z.record(str, str),
     mailChoices: z.record(str, z.record(z.enum(ACTIONS), str)),
+    demarches: obj({
+      instructions: z.array(
+        obj({
+          id: str,
+          subject: str,
+          instruction: str,
+          issuedDay: day,
+          issuedBlock: int.min(0).max(3),
+          issuedMinute: opt(int.min(0).max(1439)),
+          deadlineDay: day,
+          deadlineBlock: int.min(0).max(3),
+          level: z.enum(["desk", "director", "deputy-minister"]),
+          recipient: str,
+          talkingPoints: z.array(str).min(2).max(3),
+          routes: z.array(
+            obj({
+              id: str,
+              label: str,
+              kind: z.enum(["self", "colleague", "eu", "note"]),
+              dp: int.min(0),
+              days: int.min(0),
+            }),
+          ),
+          report: obj({ good: str, adequate: str, failed: str }),
+          fact: opt(str),
+          absurd: opt(z.boolean()),
+          conflictsWith: opt(str),
+          supersededBy: opt(obj({ day, block: int.min(0).max(3), demarcheId: str })),
+          traitOptions: opt(z.array(obj({ id: str, label: str, requiresTrait: str, result: str }))),
+        }),
+      ),
+      colleagueLines: z.record(str, str),
+      colleagueLevels: z.record(str, z.enum(["desk", "director", "deputy-minister"])),
+      unrequested: z.array(obj({ id: str, text: str, effects })),
+    }),
   } satisfies Record<keyof ChapterPack, z.ZodTypeAny>;
 }
 
@@ -449,6 +491,7 @@ const FILE_NAMES: Record<keyof ChapterPack, string> = {
   embassy: "embassy.json",
   euRepresentation: "eu-representation.json",
   mailChoices: "mail-choices.json",
+  demarches: "demarches.json",
 };
 
 type Part = string | number;
@@ -558,6 +601,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   const emails = parseFile("emails", pack.emails, add) as Email[] | undefined;
   const invitations = parseFile("invitations", pack.invitations, add) as Invitation[] | undefined;
   const press = parseFile("press", pack.press, add) as PressData | undefined;
+  const demarches = parseFile("demarches", pack.demarches, add) as DemarchePack | undefined;
   const briefing = parseFile("postingBriefing", pack.postingBriefing, add) as
     { subject: string; intro: string } | undefined;
   const payoffs = parseFile("conversationPayoffs", pack.conversationPayoffs, add) as
@@ -640,6 +684,92 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
       warn(file, pathOf(path), `${what} has ${words(text)} words (limit ${max})`);
   };
 
+  if (demarches) {
+    const f = F.demarches;
+    const all = new Set(demarches.instructions.map((d) => d.id));
+    duplicates(
+      demarches.instructions,
+      (d) => d.id,
+      (i, id) => error(f, pathOf(["instructions", i, "id"]), `Duplicate démarche id "${id}"`),
+    );
+    for (const [i, d] of demarches.instructions.entries()) {
+      const at = (...parts: Part[]) => pathOf(["instructions", i, ...parts]);
+      refCheck(characterIds, "character id", d.recipient, f, at("recipient"));
+      checkDay(d.issuedDay, f, ["instructions", i, "issuedDay"], "issuedDay");
+      checkDay(d.deadlineDay, f, ["instructions", i, "deadlineDay"], "deadlineDay");
+      if (d.issuedDay * 4 + d.issuedBlock > d.deadlineDay * 4 + d.deadlineBlock)
+        error(f, at("deadlineDay"), "Deadline precedes issue");
+      if (!d.routes.some((route) => route.kind === "note"))
+        error(f, at("routes"), "A note verbale route is required");
+      for (const kind of ["self", "colleague", "eu", "note"])
+        if (d.routes.filter((r) => r.kind === kind).length !== 1)
+          error(f, at("routes"), `Exactly one ${kind} route is required`);
+      duplicates(
+        d.routes,
+        (r) => r.id,
+        (j, id) => error(f, at("routes", j, "id"), `Duplicate route id "${id}"`),
+      );
+      refCheck(all, "démarche id", d.conflictsWith, f, at("conflictsWith"));
+      refCheck(all, "démarche id", d.supersededBy?.demarcheId, f, at("supersededBy"));
+      if (d.conflictsWith === d.id)
+        error(f, at("conflictsWith"), "An instruction cannot conflict with itself");
+      if (d.supersededBy) {
+        checkDay(
+          d.supersededBy.day,
+          f,
+          ["instructions", i, "supersededBy", "day"],
+          "superseded day",
+        );
+        const replacement = demarches.instructions.find(
+          (item) => item.id === d.supersededBy!.demarcheId,
+        );
+        if (
+          d.supersededBy.demarcheId === d.id ||
+          d.supersededBy.day * 4 + d.supersededBy.block <= d.issuedDay * 4 + d.issuedBlock
+        )
+          error(f, at("supersededBy"), "Supersession must happen after this instruction");
+        if (
+          replacement &&
+          (replacement.issuedDay !== d.supersededBy.day ||
+            replacement.issuedBlock !== d.supersededBy.block)
+        )
+          error(
+            f,
+            at("supersededBy"),
+            "Replacement must be issued when it supersedes this instruction",
+          );
+      }
+      if (d.fact && !taughtFacts.has(d.fact))
+        error(f, at("fact"), `Fact "${d.fact}" is never taught`);
+      for (const [j, option] of (d.traitOptions ?? []).entries())
+        refCheck(
+          traitIds,
+          "trait id",
+          option.requiresTrait,
+          f,
+          at("traitOptions", j, "requiresTrait"),
+        );
+      limit(
+        d.instruction,
+        TEXT_LIMITS.emailBody,
+        f,
+        ["instructions", i, "instruction"],
+        "Démarche instruction",
+      );
+      for (const quality of ["good", "adequate", "failed"] as const)
+        needText(d.report[quality], f, ["instructions", i, "report", quality], "report text");
+    }
+    for (const id of Object.keys(demarches.colleagueLines))
+      refCheck(characterIds, "character id", id, f, "colleagueLines");
+    for (const id of Object.keys(demarches.colleagueLevels))
+      refCheck(characterIds, "character id", id, f, "colleagueLevels");
+    duplicates(
+      demarches.unrequested,
+      (d) => d.id,
+      (i, id) => error(f, pathOf(["unrequested", i, "id"]), `Duplicate unrequested id "${id}"`),
+    );
+  }
+
   // Manifest.
   if (manifest) {
     const f = F.manifest;
@@ -687,6 +817,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
     );
     campaign.characters.forEach((c, i) => {
       const at = (k: string) => pathOf(["characters", i, k]);
+      if (c.refusalGreeting) readFlag(`refused-favour-${c.id}`, f, at("refusalGreeting"));
       refCheck(locationIds, "location id", c.location, f, at("location"));
       c.likes.forEach((v, j) =>
         refCheck(venueIds, "venue id", v, f, pathOf(["characters", i, "likes", j])),
@@ -1429,7 +1560,11 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   // Flags: read but never set is an error, set but never read a warning.
   const codeSet = (flag: string) =>
     (CODE_SET_FLAGS.exact as readonly string[]).includes(flag) ||
-    CODE_SET_FLAGS.prefixes.some((p) => flag.startsWith(p));
+    CODE_SET_FLAGS.prefixes.some((p) => flag.startsWith(p)) ||
+    (demarches?.instructions.some(
+      (d) => flag === `demarche-${d.id}-leak` || flag === `demarche-${d.id}-incident`,
+    ) ??
+      false);
   for (const r of flagsRead)
     if (!flagsSet.has(r.flag) && !codeSet(r.flag))
       error(r.file, r.path, `Flag "${r.flag}" is read but never set anywhere in the content`);

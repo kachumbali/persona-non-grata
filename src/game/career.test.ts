@@ -65,6 +65,20 @@ describe("newCareer", () => {
 });
 
 describe("chapter results", () => {
+  it("records delivered, failed and missed démarche counts", () => {
+    const r = chapterResultFrom(
+      game({
+        demarches: {
+          a: { status: "delivered", quality: "good", route: "self" },
+          b: { status: "delivered", quality: "failed", route: "colleague" },
+          c: { status: "missed" },
+          d: { status: "skipped" },
+        },
+      }),
+      LATER,
+    );
+    expect(r.demarcheCounts).toEqual({ delivered: 1, failed: 1, missed: 1 });
+  });
   it("carries both sides of the favour ledger into the career result", () => {
     const favours = { owedToYou: { protocol: 1 }, youOwe: { fixer: 2 } };
     const result = chapterResultFrom(game({ favours }), LATER);

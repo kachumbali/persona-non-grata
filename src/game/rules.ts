@@ -63,6 +63,8 @@ export interface Email {
   body: string;
   options: Partial<Record<Action, Outcome>>;
   ignore: Outcome;
+  demarcheId?: string;
+  issuedBlock?: number;
 }
 export interface Trait {
   id: string;
@@ -73,7 +75,21 @@ export interface Trait {
   stats: Partial<Record<StatKey, number>>;
 }
 
-export const emails = (): Email[] => activeChapter().emails;
+export const emails = (): Email[] => [
+  ...activeChapter().emails,
+  ...activeChapter().demarches.instructions.map((d): Email => ({
+    id: `demarche-fax-${d.id}`,
+    day: d.issuedDay,
+    time: d.issuedMinute ?? activeChapter().manifest.blocks[d.issuedBlock]?.time ?? 480,
+    issuedBlock: d.issuedBlock,
+    demarcheId: d.id,
+    from: "Capital · Directorate of Instructions",
+    subject: d.subject,
+    body: `${d.instruction}\n\nDeadline: Day ${d.deadlineDay}, ${activeChapter().manifest.blocks[d.deadlineBlock]?.name ?? "office hours"}. The démarche board holds the talking points.`,
+    options: { note: { text: "The instruction remains on the démarche board.", effects: {} } },
+    ignore: { text: "The instruction remains on the démarche board.", effects: {} },
+  })),
+];
 export const TRAITS = traitsData as Trait[];
 
 export const DAY_START = 8 * 60;
@@ -224,6 +240,9 @@ export interface PendingDecision {
   playerSlot?: boolean | undefined;
   favour?: { character: string; delta: number } | undefined;
   teaches?: string | undefined;
+  demarcheId?: string | undefined;
+  demarcheRoute?: "self" | "colleague" | "eu" | "note" | "coordinate" | undefined;
+  demarcheTrait?: string | undefined;
 }
 export interface StoryChoice extends ChoiceGate {
   id: string;

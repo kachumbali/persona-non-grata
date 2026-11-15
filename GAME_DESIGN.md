@@ -19,6 +19,12 @@ Money for the steps is ring-fenced like the visit reserves. The mission reserve 
 
 The last day is played. The Minister arrives on Day 15: its four blocks are played, the arrangements are closed, and the ending is decided when the last block resolves. A meter at zero still ends the posting at once.
 
+## Capital's démarche board
+
+Capital sends time-bound instructions to the secure fax and the embassy desk's démarche board. The board shares the ordinary block plan and its capacity ledger with mission work. Personal delivery costs 2 DP and travel; gravitas, the recipient's trust and a relevant fact affect the outcome. Staff delivery uses delegation and can produce a protocol incident if the messenger is too junior. A note verbale uses staff time and is adequate at best. A joint EU delivery needs coordination at the EU Delegation; poor trust may delay its delivery by a block. The player sees the outcome in the situation report and a report on the secure fax. The mission never requires a démarche, though a good delivery can earn a favour.
+
+The contradictory umbrella instructions demonstrate supersession: the earlier fax remains visible and can be delivered, but doing so after the correction fails. The compulsive démarche trait adds one seeded, unrequested note per trip to the ministry, drawn from four authored outcomes. Failed or missed instructions can affect goodwill; leaks appear in later press. Posting saves retain board progress and old saves silently skip instructions whose deadlines have already passed.
+
 ## Diplomatic calendar
 
 Daily side stories can arise from the wider diplomatic community: other countries' national-day receptions, EU coordination meetings, UN and other multilateral meetings, and invitations from diplomats at other missions. These are opportunities for relationships, information and diplomacy as well as competing demands on the player's time. Depending on the event, the player may attend, send a colleague or decline, with consequences appropriate to the host and circumstances. Some encounters can lead to follow-up stories or affect the chapter mission.

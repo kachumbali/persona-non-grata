@@ -141,7 +141,7 @@ Finish every system inside the one chapter that exists, then test it with five p
   - Mail from other missions: gossip that hints at the press story, favours asked, colleagues competing for the same promotion.
 - Done when: A 15-day run receives 25 or more circulars. A bot that ignores all of them still finishes the visit but loses goodwill for each missed buried instruction.
 
-### S-02 Démarche board
+### S-02 Démarche board — done
 
 - Type: Rules and code · Size: M · Depends on: F-04
 - Goal: Capital instructs démarches. You deliver them yourself or assign them, and the choice of messenger is where the comedy is.

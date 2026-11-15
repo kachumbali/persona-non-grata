@@ -94,6 +94,7 @@ const fixture: ChapterPack = {
   embassy: { rooms: [], staff: [] },
   euRepresentation: {},
   mailChoices: {},
+  demarches: { instructions: [], colleagueLines: {}, colleagueLevels: {}, unrequested: [] },
 };
 
 const character = { title: "Mx", name: "Tester", portrait: "diplomat-1", bio: "", traits: [] };
@@ -170,7 +171,7 @@ describe("chapter packs", () => {
     const migrate = useGame.persist.getOptions().migrate!;
     const migrated = (await migrate({ day: 3 }, 8)) as { chapterId: string };
     expect(migrated.chapterId).toBe("port-hesperia-2006");
-    expect(useGame.persist.getOptions().version).toBe(11);
+    expect(useGame.persist.getOptions().version).toBe(12);
   });
 
   it("rejects unknown chapters", () => {

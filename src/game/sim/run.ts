@@ -114,6 +114,10 @@ export interface RunResult {
   quality: Record<string, "good" | "adequate">;
   routeChanges: number;
   routeLockouts: number;
+  demarcheRoutes: Record<string, number>;
+  demarcheQuality: Record<string, number>;
+  demarcheMissed: number;
+  protocolIncidents: number;
 }
 
 /** Cash that is spoken for: the visit reserves and the mission steps still to do. */
@@ -232,6 +236,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     const arrives = (e: { day: number; time: number }) =>
       e.day === s.day && e.time >= start && e.time < end;
     const due = player.invitationsDue();
+    const openDemarches = player.openDemarches();
     const event = player.currentEvent();
     if (event) {
       // The call or fax pops up by itself, so every bot sees it and its eligible choices.
@@ -240,17 +245,41 @@ function play(options: SimOptions, chapterId: string): RunResult {
         if (eligible(c, player.traits, computeStats(player.traits)))
           player.see(`choice:event:${event.id}:${c.id}`);
     }
-    const mail = emails().filter((e) => arrives(e) && !s.handled[e.id]);
+    const mail = emails().filter((e) => !e.demarcheId && arrives(e) && !s.handled[e.id]);
     const missionMail = mail.filter((e) => Object.values(e.options).some((o) => o?.confirmsStep));
     const expiring = player.leads().filter((lead) => lead.expiresDay === s.day);
-    const competing = due.length + (event ? 1 : 0) + missionMail.length + expiring.length;
+    // A newly opened mission step competes with an active instruction even when its related mail
+    // arrived earlier. Avoid counting the same mission work twice when that mail arrives now.
+    const missionOpening =
+      openDemarches.length &&
+      !missionMail.length &&
+      Object.keys(missionTasks()).some((task) => {
+        const step = nextStep(s.missionSteps, task);
+        return (
+          step?.earliestDay === s.day &&
+          stepStatus(stepContext(s), task, step.id).state === "available"
+        );
+      });
+    const competing =
+      due.length +
+      (event ? 1 : 0) +
+      missionMail.length +
+      expiring.length +
+      openDemarches.length +
+      Number(Boolean(missionOpening));
     if (competing - missionMail.length + mail.length >= 2) conflictDaysWithMail.add(s.day);
     if (competing >= 2) {
       conflictDays.add(s.day);
       conflictBlocks++;
     }
     const answerable = player.openMail().filter(arrives);
-    if (!due.length && !event && !answerable.length && !player.leadsHere().length) {
+    if (
+      !due.length &&
+      !event &&
+      !answerable.length &&
+      !player.leadsHere().length &&
+      !openDemarches.length
+    ) {
       idleBlocksPromptsOnly++;
       idleByDayPromptsOnly[s.day] = (idleByDayPromptsOnly[s.day] ?? 0) + 1;
       const stepWaiting = Object.keys(missionTasks()).some((task) => {
@@ -326,6 +355,18 @@ function play(options: SimOptions, chapterId: string): RunResult {
     ),
     routeChanges: s.routeChanges,
     routeLockouts,
+    demarcheRoutes: Object.values(s.demarches).reduce<Record<string, number>>((counts, item) => {
+      if (item.status === "delivered" && item.route)
+        counts[item.route] = (counts[item.route] ?? 0) + 1;
+      return counts;
+    }, {}),
+    demarcheQuality: Object.values(s.demarches).reduce<Record<string, number>>((counts, item) => {
+      if (item.status === "delivered" && item.quality)
+        counts[item.quality] = (counts[item.quality] ?? 0) + 1;
+      return counts;
+    }, {}),
+    demarcheMissed: Object.values(s.demarches).filter((item) => item.status === "missed").length,
+    protocolIncidents: Object.values(s.demarches).filter((item) => item.incident).length,
   };
 }
 

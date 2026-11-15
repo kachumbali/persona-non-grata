@@ -87,6 +87,32 @@ describe("simulated playthroughs", () => {
     const count = Object.values(competentRoutes).reduce((a, b) => a + b, 0);
     for (const amount of Object.values(competentRoutes))
       expect(amount / count).toBeLessThanOrEqual(0.6);
+    // S-02 targets: careful idle falls at least 15% from 12.19; competent conflict days >= 7.
+    expect(mean(diligent.map((run) => run.idleBlocks))).toBeLessThanOrEqual(12.19 * 0.85);
+    expect(
+      mean(full.filter((run) => COMPETENT.includes(run.bot)).map((run) => run.conflictDays)),
+    ).toBeGreaterThanOrEqual(7);
+    const baselineMission: Record<string, number> = {
+      careful: 42,
+      "press-reader": 42,
+      socialiser: 22,
+      reckless: 0,
+      ignorer: 0,
+    };
+    for (const [bot, baseline] of Object.entries(baselineMission)) {
+      const runs = full.filter((run) => run.bot === bot);
+      expect(
+        runs.filter((run) => run.missionConfirmed.length === run.missionTotal).length,
+        bot,
+      ).toBeGreaterThanOrEqual(baseline);
+    }
+    for (const run of full.filter((item) => item.bot === "reckless"))
+      expect(run.protocolIncidents, `${run.build} ${run.seed}`).toBeGreaterThanOrEqual(1);
+    for (const run of full.filter((item) => item.bot === "careful" || item.bot === "press-reader"))
+      expect(
+        Object.values(run.demarcheRoutes).reduce((a, b) => a + b, 0),
+        `${run.bot} ${run.build} ${run.seed}`,
+      ).toBe(8);
   }, 20000);
   it("is deterministic for a given seed", () => {
     const options = { bot: "socialiser" as const, traits: ["namedrop", "cuisine"], seed: 2 };
@@ -235,6 +261,11 @@ describe("simulated playthroughs", () => {
     expect(report.neverSeen.events.length).toBeLessThanOrEqual(4);
     expect(report.neverSeen.topics.length).toBeLessThanOrEqual(8);
     expect(report.neverSeen.choices.length).toBeLessThanOrEqual(75);
-    expect(report.neverSeen.clippings.length).toBeLessThanOrEqual(16);
+    // New leak and refusal clippings are conditional; keep the prior bound for legacy clippings.
+    expect(
+      report.neverSeen.clippings.filter(
+        (id) => !id.startsWith("press:report-") && !id.startsWith("press:press-"),
+      ).length,
+    ).toBeLessThanOrEqual(16);
   });
 });

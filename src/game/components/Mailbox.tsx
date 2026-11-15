@@ -31,10 +31,10 @@ export function Mailbox({
   const [openId, setOpenId] = useState<string | null>(null);
   const inbox = useMemo(
     () =>
-      inboxFor(g.day, g.minute, g.handled)
+      inboxFor(g.day, g.minute, g.handled, g.demarches)
         .filter((e) => (channel === "fax") === isFax(e.from))
         .reverse(),
-    [g.day, g.minute, g.handled, channel],
+    [g.day, g.minute, g.handled, g.demarches, channel],
   );
   const open =
     inbox.find((e) => e.id === openId) ?? (singlePane ? undefined : inbox.find((e) => !e.status));
@@ -100,7 +100,11 @@ export function Mailbox({
               <div className="mt-4 border-t border-dashed border-border pt-3">
                 {open.status ? (
                   <span className="stamp animate-stamp">
-                    {open.status === "ignored" ? "Escalated" : ACTION_LABELS[open.status as Action]}
+                    {open.status === "report"
+                      ? "Report"
+                      : open.status === "ignored"
+                        ? "Escalated"
+                        : ACTION_LABELS[open.status as Action]}
                   </span>
                 ) : (
                   <div className="flex flex-wrap gap-2">
@@ -168,7 +172,9 @@ export function Mailbox({
                     <span className="self-center text-xs text-muted-foreground">
                       {scheduled(open.id)
                         ? "Reply scheduled for this round"
-                        : "Unanswered instructions resolve at round end"}
+                        : "demarcheId" in open && open.demarcheId
+                          ? "The instruction remains on the board until its deadline."
+                          : "Unanswered instructions resolve at round end"}
                     </span>
                   </div>
                 )}

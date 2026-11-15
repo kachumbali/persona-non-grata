@@ -57,6 +57,30 @@ function replaceViaZeroGoodwill() {
 }
 
 describe("save slots", () => {
+  it("round-trips a coordinated and a delivered démarche", () => {
+    beginNewCareer(0);
+    startCareer(ann, {});
+    useGame.setState({
+      demarches: {
+        "fuel-quay-note": {
+          status: "delivered",
+          quality: "adequate",
+          route: "note",
+          worker: "anselm",
+          resolvedDay: 2,
+          resolvedBlock: 1,
+        },
+        "clean-port-note": { status: "in-progress", coordinated: true },
+      },
+      unrequestedDemarches: 2,
+    });
+    const code = exportSlot(0)!;
+    expect(importIntoSlot(1, code).ok).toBe(true);
+    continueSlot(1);
+    expect(useGame.getState().demarches["fuel-quay-note"]?.quality).toBe("adequate");
+    expect(useGame.getState().demarches["clean-port-note"]?.coordinated).toBe(true);
+    expect(useGame.getState().unrequestedDemarches).toBe(2);
+  });
   it("round-trips route deliveries, facts and favours through an export", () => {
     beginNewCareer(0);
     startCareer(ann, {});

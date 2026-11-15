@@ -36,6 +36,29 @@ describe("content checker on the real chapter", () => {
 });
 
 describe("content checker catches mistakes", () => {
+  it("rejects invalid démarche recipients, dates and missing guaranteed routes", () => {
+    const pack = fresh();
+    const d = pack.demarches.instructions[0]!;
+    d.recipient = "nobody";
+    d.deadlineDay = 1;
+    d.routes = d.routes.filter((route) => route.kind !== "note");
+    const errors = check(pack).filter(
+      (finding) => finding.level === "error" && finding.file === "demarches.json",
+    );
+    expect(errors.some((finding) => finding.message.includes("nobody"))).toBe(true);
+    expect(errors.some((finding) => finding.message.includes("Deadline precedes"))).toBe(true);
+    expect(errors.some((finding) => finding.message.includes("note verbale"))).toBe(true);
+  });
+  it("rejects dangling supersessions and unrecognised colleague IDs", () => {
+    const pack = fresh();
+    pack.demarches.instructions[0]!.supersededBy = { day: 3, block: 1, demarcheId: "not-real" };
+    pack.demarches.colleagueLines["not-real"] = "A line.";
+    const errors = check(pack).filter(
+      (finding) => finding.level === "error" && finding.file === "demarches.json",
+    );
+    expect(errors.some((finding) => finding.path.endsWith("supersededBy"))).toBe(true);
+    expect(errors.some((finding) => finding.path === "colleagueLines")).toBe(true);
+  });
   it("rejects an untaught route fact and an owed favour without a call-in", () => {
     const pack = fresh();
     const route = pack.manifest.missionSteps["programme"]!.find(

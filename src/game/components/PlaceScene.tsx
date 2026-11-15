@@ -18,6 +18,7 @@ import { LocationLead } from "./LocationLead";
 import { GoodwillDashboard } from "./GoodwillDashboard";
 import { Mailbox } from "./Mailbox";
 import { PlanningDesk } from "./PlanningDesk";
+import { DemarcheBoard } from "./DemarcheBoard";
 import { Portrait } from "./Portrait";
 import { activeChapter } from "../chapters";
 
@@ -26,6 +27,7 @@ const PC_TABS = [
   ["mail", "Courrielleur 98"],
   ["tasks", "Staff & diary"],
   ["watch", "Mission Watch"],
+  ["demarches", "Démarches"],
 ] as const;
 
 export function PlaceScene({ onLeave }: { onLeave: () => void }) {
@@ -237,11 +239,11 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
       <Conversation />
 
       <Dialog open={win === "pc"} onOpenChange={(o) => !o && setWin(null)}>
-        <DialogContent className="xp-window text-card-foreground max-h-[92vh] max-w-6xl overflow-y-auto p-0">
-          <DialogTitle className="xp-titlebar">
+        <DialogContent className="xp-window text-card-foreground max-h-[92vh] max-w-[calc(100vw-1rem)] overflow-y-auto p-0 sm:max-w-6xl">
+          <DialogTitle className="xp-titlebar pr-10">
             Bellaluxe Diplomatic Workstation — Fenêtre 2000
           </DialogTitle>
-          <div className="flex gap-1 border-b border-border bg-muted px-2 pt-2">
+          <div className="flex min-w-0 flex-wrap gap-1 border-b border-border bg-muted px-2 pt-2">
             {PC_TABS.map(([id, label]) => (
               <Button
                 key={id}
@@ -258,12 +260,14 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
           {tab === "mail" && <Mailbox channel="mail" />}
           {tab === "tasks" && <PlanningDesk />}
           {tab === "watch" && <GoodwillDashboard />}
+          {tab === "demarches" && <DemarcheBoard />}
         </DialogContent>
       </Dialog>
       <Dialog open={win === "appointment"} onOpenChange={(o) => !o && setWin(null)}>
-        <DialogContent className="xp-window text-card-foreground max-h-[92vh] max-w-6xl overflow-y-auto p-0">
+        <DialogContent className="xp-window text-card-foreground max-h-[92vh] max-w-[calc(100vw-1rem)] overflow-y-auto p-0 sm:max-w-6xl">
           <DialogTitle className="xp-titlebar">Appointments · {place?.name}</DialogTitle>
           <PlanningDesk />
+          <DemarcheBoard />
         </DialogContent>
       </Dialog>
       <Dialog open={win === "fax"} onOpenChange={(o) => !o && setWin(null)}>

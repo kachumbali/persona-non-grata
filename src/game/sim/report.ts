@@ -35,6 +35,8 @@ export function contentUniverse(chapterId?: string): ContentUniverse {
     u.events.push(`event:${e.id}`);
     for (const c of e.choices) add(`choice:event:${e.id}:${c.id}`, c);
   }
+  for (const d of chapter.demarches.instructions)
+    for (const option of d.traitOptions ?? []) add(`choice:demarche:${d.id}:${option.id}`, option);
   for (const [npc, topics] of Object.entries(chapter.dialogues))
     for (const t of topics) {
       u.topics.push(`topic:${npc}:${t.id}`);
@@ -92,6 +94,15 @@ function idleByDay(rs: RunResult[], pick: (r: RunResult) => number[]): number[] 
 }
 
 export interface Report {
+  demarcheStats: Record<
+    string,
+    {
+      routes: Record<string, number>;
+      quality: Record<string, number>;
+      missed: number;
+      incidents: number;
+    }
+  >;
   qualityByTask: Record<string, Record<string, number>>;
   routeLockouts: number;
   routeStats: Record<
@@ -243,6 +254,25 @@ export function aggregate(results: RunResult[]): Report {
     for (const [msg, n] of Object.entries(r.planErrors)) errors[msg] = (errors[msg] ?? 0) + n;
 
   return {
+    demarcheStats: Object.fromEntries(
+      Object.entries(byBot).map(([bot, runs]) => [
+        bot,
+        {
+          routes: runs.reduce<Record<string, number>>((acc, run) => {
+            for (const [key, count] of Object.entries(run.demarcheRoutes))
+              acc[key] = (acc[key] ?? 0) + count;
+            return acc;
+          }, {}),
+          quality: runs.reduce<Record<string, number>>((acc, run) => {
+            for (const [key, count] of Object.entries(run.demarcheQuality))
+              acc[key] = (acc[key] ?? 0) + count;
+            return acc;
+          }, {}),
+          missed: sum(runs.map((run) => run.demarcheMissed)),
+          incidents: sum(runs.map((run) => run.protocolIncidents)),
+        },
+      ]),
+    ),
     routeLockouts: sum(results.map((run) => run.routeLockouts)),
     qualityByTask: results.reduce<Record<string, Record<string, number>>>((all, run) => {
       for (const [task, quality] of Object.entries(run.quality)) {
@@ -426,6 +456,30 @@ export function formatReport(r: Report): string {
   );
   h("Endings per bot");
   out.push(endingTable(r.endingsByBot, r.endings, "bot"));
+  h("Démarche deliveries and outcomes");
+  out.push(
+    table(
+      [
+        "bot",
+        "self",
+        "colleague",
+        "eu",
+        "note",
+        "good",
+        "adequate",
+        "failed",
+        "missed",
+        "incidents",
+      ],
+      Object.entries(r.demarcheStats).map(([bot, stats]) => [
+        bot,
+        ...["self", "colleague", "eu", "note"].map((key) => String(stats.routes[key] ?? 0)),
+        ...["good", "adequate", "failed"].map((key) => String(stats.quality[key] ?? 0)),
+        String(stats.missed),
+        String(stats.incidents),
+      ]),
+    ),
+  );
   h("Mission routes and quality");
   out.push(
     table(

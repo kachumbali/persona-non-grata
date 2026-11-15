@@ -58,7 +58,8 @@
       "skills": ["security"],
       "line": "A convoy needs vehicles, not a beautifully formatted spreadsheet.",
       "gender": "female",
-      "portrait": "npc-bianca"
+      "portrait": "npc-bianca",
+      "refusalGreeting": "Bianca has recorded your refusal as an operational constraint. "
     },
     {
       "id": "ines",
@@ -118,7 +119,8 @@
       "skills": ["clearance"],
       "line": "Permission has three stamps. You have submitted two and a coffee stain.",
       "gender": "male",
-      "portrait": "npc-protocol"
+      "portrait": "npc-protocol",
+      "refusalGreeting": "Ndao straightens the file you declined to help with. "
     },
     {
       "id": "eu",
@@ -130,7 +132,8 @@
       "skills": ["programme"],
       "line": "Yes, Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework. No, that is not your biscuit quota.",
       "gender": "female",
-      "portrait": "npc-eu"
+      "portrait": "npc-eu",
+      "refusalGreeting": "Celeste has put your refusal in the minutes. "
     },
     {
       "id": "fixer",
@@ -142,7 +145,8 @@
       "skills": ["lounge"],
       "line": "Everything is possible. The question is who owes whom afterwards.",
       "gender": "male",
-      "portrait": "npc-fixer"
+      "portrait": "npc-fixer",
+      "refusalGreeting": "Marcel produces the unpaid favour as a receipt. "
     },
     {
       "id": "journalist",
@@ -166,7 +170,8 @@
       "skills": ["clearance"],
       "line": "An appointment? My secretary says I am unavailable. My caddie disagrees.",
       "gender": "male",
-      "portrait": "npc-golf"
+      "portrait": "npc-golf",
+      "refusalGreeting": "Bako recalls the appointment you declined. "
     },
     {
       "id": "un",
@@ -663,7 +668,10 @@
       "choices": [
         {
           "id": "accept",
-          "favour": { "character": "eu", "delta": 1 },
+          "favour": {
+            "character": "eu",
+            "delta": 1
+          },
           "label": "Accept the Delegation-led announcement; fund collection planning",
           "staff": "development",
           "cashCost": 200,
@@ -691,7 +699,10 @@
         },
         {
           "id": "shared",
-          "favour": { "character": "eu", "delta": 1 },
+          "favour": {
+            "character": "eu",
+            "delta": 1
+          },
           "label": "Negotiate shared credit and a practical work plan",
           "staff": "development",
           "cashCost": 150,
@@ -736,7 +747,10 @@
         },
         {
           "id": "deliver",
-          "favour": { "character": "port-officer", "delta": 1 },
+          "favour": {
+            "character": "port-officer",
+            "delta": 1
+          },
           "label": "Keep the announcement and start collection",
           "trust": 1,
           "effects": {
@@ -761,7 +775,10 @@
       "choices": [
         {
           "id": "release",
-          "favour": { "character": "port-officer", "delta": 1 },
+          "favour": {
+            "character": "port-officer",
+            "delta": 1
+          },
           "label": "Release the plan for the local crews to use",
           "trust": 3,
           "effects": {
@@ -796,7 +813,10 @@
       "choices": [
         {
           "id": "include",
-          "favour": { "character": "port-officer", "delta": 1 },
+          "favour": {
+            "character": "port-officer",
+            "delta": 1
+          },
           "label": "Add the port crews to the public credit",
           "trust": 3,
           "effects": {
@@ -1316,7 +1336,10 @@
       "choices": [
         {
           "id": "compromise",
-          "favour": { "character": "protocol", "delta": 1 },
+          "favour": {
+            "character": "protocol",
+            "delta": 1
+          },
           "flag": "protocol-compromise",
           "label": "Move the Deputy Minister forward and explain to Capital",
           "effects": {
@@ -1355,7 +1378,10 @@
       "choices": [
         {
           "id": "compromise",
-          "favour": { "character": "protocol", "delta": 1 },
+          "favour": {
+            "character": "protocol",
+            "delta": 1
+          },
           "flag": "protocol-compromise",
           "label": "Accept Ndao's compromise and brief Capital",
           "effects": {
@@ -1702,7 +1728,10 @@
         },
         {
           "id": "coordinate",
-          "favour": { "character": "port-officer", "delta": 1 },
+          "favour": {
+            "character": "port-officer",
+            "delta": 1
+          },
           "label": "Ask Mira for the inspection timetable",
           "contact": "port-officer",
           "contactTrust": 5,

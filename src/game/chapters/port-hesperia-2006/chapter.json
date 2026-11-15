@@ -215,7 +215,11 @@
             "quality": "good",
             "result": "Ndao stamps the permit and makes a note to call.",
             "requires": {
-              "trustOrFavour": { "character": "protocol", "min": 55 }
+              "trustOrFavour": {
+                "character": "protocol",
+                "min": 55
+              },
+              "expiresOnFlags": ["refused-favour-protocol"]
             },
             "consequences": {
               "oweFavour": "protocol"
@@ -225,7 +229,9 @@
             "id": "marcel",
             "label": "Use Marcel’s handling service",
             "kind": "money",
-            "effects": { "goodwill": -2 },
+            "effects": {
+              "goodwill": -2
+            },
             "dp": 1,
             "cash": 300,
             "days": 0,
@@ -234,6 +240,9 @@
             "consequences": {
               "oweFavour": "fixer",
               "flag": "stamp-expedited"
+            },
+            "requires": {
+              "expiresOnFlags": ["refused-favour-fixer"]
             }
           },
           {
@@ -249,7 +258,8 @@
               "trust": {
                 "character": "eu",
                 "min": 45
-              }
+              },
+              "expiresOnFlags": ["refused-favour-eu"]
             },
             "consequences": {
               "oweFavour": "eu"
@@ -301,7 +311,9 @@
             "id": "marcel",
             "label": "Buy an expedited booking",
             "kind": "money",
-            "effects": { "goodwill": -2 },
+            "effects": {
+              "goodwill": -2
+            },
             "dp": 1,
             "cash": 200,
             "days": 0,
@@ -310,7 +322,10 @@
               "oweFavour": "fixer",
               "flag": "lounge-expedited"
             },
-            "result": "Marcel finds a lounge and sends an invoice."
+            "result": "Marcel finds a lounge and sends an invoice.",
+            "requires": {
+              "expiresOnFlags": ["refused-favour-fixer"]
+            }
           },
           {
             "id": "europe",
@@ -324,7 +339,8 @@
               "trust": {
                 "character": "eu",
                 "min": 45
-              }
+              },
+              "expiresOnFlags": ["refused-favour-eu"]
             },
             "consequences": {
               "oweFavour": "eu"
@@ -386,14 +402,20 @@
             "id": "marcel",
             "label": "Hire a seating consultant",
             "kind": "money",
-            "effects": { "goodwill": -2 },
+            "effects": {
+              "goodwill": -2
+            },
             "dp": 1,
             "cash": 200,
             "days": 0,
             "quality": "adequate",
             "result": "Marcel supplies a seating chart and a separate invoice.",
             "consequences": {
-              "oweFavour": "fixer"
+              "oweFavour": "fixer",
+              "flag": "lounge-guest-list-expedited"
+            },
+            "requires": {
+              "expiresOnFlags": ["refused-favour-fixer"]
             }
           },
           {
@@ -409,7 +431,8 @@
               "trust": {
                 "character": "eu",
                 "min": 45
-              }
+              },
+              "expiresOnFlags": ["refused-favour-eu"]
             },
             "consequences": {
               "oweFavour": "eu"
@@ -466,7 +489,7 @@
             "result": "Bako agrees and asks the diary to keep a space for him.",
             "requires": {
               "favour": "golf",
-              "expiresOnFlags": ["mira-port-statement", "reshuffle-public"],
+              "expiresOnFlags": ["mira-port-statement", "reshuffle-public", "refused-favour-golf"],
               "expiresDay": 10
             },
             "consequences": {
@@ -482,7 +505,13 @@
             "days": 0,
             "quality": "good",
             "consequences": {
-              "delayed": { "day": 13, "trust": { "golf": 2 }, "flag": "programme-background-used" }
+              "delayed": {
+                "day": 13,
+                "trust": {
+                  "golf": 2
+                },
+                "flag": "programme-background-used"
+              }
             },
             "result": "The constituency visit settles Bako’s objection.",
             "requires": {
@@ -502,7 +531,8 @@
               "trust": {
                 "character": "eu",
                 "min": 45
-              }
+              },
+              "expiresOnFlags": ["refused-favour-eu"]
             },
             "consequences": {
               "oweFavour": "eu"
@@ -554,7 +584,8 @@
             "quality": "good",
             "result": "Bianca finds a driver and adds your name to her diary.",
             "requires": {
-              "favour": "bianca"
+              "favour": "bianca",
+              "expiresOnFlags": ["refused-favour-bianca"]
             },
             "consequences": {
               "oweFavour": "bianca"
@@ -564,14 +595,20 @@
             "id": "marcel",
             "label": "Hire Marcel’s drivers",
             "kind": "money",
-            "effects": { "goodwill": -2 },
+            "effects": {
+              "goodwill": -2
+            },
             "dp": 1,
             "cash": 200,
             "days": 0,
             "quality": "adequate",
             "result": "Marcel sends drivers and requests a discreet receipt.",
             "consequences": {
-              "oweFavour": "fixer"
+              "oweFavour": "fixer",
+              "flag": "security-route-recon-expedited"
+            },
+            "requires": {
+              "expiresOnFlags": ["refused-favour-fixer"]
             }
           }
         ],
@@ -605,7 +642,11 @@
             "quality": "good",
             "result": "Ndao finds an escort and asks you to remember the gesture.",
             "requires": {
-              "trustOrFavour": { "character": "protocol", "min": 55 }
+              "trustOrFavour": {
+                "character": "protocol",
+                "min": 55
+              },
+              "expiresOnFlags": ["refused-favour-protocol"]
             },
             "consequences": {
               "oweFavour": "protocol"
@@ -615,14 +656,20 @@
             "id": "marcel",
             "label": "Hire an escort",
             "kind": "money",
-            "effects": { "goodwill": -2 },
+            "effects": {
+              "goodwill": -2
+            },
             "dp": 1,
             "cash": 300,
             "days": 0,
             "quality": "adequate",
             "result": "Marcel hires an escort and retains a copy of the invoice.",
             "consequences": {
-              "oweFavour": "fixer"
+              "oweFavour": "fixer",
+              "flag": "security-motorcade-expedited"
+            },
+            "requires": {
+              "expiresOnFlags": ["refused-favour-fixer"]
             }
           },
           {

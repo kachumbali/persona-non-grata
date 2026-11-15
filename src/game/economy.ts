@@ -132,7 +132,7 @@ export function validatePlan(
 ): string | null {
   if (new Set(plan.map((p) => p.id)).size !== plan.length)
     return "That commitment is already in your diary.";
-  if (block === 3 && plan.some((p) => p.remainingBlocks && p.remainingBlocks > 1))
+  if (block === 3 && plan.some((p) => !p.demarcheId && p.remainingBlocks && p.remainingBlocks > 1))
     return "Golf requires two consecutive office blocks.";
   if (
     plan.some(

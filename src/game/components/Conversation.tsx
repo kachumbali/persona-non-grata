@@ -36,7 +36,11 @@ export function Conversation() {
   const ledger = capacityLedger(g.pending, g.block).find((row) => row.id === npc.id);
   const assigned = g.pending.filter((p) => p.worker === npc.id || p.partner === npc.id);
   const isStart = !node || node === topic?.start || node === "opening";
-  const text = (isStart ? moodOpener(trust) : "") + current.text.replace("{line}", npc.line);
+  const greeting = g.storyFlags.includes(`refused-favour-${npc.id}`)
+    ? npc.refusalGreeting
+    : undefined;
+  const text =
+    (isStart ? (greeting ?? moodOpener(trust)) : "") + current.text.replace("{line}", npc.line);
   const choose = (choice: TalkChoice) => {
     if (choice.next) {
       setNode(choice.next);

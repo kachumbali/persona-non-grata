@@ -34,3 +34,5 @@
 - [x] F-05: simulated playthroughs (bots, npm run sim, balance report, regression thresholds).
 - [x] B-01: mission pacing (visit tasks in steps across the chapter, setbacks, protected mission money, playable final day).
 - [x] B-02: gatekeepers, alternative routes, favours, knowledge and mission quality.
+
+- [x] S-02: démarche board, instructions, delivery consequences, saves and simulation.

@@ -38,11 +38,15 @@ export interface StepRef {
   step: string;
 }
 
-export interface MissionRoute {
+export interface RouteBase {
   id: string;
   label: string;
-  kind: "official" | "favour" | "money" | "eu" | "knowledge";
   dp: number;
+  days: number;
+}
+
+export interface MissionRoute extends RouteBase {
+  kind: "official" | "favour" | "money" | "eu" | "knowledge";
   cash: number;
   fromGeneralFunds?: boolean;
   effects?: Partial<Record<"confidence" | "goodwill" | "morale" | "sanity", number>>;
@@ -57,7 +61,6 @@ export interface MissionRoute {
     expiresOnFlag?: string;
     expiresOnFlags?: string[];
   };
-  days: number;
   quality: "good" | "adequate";
   consequences?: {
     oweFavour?: string;
@@ -66,6 +69,38 @@ export interface MissionRoute {
     delayed?: { day: number; flag?: string; trust?: Record<string, number> };
   };
   result: string;
+}
+
+export interface DemarcheRoute extends RouteBase {
+  kind: "self" | "colleague" | "eu" | "note";
+}
+
+export interface Demarche {
+  id: string;
+  subject: string;
+  instruction: string;
+  issuedDay: number;
+  issuedBlock: number;
+  issuedMinute?: number;
+  deadlineDay: number;
+  deadlineBlock: number;
+  level: "desk" | "director" | "deputy-minister";
+  recipient: string;
+  talkingPoints: string[];
+  routes: DemarcheRoute[];
+  report: { good: string; adequate: string; failed: string };
+  fact?: string;
+  absurd?: boolean;
+  conflictsWith?: string;
+  supersededBy?: { day: number; block: number; demarcheId: string };
+  traitOptions?: { id: string; label: string; requiresTrait: string; result: string }[];
+}
+
+export interface DemarchePack {
+  instructions: Demarche[];
+  colleagueLines: Record<string, string>;
+  colleagueLevels: Record<string, "desk" | "director" | "deputy-minister">;
+  unrequested: { id: string; text: string; effects: Effects }[];
 }
 
 /**
@@ -167,6 +202,7 @@ export interface CampaignCharacter {
   dislikes: string[];
   skills: string[];
   line: string;
+  refusalGreeting?: string;
   gender: string;
   portrait: string;
 }
@@ -246,4 +282,5 @@ export interface ChapterPack {
   embassy: EmbassyData;
   euRepresentation: Record<string, string>;
   mailChoices: Record<string, Partial<Record<Action, string>>>;
+  demarches: DemarchePack;
 }

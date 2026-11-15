@@ -1,5 +1,15 @@
 import { pressReview, clippings } from "./press";
 import {
+  demarcheAt,
+  demarches as chapterDemarches,
+  migrateDemarches,
+  planDemarche,
+  resolveDemarche,
+  statusOf as demarcheStatus,
+  tick as demarcheTick,
+  type DemarcheProgress,
+} from "./demarche";
+import {
   accidentalReplyAll,
   charmGain,
   eligible,
@@ -107,6 +117,8 @@ export interface GameState {
   visit: VisitStatus;
   /** Ids of the mission steps done, by task. `visit[task]` is true when all of a task's are. */
   missionSteps: MissionProgress;
+  demarches: DemarcheProgress;
+  unrequestedDemarches: number;
   favours: { owedToYou: Record<string, number>; youOwe: Record<string, number> };
   knownFacts: string[];
   stepQualities: Record<string, Record<string, "good" | "adequate">>;
@@ -209,6 +221,8 @@ const initialState = () => {
     goodwillHistory: [],
     visit: {},
     missionSteps: emptyProgress(),
+    demarches: {} as DemarcheProgress,
+    unrequestedDemarches: 0,
     favours: { owedToYou: {}, youOwe: {} },
     knownFacts: [] as string[],
     stepQualities: {} as Record<string, Record<string, "good" | "adequate">>,
@@ -398,7 +412,7 @@ export const useGame = create<GameState>()(
         const s = get();
         const place = campaign().locations.find((l) => l.id === location);
         if (s.ending || !place || location === s.location) return false;
-        if (s.pending.some((p) => p.location && playerTime(p) > 0)) {
+        if (s.pending.some((p) => p.location && !p.id.startsWith("travel-") && playerTime(p) > 0)) {
           set({
             planError: "You have an appointment here this block. Cancel it before travelling.",
           });
@@ -412,6 +426,7 @@ export const useGame = create<GameState>()(
           text: `You travelled to ${place.name}.`,
           effects: {},
           energy: -3,
+          location,
         });
         if (ok) set({ location, selectedNpc: null });
         return ok;
@@ -426,9 +441,11 @@ export const useGame = create<GameState>()(
           set({ planError: stepped });
           return false;
         }
-        const decision = stepped;
+        let decision = stepped;
         if (replacePlayer && s.pending.some((p) => p.remainingBlocks === 1)) {
-          set({ planError: "The second half of your golf round is already committed." });
+          set({
+            planError: "A commitment is already in progress; finish it before replacing the plan.",
+          });
           return false;
         }
         const old = s.pending.filter(
@@ -436,6 +453,12 @@ export const useGame = create<GameState>()(
             !(decision.kind === "social" && p.kind === "social") &&
             !(replacePlayer && playerTime(p) > 0 && !p.id.startsWith("travel-")),
         );
+        const prepared = planDemarche({ ...s, pending: old }, decision);
+        if (typeof prepared === "string") {
+          set({ planError: prepared });
+          return false;
+        }
+        decision = prepared;
         if (
           decision.route &&
           old.some((p) => p.task === decision.task && p.step === decision.step && p.route)
@@ -512,10 +535,11 @@ export const useGame = create<GameState>()(
         const plan = s.yesterday[s.block];
         if (!plan) return;
         const error = s.pending.some((p) => p.remainingBlocks === 1)
-          ? "Finish your committed golf round before replacing the plan."
+          ? "Finish your commitment before replacing the plan."
           : plan.some(
                 (p) =>
                   p.emailId ||
+                  p.demarcheId ||
                   p.eventId ||
                   p.special ||
                   (p.task &&
@@ -575,7 +599,7 @@ export const useGame = create<GameState>()(
           id.startsWith("travel-")
             ? { planError: "The journey has already been made." }
             : s.pending.some((p) => p.id === id && p.remainingBlocks === 1)
-              ? { planError: "Finish the second half of your golf round first." }
+              ? { planError: "This commitment is already in progress." }
               : { pending: s.pending.filter((p) => p.id !== id), planError: "" },
         ),
       answer: (id, action) => {
@@ -586,6 +610,7 @@ export const useGame = create<GameState>()(
         if (
           !e ||
           !o ||
+          (e.issuedBlock !== undefined && e.day === s.day && s.block < e.issuedBlock) ||
           !s.character ||
           !eligible(o, s.character.traits, computeStats(s.character.traits)) ||
           s.handled[id] ||
@@ -695,6 +720,8 @@ export const useGame = create<GameState>()(
           storyOutcomes = { ...s.storyOutcomes };
         const favours = structuredClone(s.favours);
         const knownFacts = [...s.knownFacts];
+        const demarcheProgress = structuredClone(s.demarches);
+        let unrequestedDemarches = s.unrequestedDemarches;
         const stepQualities = structuredClone(s.stepQualities);
         const usedRoutes = { ...s.usedRoutes };
         const spentRoutes = structuredClone(s.spentRoutes);
@@ -761,18 +788,112 @@ export const useGame = create<GameState>()(
         for (const p of s.pending) {
           economy.funds -= decisionCash(p) - (p.stepCost ?? 0);
           if ((p.effects.budget ?? 0) > 0) economy.funds += (p.effects.budget ?? 0) * 100;
+          if (p.remainingBlocks && p.remainingBlocks > 1) {
+            if (p.demarcheId) {
+              demarcheProgress[p.demarcheId] = {
+                status: "in-progress",
+                coordinated: true,
+                deliveryPending: true,
+              };
+              results.push({
+                day: s.day,
+                time: s.minute,
+                text: `${p.source}: a letterhead dispute delays delivery until the next block.`,
+              });
+              energy = clamp(energy - 5 * playerTime(p));
+            } else {
+              results.push({
+                day: s.day,
+                time: s.minute,
+                text: `${p.source}: first block spent on the course; the next block is reserved.`,
+              });
+              energy = clamp(energy - 10);
+            }
+            continue;
+          }
+          if (p.demarcheId && p.demarcheRoute) {
+            const instruction = demarcheAt(p.demarcheId);
+            if (!instruction) continue;
+            if (p.demarcheRoute === "coordinate") {
+              demarcheProgress[instruction.id] = { status: "in-progress", coordinated: true };
+              record(
+                instruction.subject,
+                "The EU coordination note is agreed; the letterhead remains under discussion.",
+                {},
+              );
+              energy = clamp(energy - 5);
+              continue;
+            }
+            const route = instruction.routes.find((item) => item.kind === p.demarcheRoute);
+            if (!route) continue;
+            const worker = p.worker;
+            const succeeded =
+              route.kind !== "colleague" ||
+              (!!worker &&
+                delegationSucceeds(
+                  worker,
+                  "programme",
+                  colleagues,
+                  relationships,
+                  undefined,
+                  s.block,
+                  "programme",
+                ));
+            const partnerTrust =
+              ((colleagues["eu-france"]?.trust ?? 50) + (colleagues["eu-germany"]?.trust ?? 50)) /
+              2;
+            const outcome = resolveDemarche(instruction, route, {
+              day: s.day,
+              block: s.block,
+              traits: s.character.traits,
+              recipientTrust: colleagues[instruction.recipient]?.trust ?? 0,
+              euTrust: colleagues["eu"]?.trust ?? 0,
+              partnerTrust,
+              facts: knownFacts,
+              ...(worker ? { worker } : {}),
+              delegationSucceeded: succeeded,
+              delayApplied: p.remainingBlocks === 1,
+            });
+            const traitOption = instruction.traitOptions?.find(
+              (option) => option.id === p.demarcheTrait,
+            );
+            const incident = outcome.incident
+              ? ` Protocol incident${worker === "maxim" ? ": Maxim reports from the wrong ministry" : ": the messenger was below the required level"}.`
+              : "";
+            record(
+              instruction.subject,
+              `${outcome.text}${incident} ${instruction.report[outcome.quality]}${traitOption ? ` ${traitOption.result}` : ""}`,
+              { confidence: outcome.confidence, goodwill: outcome.goodwill },
+            );
+            const recipient = colleagues[instruction.recipient];
+            if (recipient) recipient.trust = clamp(recipient.trust + outcome.trust);
+            if (worker && colleagues[worker])
+              colleagues[worker].fatigue = clamp(colleagues[worker].fatigue + 10);
+            if (outcome.quality === "good")
+              favours.owedToYou[instruction.recipient] =
+                (favours.owedToYou[instruction.recipient] ?? 0) + 1;
+            const leak = `demarche-${instruction.id}-leak`;
+            if (!storyFlags.includes(leak)) storyFlags.push(leak);
+            if (outcome.incident) storyFlags.push(`demarche-${instruction.id}-incident`);
+            if (traitOption)
+              storyFlags.push(`trait:${traitOption.requiresTrait}:${instruction.id}`);
+            demarcheProgress[instruction.id] = {
+              status: "delivered",
+              quality: outcome.quality,
+              route: route.kind,
+              incident: outcome.incident,
+              resolvedDay: s.day,
+              resolvedBlock: s.block,
+              ...(worker ? { worker } : {}),
+            };
+            energy = clamp(energy - 5 * playerTime(p));
+            ending = pickEnding(meters, false, visit);
+            if (ending) break;
+            continue;
+          }
           if (p.special === "supplement") {
             economy.supplementUsed = true;
             economy.supplementDue = s.turn + 1 + supplement().delay;
-          }
-          if (p.remainingBlocks && p.remainingBlocks > 1) {
-            results.push({
-              day: s.day,
-              time: s.minute,
-              text: `${p.source}: first block spent on the course; the next block is reserved.`,
-            });
-            energy = clamp(energy - 10);
-            continue;
           }
           let success = true;
           const stepDef = p.task && p.step ? findStep(p.task, p.step) : undefined;
@@ -1000,9 +1121,46 @@ export const useGame = create<GameState>()(
           if (p.flag && !storyFlags.includes(p.flag)) storyFlags.push(p.flag);
           if (p.dialogueTopic && !storyFlags.includes(`dialogue:${p.dialogueTopic}`))
             storyFlags.push(`dialogue:${p.dialogueTopic}`);
+          if (
+            p.id.startsWith("travel-") &&
+            p.location === "ministry" &&
+            s.character.traits.includes("demarche")
+          ) {
+            const pool = activeChapter().demarches.unrequested;
+            const extra = pool[(s.seed + unrequestedDemarches) % pool.length];
+            if (extra) {
+              unrequestedDemarches++;
+              storyFlags.push(`trait:demarche:${extra.id}`);
+              record("Unrequested démarche", extra.text, extra.effects);
+            }
+          }
           ending = pickEnding(meters, false, visit);
           if (ending) break;
         }
+        if (!ending)
+          for (const instruction of chapterDemarches()) {
+            const status = demarcheStatus(instruction, demarcheProgress, s.day, s.block);
+            if (
+              (status === "new" || status === "in-progress") &&
+              !demarcheProgress[instruction.id]?.deliveryPending &&
+              demarcheTick(s.day, s.block) >=
+                demarcheTick(instruction.deadlineDay, instruction.deadlineBlock)
+            ) {
+              demarcheProgress[instruction.id] = {
+                status: "missed",
+                resolvedDay: s.day,
+                resolvedBlock: s.block,
+              };
+              record(
+                instruction.subject,
+                instruction.report.failed,
+                missedEffects({ confidence: -4, goodwill: -2 }, stats.deniability),
+                "Missed instruction",
+              );
+              ending = pickEnding(meters, false, visit);
+              if (ending) break;
+            }
+          }
         // Unaddressed episodes expire at the end of their scheduled block.
         if (!ending) {
           const scheduled = s.events[s.block];
@@ -1061,6 +1219,7 @@ export const useGame = create<GameState>()(
           }
           for (const e of emails()) {
             if (ending) break;
+            if (e.demarcheId) continue;
             const cutoff = blocks()[s.block + 1]?.time ?? 24 * 60;
             if (handled[e.id] || absTime(e.day, e.time) >= absTime(s.day, cutoff)) continue;
             handled[e.id] = "ignored";
@@ -1237,7 +1396,12 @@ export const useGame = create<GameState>()(
         }
         const carry = s.pending
           .filter((p) => (p.remainingBlocks ?? 0) > 1)
-          .map((p) => ({ ...p, cashCost: 0, remainingBlocks: (p.remainingBlocks ?? 2) - 1 }));
+          .map((p) => ({
+            ...p,
+            cashCost: 0,
+            timeCost: p.demarcheId ? 0 : p.timeCost,
+            remainingBlocks: (p.remainingBlocks ?? 2) - 1,
+          }));
         set({
           hangover,
           economy,
@@ -1251,6 +1415,8 @@ export const useGame = create<GameState>()(
           meters,
           visit,
           missionSteps,
+          demarches: demarcheProgress,
+          unrequestedDemarches,
           favours,
           knownFacts,
           stepQualities,
@@ -1307,7 +1473,7 @@ export const useGame = create<GameState>()(
         setItem: () => {},
         removeItem: () => {},
       })),
-      version: 11,
+      version: 12,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = {
@@ -1360,6 +1526,8 @@ export const useGame = create<GameState>()(
           ...initialState(),
           ...old,
           missionSteps,
+          demarches: old.demarches ?? migrateDemarches(old.day ?? 1, old.block ?? 0),
+          unrequestedDemarches: old.unrequestedDemarches ?? 0,
           favours: old.favours ?? { owedToYou: {}, youOwe: {} },
           knownFacts: old.knownFacts ?? [],
           usedRoutes: old.usedRoutes ?? {},
@@ -1428,6 +1596,8 @@ export const useGame = create<GameState>()(
           ...old,
           economy,
           missionSteps,
+          demarches: old.demarches ?? migrateDemarches(old.day ?? 1, old.block ?? 0),
+          unrequestedDemarches: old.unrequestedDemarches ?? 0,
           favours: old.favours ?? { owedToYou: {}, youOwe: {} },
           knownFacts: old.knownFacts ?? [],
           usedRoutes: old.usedRoutes ?? {},
@@ -1459,12 +1629,49 @@ export const useGame = create<GameState>()(
     },
   ),
 );
-export function inboxFor(day: number, minute: number, handled: Record<string, string>) {
+export function inboxFor(
+  day: number,
+  minute: number,
+  handled: Record<string, string>,
+  progress: DemarcheProgress = {},
+) {
   const cutoff = blocks().find((b) => b.time > minute)?.time ?? 24 * 60;
-  return emails()
-    .filter((e) => absTime(e.day, e.time) < absTime(day, cutoff))
+  const block = Math.max(
+    0,
+    blocks().findIndex((item) => item.time === minute),
+  );
+  const mail = emails()
+    .filter(
+      (e) =>
+        absTime(e.day, e.time) < absTime(day, cutoff) &&
+        !(e.issuedBlock !== undefined && e.day === day && block < e.issuedBlock),
+    )
     .map((e) => ({
       ...e,
       status: handled[e.id],
     }));
+  const reports = Object.entries(progress).flatMap(([id, result]) => {
+    const instruction = demarcheAt(id);
+    if (
+      !instruction ||
+      result.resolvedDay === undefined ||
+      (result.status !== "delivered" && result.status !== "missed")
+    )
+      return [];
+    const quality = result.quality ?? "failed";
+    return [
+      {
+        id: `demarche-report-${id}`,
+        day: result.resolvedDay,
+        time: blocks()[result.resolvedBlock ?? 0]?.time ?? 480,
+        from: "Capital · Directorate of Instructions",
+        subject: `Report · ${instruction.subject}`,
+        body: instruction.report[quality],
+        options: {} as Partial<Record<Action, import("./rules").Outcome>>,
+        ignore: { text: "", effects: {} },
+        status: "report",
+      },
+    ];
+  });
+  return [...mail, ...reports].sort((a, b) => a.day - b.day || a.time - b.time);
 }
