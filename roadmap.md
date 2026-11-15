@@ -30,3 +30,4 @@
 - [x] F-02: chapter packs (Port Hesperia moved to src/game/chapters/port-hesperia-2006, rules read the active chapter).
 - [x] F-06: anecdote pipeline (intake template, writing guide, scene-writer, punch-up and reviewer prompts).
 - [x] F-04: content checker (schemas, cross-references, flags, gating, lengths; npm run content:check in CI).
+- [x] F-03: career record, three save slots, export and import of a career code.
