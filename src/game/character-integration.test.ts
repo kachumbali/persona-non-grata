@@ -4,7 +4,13 @@ import { EMAILS } from "./rules";
 import { playerCapacity } from "./economy";
 import { useGame } from "./store";
 
-const character = (traits: string[]) => ({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits });
+const character = (traits: string[]) => ({
+  title: "Mx",
+  name: "Test",
+  portrait: "diplomat-1",
+  bio: "",
+  traits,
+});
 beforeEach(() => {
   useGame.getState().start(character([]));
   useGame.setState({

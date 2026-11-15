@@ -1,4 +1,5 @@
 # Embassy view
+
 - [x] Make morning press clippings funnier while preserving story clues and gameplay consequences.
 - [x] Explain the implemented morning press review in the posting briefing; show it as an email popup and retain it in BlockBerry Mail at every location and day.
 - [x] Chapter 1 / WP1b: enforce per-person time costs, baseline duties and atomic plan changes.

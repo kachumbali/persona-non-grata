@@ -4,7 +4,9 @@ import { PlaceScene } from "./components/PlaceScene";
 import { useGame } from "./store";
 
 beforeEach(() => {
-  useGame.getState().start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
+  useGame
+    .getState()
+    .start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ location: "golf", events: [] });
 });
 afterEach(cleanup);

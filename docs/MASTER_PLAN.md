@@ -420,4 +420,3 @@ Parked until the four-chapter career works.
   - A submission form that follows the anecdote template, with an editing step before anything is used.
   - Text moved into language files so German and French versions become possible.
 - Done when: A submitted story can become a scene without a developer. One chapter is playable in a second language.
-

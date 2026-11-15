@@ -22,13 +22,17 @@ import { Portrait } from "./Portrait";
 import euRepresentation from "../data/eu-representation.json";
 
 type Win = null | "pc" | "fax" | "appointment";
-const PC_TABS = [["mail", "Courrielleur 98"], ["tasks", "Staff & diary"], ["watch", "Mission Watch"]] as const;
+const PC_TABS = [
+  ["mail", "Courrielleur 98"],
+  ["tasks", "Staff & diary"],
+  ["watch", "Mission Watch"],
+] as const;
 
 export function PlaceScene({ onLeave }: { onLeave: () => void }) {
   const g = useGame();
   const [win, setWin] = useState<Win>(null);
   const rosterRef = useRef<HTMLElement>(null);
-  const [tab, setTab] = useState<typeof PC_TABS[number][0]>("mail");
+  const [tab, setTab] = useState<(typeof PC_TABS)[number][0]>("mail");
   const place = CAMPAIGN.locations.find((l) => l.id === g.location) ?? CAMPAIGN.locations[0];
   const atEmbassy = g.location === "embassy";
   const atEu = g.location === "eu";
@@ -37,47 +41,220 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
   const spot = SPOTS[g.location] ?? { x: 50, y: 50 };
   return (
     <section className="embassy-window bg-card" aria-label={place?.name}>
-      <div className="retro-titlebar justify-between"><h2>{atEmbassy ? "Embassy · Your office" : place?.name}</h2></div>
-      <div className="place-scene">
-        {atEmbassy
-          ? <img src={office} width={1536} height={768} alt="Painted embassy office" className="block aspect-[2/1] w-full object-cover" />
-          : g.location === "bar" ? <img src={bar} width={1536} height={768} alt="The Quiet Amendment, a discreet port-city bar" className="block aspect-[2/1] w-full object-cover" />
-          : g.location === "ministry" ? <img src={ministry} width={1536} height={768} alt="The Foreign Ministry's protocol office" className="block aspect-[2/1] w-full object-cover" />
-          : g.location === "pressclub" ? <img src={pressclub} width={1536} height={768} alt="The Press Correspondents Club, with its news board and interview table" className="block aspect-[2/1] w-full object-cover" />
-          : g.location === "un" ? <img src={unHouse} width={1536} height={768} alt="UN House development coordination room" className="block aspect-[2/1] w-full object-cover" />
-          : g.location === "eu" ? <img src={eu} width={1536} height={768} alt="EU Delegation coordination meeting room" className="block aspect-[2/1] w-full object-cover" />
-          : g.location === "golf" ? <img src={golf} width={1536} height={768} alt="The Precedence Golf Club terrace" className="block aspect-[2/1] w-full object-cover" />
-          : <div role="img" aria-label={`Painted view of ${place?.name}`} className="aspect-[2/1] w-full" style={{ backgroundImage: `url(${city})`, backgroundSize: "300%", backgroundPosition: `${spot.x}% ${spot.y}%` }} />}
-        {atEmbassy && <>
-          <button type="button" className="scene-hotspot" style={{ left: "3%", top: "42%", width: "12%", height: "22%" }} onClick={() => setWin("pc")} aria-label="Use your PC"><span className="map-label"><Monitor className="inline size-4" /> PC</span></button>
-          <button type="button" className="scene-hotspot" style={{ left: "69%", top: "38%", width: "10%", height: "16%" }} onClick={() => setWin("fax")} aria-label="Read the secure fax"><span className="map-label"><Printer className="inline size-4" /> Secure fax</span></button>
-        </>}
-        {!atEmbassy && <button type="button" className="scene-hotspot scene-appointment" style={{ left: "2%", top: "5%", width: "13%", height: "12%" }} onClick={() => setWin("appointment")} aria-label={`Plan an appointment: ${place?.work}`}><span className="map-label">Appointments</span></button>}
-        {atEu && <button type="button" className="scene-hotspot" style={{ left: "2%", top: "24%", width: "16%", height: "12%" }} onClick={() => rosterRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })} aria-label="Show EU representatives"><span className="map-label">People ({people.length})</span></button>}
-        {(g.location === "embassy" || g.location === "bar" || g.location === "ministry" || g.location === "pressclub" || g.location === "un" || g.location === "eu") && <LocationLead />}
-        <button type="button" className="scene-hotspot scene-town" style={{ right: "1%", top: "8%", width: "8%", height: "60%" }} onClick={onLeave} aria-label="Leave to the town map"><span className="map-label"><DoorOpen className="inline size-4" /> Town</span></button>
-        {!atEu && <div className="scene-people">
-          {people.map((c) => (
-            <button key={c.id} type="button" className="scene-person" data-active={g.selectedNpc === c.id} onClick={() => g.selectNpc(c.id)} aria-label={`Talk to ${c.name}`}>
-              <Portrait portrait={c.portrait} size={56} /><span className="map-label">{c.name.split(" ")[0]}</span>
-            </button>
-          ))}
-        </div>}
+      <div className="retro-titlebar justify-between">
+        <h2>{atEmbassy ? "Embassy · Your office" : place?.name}</h2>
       </div>
-      {atEu && <section ref={rosterRef} className="border-b border-border p-3" aria-label="EU representatives present">
-        <h3 className="font-bold">At the EU Delegation</h3>
-        <p className="mb-2 text-xs text-muted-foreground">Not every EU mission is resident here. Representation of an absent mission applies only where explicitly stated.</p>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{people.map((person) => <button key={person.id} type="button" className="flex items-center gap-2 border border-border bg-muted p-2 text-left hover:bg-accent focus-visible:outline-2 focus-visible:outline-accent" aria-pressed={g.selectedNpc === person.id} onClick={() => g.selectNpc(person.id)}>
-          <Portrait portrait={person.portrait} size={40} /><span><strong className="block text-sm">{person.name}</strong><span className="block text-xs">{representation[person.id] ?? person.role}</span></span>
-        </button>)}</div>
-      </section>}
-      <p className="px-3 py-2 text-sm">{place?.description} {atEmbassy ? "Click your PC, the fax, or a colleague." : "Click someone to talk, or follow a lead if one is available. Your BlockBerry keeps mail within reach (bottom right)."}</p>
+      <div className="place-scene">
+        {atEmbassy ? (
+          <img
+            src={office}
+            width={1536}
+            height={768}
+            alt="Painted embassy office"
+            className="block aspect-[2/1] w-full object-cover"
+          />
+        ) : g.location === "bar" ? (
+          <img
+            src={bar}
+            width={1536}
+            height={768}
+            alt="The Quiet Amendment, a discreet port-city bar"
+            className="block aspect-[2/1] w-full object-cover"
+          />
+        ) : g.location === "ministry" ? (
+          <img
+            src={ministry}
+            width={1536}
+            height={768}
+            alt="The Foreign Ministry's protocol office"
+            className="block aspect-[2/1] w-full object-cover"
+          />
+        ) : g.location === "pressclub" ? (
+          <img
+            src={pressclub}
+            width={1536}
+            height={768}
+            alt="The Press Correspondents Club, with its news board and interview table"
+            className="block aspect-[2/1] w-full object-cover"
+          />
+        ) : g.location === "un" ? (
+          <img
+            src={unHouse}
+            width={1536}
+            height={768}
+            alt="UN House development coordination room"
+            className="block aspect-[2/1] w-full object-cover"
+          />
+        ) : g.location === "eu" ? (
+          <img
+            src={eu}
+            width={1536}
+            height={768}
+            alt="EU Delegation coordination meeting room"
+            className="block aspect-[2/1] w-full object-cover"
+          />
+        ) : g.location === "golf" ? (
+          <img
+            src={golf}
+            width={1536}
+            height={768}
+            alt="The Precedence Golf Club terrace"
+            className="block aspect-[2/1] w-full object-cover"
+          />
+        ) : (
+          <div
+            role="img"
+            aria-label={`Painted view of ${place?.name}`}
+            className="aspect-[2/1] w-full"
+            style={{
+              backgroundImage: `url(${city})`,
+              backgroundSize: "300%",
+              backgroundPosition: `${spot.x}% ${spot.y}%`,
+            }}
+          />
+        )}
+        {atEmbassy && (
+          <>
+            <button
+              type="button"
+              className="scene-hotspot"
+              style={{ left: "3%", top: "42%", width: "12%", height: "22%" }}
+              onClick={() => setWin("pc")}
+              aria-label="Use your PC"
+            >
+              <span className="map-label">
+                <Monitor className="inline size-4" /> PC
+              </span>
+            </button>
+            <button
+              type="button"
+              className="scene-hotspot"
+              style={{ left: "69%", top: "38%", width: "10%", height: "16%" }}
+              onClick={() => setWin("fax")}
+              aria-label="Read the secure fax"
+            >
+              <span className="map-label">
+                <Printer className="inline size-4" /> Secure fax
+              </span>
+            </button>
+          </>
+        )}
+        {!atEmbassy && (
+          <button
+            type="button"
+            className="scene-hotspot scene-appointment"
+            style={{ left: "2%", top: "5%", width: "13%", height: "12%" }}
+            onClick={() => setWin("appointment")}
+            aria-label={`Plan an appointment: ${place?.work}`}
+          >
+            <span className="map-label">Appointments</span>
+          </button>
+        )}
+        {atEu && (
+          <button
+            type="button"
+            className="scene-hotspot"
+            style={{ left: "2%", top: "24%", width: "16%", height: "12%" }}
+            onClick={() =>
+              rosterRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+            }
+            aria-label="Show EU representatives"
+          >
+            <span className="map-label">People ({people.length})</span>
+          </button>
+        )}
+        {(g.location === "embassy" ||
+          g.location === "bar" ||
+          g.location === "ministry" ||
+          g.location === "pressclub" ||
+          g.location === "un" ||
+          g.location === "eu") && <LocationLead />}
+        <button
+          type="button"
+          className="scene-hotspot scene-town"
+          style={{ right: "1%", top: "8%", width: "8%", height: "60%" }}
+          onClick={onLeave}
+          aria-label="Leave to the town map"
+        >
+          <span className="map-label">
+            <DoorOpen className="inline size-4" /> Town
+          </span>
+        </button>
+        {!atEu && (
+          <div className="scene-people">
+            {people.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                className="scene-person"
+                data-active={g.selectedNpc === c.id}
+                onClick={() => g.selectNpc(c.id)}
+                aria-label={`Talk to ${c.name}`}
+              >
+                <Portrait portrait={c.portrait} size={56} />
+                <span className="map-label">{c.name.split(" ")[0]}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      {atEu && (
+        <section
+          ref={rosterRef}
+          className="border-b border-border p-3"
+          aria-label="EU representatives present"
+        >
+          <h3 className="font-bold">At the EU Delegation</h3>
+          <p className="mb-2 text-xs text-muted-foreground">
+            Not every EU mission is resident here. Representation of an absent mission applies only
+            where explicitly stated.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {people.map((person) => (
+              <button
+                key={person.id}
+                type="button"
+                className="flex items-center gap-2 border border-border bg-muted p-2 text-left hover:bg-accent focus-visible:outline-2 focus-visible:outline-accent"
+                aria-pressed={g.selectedNpc === person.id}
+                onClick={() => g.selectNpc(person.id)}
+              >
+                <Portrait portrait={person.portrait} size={40} />
+                <span>
+                  <strong className="block text-sm">{person.name}</strong>
+                  <span className="block text-xs">{representation[person.id] ?? person.role}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+      <p className="px-3 py-2 text-sm">
+        {place?.description}{" "}
+        {atEmbassy
+          ? "Click your PC, the fax, or a colleague."
+          : "Click someone to talk, or follow a lead if one is available. Your BlockBerry keeps mail within reach (bottom right)."}
+      </p>
       <Conversation />
 
       <Dialog open={win === "pc"} onOpenChange={(o) => !o && setWin(null)}>
         <DialogContent className="xp-window text-card-foreground max-h-[92vh] max-w-6xl overflow-y-auto p-0">
-          <DialogTitle className="xp-titlebar">Bellaluxe Diplomatic Workstation — Fenêtre 2000</DialogTitle>
-          <div className="flex gap-1 border-b border-border bg-muted px-2 pt-2">{PC_TABS.map(([id, label]) => <Button key={id} size="sm" variant={tab === id ? "secondary" : "ghost"} aria-pressed={tab === id} className="retro-button" onClick={() => setTab(id)}>{label}</Button>)}</div>
+          <DialogTitle className="xp-titlebar">
+            Bellaluxe Diplomatic Workstation — Fenêtre 2000
+          </DialogTitle>
+          <div className="flex gap-1 border-b border-border bg-muted px-2 pt-2">
+            {PC_TABS.map(([id, label]) => (
+              <Button
+                key={id}
+                size="sm"
+                variant={tab === id ? "secondary" : "ghost"}
+                aria-pressed={tab === id}
+                className="retro-button"
+                onClick={() => setTab(id)}
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
           {tab === "mail" && <Mailbox channel="mail" />}
           {tab === "tasks" && <PlanningDesk />}
           {tab === "watch" && <GoodwillDashboard />}

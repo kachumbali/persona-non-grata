@@ -4,13 +4,24 @@ import { Mailbox } from "./components/Mailbox";
 import { useGame } from "./store";
 
 beforeEach(() => {
-  useGame.getState().start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
+  useGame
+    .getState()
+    .start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
 });
 afterEach(cleanup);
 
 describe("mail scheduling", () => {
   it("shows why a reply cannot fit without losing the existing plan", () => {
-    expect(useGame.getState().queue({ id: "busy", source: "Busy", text: "Busy", effects: {}, kind: "work", timeCost: 4 })).toBe(true);
+    expect(
+      useGame.getState().queue({
+        id: "busy",
+        source: "Busy",
+        text: "Busy",
+        effects: {},
+        kind: "work",
+        timeCost: 4,
+      }),
+    ).toBe(true);
     render(<Mailbox channel="fax" />);
     fireEvent.click(screen.getByRole("button", { name: /URGENT: Political situation/i }));
     fireEvent.click(screen.getByRole("button", { name: /send the report yourself/i }));

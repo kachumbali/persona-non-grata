@@ -4,7 +4,9 @@ import { Mailbox, isFax } from "./components/Mailbox";
 import { inboxFor, useGame } from "./store";
 
 beforeEach(() => {
-  useGame.getState().start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
+  useGame
+    .getState()
+    .start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ location: "bar", minute: 720, block: 1, events: [] });
 });
 afterEach(cleanup);
@@ -12,10 +14,13 @@ afterEach(cleanup);
 describe("phone mail navigation", () => {
   it("returns to the inbox and reopens a message without losing its queued reply", () => {
     const state = useGame.getState();
-    const email = inboxFor(state.day, state.minute, state.handled).find((e) => !isFax(e.from) && !e.status);
+    const email = inboxFor(state.day, state.minute, state.handled).find(
+      (e) => !isFax(e.from) && !e.status,
+    );
     if (!email) throw new Error("Expected an available phone message");
     render(<Mailbox channel="mail" singlePane />);
-    const openMessage = () => fireEvent.click(screen.getByRole("button", { name: `${email.subject} ${email.from}` }));
+    const openMessage = () =>
+      fireEvent.click(screen.getByRole("button", { name: `${email.subject} ${email.from}` }));
     openMessage();
     const article = screen.getByRole("heading", { name: email.subject }).closest("article");
     const reply = article?.querySelector("button");

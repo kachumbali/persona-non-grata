@@ -15,7 +15,13 @@ import { DiplomaticRecord } from "./DiplomaticRecord";
 import { StoryRecord } from "./StoryRecord";
 import { PressReview } from "./PressReview";
 import { PostingBriefing } from "./PostingBriefing";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const g = useGame();

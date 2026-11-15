@@ -29,16 +29,16 @@ The supplied profile proposes **Elena Vance**: an effective synthesiser and brid
 
 These are individual starting points; their goals and competence matter as much as the comic traits. Names are proposed fictional people, not real officeholders.
 
-| Candidate | Country and useful role | Tension or surprise |
-|---|---|---|
-| Klaus Weber | Germany; organised port-logistics and safety negotiator | References annexes incessantly; privately writes romance fiction. |
-| Henri de Valois | France; a skilled advocate for language and cultural visibility | Fussy about presentation; quietly knows how to fix the printers. |
-| Lars Lindqvist | Sweden; a consensus builder on environmental issues | Advocates transparency and breaks, but enjoys competitive poker. |
-| Ioannis Papadopoulos | Greece; experienced in shipping and customs | Uses historical analogies, yet has an unexpected technology hobby. |
-| Sofia da Costa | Portugal; reception host with maritime insurance contacts | Has an intense artistic streak and a practical negotiating agenda. |
-| Jean-Luc Delacroix | Belgium; hospitable host with useful information on budget alignments | Can be charming and politically calculating in the same conversation. |
-| Jari Lindroos | Finland; useful contact on cold-chain logistics | Reserved at first; the character needs more than a single sauna joke. |
-| Franziska von Habsburg | Austria; a protocol-conscious contact on transport | Can be demanding and still reward a colleague's real competence. |
+| Candidate              | Country and useful role                                               | Tension or surprise                                                   |
+| ---------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Klaus Weber            | Germany; organised port-logistics and safety negotiator               | References annexes incessantly; privately writes romance fiction.     |
+| Henri de Valois        | France; a skilled advocate for language and cultural visibility       | Fussy about presentation; quietly knows how to fix the printers.      |
+| Lars Lindqvist         | Sweden; a consensus builder on environmental issues                   | Advocates transparency and breaks, but enjoys competitive poker.      |
+| Ioannis Papadopoulos   | Greece; experienced in shipping and customs                           | Uses historical analogies, yet has an unexpected technology hobby.    |
+| Sofia da Costa         | Portugal; reception host with maritime insurance contacts             | Has an intense artistic streak and a practical negotiating agenda.    |
+| Jean-Luc Delacroix     | Belgium; hospitable host with useful information on budget alignments | Can be charming and politically calculating in the same conversation. |
+| Jari Lindroos          | Finland; useful contact on cold-chain logistics                       | Reserved at first; the character needs more than a single sauna joke. |
+| Franziska von Habsburg | Austria; a protocol-conscious contact on transport                    | Can be demanding and still reward a colleague's real competence.      |
 
 **Additional EU candidates:** Tanya Farrugia of Malta and Ewa Zielinska of Poland, as well as representatives of Estonia, Latvia and Slovenia, fit the around-2006 setting: all joined the EU in 2004. Decide which are resident, represented by others or absent when selecting the local cast.
 

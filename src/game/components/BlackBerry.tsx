@@ -152,25 +152,29 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
               </div>
             ) : tab === "calendar" ? (
               <DiplomaticCalendar />
+            ) : briefingOpen ? (
+              <div className="space-y-3">
+                <Button size="sm" variant="outline" onClick={() => setBriefingOpen(false)}>
+                  <ArrowLeft className="size-4" /> Back to inbox
+                </Button>
+                <PostingBriefing />
+              </div>
             ) : (
-              briefingOpen ? (
-                <div className="space-y-3">
-                  <Button size="sm" variant="outline" onClick={() => setBriefingOpen(false)}>
-                    <ArrowLeft className="size-4" /> Back to inbox
-                  </Button>
-                  <PostingBriefing />
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <Button variant="outline" className="h-auto w-full justify-start whitespace-normal text-left" onClick={() => setBriefingOpen(true)}>
-                    <Mail className="size-4 shrink-0" />
-                    <span>Posting briefing · Welcome to your posting</span>
-                  </Button>
-                  {away ? <Mailbox channel="mail" singlePane /> : (
-                    <p className="text-sm">You're in the office. Use your PC for other mail.</p>
-                  )}
-                </div>
-              )
+              <div className="space-y-3">
+                <Button
+                  variant="outline"
+                  className="h-auto w-full justify-start whitespace-normal text-left"
+                  onClick={() => setBriefingOpen(true)}
+                >
+                  <Mail className="size-4 shrink-0" />
+                  <span>Posting briefing · Welcome to your posting</span>
+                </Button>
+                {away ? (
+                  <Mailbox channel="mail" singlePane />
+                ) : (
+                  <p className="text-sm">You're in the office. Use your PC for other mail.</p>
+                )}
+              </div>
             )}
           </div>
         </section>

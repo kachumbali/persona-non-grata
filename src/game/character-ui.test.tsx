@@ -5,7 +5,9 @@ import { Conversation } from "./components/Conversation";
 import { useGame } from "./store";
 
 beforeEach(() =>
-  useGame.getState().start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] }),
+  useGame
+    .getState()
+    .start({ title: "Mx", name: "Test", portrait: "diplomat-1", bio: "", traits: [] }),
 );
 afterEach(cleanup);
 

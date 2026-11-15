@@ -1,11 +1,28 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { availableFunds, baselineTime, initialEconomy, participantTime, playerCapacity, validatePlan } from "./economy";
+import {
+  availableFunds,
+  baselineTime,
+  initialEconomy,
+  participantTime,
+  playerCapacity,
+  validatePlan,
+} from "./economy";
 import { EMAILS, type PendingDecision } from "./rules";
 import { useGame } from "./store";
 
-const action = (id: string, overrides: Partial<PendingDecision> = {}): PendingDecision => ({ id, kind: "work", source: id, text: id, effects: {}, timeCost: 1, ...overrides });
+const action = (id: string, overrides: Partial<PendingDecision> = {}): PendingDecision => ({
+  id,
+  kind: "work",
+  source: id,
+  text: id,
+  effects: {},
+  timeCost: 1,
+  ...overrides,
+});
 beforeEach(() => {
-  useGame.getState().start({ title: "Dr", name: "Economist", portrait: "diplomat-1", bio: "", traits: [] });
+  useGame
+    .getState()
+    .start({ title: "Dr", name: "Economist", portrait: "diplomat-1", bio: "", traits: [] });
   useGame.setState({ events: [], handled: Object.fromEntries(EMAILS.map((e) => [e.id, "reply"])) });
 });
 describe("Chapter 1 time and money", () => {
@@ -43,7 +60,9 @@ describe("Chapter 1 time and money", () => {
   });
   it("applies a drink and strenuous activity to the next block", () => {
     useGame.setState({ energy: 38 });
-    expect(useGame.getState().queue(action("drinks", { kind: "social", drinks: true, energy: -10 }))).toBe(true);
+    expect(
+      useGame.getState().queue(action("drinks", { kind: "social", drinks: true, energy: -10 })),
+    ).toBe(true);
     useGame.getState().advance();
     const g = useGame.getState();
     expect(g.alcohol).toBe(2);
@@ -73,10 +92,21 @@ describe("Chapter 1 time and money", () => {
     const first = action("first", { kind: "dialogue", worker: "pavel" });
     const second = action("second", { kind: "dialogue", worker: "pavel", overload: true });
     expect(validatePlan([first, second], 0, initialEconomy())).toBeNull();
-    expect(validatePlan([first, { ...second, overload: false }], 0, initialEconomy())).toContain("duties conflict");
+    expect(validatePlan([first, { ...second, overload: false }], 0, initialEconomy())).toContain(
+      "duties conflict",
+    );
   });
   it("caps each colleague at 2 DP even with displacement", () => {
-    expect(validatePlan([action("a", { worker: "pavel", timeCost: 0, overload: true }), action("b", { kind: "dialogue", worker: "pavel", overload: true })], 0, initialEconomy())).toContain("only 2 DP");
+    expect(
+      validatePlan(
+        [
+          action("a", { worker: "pavel", timeCost: 0, overload: true }),
+          action("b", { kind: "dialogue", worker: "pavel", overload: true }),
+        ],
+        0,
+        initialEconomy(),
+      ),
+    ).toContain("only 2 DP");
   });
   it("keeps an already completed journey when a replacement activity is proposed", () => {
     expect(useGame.getState().move("ministry")).toBe(true);
@@ -88,7 +118,9 @@ describe("Chapter 1 time and money", () => {
   });
   it("retains the old plan when an atomic replacement is unaffordable", () => {
     useGame.getState().queue(action("original"));
-    expect(useGame.getState().queue(action("replacement", { cashCost: 4501, timeCost: 2 }), true)).toBe(false);
+    expect(
+      useGame.getState().queue(action("replacement", { cashCost: 4501, timeCost: 2 }), true),
+    ).toBe(false);
     expect(useGame.getState().pending.map((p) => p.id)).toEqual(["original"]);
   });
   it("charges reserved spending once on resolution and frees it on removal", () => {
@@ -119,7 +151,9 @@ describe("Chapter 1 time and money", () => {
     expect(useGame.getState().goodwillHistory.at(-1)?.after.confidence).toBe(50);
   });
   it("reserves both golf blocks and pays only once", () => {
-    useGame.getState().queue(action("golf", { timeCost: 2, remainingBlocks: 2, cashCost: 400, score: 3 }));
+    useGame
+      .getState()
+      .queue(action("golf", { timeCost: 2, remainingBlocks: 2, cashCost: 400, score: 3 }));
     useGame.getState().advance();
     expect(useGame.getState().score).toBe(0);
     expect(useGame.getState().queue(action("extra"))).toBe(true);
@@ -138,7 +172,10 @@ describe("Chapter 1 time and money", () => {
   it("migrates legacy savings into currency while retaining a legal pending plan", async () => {
     const migrate = useGame.persist.getOptions().migrate;
     if (!migrate) throw new Error("Save migration missing");
-    const migrated = await migrate({ day: 3, block: 1, meters: { budget: 60 }, pending: [action("rest")] }, 2);
+    const migrated = await migrate(
+      { day: 3, block: 1, meters: { budget: 60 }, pending: [action("rest")] },
+      2,
+    );
     expect(migrated.economy.funds).toBe(10000);
     expect(migrated.block).toBe(1);
     expect(migrated.pending[0]?.id).toBe("rest");
