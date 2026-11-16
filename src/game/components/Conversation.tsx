@@ -63,7 +63,7 @@ export function Conversation() {
       kind: "dialogue",
       timeCost: 1,
       cashCost: cash || undefined,
-      source: `Conversation with ${npc.name}${topic ? ` · ${topic.id}` : ""}`,
+      source: `Conversation with ${npc.name}`,
       text: choice.result ?? "Conversation completed.",
       effects: meters,
       worker: npc.id,
