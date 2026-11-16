@@ -65,6 +65,9 @@ export interface RunResult {
   day: number;
   /** HQ goodwill (confidence) when Day 1 ended, or when the posting ended on Day 1. */
   hqEndDay1: number;
+  /** Mails marked ignored over the whole run, and how many of them on Day 1. */
+  ignoredMail: number;
+  ignoredMailDay1: number;
   turns: number;
   meters: Meters;
   lowestMeters: Meters;
@@ -201,6 +204,9 @@ function play(options: SimOptions, chapterId: string): RunResult {
   let routeLockouts = 0;
   let languageDay10 = 0;
   let hqEndDay1: number | null = null;
+  const countIgnored = (handled: Record<string, string>) =>
+    Object.values(handled).filter((v) => v === "ignored").length;
+  let ignoredMailDay1: number | null = null;
   let lowestFunds = useGame.getState().economy.funds;
   let lowestAvailable = lowestFunds - reserved(useGame.getState().economy);
   const lowestMeters = zeroMeters();
@@ -223,7 +229,10 @@ function play(options: SimOptions, chapterId: string): RunResult {
     const dayBefore = s.day;
     useGame.getState().advance();
     s = useGame.getState();
-    if (hqEndDay1 === null && (s.day > 1 || s.ending)) hqEndDay1 = s.meters.confidence;
+    if (hqEndDay1 === null && (s.day > 1 || s.ending)) {
+      hqEndDay1 = s.meters.confidence;
+      ignoredMailDay1 = countIgnored(s.handled);
+    }
     if (dayBefore <= 10) languageDay10 = s.character?.languages?.["ombrazian"] ?? 0;
     if (visitReady(s.visit)) missionCompleteDay = missionCompleteDay ?? dayBefore;
     else missionCompleteDay = null;
@@ -348,6 +357,8 @@ function play(options: SimOptions, chapterId: string): RunResult {
     endedEarly: blocksPlayed < days * blocks().length,
     day: s.day,
     hqEndDay1: hqEndDay1 ?? s.meters.confidence,
+    ignoredMail: countIgnored(s.handled),
+    ignoredMailDay1: ignoredMailDay1 ?? countIgnored(s.handled),
     turns: s.turn,
     meters: { ...s.meters },
     lowestMeters,

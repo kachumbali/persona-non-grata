@@ -209,6 +209,9 @@ export interface Report {
   stepsDone: { byBot: Record<string, Stat>; overall: Stat };
   stepsTotal: number;
   missionMoneyFailures: string[];
+  /** Mails marked ignored per run, in all and on Day 1. */
+  ignoredMail: { byBot: Record<string, Stat>; overall: Stat };
+  ignoredMailDay1: { byBot: Record<string, Stat>; overall: Stat };
   /** Days on which no block had anything waiting, per run. */
   emptyDays: { byBot: Record<string, Stat>; overall: Stat };
   emptyPlans: { byBot: Record<string, Stat>; overall: Stat };
@@ -457,6 +460,8 @@ export function aggregate(results: RunResult[]): Report {
     missionMoneyFailures: results
       .filter((r) => r.missionConfirmed.length < r.missionTotal && r.missionMoneyRefusals > 0)
       .map((r) => runLabel(r)),
+    ignoredMail: statsBy((r) => r.ignoredMail),
+    ignoredMailDay1: statsBy((r) => r.ignoredMailDay1),
     emptyDays: statsBy((r) => r.idleByDay.filter((n) => n >= 4).length),
     emptyPlans: statsBy((r) => r.emptyPlans),
     conflictDays: statsBy((r) => r.conflictDays),
@@ -707,6 +712,10 @@ export function formatReport(r: Report): string {
     "Blocks with nothing to decide per run (no mail, episode, invitation, lead or mission step waiting)",
   );
   out.push(statTable("bot", r.idleBlocks.byBot, r.idleBlocks.overall));
+  h("Mails marked ignored per run");
+  out.push(statTable("bot", r.ignoredMail.byBot, r.ignoredMail.overall));
+  out.push("\nOf those, marked ignored on Day 1:");
+  out.push(statTable("bot", r.ignoredMailDay1.byBot, r.ignoredMailDay1.overall));
   out.push("\nDays on which nothing at all was waiting (all four blocks idle), per run:");
   out.push(statTable("bot", r.emptyDays.byBot, r.emptyDays.overall));
   out.push("\nIdle blocks (of 4) by day, careful / socialiser / press-reader runs:");
