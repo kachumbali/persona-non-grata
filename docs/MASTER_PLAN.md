@@ -144,6 +144,18 @@ Finish every system inside the one chapter that exists, then test it with five p
   - A 'newcomer' bot in the simulation that plays Day 1 like a first-time player.
 - Done when: A first-time player who follows the checklist is not replaced before Day 10 in at least 90% of simulated runs, and can always see what is waiting and where.
 
+### U-03 Briefings: the first one, and one every morning
+
+- Type: Screens · Size: M · Depends on: U-01, U-02
+- Goal: The game has many systems and players lose track of where they stand. A personal first briefing and a daily morning report fix that.
+- Work:
+  - The first briefing in three short pages, personal to the character and their traits.
+  - A morning report from Day 2, written by the head of chancery: where we stand, Capital and the host, the mission, yesterday, today, people, you, money and one recommendation.
+  - Her tone follows her relationship with the player. The intern writes it when she is unavailable.
+  - The same recap as a 'Previously' card when a player returns to a save.
+  - An arrival-day version on the last day.
+- Done when: A player returning after a day away can say what happened, what matters today and what to do first, from one screen.
+
 ### P-01 Portrait cleanup
 
 - Type: Art · Size: S · Depends on: none

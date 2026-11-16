@@ -11,7 +11,7 @@ export function CommitmentLine({ decision }: { decision: PendingDecision }) {
     <span>
       <strong>{d.what}</strong>
       {d.choice && ` · ${d.choice}`}
-      {` · ${d.where ?? "Location not recorded"}`} · {d.who} · {d.dp} DP · {money(d.cash)}
+      {d.where && ` · ${d.where}`} · {d.who} · {d.dp} DP · {money(d.cash)}
     </span>
   );
 }

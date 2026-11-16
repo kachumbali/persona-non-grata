@@ -178,6 +178,10 @@
   h3 {
     font-family: var(--font-serif);
   }
+  /* The pixel display face draws its fi and fl ligatures as other letters. */
+  html {
+    font-variant-ligatures: none;
+  }
 }
 @utility paper {
   background-color: var(--card);
