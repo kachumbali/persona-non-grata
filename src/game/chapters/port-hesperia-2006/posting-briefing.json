@@ -4,24 +4,40 @@
   "intro": "The Ambassador is away. You are Deputy Head of Mission, now Acting Head of Mission in Port Hesperia. Capital assures you this is an opportunity. Capital is not here.",
   "sections": [
     {
-      "title": "Your desk, your problem",
-      "text": "Capital’s instructions arrive by secure fax at the embassy. Ordinary correspondence arrives on your office PC. Your BlockBerry carries mail away from the office, your diary and round reports; this posting briefing remains in its Mail inbox wherever you are."
+      "title": "Where things arrive",
+      "text": "Capital writes by secure fax, at the embassy only; ordinary mail goes to your office PC; the BlockBerry carries your diary and round reports. Whatever is still unanswered when the block ends is recorded as ignored, and Capital keeps a note."
     },
     {
       "title": "Time and embassy funds",
-      "text": "Your base allowance is 4 Diplo-Points (DP) per block. Stamina, energy, composure and drinking can change it. Travel and mail decisions cost 1 DP each. Colleagues have routine duties of their own, and hospitality comes out of embassy funds. End the block to resolve your plans; unanswered instructions may be missed."
+      "text": "You have 4 Diplo-Points (DP) per block, tiredness and drink permitted to reduce them; hospitality comes out of embassy funds. End the block to resolve your plans."
+    },
+    {
+      "title": "The mission",
+      "text": "The ministerial visit is four arrangements, each a chain of steps shown in the “Ministerial visit” panel and in Mission Watch on the PC. Some steps open only later, and Capital and the host will change some of them on the way."
+    },
+    {
+      "title": "People",
+      "text": "Colleagues and contacts trade favours; the “Who is who” notebook records who said what; gossip is welcome in the building, and may be false."
+    },
+    {
+      "title": "Démarches",
+      "text": "Capital’s démarches wait on the board on the PC, and the choice of messenger matters more than the message."
+    },
+    {
+      "title": "Languages",
+      "text": "Ombrazian is learned by lessons and by attempts, and the Ministry will examine you on Day 13."
+    },
+    {
+      "title": "Your personnel file",
+      "text": "It changes with what you do, and it is kept whether or not you read it."
     },
     {
       "title": "Morning press review",
-      "text": "Every morning Lucien Falk compiles local press clippings: developing stories, embassy coverage and consequences of earlier decisions. If he is tired, worked the previous evening, or the rota intervenes, Maxim the intern takes over. His translations occasionally acquire a horoscope. The review appears after this briefing and can be reopened from BlockBerry Status during the morning."
-    },
-    {
-      "title": "What to do with the newspapers",
-      "text": "Reading and clipping cost 0 DP. Done reading marks the review read; Skip leaves it unread. You may forward one clipping to Capital per day: useful reporting earns HQ goodwill; forwarding the horoscope does not. When Lucien is available at the embassy, asking him for background costs 1 DP. Later coverage can reveal a developing fuel-quay lead. The review is optional, but newspapers have a habit of knowing things before we do."
+      "text": "Every morning Lucien Falk compiles the local press, or Maxim the intern does, with a horoscope in the translations. Reading costs 0 DP, you may forward one clipping to Capital a day, and the newspapers tend to know things before we do."
     },
     {
       "title": "Keep the posting",
-      "text": "Complete all four ministerial visit arrangements before arrival. Each takes several steps, and Capital and the host will change some of them on the way. Exhaust HQ goodwill and you are replaced; exhaust host-country goodwill and you are declared persona non grata. A cancelled visit is not considered an innovative scheduling solution."
+      "text": "Complete all four ministerial visit arrangements before arrival. Exhaust HQ goodwill and you are replaced; exhaust host-country goodwill and you are declared persona non grata. A cancelled visit is not considered an innovative scheduling solution."
     }
   ]
 }
