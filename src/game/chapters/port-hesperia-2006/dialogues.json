@@ -32,9 +32,9 @@
               "counts": ["credit"]
             },
             {
-              "label": "Offer to test the reception drinks",
+              "label": "Review the draft over a long lunch",
               "requiresTrait": "liver",
-              "result": "You test the drinks for quality. Your notes become unusually affectionate.",
+              "result": "The review is rigorous until page four. Pages five to eleven acquire marginal notes of great warmth.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -43,9 +43,9 @@
               "counts": ["formal"]
             },
             {
-              "label": "Describe the file as a mystery",
+              "label": "Suggest the speech needs a stronger plot",
               "requiresTrait": "novelist",
-              "result": "The missing detail is found, along with an unnecessary suspect.",
+              "result": "The speech acquires a twist on page seven. The Minister's office asks who dies.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -54,9 +54,9 @@
               "counts": ["formal"]
             },
             {
-              "label": "Promise to attend the follow-up as well",
+              "label": "Volunteer to attend the Minister's rehearsal",
               "requiresTrait": "sideevents",
-              "result": "Your enthusiasm helps, though the office now expects another appearance.",
+              "result": "Your enthusiasm helps, though the office now expects you at the next rehearsal as well.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -65,9 +65,9 @@
               "counts": ["formal"]
             },
             {
-              "label": "Remain motionless through the briefing",
+              "label": "Hear all eleven pages without moving",
               "requiresTrait": "eyesopen",
-              "result": "The speaker feels heard. Your colleague quietly checks for a pulse.",
+              "result": "Anselm feels heard. He quietly checks for a pulse.",
               "trust": 1,
               "effects": {
                 "confidence": 1,
@@ -76,27 +76,27 @@
               "counts": ["formal"]
             },
             {
-              "label": "Mention a word you have carefully looked up.",
+              "label": "Praise the draft in your favourite Ombrazian word",
               "requiresTrait": "false-friend",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "Anselm accepts the compliment. The word, it later emerges, means 'draft' only in the legal sense.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Refer to the ministry by its former title.",
+              "label": "Congratulate him in your textbook's formal register",
               "requiresTrait": "old-textbook",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "Anselm is moved. The phrase was last used by a ministry that no longer exists.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Listen carefully before replying.",
+              "label": "Quote his best sentence back to him",
               "requiresTrait": "ear-accents",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "Anselm is flattered, then wary. The quotation was accurate; so, regrettably, was the impression.",
               "effects": {
                 "sanity": -1
               },
@@ -170,9 +170,9 @@
               "counts": ["formal"]
             },
             {
-              "label": "Translate the problem into a matrix",
+              "label": "Draw a risk-and-reward matrix of the yacht",
               "requiresTrait": "brussels",
-              "result": "The matrix clarifies the deadline while obscuring the original sentence.",
+              "result": "The matrix clarifies the exposure while obscuring what the man 'does imports' of.",
               "trust": -1,
               "effects": {
                 "confidence": 1,
@@ -181,9 +181,9 @@
               "counts": ["formal"]
             },
             {
-              "label": "Deliver a written protest about the delay",
+              "label": "Send the yacht owner a note verbale",
               "requiresTrait": "demarche",
-              "result": "The response arrives quickly, with an objection to your tone.",
+              "result": "The note is delivered to the quay. The reply arrives quickly, with an objection to your tone.",
               "trust": -1,
               "effects": {
                 "confidence": 1,
@@ -229,9 +229,9 @@
               "counts": ["formal"]
             },
             {
-              "label": "Request a horizontal synergy",
+              "label": "Propose a cross-cutting stationery working group",
               "requiresTrait": "brussels",
-              "result": "A useful contact appears. Nobody agrees what you asked for.",
+              "result": "A useful contact appears. Nobody agrees what the group would staple.",
               "trust": 1,
               "effects": {
                 "confidence": 1,
@@ -239,9 +239,9 @@
               }
             },
             {
-              "label": "Request an urgent formal appointment",
+              "label": "Lodge a formal complaint about the missing stapler",
               "requiresTrait": "demarche",
-              "result": "The matter is heard; the appointment displaces a less ceremonial task.",
+              "result": "The matter is heard; the complaint displaces a less ceremonial task.",
               "trust": 1,
               "effects": {
                 "confidence": 1,
@@ -249,9 +249,9 @@
               }
             },
             {
-              "label": "Mention your acquaintance with the Commissioner",
+              "label": "Say the Commissioner once lost a stapler too",
               "requiresTrait": "namedrop",
-              "result": "The name opens the conversation. It also appears in Ruth’s notebook.",
+              "result": "The anecdote opens the conversation. It also appears in Ruth’s notebook.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -259,27 +259,27 @@
               }
             },
             {
-              "label": "Offer your favourite term for the agenda.",
+              "label": "Name the missing item in your favourite Ombrazian word",
               "requiresTrait": "false-friend",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "Pavel is moved. The word, it turns out, means a different office supply, which he now also lacks.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Use the formal address from your old textbook.",
+              "label": "Report the theft in your textbook's formal register",
               "requiresTrait": "old-textbook",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "Pavel notes that the register is correct and the ministry it addressed was abolished. The stapler remains missing.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Repeat the phrase you just heard.",
+              "label": "Ask Pavel to teach you the word for stapler",
               "requiresTrait": "ear-accents",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "Pavel teaches you the word. You can now report its absence in two languages.",
               "effects": {
                 "sanity": -1
               },
@@ -346,9 +346,9 @@
               }
             },
             {
-              "label": "Volunteer for the difficult toast",
+              "label": "Toast ambassador three's lounge",
               "requiresTrait": "liver",
-              "result": "Your toast wins the table; the minutes are less coherent.",
+              "result": "Your toast wins the table; the minutes record the lounge as sorted by Tuesday.",
               "trust": -1,
               "effects": {
                 "morale": 1,
@@ -356,9 +356,9 @@
               }
             },
             {
-              "label": "Agree to a quick additional meeting",
+              "label": "Offer to inspect the VIP lounge on Sunday",
               "requiresTrait": "sideevents",
-              "result": "The extra meeting produces a contact and postpones a quiet moment.",
+              "result": "The extra visit produces a contact and postpones a quiet Sunday.",
               "trust": -1,
               "effects": {
                 "morale": 1,
@@ -366,9 +366,9 @@
               }
             },
             {
-              "label": "Volunteer for the longest presentation",
+              "label": "Hear out the histories of all ambassadors",
               "requiresTrait": "eyesopen",
-              "result": "The presenter is encouraged; your notes contain a mysterious gap.",
+              "result": "Pavel is encouraged; your notes contain a mysterious gap.",
               "trust": -1,
               "effects": {
                 "confidence": 1,
@@ -413,9 +413,9 @@
               }
             },
             {
-              "label": "Propose a tasting as diplomatic research",
+              "label": "Offer to translate the menu at a tasting",
               "requiresTrait": "liver",
-              "result": "The research produces useful contacts and an unreliable conclusion.",
+              "result": "The research produces useful contacts and an unreliable translation.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -433,9 +433,9 @@
               }
             },
             {
-              "label": "Add one more stop to the programme",
+              "label": "Offer to translate at the next reception too",
               "requiresTrait": "sideevents",
-              "result": "The host appreciates it; your own calendar protests.",
+              "result": "Sola appreciates it; your own calendar protests.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -443,9 +443,9 @@
               }
             },
             {
-              "label": "Sit through the entire committee report",
+              "label": "Read all three documents without visible reaction",
               "requiresTrait": "eyesopen",
-              "result": "Your attendance reassures the room. One question catches you unprepared.",
+              "result": "Your composure reassures Sola. One question about the novel catches you unprepared.",
               "trust": 1,
               "effects": {
                 "confidence": 1,
@@ -453,7 +453,7 @@
               }
             },
             {
-              "label": "Offer the NGO’s local contacts with disclosure",
+              "label": "Suggest your spouse's NGO for overflow translations",
               "requiresTrait": "ngo",
               "result": "A useful introduction follows; the connection is declared in the file.",
               "trust": 1,
@@ -463,27 +463,27 @@
               }
             },
             {
-              "label": "Explain that the phrase is perfectly familiar.",
+              "label": "Translate the menu using your favourite Ombrazian word",
               "requiresTrait": "false-friend",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "The menu is delivered. Sola notes that your favourite word means something else, and that the soup is now optional.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Mention the department’s historical name.",
+              "label": "Translate the love letter in textbook formal register",
               "requiresTrait": "old-textbook",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "The letter is correct, courteous and addressed to a ministry that was abolished. Sola files it under history.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Ask how the speaker would put it.",
+              "label": "Ask Sola how each of the three would phrase it",
               "requiresTrait": "ear-accents",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "Sola explains the three registers. You can now tell the novel, the menu and the love letter apart by ear.",
               "effects": {
                 "sanity": -1
               },
@@ -555,9 +555,9 @@
               }
             },
             {
-              "label": "Turn the complaint into a démarche",
+              "label": "Record the cousin's offer in a formal note",
               "requiresTrait": "demarche",
-              "result": "The file moves. The recipient asks why it needed three seals.",
+              "result": "The file moves. The recipient asks why a band needed three seals.",
               "trust": -1,
               "effects": {
                 "confidence": 1,
@@ -565,9 +565,9 @@
               }
             },
             {
-              "label": "Invoke a former minister’s support",
+              "label": "Say a former minister knows the cousin's band",
               "requiresTrait": "namedrop",
-              "result": "The title gets attention; Ruth asks whether the person actually agreed.",
+              "result": "The title gets attention; Ruth asks whether the minister has ever heard the band.",
               "trust": -1,
               "effects": {
                 "morale": 1,
@@ -610,7 +610,7 @@
               }
             },
             {
-              "label": "Insist the position be delivered in writing",
+              "label": "Insist the Minister's well position be in writing",
               "requiresTrait": "demarche",
               "result": "The record is clear, as is the irritation in the reply.",
               "trust": 1,
@@ -620,9 +620,9 @@
               }
             },
             {
-              "label": "Recall your dinner with a senior official",
+              "label": "Recall a well you once visited with an official",
               "requiresTrait": "namedrop",
-              "result": "The anecdote breaks the ice; Ruth calls it an unsourced dinner.",
+              "result": "The anecdote breaks the ice; Ruth calls it an unsourced well.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -630,7 +630,7 @@
               }
             },
             {
-              "label": "Request a plain alternative to the local dish",
+              "label": "Ask for a plain lunch at the well site",
               "requiresTrait": "cuisine",
               "result": "A suitable meal appears; the kitchen receives another special request.",
               "trust": 1,
@@ -640,27 +640,27 @@
               }
             },
             {
-              "label": "Try the word again, with more confidence.",
+              "label": "Say 'well' in your favourite Ombrazian word",
               "requiresTrait": "false-friend",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "The engineer nods politely. Your word, it seems, means 'rumour'. The Minister will stand next to a rumour.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Ask whether the old form is still in circulation.",
+              "label": "Ask for the well by its textbook's formal term",
               "requiresTrait": "old-textbook",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "The term is accurate and was last used under a previous administration. The well, regrettably, is current.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Practise the greeting under your breath.",
+              "label": "Learn the greeting for the well site",
               "requiresTrait": "ear-accents",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "You practise the greeting until the engineers can tell where you learned it. They are impressed. Mostly.",
               "effects": {
                 "sanity": -1
               },
@@ -728,9 +728,9 @@
               "effects": {}
             },
             {
-              "label": "Compare the cellar inventories personally",
+              "label": "Offer Sola a conciliatory drink",
               "requiresTrait": "liver",
-              "result": "The missing bottles are found; your handwriting is not.",
+              "result": "Sola accepts one. The apology you write on the napkin afterwards is not legible.",
               "trust": -1,
               "effects": {
                 "morale": 1,
@@ -738,7 +738,7 @@
               }
             },
             {
-              "label": "Reply to the whole distribution list",
+              "label": "Send the apology to the whole distribution list",
               "requiresTrait": "replyall",
               "result": "The right person responds, along with twelve people seeking removal.",
               "trust": -1,
@@ -748,9 +748,9 @@
               }
             },
             {
-              "label": "Maintain an attentive expression throughout",
+              "label": "Hear Sola's side without moving or blinking",
               "requiresTrait": "eyesopen",
-              "result": "The meeting continues smoothly, until you applaud at a pause.",
+              "result": "Sola feels heard, until you applaud at a pause.",
               "trust": -1,
               "effects": {
                 "confidence": 1,
@@ -758,9 +758,9 @@
               }
             },
             {
-              "label": "Ask your spouse for an independent lead",
+              "label": "Ask your spouse's NGO to run the next workshop",
               "requiresTrait": "ngo",
-              "result": "The lead is promising. Your colleague requests a conflict check.",
+              "result": "The offer is promising. Your colleague requests a conflict check.",
               "trust": -1,
               "effects": {
                 "goodwill": 1,
@@ -803,9 +803,9 @@
               }
             },
             {
-              "label": "Raise a glass to institutional resilience",
+              "label": "Raise a glass to the goat",
               "requiresTrait": "liver",
-              "result": "The room applauds and the agenda quietly grows longer.",
+              "result": "The room applauds. The goat is added to the manifest as 'local credibility, seated'.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -813,9 +813,9 @@
               }
             },
             {
-              "label": "Circulate your answer to every desk",
+              "label": "Circulate the convoy plan to every desk",
               "requiresTrait": "replyall",
-              "result": "The issue is noticed immediately. So is your draft subject line.",
+              "result": "The plan is noticed immediately, as is the goat in paragraph three.",
               "trust": 1,
               "effects": {
                 "confidence": 1,
@@ -823,7 +823,7 @@
               }
             },
             {
-              "label": "Arrive before anyone else and prepare",
+              "label": "Walk the convoy route before anyone arrives",
               "requiresTrait": "punctual",
               "result": "The preparation helps. Your reminder about lateness does not.",
               "trust": 1,
@@ -833,9 +833,9 @@
               }
             },
             {
-              "label": "Offer to observe the late session",
+              "label": "Offer to monitor the convoy overnight",
               "requiresTrait": "eyesopen",
-              "result": "The chair welcomes your presence and asks for a detailed summary.",
+              "result": "Bianca welcomes your vigilance and asks for a detailed log.",
               "trust": 1,
               "effects": {
                 "confidence": 1,
@@ -843,9 +843,9 @@
               }
             },
             {
-              "label": "Suggest a transparent partner consultation",
+              "label": "Source the goat through your spouse's NGO, disclosed",
               "requiresTrait": "ngo",
-              "result": "Local views improve the proposal; procurement wants a written disclosure.",
+              "result": "The goat is credible and local. Procurement wants a written disclosure.",
               "trust": 1,
               "effects": {
                 "goodwill": 1,
@@ -853,27 +853,27 @@
               }
             },
             {
-              "label": "Volunteer to translate the heading.",
+              "label": "Name the goat in your favourite Ombrazian word",
               "requiresTrait": "false-friend",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "The word means something else. The goat is now listed as a consultant.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Quote the textbook’s model introduction.",
+              "label": "Brief the drivers in your textbook's formal register",
               "requiresTrait": "old-textbook",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "The briefing is grammatical and addressed to an abolished ministry. The drivers salute anyway.",
               "effects": {
                 "sanity": -1
               },
               "trust": 1
             },
             {
-              "label": "Try the new expression in a sentence.",
+              "label": "Pick up the drivers' radio phrases",
               "requiresTrait": "ear-accents",
-              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "result": "You learn the radio phrases quickly. You also learn to end every message with 'goat'.",
               "effects": {
                 "sanity": -1
               },
@@ -945,9 +945,9 @@
               "effects": {}
             },
             {
-              "label": "Offer an introduction to someone important",
+              "label": "Mention a senior official who admires gradients",
               "requiresTrait": "namedrop",
-              "result": "A useful meeting becomes possible. Ruth asks for the person’s number.",
+              "result": "A useful meeting becomes possible. Ruth asks for the official's number.",
               "trust": -1,
               "effects": {
                 "morale": 1,
@@ -955,9 +955,9 @@
               }
             },
             {
-              "label": "Ask whether the sauce comes separately",
+              "label": "Ask whether the gradient can be served separately",
               "requiresTrait": "cuisine",
-              "result": "The question prevents trouble and interrupts the chef’s explanation.",
+              "result": "The question prevents trouble and interrupts Lucien's explanation of the sunset.",
               "trust": -1,
               "effects": {
                 "goodwill": 1,
@@ -1000,9 +1000,9 @@
               "effects": {}
             },
             {
-              "label": "Refer to your contacts in Capital",
+              "label": "Say you know the Minister's actual cousins",
               "requiresTrait": "namedrop",
-              "result": "The room listens. Ruth begins checking your address book.",
+              "result": "The queue listens. Ruth begins checking your address book.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -1010,9 +1010,9 @@
               }
             },
             {
-              "label": "Praise the table setting instead of tasting",
+              "label": "Offer the man a canapé while he waits",
               "requiresTrait": "cuisine",
-              "result": "The compliment lands, though the untouched plate is conspicuous.",
+              "result": "He accepts. The rest of the queue asks whether canapés are available to it.",
               "trust": 1,
               "effects": {
                 "goodwill": 1,
@@ -1020,9 +1020,9 @@
               }
             },
             {
-              "label": "Frame the problem as a short story",
+              "label": "Treat the painting as evidence in a short story",
               "requiresTrait": "novelist",
-              "result": "The analogy explains the problem, if not the extra page.",
+              "result": "The painting acquires a backstory. It explains the problem, if not the extra page.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -1092,9 +1092,9 @@
               }
             },
             {
-              "label": "Include all possible stakeholders",
+              "label": "Copy the whole mission on the waving rota",
               "requiresTrait": "replyall",
-              "result": "The answer travels quickly; nobody can identify the original question.",
+              "result": "The rota travels quickly; nobody can identify who was meant to wave.",
               "trust": -1,
               "effects": {
                 "confidence": 1,
@@ -1102,9 +1102,9 @@
               }
             },
             {
-              "label": "Produce a schedule with an early deadline",
+              "label": "Draft a waving schedule, starting at dawn",
               "requiresTrait": "punctual",
-              "result": "The work starts promptly; your colleague questions the clock.",
+              "result": "The waving starts promptly; Ines questions the clock.",
               "trust": -1,
               "effects": {
                 "morale": 1,
@@ -1112,9 +1112,9 @@
               }
             },
             {
-              "label": "Share a community contact from home",
+              "label": "Offer your spouse's NGO volunteers for the queue",
               "requiresTrait": "ngo",
-              "result": "The discussion gains a practical perspective and a question about interests.",
+              "result": "The queue gains a practical perspective and a question about interests.",
               "trust": -1,
               "effects": {
                 "goodwill": 1,
@@ -1160,9 +1160,9 @@
               }
             },
             {
-              "label": "Make the private note a group discussion",
+              "label": "Put the hashtag poll to the whole list",
               "requiresTrait": "replyall",
-              "result": "The group finds a solution, after debating why it was copied.",
+              "result": "The list chooses a third hashtag, after debating why it was asked. Legal hates it as well.",
               "trust": 1,
               "effects": {
                 "confidence": 1,
@@ -1170,9 +1170,9 @@
               }
             },
             {
-              "label": "Offer a five-minute meeting, timed",
+              "label": "Hold a five-minute hashtag meeting, timed",
               "requiresTrait": "punctual",
-              "result": "The decision is made quickly, though the conversation was not finished.",
+              "result": "The decision is made quickly, though the hashtag was not finished.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -1180,9 +1180,9 @@
               }
             },
             {
-              "label": "Propose a coordination architecture",
+              "label": "Propose a hashtag architecture with annexes",
               "requiresTrait": "brussels",
-              "result": "The framework gives everyone a role; its acronyms require a second meeting.",
+              "result": "The framework gives every hashtag a role; its acronyms require a second meeting.",
               "trust": 1,
               "effects": {
                 "confidence": 1,
@@ -1190,7 +1190,7 @@
               }
             },
             {
-              "label": "Declare the connection and request advice",
+              "label": "Declare your spouse's NGO and ask its advice",
               "requiresTrait": "ngo",
               "result": "The conflict is on record; the advice arrives with an extra form.",
               "trust": 1,
@@ -1264,9 +1264,9 @@
               }
             },
             {
-              "label": "Bring your own emergency biscuits",
+              "label": "Bring emergency biscuits for the cat",
               "requiresTrait": "cuisine",
-              "result": "The meeting continues safely; everyone notices the packet.",
+              "result": "The photograph proceeds safely; everyone notices the packet.",
               "trust": -1,
               "effects": {
                 "goodwill": 1,
@@ -1274,9 +1274,9 @@
               }
             },
             {
-              "label": "Invent a discreet fictional example",
+              "label": "Give the cat a plausible diplomatic biography",
               "requiresTrait": "novelist",
-              "result": "The dilemma becomes clear; your listener recognises the protagonist.",
+              "result": "The biography is approved. The press office recognises the cat's earlier postings as yours.",
               "trust": -1,
               "effects": {
                 "morale": 1,
@@ -1340,9 +1340,9 @@
               }
             },
             {
-              "label": "Negotiate a canapé-only menu",
+              "label": "Put canapés on the master checklist",
               "requiresTrait": "cuisine",
-              "result": "There is enough to eat, and Ketu adds your name to a list.",
+              "result": "There is enough to eat, and the checklist of checklists gains a line.",
               "trust": 1,
               "effects": {
                 "goodwill": 1,
@@ -1350,9 +1350,9 @@
               }
             },
             {
-              "label": "Write a more compelling account",
+              "label": "Rewrite the master checklist as a gripping narrative",
               "requiresTrait": "novelist",
-              "result": "The report is read. Its dramatic opening requires a correction.",
+              "result": "The checklist is read. Its dramatic opening requires a correction.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -1360,7 +1360,7 @@
               }
             },
             {
-              "label": "Accept the additional invitation",
+              "label": "Join the checklist review committee as well",
               "requiresTrait": "sideevents",
               "result": "A useful connection is made; your schedule becomes more ambitious.",
               "trust": 1,
@@ -1430,7 +1430,7 @@
               "effects": {}
             },
             {
-              "label": "Reserve the room before the request arrives",
+              "label": "Book Maxim's wave rehearsal room before he asks",
               "requiresTrait": "punctual",
               "result": "The room is available. Its intended occupants are surprised.",
               "trust": -1,
@@ -1440,9 +1440,9 @@
               }
             },
             {
-              "label": "Describe it as a strategic deliverable",
+              "label": "Describe Maxim's career as a strategic deliverable",
               "requiresTrait": "brussels",
-              "result": "Capital likes the terminology. Your colleague requests a translation.",
+              "result": "Capital likes the terminology. Maxim requests a translation.",
               "trust": -1,
               "effects": {
                 "confidence": 1,
@@ -1487,7 +1487,7 @@
               "effects": {}
             },
             {
-              "label": "Bring a stopwatch to the briefing",
+              "label": "Bring a stopwatch to the menu briefing",
               "requiresTrait": "punctual",
               "result": "The briefing ends on time; the questions do not.",
               "trust": 1,
@@ -1497,7 +1497,7 @@
               }
             },
             {
-              "label": "Create a task force for the task force",
+              "label": "Form a dietary task force with three subgroups",
               "requiresTrait": "brussels",
               "result": "Responsibilities become visible, beneath three additional committees.",
               "trust": 1,
@@ -1507,9 +1507,9 @@
               }
             },
             {
-              "label": "Draft a note verbale immediately",
+              "label": "Send the Minister's office a note verbale on garlic",
               "requiresTrait": "demarche",
-              "result": "The issue receives formal attention; your colleague inherits the stamps.",
+              "result": "The issue receives formal attention; Ketu inherits the stamps.",
               "trust": 1,
               "effects": {
                 "confidence": 1,
@@ -1581,9 +1581,9 @@
               "effects": {}
             },
             {
-              "label": "Give the proposal a narrative arc",
+              "label": "Give the cookie arithmetic a narrative arc",
               "requiresTrait": "novelist",
-              "result": "Your colleague understands the stakes and removes the cliffhanger.",
+              "result": "Celeste understands the stakes and removes the cliffhanger.",
               "trust": -1,
               "effects": {
                 "morale": 1,
@@ -1591,7 +1591,7 @@
               }
             },
             {
-              "label": "Volunteer for the extra reception",
+              "label": "Volunteer to bake for the extra coffee morning",
               "requiresTrait": "sideevents",
               "result": "The organiser is grateful. The diary develops a second page.",
               "trust": -1,

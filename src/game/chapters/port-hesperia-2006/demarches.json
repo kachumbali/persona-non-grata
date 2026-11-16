@@ -67,9 +67,9 @@
         },
         {
           "id": "liver-toast",
-          "label": "Offer a toast to the procedure",
+          "label": "Offer a toast to the fuel inspectors",
           "requiresTrait": "liver",
-          "result": "The toast is minuted after the last guest has left."
+          "result": "The toast is minuted after the last inspector has left."
         }
       ]
     },
@@ -136,9 +136,9 @@
         },
         {
           "id": "liver-toast",
-          "label": "Offer a toast to the procedure",
+          "label": "Raise a glass to the collection crews",
           "requiresTrait": "liver",
-          "result": "The toast is minuted after the last guest has left."
+          "result": "The crews are acknowledged in the minutes, after the toast; the collection routes remain unidentified."
         }
       ],
       "gossipOptions": [
@@ -209,9 +209,9 @@
         },
         {
           "id": "liver-toast",
-          "label": "Offer a toast to the procedure",
+          "label": "Toast both logos, in alphabetical order",
           "requiresTrait": "liver",
-          "result": "The toast is minuted after the last guest has left."
+          "result": "Both logos are toasted. The order of the toasts is minuted after the last guest has left."
         }
       ]
     },
@@ -281,9 +281,9 @@
         },
         {
           "id": "liver-toast",
-          "label": "Offer a toast to the procedure",
+          "label": "Offer a toast to the umbrellas",
           "requiresTrait": "liver",
-          "result": "The toast is minuted after the last guest has left."
+          "result": "The umbrellas are toasted and, per procedure, minuted after the last guest has left."
         }
       ],
       "issuedMinute": 720
@@ -349,9 +349,9 @@
         },
         {
           "id": "liver-toast",
-          "label": "Offer a toast to the procedure",
+          "label": "Toast the withdrawal of the umbrella protest",
           "requiresTrait": "liver",
-          "result": "The toast is minuted after the last guest has left."
+          "result": "The toast to the withdrawal is minuted. The umbrellas are not mentioned."
         }
       ],
       "issuedMinute": 780
@@ -475,9 +475,9 @@
         },
         {
           "id": "liver-toast",
-          "label": "Offer a toast to the procedure",
+          "label": "Toast the seating plan without discussing it",
           "requiresTrait": "liver",
-          "result": "The toast is minuted after the last guest has left."
+          "result": "The toast is minuted after the last guest has left. The seating plan is not mentioned."
         }
       ]
     },
@@ -540,9 +540,9 @@
         },
         {
           "id": "liver-toast",
-          "label": "Offer a toast to the procedure",
+          "label": "Toast the smooth running of the visit",
           "requiresTrait": "liver",
-          "result": "The toast is minuted after the last guest has left."
+          "result": "Everyone agrees with the toast. Capital provides no next step."
         }
       ]
     }
