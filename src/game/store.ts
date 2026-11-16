@@ -126,6 +126,7 @@ export interface Character {
   languages?: Record<string, number> | undefined;
   languageProgress?: Record<string, number> | undefined;
   examAttempts?: number | undefined;
+  firstHourDone?: boolean | undefined;
 }
 export interface LogEntry {
   day: number;
@@ -404,7 +405,11 @@ export const useGame = create<GameState>()(
             ? s
             : { firstHour: { ...s.firstHour, opened: [...s.firstHour.opened, item] } },
         ),
-      dismissChecklist: () => set((s) => ({ firstHour: { ...s.firstHour, dismissed: true } })),
+      dismissChecklist: () =>
+        set((s) => ({
+          firstHour: { ...s.firstHour, dismissed: true },
+          character: s.character ? { ...s.character, firstHourDone: true } : s.character,
+        })),
       preparePress: () => {
         const s = get();
         if (s.block !== 0 || s.pressDay === s.day) return;
@@ -489,6 +494,7 @@ export const useGame = create<GameState>()(
         set({
           ...initialState(),
           character,
+          firstHour: { opened: [], dismissed: !!character.firstHourDone },
           personnel: createPersonnel(
             character.traits,
             computeStats(character.traits, character.statDrift),

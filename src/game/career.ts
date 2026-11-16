@@ -66,6 +66,8 @@ export interface Career {
   languages: Record<string, number>;
   languageProgress?: Record<string, number>;
   examAttempts?: number;
+  /** True once the player dismissed the first-day checklist: it never returns in this career. */
+  firstHourDone?: boolean;
   rank: string;
   savings: number;
   property: string[];
@@ -91,6 +93,7 @@ export interface CharacterLike extends CareerIdentity {
   languages?: Record<string, number> | undefined;
   languageProgress?: Record<string, number> | undefined;
   examAttempts?: number | undefined;
+  firstHourDone?: boolean | undefined;
 }
 
 /** Flag prefixes that are bookkeeping for the posting and never become legacy. */
@@ -134,6 +137,7 @@ export function newCareer(
     },
     languageProgress: { ...character.languageProgress },
     examAttempts: character.examAttempts ?? 0,
+    firstHourDone: character.firstHourDone ?? false,
     rank,
     savings: 0,
     property: [],
@@ -164,6 +168,7 @@ export function characterOf(career: Career): CharacterLike {
     },
     languageProgress: { ...career.languageProgress },
     examAttempts: career.examAttempts ?? 0,
+    firstHourDone: career.firstHourDone ?? false,
   };
 }
 
@@ -374,6 +379,7 @@ const careerSchema = z.object({
   languages: z.record(id, z.number().int().min(0).max(4)),
   languageProgress: z.record(id, z.number().int().min(0).max(100000)).optional(),
   examAttempts: z.number().int().min(0).max(1000).optional(),
+  firstHourDone: z.boolean().optional(),
   rank: str,
   savings: num,
   property: z.array(id).max(500),
