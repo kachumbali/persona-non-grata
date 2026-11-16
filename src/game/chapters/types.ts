@@ -162,7 +162,19 @@ export interface ChapterEconomy {
   lateFuel: { protectedFlag: string; cost: number };
 }
 
+/**
+ * A chapter-wide first-day rule: mail whose sender starts with `from` that arrived on `day` is not
+ * marked ignored until the block `untilBlock` (0-based) has ended. Also the first ignored mail of a
+ * posting costs half.
+ */
+export interface FirstDayGrace {
+  from: string;
+  day: number;
+  untilBlock: number;
+}
+
 export interface ChapterManifest {
+  firstDayGrace?: FirstDayGrace;
   hostLanguage?: {
     id: string;
     name: string;

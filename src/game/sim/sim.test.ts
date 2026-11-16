@@ -116,7 +116,9 @@ describe("simulated playthroughs", () => {
     for (const run of socialRuns)
       expect(run.pairsChanged, `${run.build} ${run.seed}`).toBeGreaterThanOrEqual(6);
     expect(share(pressRuns, (run) => run.ending === "promoted")).toBeGreaterThanOrEqual(0.7);
-    expect(share(pressRuns, (run) => run.ending === "promoted")).toBeLessThanOrEqual(0.9);
+    // U-02: the gentler first day (halved first penalty) lifts press-reader promotion from 86% to 94%;
+    // a deliberate change, so the upper bound moves from 0.9 to 0.95.
+    expect(share(pressRuns, (run) => run.ending === "promoted")).toBeLessThanOrEqual(0.95);
     expect(
       new Set(full.flatMap((run) => run.seen.filter((id) => id.startsWith("event:web-")))).size,
     ).toBeGreaterThanOrEqual(10);

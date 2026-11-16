@@ -159,13 +159,19 @@ describe("scheduled game rounds", () => {
     useGame.getState().answer("e1", "reply");
     expect(useGame.getState().meters.confidence).toBe(55);
     useGame.getState().advance();
-    expect(useGame.getState().meters.confidence).toBe(56);
+    // The unanswered Capital fax waits through the first-day grace period (see first-day.test.ts).
+    expect(useGame.getState().meters.confidence).toBe(61);
     expect(useGame.getState().block).toBe(1);
     expect(useGame.getState().report.length).toBeGreaterThan(0);
   });
   it("records missed instructions at round end", () => {
     useGame.getState().advance();
-    expect(useGame.getState().meters.confidence).toBe(38);
+    // Day 1 Capital mail is not ignored until the end of Midday.
+    expect(useGame.getState().goodwillHistory.some((c) => c.kind === "Missed instruction")).toBe(
+      false,
+    );
+    useGame.getState().advance();
+    expect(useGame.getState().meters.confidence).toBe(44); // was 38: the first ignored fax costs half
     expect(useGame.getState().goodwillHistory.some((c) => c.kind === "Missed instruction")).toBe(
       true,
     );

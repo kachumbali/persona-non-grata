@@ -94,6 +94,40 @@ export const emails = (): Email[] => [
     ignore: { text: "The instruction remains on the démarche board.", effects: {} },
   })),
 ];
+let firstDayRulesOff = false;
+/** Test and simulation only: switch the gentler first day (grace and halved first penalty) off. */
+export function setFirstDayGraceOffForTests(off: boolean): void {
+  firstDayRulesOff = off;
+}
+/** The chapter's first-day rule, unless a test has switched it off. */
+export const firstDayGrace = () =>
+  firstDayRulesOff ? undefined : activeChapter().manifest.firstDayGrace;
+
+/** True while a piece of mail is still inside the first-day grace period (so it cannot be ignored yet). */
+export function inFirstDayGrace(
+  mail: { day: number; from: string },
+  day: number,
+  block: number,
+  grace = firstDayGrace(),
+): boolean {
+  return (
+    !!grace &&
+    mail.day === grace.day &&
+    mail.from.startsWith(grace.from) &&
+    day === grace.day &&
+    block < grace.untilBlock
+  );
+}
+
+/** Halve the penalties of the first ignored mail of a posting (rounded towards zero). */
+export function halveFirstPenalty(effects: Effects): Effects {
+  return Object.fromEntries(
+    Object.entries(effects).map(([key, value]) => [
+      key,
+      value < 0 ? Math.trunc(value / 2) || 0 : value,
+    ]),
+  ) as Effects;
+}
 export const TRAITS = traitsData as Trait[];
 
 export const DAY_START = 8 * 60;

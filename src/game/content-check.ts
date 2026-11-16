@@ -322,6 +322,7 @@ function buildSchemas(strict: boolean) {
     scenario: z.record(str, z.array(str)),
   });
   const manifest = obj({
+    firstDayGrace: opt(obj({ from: str, day, untilBlock: z.number().int().min(0) })),
     hostLanguage: opt(
       obj({
         id: str,
@@ -854,6 +855,9 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   const characters = campaign?.characters ?? [];
   const characterIds = new Set(characters.map((c) => c.id));
   const locationIds = new Set((campaign?.locations ?? []).map((l) => l.id));
+  const grace = manifest?.firstDayGrace;
+  if (grace && (grace.day > days || grace.untilBlock >= (manifest?.blocks.length ?? 0)))
+    error(F.manifest, "firstDayGrace", "The first-day grace period must end within the chapter.");
   const host = manifest?.hostLanguage;
   if (host && !host.exam)
     error(F.manifest, "hostLanguage.exam", "A host-language exam is required.");

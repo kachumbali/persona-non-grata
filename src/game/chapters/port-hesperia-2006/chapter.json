@@ -8,6 +8,7 @@
   "post": "Embassy of Bellaluxe, Port Hesperia",
   "playerRank": "Chargé d'Affaires a.i.",
   "missionActor": "Minister",
+  "firstDayGrace": { "from": "Capital", "day": 1, "untilBlock": 1 },
   "days": 15,
   "blocks": [
     {

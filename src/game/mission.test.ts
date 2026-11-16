@@ -497,7 +497,7 @@ describe("saves from before the steps", () => {
     expect(migrated.missionSteps["programme"]).toEqual([]);
     expect(migrated.setbacksApplied).toEqual(["arrival-moves", "form-superseded"]);
     expect(migrated.economy.missionReserve).toBe(700);
-    expect(useGame.persist.getOptions().version).toBe(15);
+    expect(useGame.persist.getOptions().version).toBe(16);
     expect(migrated.favours).toEqual({ owedToYou: {}, youOwe: {} });
     expect(migrated.knownFacts).toEqual([]);
     expect(migrated.stepQualities["clearance"]?.["protocol-stamp"]).toBe("good");

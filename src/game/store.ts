@@ -64,6 +64,9 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import {
   absTime,
   applyEffects,
+  firstDayGrace,
+  halveFirstPenalty,
+  inFirstDayGrace,
   blocks,
   campaign,
   clamp,
@@ -137,6 +140,8 @@ export interface GameState {
   tutorFees: number;
   tutorHomework: import("./rules").Email[];
   tutorIgnored: number;
+  /** True once the first ignored mail of this posting has been halved (old saves: true). */
+  firstIgnoreUsed: boolean;
   day: number;
   minute: number;
   block: number;
@@ -252,6 +257,7 @@ const initialState = () => {
     tutorFees: 0,
     tutorHomework: [],
     tutorIgnored: 0,
+    firstIgnoreUsed: false,
     day: 1,
     minute: m.blocks[0].time,
     block: 0,
@@ -987,6 +993,7 @@ export const useGame = create<GameState>()(
         let personalFunds = s.personalFunds;
         let tutorFees = s.tutorFees;
         let tutorIgnored = s.tutorIgnored;
+        let firstIgnoreUsed = s.firstIgnoreUsed;
         let examAttempts = s.character.examAttempts ?? 0;
         const tutorHomework = [...s.tutorHomework];
         const languages: Record<string, number> = { bellaluxian: 3, ...s.character.languages };
@@ -1917,6 +1924,8 @@ export const useGame = create<GameState>()(
               continue;
             const cutoff = blocks()[s.block + 1]?.time ?? 24 * 60;
             if (handled[e.id] || absTime(e.day, e.time) >= absTime(s.day, cutoff)) continue;
+            // The first morning is gentler: Capital's mail waits until the end of the grace block.
+            if (inFirstDayGrace(e, s.day, s.block)) continue;
             handled[e.id] = "ignored";
             if (e.id.startsWith("tutor-homework-")) {
               tutorIgnored++;
@@ -1938,11 +1947,19 @@ export const useGame = create<GameState>()(
               }
             }
             if (!e.id.startsWith("tutor-homework-")) count("ignored_mail");
-            const missed = missedEffects(e.ignore.effects, stats.deniability);
+            let missed = missedEffects(e.ignore.effects, stats.deniability);
+            let jammed = "";
+            if (!firstIgnoreUsed && !e.id.startsWith("tutor-homework-")) {
+              firstIgnoreUsed = true;
+              if (firstDayGrace()) {
+                missed = halveFirstPenalty(missed);
+                jammed = " Capital assumes the fax was jammed. Once.";
+              }
+            }
             economy.funds += (missed.budget ?? 0) * 100;
             record(
               e.subject,
-              `${e.ignore.text}${stats.deniability !== 3 ? ` (Plausible Deniability: missed penalties ${(3 - stats.deniability) * 10 > 0 ? "+" : ""}${(3 - stats.deniability) * 10}%)` : ""}`,
+              `${e.ignore.text}${jammed}${stats.deniability !== 3 ? ` (Plausible Deniability: missed penalties ${(3 - stats.deniability) * 10 > 0 ? "+" : ""}${(3 - stats.deniability) * 10}%)` : ""}`,
               missed,
               "Missed instruction",
             );
@@ -2191,6 +2208,7 @@ export const useGame = create<GameState>()(
           tutorFees,
           tutorHomework,
           tutorIgnored,
+          firstIgnoreUsed,
           character,
           personnel: progressed.state,
           economy,
@@ -2267,7 +2285,7 @@ export const useGame = create<GameState>()(
         setItem: () => {},
         removeItem: () => {},
       })),
-      version: 15,
+      version: 16,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = {
@@ -2332,6 +2350,7 @@ export const useGame = create<GameState>()(
           missionSteps,
           demarches: old.demarches ?? migrateDemarches(old.day ?? 1, old.block ?? 0),
           unrequestedDemarches: old.unrequestedDemarches ?? 0,
+          firstIgnoreUsed: old.firstIgnoreUsed ?? true,
           favours: old.favours ?? { owedToYou: {}, youOwe: {} },
           knownFacts: old.knownFacts ?? [],
           usedRoutes: old.usedRoutes ?? {},
@@ -2413,6 +2432,7 @@ export const useGame = create<GameState>()(
           missionSteps,
           demarches: old.demarches ?? migrateDemarches(old.day ?? 1, old.block ?? 0),
           unrequestedDemarches: old.unrequestedDemarches ?? 0,
+          firstIgnoreUsed: old.firstIgnoreUsed ?? true,
           favours: old.favours ?? { owedToYou: {}, youOwe: {} },
           knownFacts: old.knownFacts ?? [],
           usedRoutes: old.usedRoutes ?? {},
