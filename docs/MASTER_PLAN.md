@@ -119,6 +119,18 @@ Finish every system inside the one chapter that exists, then test it with five p
   - The guaranteed official route removes the dead end at Protocol's stamp. The simulation proves a steady player can always finish and that no single route is always best.
 - Done when: In the simulation a careful player no longer wins every game, every route is used by some bot, and no run is ever locked out of the mission.
 
+### U-01 The agenda: what you committed to, where and when
+
+- Type: Screens · Size: S · Depends on: none
+- Goal: A playtester committed to visit something and could not find out what or where. The commitment lists show only a title for the current block, and there is no view of the day.
+- Work:
+  - Describe every commitment with what, the option chosen, where and who, derived from what the game already knows.
+  - An agenda in the BlockBerry and on the embassy PC: today's four blocks with what was done, what is committed now, what is still unanswered, and fixed things later today.
+  - A 'Coming up' list for the next three days.
+  - A confirmation when ending a block with a time-bound item unanswered, naming the items and places.
+  - A 'Next:' line on the main screen with the next fixed commitment.
+- Done when: A player can always answer: what am I doing this block, where, with whom, and what is coming that I must not miss. No rule or outcome changes.
+
 ### P-01 Portrait cleanup
 
 - Type: Art · Size: S · Depends on: none
