@@ -8,6 +8,7 @@ import { writeFileSync } from "node:fs";
 import { listChapters } from "../src/game/chapters";
 import { allBuilds } from "../src/game/sim/builds";
 import { BOTS } from "../src/game/sim/bots";
+import { formatFirstDay, measureFirstDay } from "../src/game/sim/first-day";
 import { aggregate, formatReport } from "../src/game/sim/report";
 import { DEFAULT_CHAPTER, runMatrix } from "../src/game/sim/run";
 
@@ -35,6 +36,8 @@ const results = runMatrix({ chapterId, bots, builds, seeds });
 
 console.log(formatReport(aggregate(results)));
 console.log(`(${results.length} runs in ${((Date.now() - started) / 1000).toFixed(1)}s)`);
+if (!botFilter || botFilter.includes("first-timer"))
+  console.log(`\n${formatFirstDay(measureFirstDay(builds, seeds))}`);
 if (jsonFile) {
   writeFileSync(jsonFile, JSON.stringify(results, null, 2));
   console.log(`Raw results written to ${jsonFile}`);

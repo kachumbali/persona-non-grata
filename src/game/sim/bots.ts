@@ -8,7 +8,8 @@ import { drawExam } from "../languages";
 import { traitsOf } from "../relationships";
 import { Player, type OverloadMode } from "./player";
 
-export type BotId = "careful" | "socialiser" | "reckless" | "ignorer" | "press-reader";
+export type BotId =
+  "careful" | "socialiser" | "reckless" | "ignorer" | "press-reader" | "newcomer" | "first-timer";
 
 export interface Bot {
   id: BotId;
@@ -304,9 +305,52 @@ export const ignorer: Bot = {
   },
 };
 
-export const BOTS: Bot[] = [careful, socialiser, reckless, ignorer, pressReader];
+/**
+ * A first-time player. On Day 1 the newcomer does only what a first-day checklist would say, in the
+ * Morning: reads the secure fax and answers Capital's mail, checks the PC and answers its mail,
+ * starts one mission step, talks to one colleague. Nothing else on Day 1 (the later blocks are
+ * simply ended). From Day 2 it plays exactly like the careful bot.
+ *
+ * Target (U-02): a newcomer is not replaced before Day 10 in at least 90% of runs.
+ */
+export const newcomer: Bot = {
+  id: "newcomer",
+  description:
+    "Day 1 Morning only: reads fax and PC and answers the mail, starts one mission step, talks to one colleague; nothing else on Day 1. From Day 2 exactly like careful.",
+  traitBias: 0.5,
+  overload: "ifNeeded",
+  plan: (p) => {
+    if (p.s.day >= 2) return carefulPlan(p, { press: false, leads: false });
+    p.skipPress();
+    if (p.s.block !== 0) return;
+    p.answerMail("best");
+    missionWork(p, { suitable: true, max: 1, self: true });
+    if (p.freeDP() >= 1 && p.s.location === p.office) {
+      const who = restedStaff(p)[0];
+      if (who) p.converse(who, "best");
+    }
+  },
+};
+
+/**
+ * A measurement variant, not in the default matrix: on Day 1 it never reads the fax or the PC (it
+ * only dismisses the press), then plays careful from Day 2.
+ */
+export const firstTimer: Bot = {
+  id: "first-timer",
+  description: "Day 1: reads neither fax nor PC and does nothing. From Day 2 exactly like careful.",
+  traitBias: 0.5,
+  overload: "ifNeeded",
+  plan: (p) => {
+    if (p.s.day >= 2) return carefulPlan(p, { press: false, leads: false });
+    p.skipPress();
+  },
+};
+
+export const BOTS: Bot[] = [careful, socialiser, reckless, ignorer, pressReader, newcomer];
+export const VARIANT_BOTS: Bot[] = [firstTimer];
 export const botById = (id: string): Bot => {
-  const bot = BOTS.find((b) => b.id === id);
+  const bot = [...BOTS, ...VARIANT_BOTS].find((b) => b.id === id);
   if (!bot) throw new Error(`Unknown bot: ${id}`);
   return bot;
 };

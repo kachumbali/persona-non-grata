@@ -11,6 +11,7 @@ import {
   emails,
   lastDay,
   missionTasks,
+  setFirstDayGraceOffForTests,
   startMeters,
   visitReady,
 } from "../rules";
@@ -47,6 +48,8 @@ export interface SimOptions {
   seed: number;
   /** Overrides the bot's default chance of choosing a trait-gated option. */
   traitBias?: number;
+  /** Measurement only: switch the gentler first day (grace and halved first penalty) off. */
+  firstDayGraceOff?: boolean;
 }
 
 export interface RunResult {
@@ -60,6 +63,8 @@ export interface RunResult {
   /** True when the run ended before the final day (a meter hit zero). */
   endedEarly: boolean;
   day: number;
+  /** HQ goodwill (confidence) when Day 1 ended, or when the posting ended on Day 1. */
+  hqEndDay1: number;
   turns: number;
   meters: Meters;
   lowestMeters: Meters;
@@ -148,9 +153,11 @@ export function simulate(options: SimOptions): RunResult {
   const previousChapter = activeChapterId();
   const chapterId = options.chapterId ?? DEFAULT_CHAPTER;
   setActiveChapter(chapterId);
+  setFirstDayGraceOffForTests(!!options.firstDayGraceOff);
   try {
     return play(options, chapterId);
   } finally {
+    setFirstDayGraceOffForTests(false);
     setActiveChapter(previousChapter);
   }
 }
@@ -193,6 +200,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     stalls = 0;
   let routeLockouts = 0;
   let languageDay10 = 0;
+  let hqEndDay1: number | null = null;
   let lowestFunds = useGame.getState().economy.funds;
   let lowestAvailable = lowestFunds - reserved(useGame.getState().economy);
   const lowestMeters = zeroMeters();
@@ -215,6 +223,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     const dayBefore = s.day;
     useGame.getState().advance();
     s = useGame.getState();
+    if (hqEndDay1 === null && (s.day > 1 || s.ending)) hqEndDay1 = s.meters.confidence;
     if (dayBefore <= 10) languageDay10 = s.character?.languages?.["ombrazian"] ?? 0;
     if (visitReady(s.visit)) missionCompleteDay = missionCompleteDay ?? dayBefore;
     else missionCompleteDay = null;
@@ -338,6 +347,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     ending: s.ending,
     endedEarly: blocksPlayed < days * blocks().length,
     day: s.day,
+    hqEndDay1: hqEndDay1 ?? s.meters.confidence,
     turns: s.turn,
     meters: { ...s.meters },
     lowestMeters,

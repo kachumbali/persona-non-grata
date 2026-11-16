@@ -3,7 +3,8 @@ import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 import { activeChapterId } from "../chapters";
 import { TRAITS, pointsLeft } from "../rules";
-import { BOTS } from "./bots";
+import { BOTS, newcomer } from "./bots";
+import { measureFirstDay, replacedBeforeDay10 } from "./first-day";
 import { allBuilds, cheapestFlaw, singleTraitBuilds, validBuild } from "./builds";
 import { aggregate, COMPETENT, contentUniverse, formatReport, type Report } from "./report";
 import { createRng } from "./rng";
@@ -340,5 +341,24 @@ describe("simulated playthroughs", () => {
           !id.startsWith("press:reputation-"),
       ).length,
     ).toBeLessThanOrEqual(16);
+  });
+});
+
+describe("the first hour", () => {
+  it("a newcomer is not replaced before Day 10 in at least 90% of runs", () => {
+    // U-02 target, recorded here: a newcomer (Day 1 Morning only, then careful) is not replaced
+    // before Day 10 in at least 90% of runs. Measured: 100% in the full matrix.
+    const runs = runMatrix({ bots: [newcomer], builds: allBuilds(), seeds: 3 });
+    expect(share(runs, (r) => !replacedBeforeDay10(r))).toBeGreaterThanOrEqual(0.9);
+  });
+
+  it("the gentler first day helps a first-timer who reads nothing on Day 1", () => {
+    const builds = allBuilds().filter((b) => BUILD_IDS.includes(b.id));
+    const rows = measureFirstDay(builds, 2);
+    const row = (bot: string, graceOff: boolean) =>
+      rows.find((r) => r.bot === bot && r.graceOff === graceOff)!;
+    expect(row("first-timer", false).meanHqEndDay1).toBeGreaterThan(
+      row("first-timer", true).meanHqEndDay1,
+    );
   });
 });
