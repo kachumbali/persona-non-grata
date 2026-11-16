@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { activeChapter } from "../chapters";
+import { gateLabel, withInterpreter } from "../character";
+import { InterpreterSelect } from "./InterpreterSelect";
 import { MapPin, Plus, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +26,7 @@ import {
   type StepStatus,
 } from "../mission";
 import { ResourceDesk } from "./ResourceDesk";
+import { LanguageExam } from "./LanguageExam";
 import {
   availableFunds,
   capacityLedger,
@@ -46,6 +50,9 @@ export function PlanningDesk() {
   const [overload, setOverload] = useState(false);
   const [service, setService] = useState<"none" | "express" | "driver">("none");
   const [notice, setNotice] = useState("");
+  const [routeInterpreter, setRouteInterpreter] = useState("");
+  const [languageTeacher, setLanguageTeacher] = useState("sola");
+  const [lessonLanguage, setLessonLanguage] = useState("host");
   useEffect(() => {
     setNotice("");
   }, [g.block, g.day]);
@@ -121,6 +128,12 @@ export function PlanningDesk() {
       task,
       step: step.id,
       route: route?.id,
+      languageGate: route?.requiresLanguage,
+      interpreter:
+        route?.requiresLanguage &&
+        (g.character?.languages?.[route.requiresLanguage.language] ?? 0) === 0
+          ? routeInterpreter || undefined
+          : undefined,
       source: `${name} · ${stepLabel(step, task, g.setbacksApplied)}`,
       text: `${name} secured written confirmation: ${stepLabel(step, task, g.setbacksApplied)}.`,
       effects: { confidence: 3 },
@@ -229,6 +242,9 @@ export function PlanningDesk() {
             {worker === "self" && g.location !== "embassy" && (
               <p className="self-end text-sm">Local appointment: {location?.work}.</p>
             )}
+            {worker === "self" && step?.routes?.some((item) => item.requiresLanguage) && (
+              <InterpreterSelect value={routeInterpreter} onChange={setRouteInterpreter} />
+            )}
             {(worker !== "self" || g.location === "embassy") && step?.routes && (
               <label className="text-sm sm:col-span-2">
                 Route
@@ -239,8 +255,11 @@ export function PlanningDesk() {
                   onChange={(e) => setRouteId(e.target.value)}
                 >
                   {step.routes.map((item) => {
-                    const state = routeStatus(item, routeContext(g, task, step.id));
-                    const text = state.state === "undiscovered" ? "?" : item.label;
+                    const ctx = routeContext(g, task, step.id);
+                    ctx.languages = withInterpreter(item, ctx.languages, routeInterpreter);
+                    const state = routeStatus(item, ctx);
+                    const text =
+                      state.state === "undiscovered" ? "?" : `${gateLabel(item)}${item.label}`;
                     const detail =
                       state.state === "available"
                         ? `${item.dp} DP · ${money(item.cash)} · ${item.days} ${item.days === 1 ? "day" : "days"}`
@@ -399,6 +418,63 @@ export function PlanningDesk() {
               Take personal time · 1 DP
             </Button>
           </div>
+          <div className="mt-4 border-t border-border pt-3">
+            <h3 className="text-xl">Language lesson</h3>
+            <p className="text-sm">Personal funds: {money(g.personalFunds)}. Lessons take 1 DP.</p>
+            <select
+              aria-label="Lesson language"
+              value={lessonLanguage}
+              onChange={(event) => setLessonLanguage(event.target.value)}
+              className="mt-2 mr-2 border border-input bg-muted p-2"
+            >
+              <option value="host">{activeChapter().manifest.hostLanguage?.name}</option>
+              <option value="communique">Communiqué</option>
+            </select>
+            <select
+              aria-label="Language teacher"
+              value={languageTeacher}
+              onChange={(event) => setLanguageTeacher(event.target.value)}
+              className="mt-2 border border-input bg-muted p-2"
+            >
+              {(activeChapter().manifest.hostLanguage?.teachers ?? [])
+                .filter((teacher) => teacher.id !== "fixer")
+                .map((teacher) => (
+                  <option key={teacher.id} value={teacher.id}>
+                    {teacher.name} · {teacher.fee ? money(teacher.fee) : "free"}
+                  </option>
+                ))}
+            </select>
+            <Button
+              className="ml-2"
+              variant="outline"
+              onClick={() => {
+                const teacher = activeChapter().manifest.hostLanguage?.teachers?.find(
+                  (item) => item.id === languageTeacher,
+                );
+                if (!teacher) return;
+                const ok = g.queue({
+                  id: "language-lesson",
+                  kind: "dialogue",
+                  source: `Language lesson with ${teacher.name}`,
+                  text: `You study ${lessonLanguage === "host" ? activeChapter().manifest.hostLanguage?.name : "Communiqué"}.`,
+                  effects: {},
+                  timeCost: 1,
+                  worker: teacher.character,
+                  trust: teacher.character ? 1 : undefined,
+                  overload,
+                  languageLesson: teacher.id,
+                  lessonLanguage:
+                    lessonLanguage === "host"
+                      ? activeChapter().manifest.hostLanguage?.id
+                      : lessonLanguage,
+                });
+                setNotice(ok ? "Language lesson scheduled." : useGame.getState().planError);
+              }}
+            >
+              Schedule lesson · 1 DP
+            </Button>
+          </div>
+          <LanguageExam />
           <div className="mt-4 border-t border-border pt-3">
             <h3 className="text-xl">{block.social} · whom will you invite?</h3>
             <div className="mt-2 grid gap-2 sm:grid-cols-2">

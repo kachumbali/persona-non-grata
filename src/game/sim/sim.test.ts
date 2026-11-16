@@ -70,6 +70,18 @@ describe("simulated playthroughs", () => {
     const diligent = full.filter((run) => run.bot === "careful");
     const socialRuns = full.filter((run) => run.bot === "socialiser");
     const pressRuns = full.filter((run) => run.bot === "press-reader");
+    // S-03 targets: careful reaches level 2 by day 10 in 80% of runs; 40–80% of exam takers pass;
+    // careful mission completion falls by at most five percentage points; reckless makes at least three errors per run.
+    expect(share(diligent, (run) => run.languageDay10 >= 2)).toBeGreaterThanOrEqual(0.8);
+    const takers = full.filter((run) => run.exam !== "not-sat");
+    expect(takers.length).toBeGreaterThan(0);
+    expect(share(takers, (run) => run.exam === "passed")).toBeGreaterThanOrEqual(0.4);
+    expect(share(takers, (run) => run.exam === "passed")).toBeLessThanOrEqual(0.8);
+    expect(
+      share(diligent, (run) => run.missionConfirmed.length === run.missionTotal),
+    ).toBeGreaterThanOrEqual(0.95);
+    for (const run of full.filter((item) => item.bot === "reckless"))
+      expect(run.mistranslations, `${run.build} ${run.seed}`).toBeGreaterThanOrEqual(3);
     // S-05 targets: every competent run earns a reputation, none appears in over 70% of runs,
     // and at least 80% of paired same-build files differ (measured 100%).
     for (const run of full.filter((r) => COMPETENT.includes(r.bot)))
@@ -302,10 +314,19 @@ describe("simulated playthroughs", () => {
     expect(report.neverSeen.events.length).toBeLessThanOrEqual(6);
     // Mission-first scheduling and replacement quirks change the reduced sample; ten topics are unseen.
     expect(report.neverSeen.topics.length).toBeLessThanOrEqual(10);
-    // Mission-first scheduling and cured traits leave 89 old choices unseen in the reduced sample.
+    // Keep the prior bound for old choices; language and its three new traits need separate coverage.
+    const universe = contentUniverse();
+    const isNewLanguageChoice = (id: string) =>
+      !!universe.languageChoices[id] ||
+      ["false-friend", "old-textbook", "ear-accents"].includes(universe.traitChoices[id] ?? "");
+    expect(Object.keys(universe.languageChoices).length).toBeGreaterThanOrEqual(18);
+    expect(results.some((run) => run.languageAttempts > 0)).toBe(true);
     expect(
       report.neverSeen.choices.filter(
-        (id) => !id.startsWith("choice:event:web-") && !id.includes(":reputation-"),
+        (id) =>
+          !id.startsWith("choice:event:web-") &&
+          !id.includes(":reputation-") &&
+          !isNewLanguageChoice(id),
       ).length,
     ).toBeLessThanOrEqual(89);
     // New leak and refusal clippings are conditional; keep the prior bound for legacy clippings.

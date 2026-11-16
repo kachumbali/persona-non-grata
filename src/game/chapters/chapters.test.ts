@@ -173,7 +173,7 @@ describe("chapter packs", () => {
     const migrate = useGame.persist.getOptions().migrate!;
     const migrated = (await migrate({ day: 3 }, 8)) as { chapterId: string };
     expect(migrated.chapterId).toBe("port-hesperia-2006");
-    expect(useGame.persist.getOptions().version).toBe(14);
+    expect(useGame.persist.getOptions().version).toBe(15);
   });
 
   it("rejects unknown chapters", () => {

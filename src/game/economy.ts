@@ -105,7 +105,9 @@ export function playerTime(p: PendingDecision): number {
 }
 export function participantTime(p: PendingDecision, id: string, block: number): number {
   if (id === "self") return playerTime(p);
+  if (p.interpreter === id) return 1;
   if (p.worker !== id && p.partner !== id) return 0;
+  if (p.languageLesson && p.worker === id) return 1;
   if (p.kind === "social") return block === 3 ? 0 : (p.guestTime ?? 1);
   if (p.kind === "dialogue") return block === 3 ? 0 : 1;
   return 2;

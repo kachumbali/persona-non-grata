@@ -64,6 +64,8 @@ export interface Career {
   curedTraits?: string[];
   statDrift?: Drift;
   languages: Record<string, number>;
+  languageProgress?: Record<string, number>;
+  examAttempts?: number;
   rank: string;
   savings: number;
   property: string[];
@@ -86,10 +88,18 @@ export interface CharacterLike extends CareerIdentity {
   curedTraits?: string[] | undefined;
   statDrift?: Drift | undefined;
   reputations?: string[] | undefined;
+  languages?: Record<string, number> | undefined;
+  languageProgress?: Record<string, number> | undefined;
+  examAttempts?: number | undefined;
 }
 
 /** Flag prefixes that are bookkeeping for the posting and never become legacy. */
-export const INTERNAL_FLAG_PREFIXES = ["social:", "dialogue:", "reward:"] as const;
+export const INTERNAL_FLAG_PREFIXES = [
+  "social:",
+  "dialogue:",
+  "reward:",
+  "last-language-speaker:",
+] as const;
 export const isLegacyFlag = (flag: string) =>
   !INTERNAL_FLAG_PREFIXES.some((prefix) => flag.startsWith(prefix));
 
@@ -116,7 +126,14 @@ export function newCareer(
     },
     traits: [...character.traits],
     earnedQuirks: [],
-    languages: {},
+    languages: {
+      bellaluxian: 3,
+      ...character.languages,
+      [activeChapter().manifest.hostLanguage?.id ?? "ombrazian"]:
+        character.languages?.[activeChapter().manifest.hostLanguage?.id ?? "ombrazian"] ?? 0,
+    },
+    languageProgress: { ...character.languageProgress },
+    examAttempts: character.examAttempts ?? 0,
     rank,
     savings: 0,
     property: [],
@@ -138,6 +155,15 @@ export function characterOf(career: Career): CharacterLike {
     curedTraits: [...(career.curedTraits ?? [])],
     statDrift: { ...(career.statDrift ?? {}) },
     reputations: [...career.reputations],
+    languages: {
+      bellaluxian: 3,
+      ...(activeChapter().manifest.hostLanguage
+        ? { [activeChapter().manifest.hostLanguage!.id]: 0 }
+        : {}),
+      ...career.languages,
+    },
+    languageProgress: { ...career.languageProgress },
+    examAttempts: career.examAttempts ?? 0,
   };
 }
 
@@ -313,7 +339,17 @@ const chapterResultSchema = z.object({
     .optional(),
   epithet: str.optional(),
   payslip: z
-    .object({ base: num, acting: num, hardship: num, drinks: num, moneyRoutes: num, total: num })
+    .object({
+      base: num,
+      acting: num,
+      hardship: num,
+      drinks: num,
+      moneyRoutes: num,
+      total: num,
+      advance: num.optional(),
+      tutorFees: num.optional(),
+      languageAllowance: num.optional(),
+    })
     .optional(),
   finishedAt: z.string().max(64),
 });
@@ -335,7 +371,9 @@ const careerSchema = z.object({
   earnedQuirks: z.array(id).max(200),
   curedTraits: z.array(id).max(20).optional(),
   statDrift: z.record(id, num).optional(),
-  languages: z.record(id, num),
+  languages: z.record(id, z.number().int().min(0).max(4)),
+  languageProgress: z.record(id, z.number().int().min(0).max(100000)).optional(),
+  examAttempts: z.number().int().min(0).max(1000).optional(),
   rank: str,
   savings: num,
   property: z.array(id).max(500),
@@ -357,6 +395,9 @@ const careerSchema = z.object({
 const postingSchema = z
   .object({
     chapterId: id,
+    personalFunds: num.nonnegative().optional(),
+    tutorFees: num.nonnegative().optional(),
+    tutorIgnored: z.number().int().min(0).optional(),
     day: num,
     block: num,
     meters: z.record(id, num),

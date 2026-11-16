@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { activeChapter } from "../chapters";
 import { Button } from "@/components/ui/button";
 import { clippings, outlets } from "../press";
 import { useGame } from "../store";
@@ -7,6 +8,7 @@ import { campaign } from "../rules";
 export function PressReview({ onClose }: { onClose: () => void }) {
   const g = useGame();
   const [hint, setHint] = useState("");
+  const hostLevel = g.character?.languages?.[activeChapter().manifest.hostLanguage?.id ?? ""] ?? 0;
   const items = g.pressIds
     .map((id) => clippings().find((c) => c.id === id))
     .filter((c) => c !== undefined);
@@ -33,7 +35,7 @@ export function PressReview({ onClose }: { onClose: () => void }) {
       setHint(
         signal?.background?.text ??
           (signal
-            ? `Lucien points to “${g.pressCompiler === "maxim" && signal.maxim ? signal.maxim.headline : signal.headline}”.`
+            ? `Lucien points to “${hostLevel < 2 && signal.maxim ? signal.maxim.headline : signal.headline}”.`
             : "Lucien says there is no developing fuel quay item today."),
       );
     } else setHint(useGame.getState().planError);
@@ -46,7 +48,7 @@ export function PressReview({ onClose }: { onClose: () => void }) {
       </h2>
       <div className="mt-3 grid gap-3">
         {items.map((c) => {
-          const copy = g.pressCompiler === "maxim" && c.maxim ? { ...c, ...c.maxim } : c;
+          const copy = hostLevel < 2 && c.maxim ? { ...c, ...c.maxim } : c;
           return (
             <article key={c.id} className="border-b border-border pb-2">
               <p className="font-mono text-xs uppercase text-muted-foreground">
@@ -54,6 +56,9 @@ export function PressReview({ onClose }: { onClose: () => void }) {
               </p>
               <h3 className="font-bold">{copy.headline}</h3>
               <p className="text-sm">{copy.body}</p>
+              {hostLevel >= 3 && c.original && (
+                <p className="mt-1 text-sm italic">In the original: {c.original}</p>
+              )}
               <Button
                 size="sm"
                 variant="outline"

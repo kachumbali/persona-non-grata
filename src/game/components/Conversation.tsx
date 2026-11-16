@@ -1,4 +1,4 @@
-import { eligible, gateLabel } from "../character";
+import { eligible, gateLabel, withInterpreter } from "../character";
 import { computeStats } from "../rules";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ export function Conversation() {
   const [node, setNode] = useState("");
   const [notice, setNotice] = useState("");
   const [overload, setOverload] = useState(false);
+  const [interpreter, setInterpreter] = useState("");
   useEffect(() => {
     setNode("");
     setNotice("");
@@ -76,6 +77,12 @@ export function Conversation() {
       pairTarget: choice.pairTarget,
       formal: choice.formal,
       traitChoice: choice.requiresTrait,
+      languageGate: choice.requiresLanguage,
+      interpreter:
+        choice.requiresLanguage &&
+        (g.character?.languages?.[choice.requiresLanguage.language] ?? 0) === 0
+          ? interpreter || undefined
+          : undefined,
       counts: choice.counts,
       statDrift: choice.statDrift,
       score: choice.score,
@@ -148,7 +155,11 @@ export function Conversation() {
           )
           .map((item) => (
             <div key={item.id} className="mb-2 border border-border p-2 text-sm">
-              <p>{item.text}</p>
+              <p>
+                {g.knownFacts.includes(`gossip-garbled:${item.id}`)
+                  ? (item.garbled ?? item.text)
+                  : item.text}
+              </p>
               <p className="text-muted-foreground">
                 Keep this to yourself, or discuss it with {npc.name}.
               </p>
@@ -161,7 +172,9 @@ export function Conversation() {
                     id: `gossip-${item.id}`,
                     kind: "dialogue",
                     source: "Gossip",
-                    text: item.text,
+                    text: g.knownFacts.includes(`gossip-garbled:${item.id}`)
+                      ? (item.garbled ?? item.text)
+                      : item.text,
                     effects: {},
                     timeCost: 1,
                     worker: npc.id,
@@ -205,6 +218,41 @@ export function Conversation() {
             </Button>
           );
         })}
+        <label className="mb-2 block text-xs">
+          Interpreter for unfamiliar languages{" "}
+          <select
+            value={interpreter}
+            onChange={(event) => setInterpreter(event.target.value)}
+            className="border border-input bg-muted p-1"
+          >
+            <option value="">None</option>
+            <option value="sola">Sola · 1 staff DP</option>
+            <option value="anselm">Anselm · 1 staff DP</option>
+            <option value="maxim">Maxim · 1 staff DP</option>
+          </select>
+        </label>
+        {!notice &&
+          (current.choices as TalkChoice[]).some(
+            (choice) =>
+              choice.requiresLanguage &&
+              (g.character?.languages?.[choice.requiresLanguage.language] ?? 0) === 0,
+          ) && (
+            <Button
+              variant="outline"
+              className="mb-2 h-auto whitespace-normal text-left"
+              onClick={() =>
+                choose({
+                  label: "Smile and nod",
+                  result:
+                    "You smile and nod. The official leaves with a less certain impression of your position.",
+                  trust: -1,
+                  effects: { goodwill: -1 },
+                })
+              }
+            >
+              Smile and nod · 1 DP
+            </Button>
+          )}
         {notice ? (
           <p role="status" className="mt-2 text-sm">
             {notice}
@@ -218,6 +266,7 @@ export function Conversation() {
                   g.character?.traits ?? [],
                   computeStats(g.character?.traits ?? [], g.character?.statDrift),
                   g.personnel.reputations,
+                  withInterpreter(c, g.character?.languages, interpreter),
                 ),
               )
               .map((c, i) => (
@@ -232,6 +281,12 @@ export function Conversation() {
                 >
                   ▸ {gateLabel(c)}
                   {c.label}
+                  {c.requiresLanguage &&
+                  !interpreter &&
+                  (g.character?.languages?.[c.requiresLanguage.language] ?? 0) <
+                    c.requiresLanguage.min
+                    ? " · risky attempt"
+                    : ""}
                   {c.next
                     ? ""
                     : ` · 1 DP${c.effects?.["money"] ? ` · ƒ${-c.effects["money"]}` : ""}`}

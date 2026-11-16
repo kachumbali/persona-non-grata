@@ -1,4 +1,5 @@
-import { eligible, gateLabel } from "../character";
+import { eligible, gateLabel, withInterpreter } from "../character";
+import { InterpreterSelect } from "./InterpreterSelect";
 import { computeStats } from "../rules";
 import { useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
@@ -29,12 +30,13 @@ export function Mailbox({
 }) {
   const g = useGame();
   const [openId, setOpenId] = useState<string | null>(null);
+  const [interpreter, setInterpreter] = useState("");
   const inbox = useMemo(
     () =>
-      inboxFor(g.day, g.minute, g.handled, g.demarches, g.personnel.notices)
+      inboxFor(g.day, g.minute, g.handled, g.demarches, g.personnel.notices, g.tutorHomework)
         .filter((e) => (channel === "fax") === isFax(e.from))
         .reverse(),
-    [g.day, g.minute, g.handled, g.demarches, g.personnel.notices, channel],
+    [g.day, g.minute, g.handled, g.demarches, g.personnel.notices, g.tutorHomework, channel],
   );
   const open =
     inbox.find((e) => e.id === openId) ?? (singlePane ? undefined : inbox.find((e) => !e.status));
@@ -108,6 +110,9 @@ export function Mailbox({
                   </span>
                 ) : (
                   <div className="flex flex-wrap gap-2">
+                    {Object.values(open.options).some((option) => option?.requiresLanguage) && (
+                      <InterpreterSelect value={interpreter} onChange={setInterpreter} />
+                    )}
                     {(Object.keys(open.options) as Action[]).map((a) => {
                       const outcome = open.options[a];
                       if (
@@ -117,6 +122,7 @@ export function Mailbox({
                           g.character?.traits ?? [],
                           computeStats(g.character?.traits ?? [], g.character?.statDrift),
                           g.personnel.reputations,
+                          withInterpreter(outcome, g.character?.languages, interpreter),
                         )
                       )
                         return null;
@@ -154,7 +160,7 @@ export function Mailbox({
                           className="h-auto whitespace-normal py-2 text-left"
                           onClick={() => {
                             setOpenId(open.id);
-                            g.answer(open.id, a);
+                            g.answer(open.id, a, interpreter || undefined);
                           }}
                         >
                           {gateLabel(outcome)}

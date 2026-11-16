@@ -256,6 +256,11 @@ export interface PendingDecision {
   gossipAction?: "pass" | "deny" | undefined;
   counts?: string[] | undefined;
   statDrift?: { stat: StatKey; delta: number } | undefined;
+  languageGate?: { language: string; min: number } | undefined;
+  interpreter?: string | undefined;
+  languageLesson?: string | undefined;
+  lessonLanguage?: string | undefined;
+  examAnswers?: { question: string; answer: number }[] | undefined;
 }
 export interface StoryChoice extends ChoiceGate {
   id: string;

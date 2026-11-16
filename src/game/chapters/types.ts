@@ -1,4 +1,5 @@
 import type { Invitation } from "../calendar";
+import type { ChoiceGate } from "../character";
 import type { Topic } from "../dialogues";
 import type { Clipping } from "../press";
 import type { Action, Effects, Email, MeterKey, Meters, StoryChoice, StoryEvent } from "../rules";
@@ -38,7 +39,7 @@ export interface StepRef {
   step: string;
 }
 
-export interface RouteBase {
+export interface RouteBase extends ChoiceGate {
   id: string;
   label: string;
   dp: number;
@@ -162,6 +163,32 @@ export interface ChapterEconomy {
 }
 
 export interface ChapterManifest {
+  hostLanguage?: {
+    id: string;
+    name: string;
+    description: string;
+    mistranslations?: string[];
+    formalSlang?: string[];
+    homework?: {
+      from: string;
+      subject: string;
+      body: string;
+      reply: string;
+      ignore: string;
+      quit: string;
+    };
+    exam?: {
+      day: number;
+      block: number;
+      examiner: string;
+      examinerId?: string;
+      portrait?: string;
+      traits?: string[];
+      lines?: { pass: string; narrow: string; fail: string; spectacular: string };
+      questions: { id: string; prompt: string; answers: { text: string; correct: boolean }[] }[];
+    };
+    teachers?: { id: string; name: string; character?: string; points: number; fee: number }[];
+  };
   id: string;
   /** Player-facing short name, e.g. "Chapter 1". */
   label: string;
@@ -200,6 +227,8 @@ export interface ChapterManifest {
       hardship: number;
       drinkDeduction: number;
       moneyRouteDeduction: number;
+      advance?: number;
+      languageAllowance?: number;
     };
   };
   endingRules: EndingRule[];
@@ -220,6 +249,7 @@ export interface CampaignCharacter {
   id: string;
   name: string;
   role: string;
+  age?: number;
   location: string;
   likes: string[];
   dislikes: string[];
@@ -263,6 +293,8 @@ export interface GossipItem {
   truth: "true" | "false" | "half-true";
   day: number;
   source: "conversation" | "press" | "reception" | "overheard";
+  requiresLanguage?: { language: string; min: number };
+  garbled?: string;
 }
 export interface PressData {
   outlets: { id: string; name: string; voice: string }[];

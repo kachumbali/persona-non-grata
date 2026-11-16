@@ -1,4 +1,6 @@
 import traitsData from "./data/traits.json";
+import languagesData from "./data/languages.json";
+import { activeChapter } from "./chapters";
 import { REPUTATIONS } from "./personnel";
 import type { Effects, StatKey } from "./rules";
 
@@ -7,19 +9,41 @@ export interface ChoiceGate {
   blockedByTrait?: string;
   requiresStat?: { stat: StatKey; min: number };
   requiresReputation?: string;
+  requiresLanguage?: { language: string; min: number };
 }
 export type Stats = Record<StatKey, number>;
+export function withInterpreter(
+  gate: ChoiceGate,
+  languages: Record<string, number> | undefined,
+  interpreter: string,
+): Record<string, number> | undefined {
+  if (!interpreter || !gate.requiresLanguage || gate.requiresLanguage.language === "communique")
+    return languages;
+  return {
+    ...languages,
+    [gate.requiresLanguage.language]: Math.max(
+      gate.requiresLanguage.min,
+      languages?.[gate.requiresLanguage.language] ?? 0,
+    ),
+  };
+}
 export function eligible(
   gate: ChoiceGate,
   traits: string[],
   stats: Stats,
   reputations: string[] = [],
+  languages: Record<string, number> = {},
 ): boolean {
   return (
     (!gate.requiresTrait || traits.includes(gate.requiresTrait)) &&
     (!gate.blockedByTrait || !traits.includes(gate.blockedByTrait)) &&
     (!gate.requiresStat || stats[gate.requiresStat.stat] >= gate.requiresStat.min) &&
-    (!gate.requiresReputation || reputations.includes(gate.requiresReputation))
+    (!gate.requiresReputation || reputations.includes(gate.requiresReputation)) &&
+    (!gate.requiresLanguage ||
+      (languages[gate.requiresLanguage.language] ?? 0) >=
+        (gate.requiresLanguage.language === "communique"
+          ? gate.requiresLanguage.min
+          : Math.max(1, gate.requiresLanguage.min - 1)))
   );
 }
 export function gateLabel(gate: ChoiceGate): string {
@@ -31,6 +55,10 @@ export function gateLabel(gate: ChoiceGate): string {
     liver: "Liver",
   };
   const labels = [
+    gate.requiresLanguage?.language === "communique" && "Communiqué",
+    gate.requiresLanguage &&
+      gate.requiresLanguage.language !== "communique" &&
+      `${languagesData.find((l) => l.id === gate.requiresLanguage!.language)?.name ?? (activeChapter().manifest.hostLanguage?.id === gate.requiresLanguage.language ? activeChapter().manifest.hostLanguage?.name : gate.requiresLanguage.language)} ${gate.requiresLanguage.min}`,
     gate.requiresReputation &&
       (REPUTATIONS.find((r) => r.id === gate.requiresReputation)?.name ?? gate.requiresReputation),
     gate.requiresTrait &&

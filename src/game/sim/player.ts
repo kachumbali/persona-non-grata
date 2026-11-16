@@ -268,8 +268,11 @@ export class Player {
   ): T[] {
     const stats = this.stats;
     const traits = this.traits;
+    const knownLanguages = { ...this.s.character?.languages };
+    if (this.options.botId === "reckless")
+      knownLanguages["ombrazian"] = Math.max(1, knownLanguages["ombrazian"] ?? 0);
     const options = items.filter((item) =>
-      eligible(gate(item), traits, stats, this.s.personnel.reputations),
+      eligible(gate(item), traits, stats, this.s.personnel.reputations, knownLanguages),
     );
     const gated = options.filter((item) => gate(item).requiresTrait);
     for (const trait of new Set(gated.map((item) => gate(item).requiresTrait!)))
@@ -282,6 +285,11 @@ export class Player {
         .sort((a, b) => a.key - b.key)
         .map((x) => x.item);
     };
+    if (this.options.botId === "reckless" && options.some((item) => gate(item).requiresLanguage))
+      return [
+        ...rank(options.filter((item) => gate(item).requiresLanguage)),
+        ...rank(options.filter((item) => !gate(item).requiresLanguage)),
+      ];
     if (gated.length && this.rng.chance(this.options.traitBias))
       return [...rank(gated), ...rank(options.filter((item) => !gate(item).requiresTrait))];
     return rank(options);
@@ -290,7 +298,7 @@ export class Player {
   // ---- travel and rest --------------------------------------------------------------------
   travel(location: string): boolean {
     if (this.s.location === location) return true;
-    const ok = this.s.move(location);
+    const ok = this.s.move(location, this.options.botId === "socialiser");
     if (!ok) this.note(this.s.planError);
     return ok;
   }
@@ -587,6 +595,7 @@ export class Player {
           pairTarget: choice.pairTarget,
           formal: choice.formal,
           traitChoice: choice.requiresTrait,
+          languageGate: choice.requiresLanguage,
           counts: choice.counts,
           statDrift: choice.statDrift,
           score: choice.score,
@@ -681,6 +690,7 @@ export class Player {
           contactTrust: c.contactTrust,
           formal: c.formal,
           traitChoice: c.requiresTrait,
+          languageGate: c.requiresLanguage,
           counts: c.counts,
           statDrift: c.statDrift,
           overload,
@@ -741,6 +751,7 @@ export class Player {
         pairTarget: choice.pairTarget,
         formal: choice.formal,
         traitChoice: choice.requiresTrait,
+        languageGate: choice.requiresLanguage,
         counts: choice.counts,
         statDrift: choice.statDrift,
         cashCost: choice.cashCost,
@@ -820,7 +831,14 @@ export class Player {
   /** Unanswered mail the person can answer this block; Capital's only comes through the embassy fax. */
   openMail() {
     const s = this.s;
-    return inboxFor(s.day, s.minute, s.handled).filter(
+    return inboxFor(
+      s.day,
+      s.minute,
+      s.handled,
+      s.demarches,
+      s.personnel.notices,
+      s.tutorHomework,
+    ).filter(
       (e) =>
         !("demarcheId" in e && e.demarcheId) &&
         !e.status &&

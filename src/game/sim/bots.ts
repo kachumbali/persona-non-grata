@@ -3,6 +3,8 @@
  * Player (which mirrors what the screens offer) and queues decisions. The runner then advances.
  */
 import { campaign } from "../rules";
+import { activeChapter } from "../chapters";
+import { drawExam } from "../languages";
 import { traitsOf } from "../relationships";
 import { Player, type OverloadMode } from "./player";
 
@@ -96,9 +98,52 @@ function restIfLow(p: Player, threshold: number) {
   if ((s.energy < threshold || s.composure < 30) && p.freeDP() >= 1) p.rest();
 }
 
+function languageStudy(p: Player, prioritise = false) {
+  const host = activeChapter().manifest.hostLanguage;
+  const exam = host?.exam;
+  if (!host || !exam) return;
+  const level = p.s.character?.languages?.[host.id] ?? 0;
+  if (p.s.day === exam.day && p.s.block === exam.block && level >= 2 && p.freeDP() >= 2) {
+    const questions = drawExam(exam.questions, p.s.seed, 0);
+    const answers = questions.map((q) => ({
+      question: q.id,
+      answer: p.rng.chance(level >= 3 ? 0.85 : 0.75)
+        ? q.answers.findIndex((a) => a.correct)
+        : q.answers.findIndex((a) => !a.correct),
+    }));
+    p.queue({
+      id: "language-exam",
+      kind: "work",
+      source: "Language examination",
+      text: "The Ministry conducts your examination.",
+      effects: {},
+      timeCost: 2,
+      examAnswers: answers,
+    });
+  } else if (
+    level < (prioritise ? 3 : 2) &&
+    p.freeDP() >= 1 &&
+    p.s.personalFunds >= 100 &&
+    !p.s.pending.some((item) => item.languageLesson)
+  ) {
+    p.queue({
+      id: "language-lesson",
+      kind: "dialogue",
+      source: "Language lesson with private tutor",
+      text: "A language lesson.",
+      effects: {},
+      timeCost: 1,
+      languageLesson: "tutor",
+    });
+  }
+}
+
 // ---- the bots ------------------------------------------------------------------------------
 
 function carefulPlan(p: Player, extras: { press: boolean; leads: boolean }) {
+  const exam = activeChapter().manifest.hostLanguage?.exam;
+  if ((p.s.day === exam?.day && p.s.block === exam.block) || (extras.press && p.s.day <= 5))
+    languageStudy(p, extras.press);
   if (extras.press) p.readPress(true);
   else p.skipPress();
   goHomeForFax(p);
@@ -128,6 +173,7 @@ function carefulPlan(p: Player, extras: { press: boolean; leads: boolean }) {
     const who = staff[p.rng.int(Math.max(1, staff.length))];
     if (who && p.rng.chance(0.5)) p.converse(who, "best");
   }
+  languageStudy(p, extras.press);
   if (p.freeDP() >= 1 && (p.s.energy < 60 || p.s.composure < 50)) p.rest();
 }
 
@@ -207,6 +253,8 @@ export const reckless: Bot = {
     const s = p.s;
     p.skipPress();
     p.handleDemarche("reckless");
+    if (p.freeDP() >= 2 && p.s.location !== "ministry" && p.s.day <= 10) p.travel("ministry");
+    if (p.freeDP() >= 1 && p.s.location === "ministry") p.converse("protocol", "risky");
     const source = (campaign().gossip ?? [])
       .filter((item) => item.day <= p.s.day && !p.s.knownFacts.includes(`gossip:${item.id}`))
       .sort((a, b) => b.sensitivity - a.sensitivity)

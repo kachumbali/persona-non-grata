@@ -21,7 +21,11 @@
           "kind": "self",
           "dp": 2,
           "days": 0,
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "requiresLanguage": {
+            "language": "ombrazian",
+            "min": 2
+          }
         },
         {
           "id": "colleague",

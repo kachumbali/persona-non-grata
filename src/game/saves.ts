@@ -202,6 +202,9 @@ function onGameChange(state: ReturnType<typeof useGame.getState>, prev: typeof s
     curedTraits: [...state.personnel.curedTraits],
     statDrift: { ...state.personnel.drift },
     reputations: [...state.personnel.reputations],
+    languages: { bellaluxian: 3, ...career.languages, ...state.character.languages },
+    languageProgress: { ...state.character.languageProgress },
+    examAttempts: state.character.examAttempts ?? 0,
   };
   if (state.ending && !prev.ending)
     career = applyChapterResult(career, chapterResultFrom(state, now()));

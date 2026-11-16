@@ -118,5 +118,35 @@
       "deniability": -1
     },
     "plays": "Charm improves relationship gains, while lower deniability worsens missed instructions."
+  },
+  {
+    "id": "false-friend",
+    "name": "False-Friend Collector",
+    "cost": -1,
+    "desc": "Your favourite word means something else. Again.",
+    "stats": {
+      "charm": -1
+    },
+    "plays": "Mistranslations are twice as likely."
+  },
+  {
+    "id": "old-textbook",
+    "name": "Learned It From a 1970s Textbook",
+    "cost": -1,
+    "desc": "The grammar is impeccable. The administration is no longer in office.",
+    "stats": {
+      "gravitas": -1
+    },
+    "plays": "Some senior officials appreciate the formal vocabulary."
+  },
+  {
+    "id": "ear-accents",
+    "name": "Ear for Accents",
+    "cost": 1,
+    "desc": "You pick up languages quickly, and occasionally the speaker.",
+    "stats": {
+      "charm": 1
+    },
+    "plays": "Lessons grant an extra learning point."
   }
 ]

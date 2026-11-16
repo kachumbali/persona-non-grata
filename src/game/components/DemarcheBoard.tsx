@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { InterpreterSelect } from "./InterpreterSelect";
 import { Button } from "@/components/ui/button";
 import { activeChapter } from "../chapters";
 import { demarches, planDemarche, statusOf, tick } from "../demarche";
@@ -17,6 +18,7 @@ export function DemarcheBoard() {
       )?.id ?? "",
   );
   const [trait, setTrait] = useState("");
+  const [interpreter, setInterpreter] = useState("");
   const [overload, setOverload] = useState(false);
   const [notice, setNotice] = useState("");
   const items = demarches().filter((d) => statusOf(d, g.demarches, g.day, g.block) !== "future");
@@ -34,6 +36,14 @@ export function DemarcheBoard() {
     demarcheRoute: route,
     worker: route === "colleague" || route === "note" ? worker : undefined,
     demarcheTrait: trait || undefined,
+    languageGate: chosen?.routes.find((item) => item.kind === route)?.requiresLanguage,
+    interpreter:
+      chosen?.routes.find((item) => item.kind === route)?.requiresLanguage &&
+      (g.character?.languages?.[
+        chosen.routes.find((item) => item.kind === route)!.requiresLanguage!.language
+      ] ?? 0) === 0
+        ? interpreter || undefined
+        : undefined,
     overload,
   });
   const add = (route: PendingDecision["demarcheRoute"]) => {
@@ -155,6 +165,9 @@ export function DemarcheBoard() {
                 />
                 Allow displaced routine work
               </label>
+              {chosen.routes.some((route) => route.requiresLanguage) && (
+                <InterpreterSelect value={interpreter} onChange={setInterpreter} />
+              )}
               {!g.demarches[chosen.id]?.coordinated && (
                 <Button
                   type="button"

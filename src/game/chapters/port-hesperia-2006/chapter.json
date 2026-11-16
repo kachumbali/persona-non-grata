@@ -592,7 +592,11 @@
             "consequences": {
               "oweFavour": "golf"
             },
-            "counts": ["formal"]
+            "counts": ["formal"],
+            "requiresLanguage": {
+              "language": "ombrazian",
+              "min": 2
+            }
           },
           {
             "id": "knowledge",
@@ -1433,7 +1437,439 @@
       "acting": 600,
       "hardship": 450,
       "drinkDeduction": 75,
-      "moneyRouteDeduction": 100
+      "moneyRouteDeduction": 100,
+      "advance": 1000,
+      "languageAllowance": 300
     }
+  },
+  "hostLanguage": {
+    "id": "ombrazian",
+    "name": "Ombrazian",
+    "description": "The language of the host ministry, where even a comma may require a permit.",
+    "teachers": [
+      {
+        "id": "sola",
+        "name": "Sola",
+        "character": "sola",
+        "points": 2,
+        "fee": 0
+      },
+      {
+        "id": "tutor",
+        "name": "Private tutor",
+        "points": 4,
+        "fee": 100
+      },
+      {
+        "id": "fixer",
+        "name": "Fixer’s taxi",
+        "character": "fixer",
+        "points": 2,
+        "fee": 0
+      }
+    ],
+    "exam": {
+      "day": 13,
+      "block": 1,
+      "examiner": "Director Vela",
+      "questions": [
+        {
+          "id": "q01",
+          "prompt": "A meeting is running late. What do you tell the host?",
+          "answers": [
+            {
+              "text": "Thank you for your patience.",
+              "correct": true
+            },
+            {
+              "text": "Thank you for your furniture.",
+              "correct": false
+            },
+            {
+              "text": "Your patience has expired.",
+              "correct": false
+            },
+            {
+              "text": "Please arrest the clock.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q02",
+          "prompt": "A minister has been promoted. Offer congratulations.",
+          "answers": [
+            {
+              "text": "Congratulations on your appointment.",
+              "correct": true
+            },
+            {
+              "text": "Condolences on your appointment.",
+              "correct": false
+            },
+            {
+              "text": "Congratulations on your appointment book.",
+              "correct": false
+            },
+            {
+              "text": "The chair is now your legal guardian.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q03",
+          "prompt": "Ask whether the port is open tomorrow.",
+          "answers": [
+            {
+              "text": "Will the port be open tomorrow?",
+              "correct": true
+            },
+            {
+              "text": "Will the door be open yesterday?",
+              "correct": false
+            },
+            {
+              "text": "Is tomorrow under arrest?",
+              "correct": false
+            },
+            {
+              "text": "May I marry the quay?",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q04",
+          "prompt": "The host offers tea. You prefer water.",
+          "answers": [
+            {
+              "text": "Water, please, if convenient.",
+              "correct": true
+            },
+            {
+              "text": "Your water is inconvenient.",
+              "correct": false
+            },
+            {
+              "text": "Tea has been abolished.",
+              "correct": false
+            },
+            {
+              "text": "I accept the ceremonial kettle.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q05",
+          "prompt": "You need the signed document.",
+          "answers": [
+            {
+              "text": "Could we have the signed document?",
+              "correct": true
+            },
+            {
+              "text": "Could we sign the document cupboard?",
+              "correct": false
+            },
+            {
+              "text": "The document has signed us.",
+              "correct": false
+            },
+            {
+              "text": "I request diplomatic custody of the stapler.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q06",
+          "prompt": "An official says the matter is under review.",
+          "answers": [
+            {
+              "text": "Thank them and ask when to follow up.",
+              "correct": true
+            },
+            {
+              "text": "Announce that the matter is closed.",
+              "correct": false
+            },
+            {
+              "text": "Demand a review of the furniture.",
+              "correct": false
+            },
+            {
+              "text": "Promote the matter to minister.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q07",
+          "prompt": "A colleague introduces the examiner as Director Vela. How do you address them?",
+          "answers": [
+            {
+              "text": "Director Vela.",
+              "correct": true
+            },
+            {
+              "text": "Minister Vela.",
+              "correct": false
+            },
+            {
+              "text": "Director Velour.",
+              "correct": false
+            },
+            {
+              "text": "Your Impossibly Official Highness.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q08",
+          "prompt": "You must decline an invitation politely.",
+          "answers": [
+            {
+              "text": "Thank you; regrettably I cannot attend.",
+              "correct": true
+            },
+            {
+              "text": "I regret that you invited me.",
+              "correct": false
+            },
+            {
+              "text": "I will attend your regret.",
+              "correct": false
+            },
+            {
+              "text": "The invitation has eaten my diary.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q09",
+          "prompt": "Ask for a receipt.",
+          "answers": [
+            {
+              "text": "May I have a receipt, please?",
+              "correct": true
+            },
+            {
+              "text": "May I receive the receptionist?",
+              "correct": false
+            },
+            {
+              "text": "The receipt asks for you.",
+              "correct": false
+            },
+            {
+              "text": "The invoice has diplomatic immunity.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q10",
+          "prompt": "The driver asks which entrance.",
+          "answers": [
+            {
+              "text": "The main entrance, please.",
+              "correct": true
+            },
+            {
+              "text": "The entrance to next week.",
+              "correct": false
+            },
+            {
+              "text": "Please enter the ministry of exits.",
+              "correct": false
+            },
+            {
+              "text": "Whichever entrance is king.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q11",
+          "prompt": "A revised programme arrives.",
+          "answers": [
+            {
+              "text": "Thank you; we will check the changes.",
+              "correct": true
+            },
+            {
+              "text": "The changes will check your gratitude.",
+              "correct": false
+            },
+            {
+              "text": "We refuse all programmes on principle.",
+              "correct": false
+            },
+            {
+              "text": "Please file the programme under weather.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q12",
+          "prompt": "Ask an official to repeat a date.",
+          "answers": [
+            {
+              "text": "Could you repeat the date, please?",
+              "correct": true
+            },
+            {
+              "text": "Could the date repeat the official?",
+              "correct": false
+            },
+            {
+              "text": "Yesterday is your responsibility.",
+              "correct": false
+            },
+            {
+              "text": "Please appoint the calendar ambassador.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q13",
+          "prompt": "The host proposes a short delay.",
+          "answers": [
+            {
+              "text": "We understand; please keep us informed.",
+              "correct": true
+            },
+            {
+              "text": "We understand that you are short.",
+              "correct": false
+            },
+            {
+              "text": "Delay is a form of dessert.",
+              "correct": false
+            },
+            {
+              "text": "Please give the delay a passport.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q14",
+          "prompt": "You are offered the floor at a meeting.",
+          "answers": [
+            {
+              "text": "Thank you. I have one brief point.",
+              "correct": true
+            },
+            {
+              "text": "Thank you. I shall take the carpet.",
+              "correct": false
+            },
+            {
+              "text": "Your floor is diplomatically unacceptable.",
+              "correct": false
+            },
+            {
+              "text": "I appoint the ceiling my deputy.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q15",
+          "prompt": "The official says the permit is pending.",
+          "answers": [
+            {
+              "text": "Ask what remains to be completed.",
+              "correct": true
+            },
+            {
+              "text": "Congratulate them on the completed permit.",
+              "correct": false
+            },
+            {
+              "text": "Demand a permit for the pen.",
+              "correct": false
+            },
+            {
+              "text": "Declare the permit a sovereign state.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "q16",
+          "prompt": "You wish to confirm a time.",
+          "answers": [
+            {
+              "text": "May I confirm the meeting is at noon?",
+              "correct": true
+            },
+            {
+              "text": "May noon confirm the meeting with me?",
+              "correct": false
+            },
+            {
+              "text": "Your noon has been cancelled.",
+              "correct": false
+            },
+            {
+              "text": "Please notarise the sun.",
+              "correct": false
+            }
+          ]
+        }
+      ],
+      "lines": {
+        "pass": "A commendable result. The verbs may now travel without supervision.",
+        "narrow": "Four answers are correct. The fifth is retained for training purposes.",
+        "fail": "The Ministry records an unsuccessful attempt and an opportunity to return.",
+        "spectacular": "The answers have been circulated to the syllabus committee under separate cover."
+      },
+      "examinerId": "examiner-vela",
+      "portrait": "npc-protocol",
+      "traits": ["template", "grudge"]
+    },
+    "mistranslations": [
+      "You thanked the Deputy Minister for his excellent goat.",
+      "You asked whether the minutes had received their vaccinations.",
+      "You congratulated the office on its recent merger with a chair.",
+      "You requested an urgent meeting with the corridor.",
+      "You assured the Director that the embassy was entirely edible.",
+      "You called the programme a ceremonial turnip.",
+      "You offered the Minister a complimentary filing cabinet.",
+      "You described the port as professionally embarrassed.",
+      "You asked for a permit to postpone Tuesday.",
+      "You thanked the official for the decisive intervention of a spoon.",
+      "You promised that the ambassador would arrive by envelope.",
+      "You praised the department for its unusually well-behaved curtains.",
+      "You asked the Director to sign the nearest sandwich.",
+      "You described the appointment as legally refrigerated.",
+      "You assured the host that the memorandum had no known allergies.",
+      "You requested a bilateral discussion with the afternoon.",
+      "You explained that the reception had been approved by a cabbage.",
+      "You informed the ministry that the schedule was wearing a hat.",
+      "You called the revised agenda an extremely patient fish.",
+      "You apologised on behalf of the embassy’s imaginary accordion."
+    ],
+    "homework": {
+      "from": "Your language tutor",
+      "subject": "Homework: a short exercise",
+      "body": "Please reply with a sentence suitable for a meeting with the Ministry. A complete sentence is preferred, though not required by the Ministry.",
+      "reply": "You send a careful sentence. Your tutor marks the verbs.",
+      "ignore": "The tutor notes that the exercise remains unanswered.",
+      "quit": "After three unanswered exercises, your tutor withdraws. The invoice remains entirely fluent."
+    },
+    "formalSlang": [
+      "You opened the formal meeting by calling it a paperwork picnic.",
+      "You referred to the Deputy Minister as the person in charge of the good chairs.",
+      "You asked Protocol to hurry the extremely official paperwork bus."
+    ]
   }
 }

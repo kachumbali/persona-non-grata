@@ -16,6 +16,7 @@ import type {
 } from "./chapters/types";
 import { parseStepRef } from "./mission";
 import npcTraits from "./data/npc-traits.json";
+import languages from "./data/languages.json";
 import reputationData from "./data/reputations.json";
 import { EARNED_QUIRKS as quirkData } from "./personnel";
 
@@ -59,8 +60,21 @@ export const TEXT_LIMITS = {
  *   `reward:` (a one-off score reward for a source).
  */
 export const CODE_SET_FLAGS = {
-  exact: ["fuel-lead", "fuel-protected"],
-  prefixes: ["trait:", "trait-accident:", "social:", "dialogue:", "reward:"],
+  exact: [
+    "fuel-lead",
+    "fuel-protected",
+    "language-slang",
+    "language-exam:pass",
+    "language-exam:fail",
+  ],
+  prefixes: [
+    "trait:",
+    "trait-accident:",
+    "social:",
+    "dialogue:",
+    "reward:",
+    "last-language-speaker:",
+  ],
 } as const;
 
 /** Flags that code (not content) reads, so a content choice may set them without a reader in JSON. */
@@ -107,6 +121,7 @@ function buildSchemas(strict: boolean) {
     blockedByTrait: opt(str),
     requiresStat: opt(obj({ stat: z.enum(STATS), min: num })),
     requiresReputation: opt(str),
+    requiresLanguage: opt(obj({ language: str, min: int.min(1).max(4) })),
   };
   const personnelChoice = {
     counts: opt(z.array(str)),
@@ -164,6 +179,7 @@ function buildSchemas(strict: boolean) {
         id: str,
         name: str,
         role: str,
+        age: opt(int.min(18).max(120)),
         location: str,
         likes: z.array(str),
         dislikes: z.array(str),
@@ -193,6 +209,8 @@ function buildSchemas(strict: boolean) {
           truth: z.enum(["true", "false", "half-true"]),
           day,
           source: z.enum(["conversation", "press", "reception", "overheard"]),
+          requiresLanguage: opt(obj({ language: str, min: int.min(1).max(4) })),
+          garbled: opt(str),
         }),
       ),
     ),
@@ -286,6 +304,7 @@ function buildSchemas(strict: boolean) {
         outlet: str,
         headline: str,
         body: str,
+        original: opt(str),
         day: opt(day),
         minDay: opt(day),
         maxDay: opt(day),
@@ -303,6 +322,49 @@ function buildSchemas(strict: boolean) {
     scenario: z.record(str, z.array(str)),
   });
   const manifest = obj({
+    hostLanguage: opt(
+      obj({
+        id: str,
+        name: str,
+        description: str,
+        mistranslations: opt(z.array(str).min(20)),
+        formalSlang: opt(z.array(str).min(3)),
+        homework: opt(
+          obj({ from: str, subject: str, body: str, reply: str, ignore: str, quit: str }),
+        ),
+        exam: opt(
+          obj({
+            day: int.min(1),
+            block: int.min(0),
+            examiner: str,
+            examinerId: opt(str),
+            portrait: opt(str),
+            traits: opt(z.array(str).length(2)),
+            lines: opt(obj({ pass: str, narrow: str, fail: str, spectacular: str })),
+            questions: z
+              .array(
+                obj({
+                  id: str,
+                  prompt: str,
+                  answers: z
+                    .array(obj({ text: str, correct: z.boolean() }))
+                    .length(4)
+                    .refine(
+                      (answers) => answers.filter((answer) => answer.correct).length === 1,
+                      "Exactly one answer must be correct",
+                    ),
+                }),
+              )
+              .min(15),
+          }),
+        ),
+        teachers: opt(
+          z.array(
+            obj({ id: str, name: str, character: opt(str), points: int.min(1), fee: num.min(0) }),
+          ),
+        ),
+      }),
+    ),
     id: str,
     label: str,
     title: str,
@@ -341,6 +403,7 @@ function buildSchemas(strict: boolean) {
                   dp: int.min(1).max(4),
                   cash: num.min(0),
                   fromGeneralFunds: opt(z.boolean()),
+                  ...gate,
                   effects: opt(effects),
                   requires: opt(
                     obj({
@@ -409,6 +472,8 @@ function buildSchemas(strict: boolean) {
           hardship: num.min(0),
           drinkDeduction: num.min(0),
           moneyRouteDeduction: num.min(0),
+          advance: opt(num.min(0)),
+          languageAllowance: opt(num.min(0)),
         }),
       }),
     ),
@@ -498,6 +563,7 @@ function buildSchemas(strict: boolean) {
               id: str,
               label: str,
               kind: z.enum(["self", "colleague", "eu", "note"]),
+              ...gate,
               dp: int.min(0),
               days: int.min(0),
               ...personnelChoice,
@@ -579,7 +645,15 @@ const gated = (c: {
   blockedByTrait?: string | undefined;
   requiresStat?: unknown;
   requiresReputation?: string | undefined;
-}): boolean => !!(c.requiresTrait || c.blockedByTrait || c.requiresStat || c.requiresReputation);
+  requiresLanguage?: { language: string; min: number } | undefined;
+}): boolean =>
+  !!(
+    c.requiresTrait ||
+    c.blockedByTrait ||
+    c.requiresStat ||
+    c.requiresReputation ||
+    c.requiresLanguage
+  );
 
 type Gate = Parameters<typeof gated>[0];
 
@@ -780,6 +854,51 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   const characters = campaign?.characters ?? [];
   const characterIds = new Set(characters.map((c) => c.id));
   const locationIds = new Set((campaign?.locations ?? []).map((l) => l.id));
+  const host = manifest?.hostLanguage;
+  if (host && !host.exam)
+    error(F.manifest, "hostLanguage.exam", "A host-language exam is required.");
+  if (host && !host.mistranslations)
+    error(F.manifest, "hostLanguage.mistranslations", "A mistranslation table is required.");
+  if (host?.exam)
+    duplicates(
+      host.exam.questions,
+      (question) => question.id,
+      (index, id) =>
+        error(
+          F.manifest,
+          `hostLanguage.exam.questions[${index}].id`,
+          `Duplicate exam question id "${id}"`,
+        ),
+    );
+  for (const [index, item] of (campaign?.gossip ?? []).entries()) {
+    if (
+      item.requiresLanguage &&
+      !new Set([...languages.map((language) => language.id), ...(host ? [host.id] : [])]).has(
+        item.requiresLanguage.language,
+      )
+    )
+      error(
+        F.campaign,
+        `gossip[${index}].requiresLanguage.language`,
+        `Unknown language id "${item.requiresLanguage.language}"`,
+      );
+  }
+  if (host?.exam?.portrait && !portraitById.has(host.exam.portrait))
+    error(F.manifest, "hostLanguage.exam.portrait", `Unknown portrait id "${host.exam.portrait}"`);
+  host?.exam?.traits?.forEach((id, index) => {
+    if (!npcData.some((trait) => trait.id === id))
+      error(F.manifest, `hostLanguage.exam.traits[${index}]`, `Unknown NPC trait id "${id}"`);
+  });
+  if (host?.exam && (host.exam.day > days || host.exam.block >= (manifest?.blocks.length ?? 0)))
+    error(F.manifest, "hostLanguage.exam", "The exam must take place during a chapter block.");
+  host?.teachers?.forEach((teacher, index) => {
+    if (teacher.character && !characterIds.has(teacher.character))
+      error(
+        F.manifest,
+        `hostLanguage.teachers[${index}].character`,
+        `Unknown character id "${teacher.character}"`,
+      );
+  });
   const venueIds = new Set((campaign?.venues ?? []).map((v) => v.id));
   const taskIds = new Set(Object.keys(manifest?.missionTasks ?? {}));
   const events = campaign?.events ?? [];
@@ -825,6 +944,16 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   const checkGate = (c: Gate, file: string, path: Part[]) => {
     refCheck(traitIds, "trait id", c.requiresTrait, file, pathOf([...path, "requiresTrait"]));
     refCheck(traitIds, "trait id", c.blockedByTrait, file, pathOf([...path, "blockedByTrait"]));
+    refCheck(
+      new Set([
+        ...languages.map((item) => item.id),
+        ...(manifest?.hostLanguage ? [manifest.hostLanguage.id] : []),
+      ]),
+      "language id",
+      c.requiresLanguage?.language,
+      file,
+      pathOf([...path, "requiresLanguage", "language"]),
+    );
   };
   const checkDay = (value: number | undefined, file: string, path: Part[], what: string) => {
     if (value === undefined || !days) return;
@@ -860,8 +989,8 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
       checkDay(d.deadlineDay, f, ["instructions", i, "deadlineDay"], "deadlineDay");
       if (d.issuedDay * 4 + d.issuedBlock > d.deadlineDay * 4 + d.deadlineBlock)
         error(f, at("deadlineDay"), "Deadline precedes issue");
-      if (!d.routes.some((route) => route.kind === "note"))
-        error(f, at("routes"), "A note verbale route is required");
+      if (!d.routes.some((route) => route.kind === "note" && !gated(route)))
+        error(f, at("routes"), "An ungated note verbale route is required");
       for (const kind of ["self", "colleague", "eu", "note"])
         if (d.routes.filter((r) => r.kind === kind).length !== 1)
           error(f, at("routes"), `Exactly one ${kind} route is required`);
@@ -870,6 +999,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
         (r) => r.id,
         (j, id) => error(f, at("routes", j, "id"), `Duplicate route id "${id}"`),
       );
+      d.routes.forEach((route, j) => checkGate(route, f, ["instructions", i, "routes", j]));
       refCheck(all, "démarche id", d.conflictsWith, f, at("conflictsWith"));
       refCheck(all, "démarche id", d.supersededBy?.demarcheId, f, at("supersededBy"));
       if (d.conflictsWith === d.id)
@@ -1496,7 +1626,10 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
           const official = st.routes.filter((route) => route.kind === "official");
           if (official.length !== 1)
             error(f, at("routes"), "A routed step needs exactly one official route");
+          else if (gated(official[0]!))
+            error(f, at("routes"), "The official route must remain ungated.");
           for (const [j, route] of st.routes.entries()) {
+            checkGate(route, f, ["missionSteps", task, i, "routes", j]);
             const path = pathOf(["missionSteps", task, i, "routes", j]);
             limit(
               route.label,

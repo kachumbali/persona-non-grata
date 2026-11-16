@@ -127,6 +127,12 @@ export interface RunResult {
   falseGossipActed: number;
   relationshipScenesSeen: number;
   personnel: import("../personnel").PersonnelState;
+  languageLevel: number;
+  languageDay10: number;
+  languageLessons: Record<string, number>;
+  languageAttempts: number;
+  mistranslations: number;
+  exam: "passed" | "failed" | "not-sat";
   epithet: string;
   board: string[];
   debriefText: string;
@@ -167,6 +173,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     portrait: "diplomat-1",
     bio: "",
     traits: [...options.traits],
+    languages: { bellaluxian: 3, english: 2, french: 2, german: 0, ombrazian: 0 },
   });
   // The seed is plain store state; changing it varies the daily episode order and the press.
   useGame.setState({ seed: gameSeed, events: dailyEvents(1, gameSeed, [], {}) });
@@ -185,6 +192,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     blocksPlayed = 0,
     stalls = 0;
   let routeLockouts = 0;
+  let languageDay10 = 0;
   let lowestFunds = useGame.getState().economy.funds;
   let lowestAvailable = lowestFunds - reserved(useGame.getState().economy);
   const lowestMeters = zeroMeters();
@@ -207,6 +215,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     const dayBefore = s.day;
     useGame.getState().advance();
     s = useGame.getState();
+    if (dayBefore <= 10) languageDay10 = s.character?.languages?.["ombrazian"] ?? 0;
     if (visitReady(s.visit)) missionCompleteDay = missionCompleteDay ?? dayBefore;
     else missionCompleteDay = null;
     if (s.turn === before && !s.ending) {
@@ -388,6 +397,18 @@ function play(options: SimOptions, chapterId: string): RunResult {
     falseGossipActed: s.storyFlags.filter((f) => f.startsWith("gossip:false:")).length,
     relationshipScenesSeen: [...tracker.seen].filter((id) => id.startsWith("event:web-")).length,
     personnel: structuredClone(s.personnel),
+    languageLevel: s.character?.languages?.["ombrazian"] ?? 0,
+    languageDay10,
+    languageLessons: Object.fromEntries(
+      Object.entries(s.personnel.counters).filter(([key]) => key.startsWith("language_lesson_")),
+    ),
+    languageAttempts: s.personnel.counters["language_attempt"] ?? 0,
+    mistranslations: s.personnel.counters["language_error"] ?? 0,
+    exam: s.storyFlags.includes("language-exam:pass")
+      ? "passed"
+      : s.storyFlags.includes("language-exam:fail")
+        ? "failed"
+        : "not-sat",
     epithet: debrief.epithet,
     board: debrief.board.map((member) => member.id),
     debriefText: debrief.text,

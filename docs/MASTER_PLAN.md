@@ -163,7 +163,7 @@ Finish every system inside the one chapter that exists, then test it with five p
   - Absurd instructions mixed in. The Compulsive Démarche trait adds unrequested ones.
 - Done when: Six to eight démarches across the chapter, each with at least three distinct outcomes depending on the messenger.
 
-### S-03 Languages and the exam
+### S-03 Languages and the exam (done)
 
 - Type: Rules and code · Size: M · Depends on: F-03
 - Goal: Language skill is a career-long track with comic failure built in, and passing the exam raises your salary.

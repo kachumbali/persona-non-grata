@@ -59,7 +59,11 @@ Charm adjusts positive social and contact trust gains (minimum +1); Gravitas add
 
 ## Morning press review
 
-Each morning's optional review combines a developing fuel-quay story with consequences of earlier decisions and local filler. Reading the signals from Day 4 can reveal an optional ministry lead; early action protects the generator fuel reserve, while late procurement costs more without blocking the visit. The review can be skipped and reopened during the morning. One clipping per day can be sent to Capital; Lucien can identify the significant item for one DP. Maxim substitutes when Lucien is tired, recently worked late or is unavailable by chance. Translation quality is an explicit selection parameter for future language mechanics.
+Each morning's optional review combines a developing fuel-quay story with consequences of earlier decisions and local filler. Reading the signals from Day 4 can reveal an optional ministry lead; early action protects the generator fuel reserve, while late procurement costs more without blocking the visit. The review can be skipped and reopened during the morning. One clipping per day can be sent to Capital; Lucien can identify the significant item for one DP. Maxim substitutes when Lucien is tired, recently worked late or is unavailable by chance. At Ombrazian levels 0–1 the copy uses Maxim’s translation; from level 2 it uses the standard text, and level 3 reveals the original’s extra nuance.
+
+## Languages and personal study
+
+The career records language levels and progress. Bellaluxian starts at 3; new diplomats distribute four points between two other working languages. Each chapter defines its host language. Lessons and field practice build progress towards levels 1–3; the examination certifies level 4. The tutor is paid from a personal advance, separate from embassy funds. Tutor fees are deducted once from the final salary; the advance is a payment on account and is displayed for information, not added a second time. The tutor sends homework and withdraws after three unanswered exercises. Sola uses staff capacity, and the fixer can teach during a journey. Interpreters also spend staff capacity. The language choices preserve ungated routes through the mission.
 
 ## Chapter packs
 

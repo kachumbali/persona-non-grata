@@ -41,3 +41,5 @@
 
 - [x] S-05: reputations, earned quirks, stat drift and personnel file.
 - [x] S-08: final debrief, promotion board, payslip and text export.
+
+- [x] S-03: languages, lessons, mistranslations and the examination.

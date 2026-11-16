@@ -1,4 +1,5 @@
-import { eligible, gateLabel } from "../character";
+import { eligible, gateLabel, withInterpreter } from "../character";
+import { InterpreterSelect } from "./InterpreterSelect";
 import { computeStats } from "../rules";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ export function LocationLead() {
   const [notice, setNotice] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const [overload, setOverload] = useState(false);
+  const [interpreter, setInterpreter] = useState("");
   const leads = locationStories(
     g.day,
     g.completedEvents,
@@ -58,6 +60,12 @@ export function LocationLead() {
       pairTarget: choice.pairTarget,
       formal: choice.formal,
       traitChoice: choice.requiresTrait,
+      languageGate: choice.requiresLanguage,
+      interpreter:
+        choice.requiresLanguage &&
+        (g.character?.languages?.[choice.requiresLanguage.language] ?? 0) === 0
+          ? interpreter || undefined
+          : undefined,
       counts: choice.counts,
       statDrift: choice.statDrift,
       cashCost: choice.cashCost,
@@ -159,6 +167,9 @@ export function LocationLead() {
               <p role="status">Decision scheduled. It takes effect at the end of this block.</p>
             ) : (
               <div className="flex flex-col gap-2">
+                {event.choices.some((option) => option.requiresLanguage) && (
+                  <InterpreterSelect value={interpreter} onChange={setInterpreter} />
+                )}
                 {event.choices
                   .filter((choice) =>
                     eligible(
@@ -166,6 +177,7 @@ export function LocationLead() {
                       g.character?.traits ?? [],
                       computeStats(g.character?.traits ?? [], g.character?.statDrift),
                       g.personnel.reputations,
+                      withInterpreter(choice, g.character?.languages, interpreter),
                     ),
                   )
                   .map((choice) => {

@@ -16,6 +16,14 @@ export function PersonnelFile() {
         <p>{c.bio}</p>
       </div>
       <div>
+        <h3 className="font-bold">Languages</h3>
+        <p>
+          {Object.entries(c.languages ?? { bellaluxian: 3 })
+            .map(([id, level]) => `${id}: ${level}`)
+            .join(", ")}
+        </p>
+      </div>
+      <div>
         <h3 className="font-bold">Starting traits</h3>
         <p>
           {(c.startingTraits ?? g.personnel.start.traits)
@@ -70,6 +78,10 @@ export function PersonnelFile() {
       </div>
       <div>
         <h3 className="font-bold">Personnel notes</h3>
+        {g.storyFlags.includes("language-exam:fail") && (
+          <p>Language examination: unsuccessful attempt; retake eligible.</p>
+        )}
+        {g.storyFlags.includes("language-exam:pass") && <p>Language examination: certified.</p>}
         <ul>
           {REPUTATIONS.filter(
             (r) =>

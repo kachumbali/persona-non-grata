@@ -170,6 +170,7 @@ export interface RouteContext {
   flags: string[];
   outcomes: Record<string, { status: string; choice?: string }>;
   spentRoutes: string[];
+  languages?: Record<string, number> | undefined;
 }
 
 export interface RoutePosting {
@@ -180,11 +181,13 @@ export interface RoutePosting {
   storyFlags: string[];
   storyOutcomes: RouteContext["outcomes"];
   spentRoutes: Record<string, string[]>;
+  character?: { languages?: Record<string, number> | undefined } | null;
 }
 
 export function routeContext(s: RoutePosting, task: string, step: string): RouteContext {
   return {
     day: s.day,
+    languages: s.character?.languages,
     trust: s.colleagues,
     owedToYou: s.favours.owedToYou,
     knownFacts: s.knownFacts,
@@ -217,6 +220,15 @@ export function routeStatus(route: MissionRoute, ctx: RouteContext): RouteStatus
     req?.expiresOnFlags?.some((flag) => ctx.flags.includes(flag))
   )
     return { state: "expired" };
+  if (
+    route.requiresLanguage &&
+    (ctx.languages?.[route.requiresLanguage.language] ?? 0) <
+      Math.max(1, route.requiresLanguage.min - 1)
+  )
+    return {
+      state: "blocked",
+      reason: `needs ${route.requiresLanguage.language} ${route.requiresLanguage.min - 1} for an attempt`,
+    };
   if (req?.fact && !ctx.knownFacts.includes(req.fact)) return { state: "undiscovered" };
   if (req?.trust && (ctx.trust[req.trust.character]?.trust ?? 0) < req.trust.min)
     return {

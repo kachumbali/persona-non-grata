@@ -74,6 +74,33 @@
                 "sanity": -1
               },
               "counts": ["formal"]
+            },
+            {
+              "label": "Mention a word you have carefully looked up.",
+              "requiresTrait": "false-friend",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Refer to the ministry by its former title.",
+              "requiresTrait": "old-textbook",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Listen carefully before replying.",
+              "requiresTrait": "ear-accents",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
             }
           ]
         },
@@ -230,6 +257,33 @@
                 "morale": 1,
                 "sanity": -1
               }
+            },
+            {
+              "label": "Offer your favourite term for the agenda.",
+              "requiresTrait": "false-friend",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Use the formal address from your old textbook.",
+              "requiresTrait": "old-textbook",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Repeat the phrase you just heard.",
+              "requiresTrait": "ear-accents",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
             }
           ]
         },
@@ -407,6 +461,33 @@
                 "goodwill": 1,
                 "morale": -1
               }
+            },
+            {
+              "label": "Explain that the phrase is perfectly familiar.",
+              "requiresTrait": "false-friend",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Mention the department’s historical name.",
+              "requiresTrait": "old-textbook",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Ask how the speaker would put it.",
+              "requiresTrait": "ear-accents",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
             }
           ]
         },
@@ -557,6 +638,33 @@
                 "goodwill": 1,
                 "morale": -1
               }
+            },
+            {
+              "label": "Try the word again, with more confidence.",
+              "requiresTrait": "false-friend",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Ask whether the old form is still in circulation.",
+              "requiresTrait": "old-textbook",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Practise the greeting under your breath.",
+              "requiresTrait": "ear-accents",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
             }
           ]
         },
@@ -743,6 +851,33 @@
                 "goodwill": 1,
                 "morale": -1
               }
+            },
+            {
+              "label": "Volunteer to translate the heading.",
+              "requiresTrait": "false-friend",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Quote the textbook’s model introduction.",
+              "requiresTrait": "old-textbook",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
+            },
+            {
+              "label": "Try the new expression in a sentence.",
+              "requiresTrait": "ear-accents",
+              "result": "The observation is acknowledged. Someone makes a note for the file.",
+              "effects": {
+                "sanity": -1
+              },
+              "trust": 1
             }
           ]
         },
@@ -1502,6 +1637,37 @@
               "effects": {
                 "goodwill": -3
               }
+            },
+            {
+              "label": "Ask which office holds the original stamp.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {},
+              "formal": true
+            },
+            {
+              "label": "Clarify which signature belongs on the form.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {},
+              "formal": true
+            },
+            {
+              "label": "Welcome the constructive exchange of views.",
+              "requiresLanguage": {
+                "language": "communique",
+                "min": 2
+              },
+              "result": "The constructive exchange of views is welcomed. The minutes will reflect this.",
+              "effects": {}
             }
           ]
         },
@@ -1566,6 +1732,37 @@
               "effects": {
                 "goodwill": 3
               }
+            },
+            {
+              "label": "Offer to bring the revised programme in person.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {},
+              "formal": true
+            },
+            {
+              "label": "Thank the ministry for making time.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {},
+              "formal": true
+            },
+            {
+              "label": "Welcome the constructive exchange of views.",
+              "requiresLanguage": {
+                "language": "communique",
+                "min": 2
+              },
+              "result": "The constructive exchange of views is welcomed. The minutes will reflect this.",
+              "effects": {}
             }
           ]
         }
@@ -1939,6 +2136,26 @@
               "pair": 0,
               "score": 2,
               "effects": {}
+            },
+            {
+              "label": "Ask whether the meeting starts before the first tee.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {}
+            },
+            {
+              "label": "Compliment the course and ask about the programme.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {}
             }
           ]
         },
@@ -2006,6 +2223,26 @@
               "effects": {
                 "confidence": 2
               }
+            },
+            {
+              "label": "Suggest a shorter route around the course.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {}
+            },
+            {
+              "label": "Explain that the Minister prefers a punctual finish.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {}
             }
           ]
         }
@@ -2236,6 +2473,26 @@
               "effects": {
                 "sanity": -1
               }
+            },
+            {
+              "label": "Ask whether the deadline is confirmed.",
+              "requiresLanguage": {
+                "language": "german",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {}
+            },
+            {
+              "label": "Offer to compare the two versions of the note.",
+              "requiresLanguage": {
+                "language": "german",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {}
             }
           ]
         }
@@ -2260,6 +2517,16 @@
               "label": "Request a synopsis for Capital.",
               "result": "Klaus insists the duke is not authorised to be quoted.",
               "trust": -1,
+              "effects": {}
+            },
+            {
+              "label": "Explain that the programme still needs one signature.",
+              "requiresLanguage": {
+                "language": "german",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
               "effects": {}
             }
           ]
@@ -2288,6 +2555,26 @@
               "result": "Henri promises to correct the atmosphere in the next translation.",
               "trust": -2,
               "effects": {}
+            },
+            {
+              "label": "Describe the meeting as cordial.",
+              "requiresLanguage": {
+                "language": "french",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {}
+            },
+            {
+              "label": "Offer to draft the joint note in French.",
+              "requiresLanguage": {
+                "language": "french",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {}
             }
           ]
         }
@@ -2311,6 +2598,16 @@
             {
               "label": "Issue the printer a formal protest.",
               "result": "Henri files the protest under 'mechanical correspondence'.",
+              "trust": 1,
+              "effects": {}
+            },
+            {
+              "label": "Ask whether constructive means an agreement was reached.",
+              "requiresLanguage": {
+                "language": "french",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
               "trust": 1,
               "effects": {}
             }
@@ -2445,6 +2742,28 @@
               "result": "Mira points to the bin currently blocking the route.",
               "trust": -1,
               "effects": {}
+            },
+            {
+              "label": "Ask when the quay inspection is due to finish.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {},
+              "formal": true
+            },
+            {
+              "label": "Confirm where the fuel permit should be collected.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {},
+              "formal": true
             }
           ]
         }
@@ -2470,6 +2789,28 @@
               "result": "Mira measures the ribbon against the blocked drain.",
               "trust": -1,
               "effects": {}
+            },
+            {
+              "label": "Offer to submit the delivery list again.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {},
+              "formal": true
+            },
+            {
+              "label": "Thank the officer for explaining the delay.",
+              "requiresLanguage": {
+                "language": "ombrazian",
+                "min": 2
+              },
+              "result": "The observation is understood. The official makes a note in the margin.",
+              "trust": 1,
+              "effects": {},
+              "formal": true
             }
           ]
         }

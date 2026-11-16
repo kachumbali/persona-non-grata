@@ -13,6 +13,9 @@ export interface Payslip {
   drinks: number;
   moneyRoutes: number;
   total: number;
+  advance?: number;
+  tutorFees?: number;
+  languageAllowance?: number;
 }
 export interface Debrief {
   title: string;
@@ -99,10 +102,21 @@ export function buildDebrief(g: Game): Debrief {
     hardship: salary.hardship,
     drinks: (counts["drinks"] ?? 0) * salary.drinkDeduction,
     moneyRoutes: (counts["money_routes"] ?? 0) * salary.moneyRouteDeduction,
+    advance: salary.advance ?? 0,
+    tutorFees: g.tutorFees ?? 0,
+    languageAllowance:
+      Object.values(g.character?.languages ?? {}).filter((level) => level >= 4).length *
+      (salary.languageAllowance ?? 0),
     total: 0,
   };
   payslip.total =
-    payslip.base + payslip.acting + payslip.hardship - payslip.drinks - payslip.moneyRoutes;
+    payslip.base +
+    payslip.acting +
+    payslip.hardship +
+    (payslip.languageAllowance ?? 0) -
+    payslip.drinks -
+    payslip.moneyRoutes -
+    (payslip.tutorFees ?? 0);
   const finalStats = computeStats(traits, person?.drift),
     startingStats = person?.start.stats ?? computeStats(starting);
   const name = (id: string) =>
@@ -118,6 +132,9 @@ export function buildDebrief(g: Game): Debrief {
       )
       .join(", ") || "None";
   const personnelLines = [
+    `Languages: ${Object.entries(g.character?.languages ?? { bellaluxian: 3 })
+      .map(([id, level]) => `${id} ${level}`)
+      .join(", ")}`,
     `Day 1 traits: ${display(starting)}`,
     `Last day traits: ${display(traits)}`,
     `Gained: ${display((person?.earnedQuirks ?? []).filter((q) => !starting.includes(q)))}`,
@@ -182,6 +199,9 @@ export function buildDebrief(g: Game): Debrief {
         `Hardship allowance: ƒ${payslip.hardship}`,
         `Dry cleaning after toasts: −ƒ${payslip.drinks}`,
         `Rejected expedited claims: −ƒ${payslip.moneyRoutes}`,
+        `Advance made available during posting: ƒ${payslip.advance ?? 0}`,
+        `Private tuition: −ƒ${payslip.tutorFees ?? 0}`,
+        `Language allowance: ƒ${payslip.languageAllowance ?? 0}`,
         `Total: ƒ${payslip.total}`,
       ],
     },

@@ -15,6 +15,7 @@ export type Clipping = {
   outlet: string;
   headline: string;
   body: string;
+  original?: string;
   day?: number;
   minDay?: number;
   maxDay?: number;

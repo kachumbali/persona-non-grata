@@ -38,7 +38,8 @@
       "maxim": {
         "headline": "Inspection of a very safe routine",
         "body": "The quay is inspecting its routine. Tankers remain involved. Translator’s note: ‘industrial action’ probably means the workers are being very industrious."
-      }
+      },
+      "original": "The notice describes the inspection as continuing until further notice."
     },
     {
       "id": "fuel-4",
@@ -47,7 +48,8 @@
       "body": "Tanker lorries wait outside the fuel quay. Drivers have no estimate for reopening, but the queue now has a tea seller, a barber and better public services than the ministry.",
       "day": 4,
       "priority": 100,
-      "signal": true
+      "signal": true,
+      "original": "The drivers say no reopening time has been communicated."
     },
     {
       "id": "fuel-5",
@@ -56,7 +58,8 @@
       "body": "Deputy Foreign Minister Bako says there is no dispute at the fuel quay. The inspection remains routine. Asked why the gates were locked, he explained that openness is a policy, not a hinge.",
       "day": 5,
       "priority": 100,
-      "signal": true
+      "signal": true,
+      "original": "The original distinguishes the locked gates from the ministry’s claim of openness."
     },
     {
       "id": "fuel-7",
@@ -65,7 +68,8 @@
       "body": "The Valdorian embassy has quietly bought generator fuel. Its cable calls this a seasonal precaution. The season appears to be ‘before everyone else notices’.",
       "day": 7,
       "priority": 100,
-      "signal": true
+      "signal": true,
+      "original": "The embassy describes the purchase as a precaution, without specifying a season."
     },
     {
       "id": "fuel-8",
@@ -75,7 +79,8 @@
       "body": "Mira Sene controls the inspection timetable, though the minister signs the portfolio papers. She declined to comment, but pointed at an actual timetable.",
       "day": 8,
       "priority": 100,
-      "signal": true
+      "signal": true,
+      "original": "The timetable identifies Sene as the person controlling the inspection schedule."
     },
     {
       "id": "fuel-9",
@@ -90,7 +95,8 @@
       "body": "A cabinet reshuffle may move responsibility for the port. No minister has volunteered to inherit the inspection. Three have volunteered to inherit the ribbon-cutting scissors.",
       "day": 9,
       "priority": 100,
-      "signal": true
+      "signal": true,
+      "original": "The port portfolio may change hands before the inspection ends."
     },
     {
       "id": "fuel-11",
@@ -99,7 +105,8 @@
       "body": "Dockworkers have posted a strike notice over safety checks and staffing. The ministry says it was taken by surprise, having filed the previous six warnings under ‘stakeholder enthusiasm’.",
       "day": 11,
       "priority": 100,
-      "signal": true
+      "signal": true,
+      "original": "The original refers to several earlier warnings about staffing."
     },
     {
       "id": "fuel-bought",
@@ -111,7 +118,8 @@
       "signal": true,
       "trigger": {
         "flag": "fuel-bought"
-      }
+      },
+      "original": "The original confirms that early deliveries preceded rationing."
     },
     {
       "id": "fuel-mira",

@@ -13,6 +13,7 @@ export interface ContentUniverse {
   choices: string[];
   /** Subset of choices gated by a trait, with the trait. */
   traitChoices: Record<string, string>;
+  languageChoices: Record<string, string>;
 }
 
 /** Everything the chapter authors, under the same ids the bots record. */
@@ -26,10 +27,18 @@ export function contentUniverse(chapterId?: string): ContentUniverse {
     clippings: [],
     choices: [],
     traitChoices: {},
+    languageChoices: {},
   };
-  const add = (id: string, gate: { requiresTrait?: string | undefined }) => {
+  const add = (
+    id: string,
+    gate: {
+      requiresTrait?: string | undefined;
+      requiresLanguage?: { language: string } | undefined;
+    },
+  ) => {
     u.choices.push(id);
     if (gate.requiresTrait) u.traitChoices[id] = gate.requiresTrait;
+    if (gate.requiresLanguage) u.languageChoices[id] = gate.requiresLanguage.language;
   };
   for (const e of chapter.campaign.events) {
     u.events.push(`event:${e.id}`);
@@ -94,6 +103,19 @@ function idleByDay(rs: RunResult[], pick: (r: RunResult) => number[]): number[] 
 }
 
 export interface Report {
+  languagesByBot: Record<
+    string,
+    {
+      level: number;
+      level2ByDay10: number;
+      lessons: Record<string, number>;
+      attempts: number;
+      errors: number;
+      sat: number;
+      passed: number;
+      failed: number;
+    }
+  >;
   personnelByBot: Record<
     string,
     {
@@ -170,10 +192,10 @@ export interface Report {
     clippings: number;
     choices: number;
   };
-  neverSeen: Omit<ContentUniverse, "traitChoices">;
+  neverSeen: Omit<ContentUniverse, "traitChoices" | "languageChoices">;
   neverTaken: { choices: string[] };
   /** The same, counting only runs that used the shipped game seed (what players actually get). */
-  neverSeenShipped: Omit<ContentUniverse, "traitChoices">;
+  neverSeenShipped: Omit<ContentUniverse, "traitChoices" | "languageChoices">;
   idleBlocks: { byBot: Record<string, Stat>; overall: Stat };
   /** Mean idle blocks (of 4) on each day, over the runs of the bots that play the chapter through. */
   idleByDay: number[];
@@ -277,6 +299,26 @@ export function aggregate(results: RunResult[]): Report {
     for (const [msg, n] of Object.entries(r.planErrors)) errors[msg] = (errors[msg] ?? 0) + n;
 
   return {
+    languagesByBot: Object.fromEntries(
+      Object.entries(byBot).map(([bot, rs]) => [
+        bot,
+        {
+          level: mean(rs.map((r) => r.languageLevel)),
+          level2ByDay10: mean(rs.map((r) => Number(r.languageDay10 >= 2))),
+          lessons: Object.fromEntries(
+            ["sola", "tutor", "fixer"].map((id) => [
+              id,
+              mean(rs.map((r) => r.languageLessons[`language_lesson_${id}`] ?? 0)),
+            ]),
+          ),
+          attempts: mean(rs.map((r) => r.languageAttempts)),
+          errors: mean(rs.map((r) => r.mistranslations)),
+          sat: rs.filter((r) => r.exam !== "not-sat").length,
+          passed: rs.filter((r) => r.exam === "passed").length,
+          failed: rs.filter((r) => r.exam === "failed").length,
+        },
+      ]),
+    ),
     personnelByBot: Object.fromEntries(
       Object.entries(byBot).map(([bot, runs]) => [
         bot,
@@ -513,6 +555,9 @@ export function formatReport(r: Report): string {
   out.push(
     `Simulated playthroughs: chapter ${r.chapterId}, ${r.runs} runs (${r.bots.length} bots x ${r.builds.length} builds x ${r.seeds.length} seeds)`,
   );
+  h("Languages per bot");
+  for (const [bot, stats] of Object.entries(r.languagesByBot))
+    out.push(`${bot}: ${JSON.stringify(stats)}`);
   h("Endings per bot");
   out.push(endingTable(r.endingsByBot, r.endings, "bot"));
   h("Personnel records and debriefs");

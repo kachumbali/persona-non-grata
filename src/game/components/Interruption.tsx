@@ -1,4 +1,5 @@
-import { eligible, gateLabel } from "../character";
+import { eligible, gateLabel, withInterpreter } from "../character";
+import { InterpreterSelect } from "./InterpreterSelect";
 import { computeStats } from "../rules";
 import { useEffect, useState } from "react";
 import { BellRing, Phone, Printer, UserRound } from "lucide-react";
@@ -26,6 +27,7 @@ export function Interruption() {
   const [open, setOpen] = useState(true);
   const [notice, setNotice] = useState("");
   const [overload, setOverload] = useState(false);
+  const [interpreter, setInterpreter] = useState("");
   useEffect(() => {
     setOpen(true);
     setNotice("");
@@ -84,6 +86,11 @@ export function Interruption() {
         contactTrust: c.contactTrust,
         formal: c.formal,
         traitChoice: c.requiresTrait,
+        languageGate: c.requiresLanguage,
+        interpreter:
+          c.requiresLanguage && (g.character?.languages?.[c.requiresLanguage.language] ?? 0) === 0
+            ? interpreter || undefined
+            : undefined,
         counts: c.counts,
         statDrift: c.statDrift,
         overload,
@@ -144,6 +151,9 @@ export function Interruption() {
                 </div>
               )}
               <div className="flex flex-col gap-2">
+                {event.choices.some((option) => option.requiresLanguage) && (
+                  <InterpreterSelect value={interpreter} onChange={setInterpreter} />
+                )}
                 {event.choices
                   .filter((c) =>
                     eligible(
@@ -151,6 +161,7 @@ export function Interruption() {
                       g.character?.traits ?? [],
                       computeStats(g.character?.traits ?? [], g.character?.statDrift),
                       g.personnel.reputations,
+                      withInterpreter(c, g.character?.languages, interpreter),
                     ),
                   )
                   .map((c) => (

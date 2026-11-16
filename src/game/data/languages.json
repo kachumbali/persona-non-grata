@@ -1,0 +1,27 @@
+[
+  {
+    "id": "bellaluxian",
+    "name": "Bellaluxian",
+    "description": "The language of home and the Ministry's forms."
+  },
+  {
+    "id": "english",
+    "name": "English",
+    "description": "Useful at meetings that could have been emails."
+  },
+  {
+    "id": "french",
+    "name": "French",
+    "description": "A working language with a formidable supply of procedure."
+  },
+  {
+    "id": "german",
+    "name": "German",
+    "description": "A working language well suited to a properly organised file."
+  },
+  {
+    "id": "communique",
+    "name": "Communiqué",
+    "description": "The art of saying nothing at considerable length."
+  }
+]

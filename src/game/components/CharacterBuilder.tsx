@@ -26,13 +26,23 @@ export function CharacterBuilder() {
   const [filter, setFilter] = useState<"all" | "female" | "male">("all");
   const [slots, setSlots] = useState<[number, number, number]>([0, 0, 0]);
   const [traits, setTraits] = useState<string[]>([]);
+  const [languages, setLanguages] = useState<Record<string, number>>({
+    english: 2,
+    french: 2,
+    german: 0,
+  });
+  const languageValues = Object.values(languages);
+  const validLanguages =
+    languageValues.filter((value) => value > 0).length === 2 &&
+    languageValues.reduce((a, b) => a + b, 0) === 4;
   const left = pointsLeft(traits);
   const stats = computeStats(traits);
   const bio = `${bg.origin[slots[0]]}, ${bg.misstep[slots[1]]}. ${bg.reason[slots[2]]}`;
   const toggle = (id: string) =>
     setTraits((t) => (t.includes(id) ? t.filter((x) => x !== id) : [...t, id]));
   const hasFlaw = traits.some((id) => (TRAITS.find((t) => t.id === id)?.cost ?? 0) < 0);
-  const canStart = name.trim().length > 0 && left >= 0 && hasFlaw && traits.length <= 4;
+  const canStart =
+    name.trim().length > 0 && left >= 0 && hasFlaw && traits.length <= 4 && validLanguages;
 
   return (
     <main className="mx-auto retro-desktop px-3 py-6 sm:px-6">
@@ -179,6 +189,36 @@ export function CharacterBuilder() {
                 );
               })}
             </div>
+            <h2 className="retro-section-heading mb-2 mt-5 font-bold">Languages</h2>
+            <p className="text-sm">
+              Bellaluxian: 3 (native). Choose two languages and distribute four points between them.
+            </p>
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {(["english", "french", "german"] as const).map((id) => (
+                <label key={id} className="text-sm capitalize">
+                  {id}
+                  <select
+                    aria-label={`${id} language level`}
+                    className="mt-1 w-full border border-input bg-muted p-1"
+                    value={languages[id]}
+                    onChange={(event) =>
+                      setLanguages({ ...languages, [id]: Number(event.target.value) })
+                    }
+                  >
+                    {[0, 1, 2, 3].map((level) => (
+                      <option key={level} value={level}>
+                        {level}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+            {!validLanguages && (
+              <p className="text-sm text-destructive">
+                Choose exactly two languages and four points in total.
+              </p>
+            )}
             <h2 className="retro-section-heading mb-2 mt-5 font-bold">Stats</h2>
             <p className="mb-2 text-sm">
               Starting DP per block: {playerCapacity({ traits }, 80, 75, 0).total}. Stamina changes
@@ -206,7 +246,14 @@ export function CharacterBuilder() {
             disabled={!canStart}
             onClick={() =>
               startCareer(
-                { title, name: name.trim(), portrait, bio, traits },
+                {
+                  title,
+                  name: name.trim(),
+                  portrait,
+                  bio,
+                  traits,
+                  languages: { bellaluxian: 3, ...languages },
+                },
                 { origin: slots[0], misstep: slots[1], reason: slots[2] },
               )
             }
@@ -215,13 +262,15 @@ export function CharacterBuilder() {
           </Button>
           {!canStart && (
             <p className="mt-2 text-xs text-muted-foreground">
-              {!name.trim()
-                ? "The form requires a surname."
-                : !hasFlaw
-                  ? "Choose at least one flaw; you may take up to four traits."
-                  : left < 0
-                    ? "Too many advantages for your points."
-                    : "Choose no more than four traits."}
+              {!validLanguages
+                ? "Choose exactly two languages and four language points."
+                : !name.trim()
+                  ? "The form requires a surname."
+                  : !hasFlaw
+                    ? "Choose at least one flaw; you may take up to four traits."
+                    : left < 0
+                      ? "Too many advantages for your points."
+                      : "Choose no more than four traits."}
             </p>
           )}
         </div>

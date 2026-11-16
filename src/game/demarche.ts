@@ -60,6 +60,8 @@ export interface DeliveryContext {
   worker?: string;
   delegationSucceeded?: boolean;
   delayApplied?: boolean;
+  hostLanguageLevel?: number;
+  interpreter?: boolean;
 }
 export interface DeliveryOutcome {
   quality: DemarcheQuality;
@@ -100,6 +102,11 @@ export function resolveDemarche(
     quality =
       d.level !== "deputy-minister" && ctx.euTrust + ctx.partnerTrust >= 100 ? "good" : "adequate";
   else if (route.kind === "colleague") quality = incident ? "adequate" : "good";
+  if (route.kind === "self" && !late && !superseded && ctx.hostLanguageLevel !== undefined) {
+    if (ctx.hostLanguageLevel >= 2 && quality === "adequate") quality = "good";
+    else if (ctx.hostLanguageLevel === 0 && !ctx.interpreter)
+      quality = quality === "good" ? "adequate" : "failed";
+  }
   const base =
     quality === "good"
       ? { confidence: 3, goodwill: 2 }
@@ -137,7 +144,7 @@ export function planDemarche(
     day: number;
     block: number;
     location: string;
-    character: { traits: string[] } | null;
+    character: { traits: string[]; languages?: Record<string, number> | undefined } | null;
     knownFacts: string[];
     colleagues: Record<string, { trust: number }>;
     demarches: DemarcheProgress;
@@ -170,6 +177,14 @@ export function planDemarche(
   }
   const route = d.routes.find((item) => item.kind === kind);
   if (!route) return "Choose a delivery route.";
+  if (
+    route.requiresLanguage &&
+    Math.max(
+      decision.interpreter ? route.requiresLanguage.min : 0,
+      s.character.languages?.[route.requiresLanguage.language] ?? 0,
+    ) < Math.max(1, route.requiresLanguage.min - 1)
+  )
+    return "Your language level is too low for this route.";
   const recipient = activeChapter().campaign.characters.find((person) => person.id === d.recipient);
   if (kind === "self" && s.location !== recipient?.location)
     return `Travel to ${recipient?.name ?? "the recipient"} first.`;
@@ -203,6 +218,7 @@ export function planDemarche(
   const delayed = kind === "eu" && (s.colleagues["eu"]?.trust ?? 0) + partnerTrust < 100;
   return {
     ...decision,
+    languageGate: route.requiresLanguage,
     kind: "work",
     worker: kind === "self" || kind === "eu" ? undefined : decision.worker,
     timeCost: route.dp,

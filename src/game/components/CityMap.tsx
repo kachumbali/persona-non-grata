@@ -33,6 +33,7 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
   const g = useGame();
   const [target, setTarget] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [taxiLesson, setTaxiLesson] = useState(false);
   const left =
     playerCapacity(g.character, g.energy, g.composure, g.alcohol, g.hangover).total -
     g.pending.reduce((n, p) => n + playerTime(p), 0);
@@ -41,7 +42,7 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
   const dest = campaign().locations.find((l) => l.id === target);
   const travel = () => {
     if (!target) return;
-    if (g.move(target)) {
+    if (g.move(target, taxiLesson)) {
       setTarget(null);
       setError("");
     } else setError(useGame.getState().planError || "You cannot travel now.");
@@ -123,6 +124,14 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
               {dest?.description} The trip costs {TRAVEL_DP} DP. You have {left} DP left this block.
             </AlertDialogDescription>
           </AlertDialogHeader>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={taxiLesson}
+              onChange={(event) => setTaxiLesson(event.target.checked)}
+            />{" "}
+            Practise Ombrazian in the fixer’s taxi · no extra DP
+          </label>
           {error && (
             <p role="alert" className="text-sm text-destructive">
               {error}

@@ -1,3 +1,4 @@
+import { drawExam, languageRoll, learnLanguage, mistranslates } from "./languages";
 import { pressReview, clippings } from "./press";
 import {
   advancePersonnel,
@@ -31,6 +32,7 @@ import {
   missedEffects,
   overnightRecovery,
   socialBonus,
+  withInterpreter,
 } from "./character";
 import { create } from "zustand";
 import { activeChapter, activeChapterId, DEFAULT_CHAPTER_ID } from "./chapters";
@@ -117,6 +119,9 @@ export interface Character {
   curedTraits?: string[] | undefined;
   statDrift?: Drift | undefined;
   reputations?: string[] | undefined;
+  languages?: Record<string, number> | undefined;
+  languageProgress?: Record<string, number> | undefined;
+  examAttempts?: number | undefined;
 }
 export interface LogEntry {
   day: number;
@@ -128,6 +133,10 @@ export interface GameState {
   chapterId: string;
   character: Character | null;
   personnel: PersonnelState;
+  personalFunds: number;
+  tutorFees: number;
+  tutorHomework: import("./rules").Email[];
+  tutorIgnored: number;
   day: number;
   minute: number;
   block: number;
@@ -197,12 +206,12 @@ export interface GameState {
   storyOutcomes: Record<string, StoryOutcome>;
   start: (c: Character) => void;
   reset: () => void;
-  move: (location: string) => boolean;
+  move: (location: string, learnInTaxi?: boolean) => boolean;
   moveRoom: (room: string) => void;
   selectNpc: (id: string | null) => void;
   queue: (decision: PendingDecision, replacePlayer?: boolean) => boolean;
   removeDecision: (id: string) => void;
-  answer: (id: string, action: Action) => void;
+  answer: (id: string, action: Action, interpreter?: string) => void;
   recall: (id: string) => void;
   advance: () => void;
 }
@@ -239,6 +248,10 @@ const initialState = () => {
     todayPlans: {},
     character: null,
     personnel: createPersonnel([], computeStats([])),
+    personalFunds: m.debrief?.payslip.advance ?? 0,
+    tutorFees: 0,
+    tutorHomework: [],
+    tutorIgnored: 0,
     day: 1,
     minute: m.blocks[0].time,
     block: 0,
@@ -327,13 +340,16 @@ export function resolveStep(s: GameState, decision: PendingDecision): PendingDec
     if (s.routeDeliveries[key]) return `${label}: confirmation is already on its way.`;
     const route = step.routes.find((r) => r.id === decision.route);
     if (!route) return `${label}: choose a route.`;
-    const available = routeStatus(route, routeContext(s, decision.task, step.id));
+    const ctx = routeContext(s, decision.task, step.id);
+    ctx.languages = withInterpreter(route, ctx.languages, decision.interpreter ?? "");
+    const available = routeStatus(route, ctx);
     if (available.state !== "available")
       return `${label}: ${available.state === "blocked" ? available.reason : available.state}.`;
     if (decision.worker) return `${label}: choose a route in person.`;
     const cash = route.cash + (decision.cashCost ?? 0);
     return {
       ...decision,
+      languageGate: route.requiresLanguage,
       counts: [...(decision.counts ?? []), ...(route.counts ?? [])],
       statDrift: route.statDrift ?? decision.statDrift,
       step: step.id,
@@ -360,7 +376,12 @@ export const useGame = create<GameState>()(
       preparePress: () => {
         const s = get();
         if (s.block !== 0 || s.pressDay === s.day) return;
-        const review = pressReview(s, s.day);
+        const hostId = activeChapter().manifest.hostLanguage?.id;
+        const review = pressReview(
+          s,
+          s.day,
+          (s.character?.languages?.[hostId ?? ""] ?? 0) >= 2 ? "standard" : "maxim",
+        );
         set({
           pressDay: s.day,
           pressIds: review.clippings.map((c) => c.id),
@@ -453,7 +474,7 @@ export const useGame = create<GameState>()(
           ],
         }),
       reset: () => set({ ...initialState() }),
-      move: (location) => {
+      move: (location, learnInTaxi = false) => {
         const s = get();
         const place = campaign().locations.find((l) => l.id === location);
         if (s.ending || !place || location === s.location) return false;
@@ -472,6 +493,7 @@ export const useGame = create<GameState>()(
           effects: {},
           energy: -3,
           location,
+          languageLesson: learnInTaxi ? "fixer" : undefined,
         });
         if (ok) {
           const people = campaign()
@@ -480,6 +502,11 @@ export const useGame = create<GameState>()(
           const overheard = (campaign().gossip ?? []).filter(
             (g) =>
               g.source === "overheard" &&
+              (!g.requiresLanguage ||
+                (s.character?.languages?.[g.requiresLanguage.language] ?? 0) >= 1) &&
+              (!g.requiresLanguage ||
+                (s.character?.languages?.[g.requiresLanguage.language] ?? 0) < 4 ||
+                languageRoll(s.seed, `${s.day}:${location}:${g.id}`) % 2 === 0) &&
               g.day <= s.day &&
               people.includes(g.subject) &&
               g.knowers.some((id) => people.includes(id)) &&
@@ -494,7 +521,17 @@ export const useGame = create<GameState>()(
             location,
             selectedNpc: null,
             knownFacts: [
-              ...new Set([...get().knownFacts, ...overheard.map((g) => `gossip:${g.id}`)]),
+              ...new Set([
+                ...get().knownFacts,
+                ...overheard.flatMap((g) => [
+                  `gossip:${g.id}`,
+                  ...(g.requiresLanguage &&
+                  (s.character?.languages?.[g.requiresLanguage.language] ?? 0) <
+                    g.requiresLanguage.min
+                    ? [`gossip-garbled:${g.id}`]
+                    : []),
+                ]),
+              ]),
             ],
           });
         }
@@ -550,6 +587,77 @@ export const useGame = create<GameState>()(
       queue: (requested, replacePlayer = false) => {
         const s = get();
         if (!s.character || s.ending) return false;
+        if (
+          requested.interpreter &&
+          (!requested.languageGate ||
+            !["sola", "anselm", "maxim"].includes(requested.interpreter) ||
+            (s.character.languages?.[requested.languageGate.language] ?? 0) !== 0)
+        ) {
+          set({ planError: "That interpreter is not available for this choice." });
+          return false;
+        }
+        if (requested.examAnswers) {
+          const host = activeChapter().manifest.hostLanguage;
+          const exam = host?.exam;
+          const attempt = s.character.examAttempts ?? 0;
+          const questions = exam ? drawExam(exam.questions, s.seed, attempt) : [];
+          if (
+            !host ||
+            !exam ||
+            s.day !== exam.day ||
+            s.block !== exam.block ||
+            (s.character.languages?.[host.id] ?? 0) < 2 ||
+            requested.timeCost !== 2 ||
+            requested.examAnswers.length !== 5 ||
+            s.pending.some((item) => !!item.examAnswers) ||
+            questions.some(
+              (question) =>
+                !requested.examAnswers?.some(
+                  (answer) =>
+                    answer.question === question.id &&
+                    Number.isInteger(answer.answer) &&
+                    answer.answer >= 0 &&
+                    answer.answer < question.answers.length,
+                ),
+            ) ||
+            s.storyFlags.some((flag) => flag.startsWith("language-exam:"))
+          ) {
+            set({ planError: "The language examination is unavailable." });
+            return false;
+          }
+        }
+        if (requested.languageLesson) {
+          const teacher = activeChapter().manifest.hostLanguage?.teachers?.find(
+            (item) => item.id === requested.languageLesson,
+          );
+          if (
+            !teacher ||
+            (requested.lessonLanguage !== undefined &&
+              requested.lessonLanguage !== "communique" &&
+              requested.lessonLanguage !== activeChapter().manifest.hostLanguage?.id) ||
+            (requested.lessonLanguage === "communique" && teacher.id === "fixer") ||
+            (teacher.id === "tutor" && s.tutorIgnored >= 3) ||
+            (teacher.id === "fixer" &&
+              (!requested.id.startsWith("travel-") || !requested.location)) ||
+            (teacher.id !== "fixer" &&
+              teacher.character &&
+              requested.worker !== teacher.character) ||
+            requested.timeCost !== 1 ||
+            s.personalFunds <
+              teacher.fee +
+                s.pending.reduce(
+                  (sum, item) =>
+                    sum +
+                    (activeChapter().manifest.hostLanguage?.teachers?.find(
+                      (entry) => entry.id === item.languageLesson,
+                    )?.fee ?? 0),
+                  0,
+                )
+          ) {
+            set({ planError: "That language lesson is not available." });
+            return false;
+          }
+        }
         if (requested.eventId && requested.eventChoice) {
           const choice = campaign()
             .events.find((event) => event.id === requested.eventId)
@@ -561,6 +669,17 @@ export const useGame = create<GameState>()(
               s.character.traits,
               computeStats(s.character.traits, s.character.statDrift),
               s.personnel.reputations,
+              choice.requiresLanguage &&
+                requested.interpreter &&
+                choice.requiresLanguage.language !== "communique"
+                ? {
+                    ...s.character.languages,
+                    [choice.requiresLanguage.language]: Math.max(
+                      1,
+                      s.character.languages?.[choice.requiresLanguage.language] ?? 0,
+                    ),
+                  }
+                : s.character.languages,
             )
           ) {
             set({ planError: "That choice is not available to your personnel file." });
@@ -745,9 +864,9 @@ export const useGame = create<GameState>()(
               ? { planError: "This commitment is already in progress." }
               : { pending: s.pending.filter((p) => p.id !== id), planError: "" },
         ),
-      answer: (id, action) => {
+      answer: (id, action, interpreter) => {
         const s = get();
-        const e = emails().find((x) => x.id === id);
+        const e = [...emails(), ...s.tutorHomework].find((x) => x.id === id);
         const o = e?.options[action];
         const cutoff = blocks()[s.block + 1]?.time ?? 24 * 60;
         if (
@@ -760,6 +879,15 @@ export const useGame = create<GameState>()(
             s.character.traits,
             computeStats(s.character.traits, s.character.statDrift),
             s.personnel.reputations,
+            o.requiresLanguage && interpreter && o.requiresLanguage.language !== "communique"
+              ? {
+                  ...s.character.languages,
+                  [o.requiresLanguage.language]: Math.max(
+                    1,
+                    s.character.languages?.[o.requiresLanguage.language] ?? 0,
+                  ),
+                }
+              : s.character.languages,
           ) ||
           s.handled[id] ||
           absTime(s.day, cutoff - 1) < absTime(e.day, e.time)
@@ -788,6 +916,12 @@ export const useGame = create<GameState>()(
           favour: actual.favour,
           teaches: actual.teaches,
           traitChoice: actual.requiresTrait,
+          languageGate: actual.requiresLanguage,
+          interpreter:
+            actual.requiresLanguage &&
+            (s.character.languages?.[actual.requiresLanguage.language] ?? 0) === 0
+              ? interpreter
+              : undefined,
           counts: actual.counts,
           statDrift: actual.statDrift,
           emailId: id,
@@ -813,6 +947,7 @@ export const useGame = create<GameState>()(
           favour: original.favour,
           teaches: original.teaches,
           traitChoice: original.requiresTrait,
+          languageGate: original.requiresLanguage,
           counts: [...(original.counts ?? []), "recalls", "replyall_accidents"],
           emailAction: "reply" as const,
           recall: undefined,
@@ -849,6 +984,13 @@ export const useGame = create<GameState>()(
           return;
         }
         const economy = { ...s.economy };
+        let personalFunds = s.personalFunds;
+        let tutorFees = s.tutorFees;
+        let tutorIgnored = s.tutorIgnored;
+        let examAttempts = s.character.examAttempts ?? 0;
+        const tutorHomework = [...s.tutorHomework];
+        const languages: Record<string, number> = { bellaluxian: 3, ...s.character.languages };
+        const languageProgress = { ...s.character.languageProgress };
         const missionSteps: MissionProgress = Object.fromEntries(
           Object.entries(s.missionSteps).map(([task, ids]) => [task, [...ids]]),
         );
@@ -946,6 +1088,102 @@ export const useGame = create<GameState>()(
           }
         }
         for (const p of s.pending) {
+          if (p.examAnswers) {
+            examAttempts++;
+            const host = activeChapter().manifest.hostLanguage;
+            const exam = host?.exam;
+            if (host && exam) {
+              const score = p.examAnswers.filter(
+                (answer) =>
+                  exam.questions.find((question) => question.id === answer.question)?.answers[
+                    answer.answer
+                  ]?.correct,
+              ).length;
+              const passed = score >= 4;
+              storyFlags.push(`language-exam:${passed ? "pass" : "fail"}`);
+              if (passed) {
+                languages[host.id] = 4;
+                languageProgress[host.id] = 0;
+                count("language_exam_passed");
+                count("formal");
+              }
+              const line =
+                score === 5
+                  ? exam.lines?.pass
+                  : score === 4
+                    ? exam.lines?.narrow
+                    : score <= 1
+                      ? exam.lines?.spectacular
+                      : exam.lines?.fail;
+              const callback =
+                !passed && s.character.bio.includes("failed the diplomatic entrance exam twice")
+                  ? " Personnel notes that this examination was not conducted by the previous examiner."
+                  : "";
+              const text = `${exam.examiner}: ${score}/5. ${line ?? (passed ? "Passed." : "Not passed.")}${callback}`;
+              results.push({ day: s.day, time: s.minute, text });
+              tutorHomework.push({
+                id: `language-exam-result-${s.turn}`,
+                day: s.day,
+                time: s.minute,
+                from: passed ? "Capital · Personnel Directorate" : exam.examiner,
+                subject: passed
+                  ? "Language qualification confirmed"
+                  : "Language examination result",
+                body: passed
+                  ? `Capital confirms your ${host.name} qualification and allowance. ${text}`
+                  : text,
+                options: {},
+                ignore: { text: "", effects: {} },
+              });
+            }
+          }
+          if (p.languageLesson) {
+            const host = activeChapter().manifest.hostLanguage;
+            const teacher = host?.teachers?.find((item) => item.id === p.languageLesson);
+            if (host && teacher && personalFunds >= teacher.fee) {
+              if (teacher.id === "fixer" && !storyFlags.includes("language-slang"))
+                storyFlags.push("language-slang");
+              count(`language_lesson_${teacher.id}`);
+              personalFunds -= teacher.fee;
+              tutorFees += teacher.fee;
+              if (
+                teacher.id === "tutor" &&
+                (!p.lessonLanguage || p.lessonLanguage === host.id) &&
+                host.homework &&
+                s.day < activeChapter().manifest.days
+              ) {
+                const copy = host.homework;
+                tutorHomework.push({
+                  id: `tutor-homework-${s.turn}`,
+                  day: s.day + 1,
+                  time: activeChapter().manifest.blocks[0].time,
+                  from: copy.from,
+                  subject: copy.subject,
+                  body: copy.body,
+                  options: { reply: { text: copy.reply, effects: {} } },
+                  ignore: { text: copy.ignore, effects: {} },
+                });
+              }
+              const language = p.lessonLanguage ?? host.id;
+              const learned = learnLanguage(
+                languages[language] ?? 0,
+                languageProgress[language] ?? 0,
+                Math.max(
+                  1,
+                  teacher.points +
+                    (teacher.id === "fixer" && (languages[language] ?? 0) === 0 ? 1 : 0) -
+                    (teacher.id === "tutor" ? tutorIgnored : 0),
+                ) + (s.character.traits.includes("ear-accents") ? 1 : 0),
+              );
+              languages[language] = learned.level;
+              languageProgress[language] = learned.progress;
+              results.push({
+                day: s.day,
+                time: s.minute,
+                text: `${teacher.name}: ${language === host.id ? host.name : "Communiqué"} is now level ${learned.level}.`,
+              });
+            }
+          }
           if (p.eventId) {
             const person = campaign().characters.find((c) => c.id === (p.contact ?? p.worker));
             if (person && !metPeople.includes(person.id)) {
@@ -987,18 +1225,21 @@ export const useGame = create<GameState>()(
             ) {
               storyFlags.push(`gossip:${item.id}:${p.gossipAction}`);
               if (p.gossipAction === "pass") {
+                const truth = knownFacts.includes(`gossip-garbled:${item.id}`)
+                  ? "false"
+                  : item.truth;
                 count("gossip_passed");
                 const key = pairKey(p.worker, item.subject);
                 if (p.worker !== item.subject) {
                   relationships[key] = clamp(
-                    (relationships[key] ?? 50) + (item.truth === "true" ? 4 : -6),
+                    (relationships[key] ?? 50) + (truth === "true" ? 4 : -6),
                   );
                   if (!playerPairChanges.includes(key)) playerPairChanges.push(key);
                 }
                 if (!knownRelationships.includes(key)) knownRelationships.push(key);
                 const listener = colleagues[p.worker];
                 if (listener) listener.trust = clamp(listener.trust + 2);
-                if (item.truth !== "true") {
+                if (truth !== "true") {
                   record("Gossip", "Capital receives a correction to the correction.", {
                     confidence: -item.sensitivity - 1 - (item.source === "press" ? 2 : 0),
                   });
@@ -1006,14 +1247,14 @@ export const useGame = create<GameState>()(
                 }
                 delayedRouteEffects.push({
                   dueDay: s.day + 1,
-                  trust: { [item.subject]: item.truth === "true" ? -1 : -3 },
+                  trust: { [item.subject]: truth === "true" ? -1 : -3 },
                   flag: `gossip-reached-${item.id}`,
                 });
                 results.push({
                   day: s.day,
                   time: s.minute,
                   text:
-                    item.truth === "true"
+                    truth === "true"
                       ? "The story travels faster than the minutes."
                       : "The story proves unreliable. Capital receives a correction to the correction.",
                 });
@@ -1103,7 +1344,46 @@ export const useGame = create<GameState>()(
               ...(worker ? { worker } : {}),
               delegationSucceeded: succeeded,
               delayApplied: p.remainingBlocks === 1,
+              hostLanguageLevel:
+                s.character.languages?.[activeChapter().manifest.hostLanguage?.id ?? ""] ?? 0,
+              interpreter: !!p.interpreter,
             });
+            if (p.languageGate && p.languageGate.language !== "communique") {
+              const level = languages[p.languageGate.language] ?? 0;
+              count("language_attempt");
+              const error =
+                !p.interpreter &&
+                mistranslates(
+                  s.seed,
+                  `${s.day}:${s.block}:${p.id}`,
+                  level,
+                  s.character.traits.includes("false-friend"),
+                );
+              const learned = learnLanguage(
+                level,
+                languageProgress[p.languageGate.language] ?? 0,
+                error ? 2 : 1,
+              );
+              languages[p.languageGate.language] = learned.level;
+              languageProgress[p.languageGate.language] = learned.progress;
+              if (error) {
+                count("language_error");
+                const table = activeChapter().manifest.hostLanguage?.mistranslations ?? [];
+                outcome.text =
+                  table[
+                    languageRoll(
+                      s.seed,
+                      s.character.traits.includes("false-friend")
+                        ? "false-friend"
+                        : `${p.id}:error`,
+                    ) % table.length
+                  ] ?? "The intended meaning does not arrive.";
+                outcome.quality = "failed";
+                outcome.confidence = -2;
+                outcome.goodwill = -2;
+                outcome.trust = -1;
+              }
+            }
             for (const key of route.counts ?? []) count(key);
             if (route.statDrift) {
               drift[route.statDrift.stat] =
@@ -1178,6 +1458,62 @@ export const useGame = create<GameState>()(
               ? `${p.source}: ${route?.result ?? stepDef.result}`
               : p.text
             : `${p.source}: work stalled. Check skills, fatigue, trust and cooperation before reassigning.`;
+          let translationError = false;
+          let slangError = false;
+          let translationCost = 2;
+          if (p.languageGate && p.languageGate.language !== "communique") {
+            const level = languages[p.languageGate.language] ?? 0;
+            translationCost = level === 2 ? 3 : 2;
+            count("language_attempt");
+            slangError =
+              !p.interpreter &&
+              !!p.formal &&
+              storyFlags.includes("language-slang") &&
+              level < 3 &&
+              languageRoll(s.seed, `${p.id}:slang`) % 3 === 0;
+            translationError =
+              (p.interpreter === "maxim" &&
+                languageRoll(s.seed, `${s.day}:${s.block}:${p.id}:maxim`) % 4 === 0) ||
+              (!p.interpreter &&
+                (slangError ||
+                  mistranslates(
+                    s.seed,
+                    `${s.day}:${s.block}:${p.id}`,
+                    level,
+                    s.character.traits.includes("false-friend"),
+                  )));
+            const learned = learnLanguage(
+              level,
+              languageProgress[p.languageGate.language] ?? 0,
+              translationError ? 2 : 1,
+            );
+            languages[p.languageGate.language] = learned.level;
+            languageProgress[p.languageGate.language] = learned.progress;
+            if (p.interpreter)
+              results.push({
+                day: s.day,
+                time: s.minute,
+                text:
+                  p.interpreter === "sola"
+                    ? "Sola translates precisely."
+                    : p.interpreter === "anselm"
+                      ? "Anselm improves your remarks while translating."
+                      : "Maxim offers a confident approximation.",
+              });
+            if (translationError) {
+              count("language_error");
+              const host = activeChapter().manifest.hostLanguage;
+              const table = (slangError ? host?.formalSlang : host?.mistranslations) ?? [];
+              text =
+                table[
+                  languageRoll(
+                    s.seed,
+                    s.character.traits.includes("false-friend") ? "false-friend" : `${p.id}:error`,
+                  ) % table.length
+                ] ?? "Your intended meaning fails to arrive.";
+              success = false;
+            }
+          }
           const formal = success && p.formal ? formalBonus(stats.gravitas) : 0;
           const routeEffects: Effects = {};
           for (const key of ["confidence", "goodwill", "morale", "sanity"] as const) {
@@ -1192,7 +1528,9 @@ export const useGame = create<GameState>()(
                   ? { confidence: (routeEffects.confidence ?? p.effects.confidence ?? 0) + formal }
                   : {}),
               }
-            : { confidence: -2, morale: -1 };
+            : translationError
+              ? { goodwill: -translationCost }
+              : { confidence: -2, morale: -1 };
           if (formal) text += ` (Gravitas +${formal} HQ goodwill)`;
           record(p.source, text, effects);
           if (success) {
@@ -1282,7 +1620,11 @@ export const useGame = create<GameState>()(
             const c = colleagues[p.worker];
             const socialRepeat = p.kind === "social" && storyFlags.includes(`social:${p.worker}`);
             if (c) {
-              const base = socialRepeat && (p.trust ?? 0) > 0 ? 1 : (p.trust ?? 0);
+              const base = translationError
+                ? -1
+                : socialRepeat && (p.trust ?? 0) > 0
+                  ? 1
+                  : (p.trust ?? 0);
               const person = campaign().characters.find((item) => item.id === p.worker);
               const scaled = person
                 ? trustModifier(
@@ -1300,7 +1642,38 @@ export const useGame = create<GameState>()(
                   ? 1
                   : 0;
               const liver = p.kind === "social" ? socialBonus(stats.liver, !!p.drinks) : 0;
-              c.trust = clamp(c.trust + scaled + namedrop + liver);
+              const interpreterBonus = p.interpreter === "anselm" && !translationError ? 1 : 0;
+              const textbook =
+                host && s.character.traits.includes("old-textbook")
+                  ? (person?.age ?? 0) >= 60
+                    ? 1
+                    : -1
+                  : 0;
+              const fluent =
+                host &&
+                (languages[activeChapter().manifest.hostLanguage?.id ?? ""] ?? 0) >= 3 &&
+                scaled > 0
+                  ? 1
+                  : 0;
+              const lastSpeaker = storyFlags.find((flag) =>
+                flag.startsWith("last-language-speaker:"),
+              );
+              const mimics =
+                p.kind === "dialogue" && s.character.traits.includes("ear-accents") && lastSpeaker
+                  ? lastSpeaker === `last-language-speaker:${p.worker}`
+                    ? 1
+                    : -1
+                  : 0;
+              c.trust = clamp(
+                c.trust + scaled + namedrop + liver + textbook + fluent + mimics + interpreterBonus,
+              );
+              if (p.kind === "dialogue" && s.character.traits.includes("ear-accents")) {
+                const index = storyFlags.findIndex((flag) =>
+                  flag.startsWith("last-language-speaker:"),
+                );
+                if (index >= 0) storyFlags.splice(index, 1);
+                storyFlags.push(`last-language-speaker:${p.worker}`);
+              }
               c.fatigue = clamp(
                 c.fatigue + (p.kind === "work" ? 18 : p.kind === "social" ? -12 : 0),
               );
@@ -1308,12 +1681,16 @@ export const useGame = create<GameState>()(
                 scaled !== base ? `Charm ${scaled - base > 0 ? "+" : ""}${scaled - base}` : "",
                 namedrop ? "Name-dropper +1" : "",
                 liver ? "Liver +1" : "",
+                textbook ? `Textbook ${textbook > 0 ? "+" : ""}${textbook}` : "",
+                fluent ? "Working language +1" : "",
+                mimics ? `Mimicry ${mimics > 0 ? "+" : ""}${mimics}` : "",
+                interpreterBonus ? "Anselm +1" : "",
               ].filter(Boolean);
               if (factors.length)
                 results.push({
                   day: s.day,
                   time: s.minute,
-                  text: `${p.source}: trust ${scaled + namedrop + liver >= 0 ? "+" : ""}${scaled + namedrop + liver} (${factors.join(", ")}).`,
+                  text: `${p.source}: trust ${scaled + namedrop + liver + textbook + fluent + mimics + interpreterBonus >= 0 ? "+" : ""}${scaled + namedrop + liver + textbook + fluent + mimics + interpreterBonus} (${factors.join(", ")}).`,
                 });
             }
             if (p.kind === "social") storyFlags.push(`social:${p.worker}`);
@@ -1395,7 +1772,19 @@ export const useGame = create<GameState>()(
             (p.eventChoice === "buy" || p.eventChoice === "coordinate")
           )
             storyFlags.push("fuel-protected");
-          if (p.emailId) handled[p.emailId] = p.emailAction ?? "reply";
+          if (p.emailId) {
+            handled[p.emailId] = p.emailAction ?? "reply";
+            const host = activeChapter().manifest.hostLanguage;
+            if (host && p.emailId.startsWith("tutor-homework-") && p.emailAction === "reply") {
+              const learned = learnLanguage(
+                languages[host.id] ?? 0,
+                languageProgress[host.id] ?? 0,
+                1,
+              );
+              languages[host.id] = learned.level;
+              languageProgress[host.id] = learned.progress;
+            }
+          }
           if (p.eventId && !completedEvents.includes(p.eventId)) {
             completedEvents.push(p.eventId);
             storyOutcomes[p.eventId] = {
@@ -1518,13 +1907,37 @@ export const useGame = create<GameState>()(
             ending = pickEnding(meters, false, visit);
             if (ending) break;
           }
-          for (const e of emails()) {
+          for (const e of [...emails(), ...tutorHomework]) {
             if (ending) break;
-            if (e.demarcheId) continue;
+            if (
+              e.demarcheId ||
+              e.id.startsWith("language-exam-result-") ||
+              e.id.startsWith("tutor-quit-")
+            )
+              continue;
             const cutoff = blocks()[s.block + 1]?.time ?? 24 * 60;
             if (handled[e.id] || absTime(e.day, e.time) >= absTime(s.day, cutoff)) continue;
             handled[e.id] = "ignored";
-            count("ignored_mail");
+            if (e.id.startsWith("tutor-homework-")) {
+              tutorIgnored++;
+              if (tutorIgnored === 3) {
+                const text =
+                  activeChapter().manifest.hostLanguage?.homework?.quit ?? "The tutor quits.";
+                results.push({ day: s.day, time: s.minute, text });
+                tutorHomework.push({
+                  id: `tutor-quit-${s.turn}`,
+                  day: s.day,
+                  time: s.minute,
+                  from:
+                    activeChapter().manifest.hostLanguage?.homework?.from ?? "Your language tutor",
+                  subject: "Conclusion of tuition",
+                  body: text,
+                  options: {},
+                  ignore: { text: "", effects: {} },
+                });
+              }
+            }
+            if (!e.id.startsWith("tutor-homework-")) count("ignored_mail");
             const missed = missedEffects(e.ignore.effects, stats.deniability);
             economy.funds += (missed.budget ?? 0) * 100;
             record(
@@ -1758,6 +2171,9 @@ export const useGame = create<GameState>()(
           results.push({ day: s.day, time: s.minute, text: line });
         const character = {
           ...s.character,
+          languages,
+          languageProgress,
+          examAttempts,
           traits: effectiveTraits(
             s.character.startingTraits ??
               s.personnel.start.traits.filter((id) => !s.personnel.earnedQuirks.includes(id)),
@@ -1771,6 +2187,10 @@ export const useGame = create<GameState>()(
         };
         set({
           hangover,
+          personalFunds,
+          tutorFees,
+          tutorHomework,
+          tutorIgnored,
           character,
           personnel: progressed.state,
           economy,
@@ -1847,7 +2267,7 @@ export const useGame = create<GameState>()(
         setItem: () => {},
         removeItem: () => {},
       })),
-      version: 14,
+      version: 15,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = {
@@ -2031,13 +2451,14 @@ export function inboxFor(
   handled: Record<string, string>,
   progress: DemarcheProgress = {},
   notices: PersonnelState["notices"] = [],
+  tutorHomework: import("./rules").Email[] = [],
 ) {
   const cutoff = blocks().find((b) => b.time > minute)?.time ?? 24 * 60;
   const block = Math.max(
     0,
     blocks().findIndex((item) => item.time === minute),
   );
-  const mail = emails()
+  const mail = [...emails(), ...tutorHomework]
     .filter(
       (e) =>
         absTime(e.day, e.time) < absTime(day, cutoff) &&
@@ -2045,7 +2466,10 @@ export function inboxFor(
     )
     .map((e) => ({
       ...e,
-      status: handled[e.id],
+      status:
+        e.id.startsWith("language-exam-result-") || e.id.startsWith("tutor-quit-")
+          ? "report"
+          : handled[e.id],
     }));
   const reports = Object.entries(progress).flatMap(([id, result]) => {
     const instruction = demarcheAt(id);

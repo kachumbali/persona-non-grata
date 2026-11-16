@@ -140,7 +140,8 @@
       "portrait": "npc-protocol",
       "refusalGreeting": "Ndao straightens the file you declined to help with. ",
       "traits": ["seating", "process"],
-      "wants": "Keep the visiting delegation in the approved order."
+      "wants": "Keep the visiting delegation in the approved order.",
+      "age": 64
     },
     {
       "id": "eu",
@@ -199,7 +200,8 @@
       "portrait": "npc-golf",
       "refusalGreeting": "Bako recalls the appointment you declined. ",
       "traits": ["seating", "grudge"],
-      "wants": "Keep the reception on the proper course."
+      "wants": "Keep the reception on the proper course.",
+      "age": 62
     },
     {
       "id": "un",
@@ -255,7 +257,8 @@
       "gender": "female",
       "portrait": "npc-port-officer",
       "traits": ["service", "initiative"],
-      "wants": "Keep the port clean without overlooking its crews."
+      "wants": "Keep the port clean without overlooking its crews.",
+      "age": 49
     },
     {
       "id": "bar-insurer",
@@ -2691,7 +2694,12 @@
       "sensitivity": 1,
       "truth": "true",
       "day": 4,
-      "source": "overheard"
+      "source": "overheard",
+      "requiresLanguage": {
+        "language": "ombrazian",
+        "min": 2
+      },
+      "garbled": "You heard that a meeting had been cancelled because the minutes requested leave."
     },
     {
       "id": "office-cupboard",
@@ -2701,7 +2709,12 @@
       "sensitivity": 2,
       "truth": "half-true",
       "day": 5,
-      "source": "overheard"
+      "source": "overheard",
+      "requiresLanguage": {
+        "language": "ombrazian",
+        "min": 2
+      },
+      "garbled": "You heard that a meeting had been cancelled because the minutes requested leave."
     },
     {
       "id": "receipts",
@@ -2751,7 +2764,12 @@
       "sensitivity": 2,
       "truth": "true",
       "day": 10,
-      "source": "overheard"
+      "source": "overheard",
+      "requiresLanguage": {
+        "language": "ombrazian",
+        "min": 2
+      },
+      "garbled": "You heard that a meeting had been cancelled because the minutes requested leave."
     }
   ]
 }
