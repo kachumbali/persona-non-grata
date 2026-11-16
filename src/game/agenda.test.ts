@@ -131,3 +131,65 @@ describe("other commitment types", () => {
     ).toMatchObject({ what: "Personal time", who: "You" });
   });
 });
+
+describe("the language exam", () => {
+  const host = chapter.manifest.hostLanguage!;
+  const exam = host.exam!;
+  const withLevel = (level: number, day: number, block: number, extra = {}) => {
+    const s = useGame.getState();
+    return {
+      ...s,
+      day,
+      block,
+      pending: [],
+      storyFlags: [],
+      events: [],
+      character: { ...s.character!, languages: { [host.id]: level } },
+      ...extra,
+    };
+  };
+  const find = (s: ReturnType<typeof withLevel>) =>
+    agendaItems(s, chapter).find((i) => i.id === "language-exam");
+  it("is today's item on exam day for an eligible player, with what, where and when", () => {
+    useGame
+      .getState()
+      .start({ title: "Mx", name: "T", portrait: "diplomat-1", bio: "", traits: [] });
+    const item = find(withLevel(2, exam.day, exam.block));
+    expect(item).toMatchObject({ day: exam.day, block: exam.block });
+    expect(item?.what).toContain(exam.examiner);
+    expect(item?.where).toContain("Staff & diary");
+  });
+  it("appears in the three days before, stating the requirement when not yet eligible", () => {
+    useGame
+      .getState()
+      .start({ title: "Mx", name: "T", portrait: "diplomat-1", bio: "", traits: [] });
+    const eligible = find(withLevel(2, exam.day - 2, 0));
+    expect(eligible?.what).not.toContain("needs");
+    const not = find(withLevel(0, exam.day - 2, 0));
+    expect(not?.what).toContain("needs");
+    expect(not?.what).toContain("level 2");
+  });
+  it("is hidden when it can no longer be taken or has been taken", () => {
+    useGame
+      .getState()
+      .start({ title: "Mx", name: "T", portrait: "diplomat-1", bio: "", traits: [] });
+    expect(find(withLevel(0, exam.day, exam.block))).toBeUndefined();
+    expect(find(withLevel(3, exam.day + 1, 0))).toBeUndefined();
+    expect(
+      find(withLevel(3, exam.day, exam.block, { storyFlags: ["language-exam:pass"] })),
+    ).toBeUndefined();
+  });
+});
+
+describe("commitment lines carry no raw ids", () => {
+  it("names a language lesson's teacher and never prints an id", () => {
+    const d = describeCommitment(
+      { ...base, id: "language-lesson", source: "Language lesson with Sola", worker: "sola" },
+      chapter,
+    );
+    expect(d.who).toBe(chapter.campaign.characters.find((c) => c.id === "sola")!.name);
+    const unknown = describeCommitment({ ...base, worker: "ghost", location: "nowhere" }, chapter);
+    expect(unknown.who).toBe("You");
+    expect(unknown.where).toBeUndefined();
+  });
+});

@@ -4,6 +4,7 @@ import { nextStep, stepLabel } from "./mission";
 import type { GameState } from "./store";
 import { decisionCash, playerTime } from "./economy";
 import { statusOf, tick } from "./demarche";
+import { LANGUAGE_LEVELS } from "./languages";
 
 export function describeCommitment(decision: PendingDecision, chapter: ChapterPack) {
   const event = chapter.campaign.events.find((e) => e.id === decision.eventId);
@@ -28,11 +29,12 @@ export function describeCommitment(decision: PendingDecision, chapter: ChapterPa
     event?.location ??
     demarcheLocation ??
     (step ? chapter.manifest.officeLocation : undefined);
-  const place = chapter.campaign.locations.find((l) => l.id === placeId)?.name ?? placeId;
+  const place = chapter.campaign.locations.find((l) => l.id === placeId)?.name;
   const venue = chapter.campaign.venues.find((v) => v.id === decision.venue)?.name;
   const names = [decision.worker, decision.partner]
     .filter(Boolean)
-    .map((id) => chapter.campaign.characters.find((c) => c.id === id)?.name ?? id);
+    .map((id) => chapter.campaign.characters.find((c) => c.id === id)?.name)
+    .filter((name): name is string => !!name);
   const route = step?.routes?.find((r) => r.id === decision.route);
   const action = decision.emailAction && mail?.options[decision.emailAction];
   const choice =
@@ -166,6 +168,33 @@ export function agendaItems(g: GameState, chapter: ChapterPack): AgendaItem[] {
         location,
         day,
         block: day === g.day ? g.block : 0,
+      });
+    }
+  }
+  const host = chapter.manifest.hostLanguage;
+  const exam = host?.exam;
+  if (
+    host &&
+    exam &&
+    !g.storyFlags.some((flag) => flag.startsWith("language-exam:")) &&
+    !g.pending.some((p) => p.id === "language-exam")
+  ) {
+    const level = g.character?.languages?.[host.id] ?? 0;
+    const when = tick(exam.day, exam.block);
+    // Eligible players see it until it is over; others only while a lesson could still get them there.
+    if (level >= 2 ? when >= now : when > now) {
+      const location = chapter.manifest.officeLocation;
+      const need =
+        level >= 2
+          ? ""
+          : ` · needs ${host.name} level 2 (${LANGUAGE_LEVELS[2]}), you are at level ${level}`;
+      result.push({
+        id: "language-exam",
+        what: `${host.name} examination with ${exam.examiner} (2 DP)${need}`,
+        where: `${name(location)} · Staff & diary`,
+        location,
+        day: exam.day,
+        block: exam.block,
       });
     }
   }
