@@ -43,6 +43,8 @@ export interface RouteBase {
   label: string;
   dp: number;
   days: number;
+  counts?: string[];
+  statDrift?: { stat: import("../rules").StatKey; delta: number };
 }
 
 export interface MissionRoute extends RouteBase {

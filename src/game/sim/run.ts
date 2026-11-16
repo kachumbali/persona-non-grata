@@ -125,6 +125,7 @@ export interface RunResult {
   gossipHeld: number;
   falseGossipActed: number;
   relationshipScenesSeen: number;
+  personnel: import("../personnel").PersonnelState;
 }
 
 /** Cash that is spoken for: the visit reserves and the mission steps still to do. */
@@ -249,7 +250,14 @@ function play(options: SimOptions, chapterId: string): RunResult {
       // The call or fax pops up by itself, so every bot sees it and its eligible choices.
       player.see(`event:${event.id}`);
       for (const c of event.choices)
-        if (eligible(c, player.traits, computeStats(player.traits)))
+        if (
+          eligible(
+            c,
+            player.traits,
+            computeStats(player.traits, player.s.character?.statDrift),
+            player.s.personnel.reputations,
+          )
+        )
           player.see(`choice:event:${event.id}:${c.id}`);
     }
     const mail = emails().filter((e) => !e.demarcheId && arrives(e) && !s.handled[e.id]);
@@ -314,7 +322,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     seed: options.seed,
     gameSeed,
     ending: s.ending,
-    endedEarly: s.day < days,
+    endedEarly: blocksPlayed < days * blocks().length,
     day: s.day,
     turns: s.turn,
     meters: { ...s.meters },
@@ -374,6 +382,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     ).length,
     falseGossipActed: s.storyFlags.filter((f) => f.startsWith("gossip:false:")).length,
     relationshipScenesSeen: [...tracker.seen].filter((id) => id.startsWith("event:web-")).length,
+    personnel: structuredClone(s.personnel),
     demarcheRoutes: Object.values(s.demarches).reduce<Record<string, number>>((counts, item) => {
       if (item.status === "delivered" && item.route)
         counts[item.route] = (counts[item.route] ?? 0) + 1;

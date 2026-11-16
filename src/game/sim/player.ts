@@ -119,7 +119,7 @@ export class Player {
     return this.s.character?.traits ?? [];
   }
   get stats() {
-    return computeStats(this.traits);
+    return computeStats(this.traits, this.s.character?.statDrift);
   }
   get office(): string {
     return activeChapter().manifest.officeLocation;
@@ -268,7 +268,9 @@ export class Player {
   ): T[] {
     const stats = this.stats;
     const traits = this.traits;
-    const options = items.filter((item) => eligible(gate(item), traits, stats));
+    const options = items.filter((item) =>
+      eligible(gate(item), traits, stats, this.s.personnel.reputations),
+    );
     const gated = options.filter((item) => gate(item).requiresTrait);
     for (const trait of new Set(gated.map((item) => gate(item).requiresTrait!)))
       this.tracker.traitOffers[trait] = (this.tracker.traitOffers[trait] ?? 0) + 1;
@@ -356,6 +358,9 @@ export class Player {
       choices.find((item) => item.kind === preference) ??
       (this.options.botId === "socialiser" || this.options.botId === "press-reader"
         ? choices.find((item) => item.kind === "eu")
+        : undefined) ??
+      (this.options.botId === "socialiser" && task === "security" && this.s.day >= 12
+        ? choices.find((item) => item.kind === "money")
         : undefined) ??
       choices.find((item) => item.kind === "official");
     if (!route) return false;
@@ -582,6 +587,8 @@ export class Player {
           pairTarget: choice.pairTarget,
           formal: choice.formal,
           traitChoice: choice.requiresTrait,
+          counts: choice.counts,
+          statDrift: choice.statDrift,
           score: choice.score,
           composure: 3,
           energy: energy || undefined,
@@ -674,6 +681,8 @@ export class Player {
           contactTrust: c.contactTrust,
           formal: c.formal,
           traitChoice: c.requiresTrait,
+          counts: c.counts,
+          statDrift: c.statDrift,
           overload,
           playerSlot: c.replace,
           timeCost: eventDP(event.id, c),
@@ -732,6 +741,8 @@ export class Player {
         pairTarget: choice.pairTarget,
         formal: choice.formal,
         traitChoice: choice.requiresTrait,
+        counts: choice.counts,
+        statDrift: choice.statDrift,
         cashCost: choice.cashCost,
         overload,
         trust: choice.trust,

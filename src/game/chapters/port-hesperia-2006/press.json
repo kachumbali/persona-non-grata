@@ -667,6 +667,188 @@
         "flag": "trait:demarche:old-parade"
       },
       "once": true
+    },
+    {
+      "id": "reputation-biscuit-hawk",
+      "outlet": "vale",
+      "headline": "The Biscuit Hawk",
+      "body": "Hospitality budgets now come with a covering note.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "biscuit-hawk"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-team-europe",
+      "outlet": "vale",
+      "headline": "Celeste’s Favourite",
+      "body": "Shared credit has become a private achievement.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "team-europe"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-known-to-fax",
+      "outlet": "vale",
+      "headline": "Known to Fax",
+      "body": "The secure fax recognises your handwriting.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "known-to-fax"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-credit-taker",
+      "outlet": "vale",
+      "headline": "First Among Signatories",
+      "body": "Your name appears before the attached decision.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "credit-taker"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-capital-pleaser",
+      "outlet": "vale",
+      "headline": "Capital’s Reliable Correspondent",
+      "body": "Capital has started to notice your forwarding habits.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "capital-pleaser"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-rule-bender",
+      "outlet": "vale",
+      "headline": "The Annex Wrangler",
+      "body": "Procedures have learned to move around you.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "rule-bender"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-absent",
+      "outlet": "vale",
+      "headline": "The Unread Diplomat",
+      "body": "Several instructions are still looking for you.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "absent"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-debtor",
+      "outlet": "vale",
+      "headline": "Owes Half the Corps",
+      "body": "Your favours ledger needs its own ledger.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "debtor"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-gossip",
+      "outlet": "vale",
+      "headline": "The Discreet Source",
+      "body": "Your discretion is widely quoted.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "gossip"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-envoy",
+      "outlet": "vale",
+      "headline": "The Walking Note",
+      "body": "You are increasingly delivered in person.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "envoy"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-expediter",
+      "outlet": "vale",
+      "headline": "The Expedited Official",
+      "body": "Your paperwork arrives with an invoice.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "expediter"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-reply-all",
+      "outlet": "vale",
+      "headline": "The Distribution List",
+      "body": "Your replies have an extensive readership.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "reply-all"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-protocol",
+      "outlet": "vale",
+      "headline": "The Protocol Exception",
+      "body": "Protocol has added an exception for you.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "protocol"
+      },
+      "once": true
+    },
+    {
+      "id": "reputation-host",
+      "outlet": "vale",
+      "headline": "The Last Toast",
+      "body": "The reception has requested your glass be registered.",
+      "minDay": 2,
+      "maxDay": 15,
+      "priority": 45,
+      "trigger": {
+        "reputation": "host"
+      },
+      "once": true
     }
   ],
   "scenario": {

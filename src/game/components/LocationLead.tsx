@@ -58,6 +58,8 @@ export function LocationLead() {
       pairTarget: choice.pairTarget,
       formal: choice.formal,
       traitChoice: choice.requiresTrait,
+      counts: choice.counts,
+      statDrift: choice.statDrift,
       cashCost: choice.cashCost,
       overload,
       trust: choice.trust,
@@ -162,7 +164,8 @@ export function LocationLead() {
                     eligible(
                       choice,
                       g.character?.traits ?? [],
-                      computeStats(g.character?.traits ?? []),
+                      computeStats(g.character?.traits ?? [], g.character?.statDrift),
+                      g.personnel.reputations,
                     ),
                   )
                   .map((choice) => {

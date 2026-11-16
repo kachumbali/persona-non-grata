@@ -287,7 +287,8 @@
             "cash": 0,
             "days": 3,
             "quality": "good",
-            "result": "The form enters the queue. The queue has a form of its own."
+            "result": "The form enters the queue. The queue has a form of its own.",
+            "counts": ["formal"]
           },
           {
             "id": "ndao",
@@ -307,7 +308,8 @@
             },
             "consequences": {
               "oweFavour": "protocol"
-            }
+            },
+            "counts": ["formal"]
           },
           {
             "id": "marcel",
@@ -327,7 +329,8 @@
             },
             "requires": {
               "expiresOnFlags": ["refused-favour-fixer"]
-            }
+            },
+            "counts": ["rules"]
           },
           {
             "id": "europe",
@@ -347,7 +350,8 @@
             },
             "consequences": {
               "oweFavour": "eu"
-            }
+            },
+            "counts": ["formal"]
           }
         ],
         "result": "Director Ndao's office stamps the confirmation, for a small fee. The stamp is the right stamp and is kept under glass."
@@ -370,7 +374,8 @@
             "cash": 0,
             "days": 1,
             "quality": "good",
-            "result": "The request joins the official queue."
+            "result": "The request joins the official queue.",
+            "counts": ["formal"]
           },
           {
             "id": "mira",
@@ -389,7 +394,8 @@
                 "golf": -10
               }
             },
-            "result": "Mira finds space after the clean-port statement is promised."
+            "result": "Mira finds space after the clean-port statement is promised.",
+            "counts": ["formal"]
           },
           {
             "id": "marcel",
@@ -409,7 +415,8 @@
             "result": "Marcel finds a lounge and sends an invoice.",
             "requires": {
               "expiresOnFlags": ["refused-favour-fixer"]
-            }
+            },
+            "counts": ["rules"]
           },
           {
             "id": "europe",
@@ -429,7 +436,8 @@
             "consequences": {
               "oweFavour": "eu"
             },
-            "result": "The EU reserves space under a common cover note."
+            "result": "The EU reserves space under a common cover note.",
+            "counts": ["formal"]
           }
         ],
         "result": "The airport enters a provisional hold for the Minister. 'Provisional' is underlined twice."
@@ -461,7 +469,8 @@
             "cash": 0,
             "days": 2,
             "quality": "good",
-            "result": "The list enters the queue, alphabetised by rank."
+            "result": "The list enters the queue, alphabetised by rank.",
+            "counts": ["formal"]
           },
           {
             "id": "mira",
@@ -480,7 +489,8 @@
               "trust": {
                 "golf": -10
               }
-            }
+            },
+            "counts": ["formal"]
           },
           {
             "id": "marcel",
@@ -500,7 +510,8 @@
             },
             "requires": {
               "expiresOnFlags": ["refused-favour-fixer"]
-            }
+            },
+            "counts": ["rules"]
           },
           {
             "id": "europe",
@@ -520,7 +531,8 @@
             },
             "consequences": {
               "oweFavour": "eu"
-            }
+            },
+            "counts": ["formal"]
           }
         ],
         "result": "The airport accepts forty-one names for a lounge of twelve and describes it as a reception."
@@ -560,7 +572,8 @@
             "cash": 0,
             "days": 2,
             "quality": "good",
-            "result": "The ministry registers the draft and forwards the receipt."
+            "result": "The ministry registers the draft and forwards the receipt.",
+            "counts": ["formal"]
           },
           {
             "id": "bako",
@@ -578,7 +591,8 @@
             },
             "consequences": {
               "oweFavour": "golf"
-            }
+            },
+            "counts": ["formal"]
           },
           {
             "id": "knowledge",
@@ -600,7 +614,8 @@
             "result": "The constituency visit settles Bako’s objection.",
             "requires": {
               "fact": "bako-objection"
-            }
+            },
+            "counts": ["formal"]
           },
           {
             "id": "europe",
@@ -620,7 +635,8 @@
             },
             "consequences": {
               "oweFavour": "eu"
-            }
+            },
+            "counts": ["formal"]
           }
         ],
         "result": "The Ministry agrees the programme, subject to the programme."
@@ -656,7 +672,8 @@
             "cash": 0,
             "days": 2,
             "quality": "good",
-            "result": "The route request is filed for the next available driver."
+            "result": "The route request is filed for the next available driver.",
+            "counts": ["formal"]
           },
           {
             "id": "defence",
@@ -673,7 +690,8 @@
             },
             "consequences": {
               "oweFavour": "bianca"
-            }
+            },
+            "counts": ["formal"]
           },
           {
             "id": "marcel",
@@ -693,7 +711,8 @@
             },
             "requires": {
               "expiresOnFlags": ["refused-favour-fixer"]
-            }
+            },
+            "counts": ["rules"]
           }
         ],
         "result": "The route is driven twice, once in each direction. Both directions are recorded as satisfactory."
@@ -714,7 +733,8 @@
             "cash": 0,
             "days": 1,
             "quality": "good",
-            "result": "The escort request joins the official vehicle queue."
+            "result": "The escort request joins the official vehicle queue.",
+            "counts": ["formal"]
           },
           {
             "id": "ndao",
@@ -734,7 +754,8 @@
             },
             "consequences": {
               "oweFavour": "protocol"
-            }
+            },
+            "counts": ["formal"]
           },
           {
             "id": "marcel",
@@ -754,7 +775,8 @@
             },
             "requires": {
               "expiresOnFlags": ["refused-favour-fixer"]
-            }
+            },
+            "counts": ["rules"]
           },
           {
             "id": "portfolio",
@@ -767,7 +789,8 @@
             "requires": {
               "fact": "port-control"
             },
-            "result": "Mira’s inspection timetable identifies the office that can clear the escort."
+            "result": "Mira’s inspection timetable identifies the office that can clear the escort.",
+            "counts": ["formal"]
           }
         ],
         "result": "Vehicles and escort are confirmed in writing. The vehicles are described as 'available in principle'."

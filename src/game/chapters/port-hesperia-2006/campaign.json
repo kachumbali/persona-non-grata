@@ -576,7 +576,12 @@
           "trust": -2,
           "contact": "eu-malta",
           "contactTrust": -3,
-          "result": "Your colleague starts the stopwatch. Tanya's Cyprus and Luxembourg briefs are postponed until after the biscuits. Capital appreciates the visible arithmetic."
+          "result": "Your colleague starts the stopwatch. Tanya's Cyprus and Luxembourg briefs are postponed until after the biscuits. Capital appreciates the visible arithmetic.",
+          "counts": ["credit"],
+          "statDrift": {
+            "stat": "deniability",
+            "delta": -1
+          }
         },
         {
           "id": "share",
@@ -587,7 +592,8 @@
           "trust": 1,
           "contact": "eu-malta",
           "contactTrust": 4,
-          "result": "Tanya presents all three briefs. Celeste calls it Team Europe; the stopwatch records 17.6% of a very patient silence."
+          "result": "Tanya presents all three briefs. Celeste calls it Team Europe; the stopwatch records 17.6% of a very patient silence.",
+          "counts": ["team"]
         },
         {
           "id": "reform",
@@ -598,7 +604,8 @@
           "trust": 2,
           "contact": "eu-germany",
           "contactTrust": 2,
-          "result": "Klaus agrees to an equal first round, subject to a one-page annex. Henri gets to the ministry before it closes."
+          "result": "Klaus agrees to an equal first round, subject to a one-page annex. Henri gets to the ministry before it closes.",
+          "counts": ["team"]
         },
         {
           "id": "trait-liver",
@@ -609,7 +616,21 @@
             "goodwill": 1,
             "sanity": -1
           },
-          "trust": 1
+          "trust": 1,
+          "counts": ["team"]
+        },
+        {
+          "label": "Cite The Biscuit Hawk",
+          "effects": {
+            "confidence": 2
+          },
+          "trust": -1,
+          "contact": "eu-malta",
+          "contactTrust": -3,
+          "result": "The Biscuit Hawk is entered in the margin of the decision.",
+          "counts": ["team"],
+          "id": "reputation-biscuit-hawk",
+          "requiresReputation": "biscuit-hawk"
         }
       ]
     },
@@ -631,7 +652,8 @@
             "goodwill": 1
           },
           "trust": 3,
-          "result": "Tanya supplies the authorised paragraph and Celeste amends the draft. Capital asks whether the correction used any of its speaking time."
+          "result": "Tanya supplies the authorised paragraph and Celeste amends the draft. Capital asks whether the correction used any of its speaking time.",
+          "counts": ["credit"]
         },
         {
           "id": "leave",
@@ -640,7 +662,19 @@
             "confidence": 1
           },
           "trust": -2,
-          "result": "The draft goes forward without Cyprus's paragraph. Tanya promises to bring a larger stopwatch."
+          "result": "The draft goes forward without Cyprus's paragraph. Tanya promises to bring a larger stopwatch.",
+          "counts": ["credit"]
+        },
+        {
+          "label": "Cite Celeste’s Favourite",
+          "effects": {
+            "goodwill": 1
+          },
+          "trust": 4,
+          "result": "Celeste’s Favourite is entered in the margin of the decision.",
+          "counts": ["credit"],
+          "id": "reputation-team-europe",
+          "requiresReputation": "team-europe"
         }
       ]
     },
@@ -662,7 +696,8 @@
             "goodwill": 2
           },
           "trust": 3,
-          "result": "The amendment reaches the host desk. Both missions receive credit; Celeste asks whether the cover page can say Team Europe."
+          "result": "The amendment reaches the host desk. Both missions receive credit; Celeste asks whether the cover page can say Team Europe.",
+          "counts": ["team"]
         },
         {
           "id": "defer",
@@ -671,7 +706,19 @@
             "confidence": 1
           },
           "trust": -1,
-          "result": "Capital receives the amendment for review. Tanya points out that lunch was the deadline, not a suggestion."
+          "result": "Capital receives the amendment for review. Tanya points out that lunch was the deadline, not a suggestion.",
+          "counts": ["team"]
+        },
+        {
+          "label": "Cite Known to Fax",
+          "effects": {
+            "goodwill": 2
+          },
+          "trust": 4,
+          "result": "Known to Fax is entered in the margin of the decision.",
+          "counts": ["team"],
+          "id": "reputation-known-to-fax",
+          "requiresReputation": "known-to-fax"
         }
       ]
     },
@@ -693,7 +740,8 @@
             "goodwill": 1
           },
           "trust": 3,
-          "result": "Klaus circulates the rule. Everyone gets a turn to object to the annex."
+          "result": "Klaus circulates the rule. Everyone gets a turn to object to the annex.",
+          "counts": ["team"]
         },
         {
           "id": "exception",
@@ -702,7 +750,19 @@
             "confidence": 2
           },
           "trust": -2,
-          "result": "Klaus adds a second annex titled 'exception to equal time'. Capital asks for a copy."
+          "result": "Klaus adds a second annex titled 'exception to equal time'. Capital asks for a copy.",
+          "counts": ["team"]
+        },
+        {
+          "label": "Cite First Among Signatories",
+          "effects": {
+            "goodwill": 1
+          },
+          "trust": 4,
+          "result": "First Among Signatories is entered in the margin of the decision.",
+          "counts": ["credit"],
+          "id": "reputation-credit-taker",
+          "requiresReputation": "credit-taker"
         }
       ]
     },
@@ -730,7 +790,8 @@
             "confidence": -2,
             "goodwill": 1
           },
-          "result": "Elise and local crews plan collection; Bellaluxe pays ƒ200. Celeste announces the Delegation initiative. Capital asks where Bellaluxe appears."
+          "result": "Elise and local crews plan collection; Bellaluxe pays ƒ200. Celeste announces the Delegation initiative. Capital asks where Bellaluxe appears.",
+          "counts": ["formal"]
         },
         {
           "id": "national",
@@ -743,7 +804,8 @@
           "effects": {
             "confidence": 2
           },
-          "result": "Elise prepares a ƒ100 Bellaluxe proposal. Celeste delays the joint announcement; Mira must wait for agreement before scheduling crews."
+          "result": "Elise prepares a ƒ100 Bellaluxe proposal. Celeste delays the joint announcement; Mira must wait for agreement before scheduling crews.",
+          "counts": ["formal"]
         },
         {
           "id": "shared",
@@ -760,14 +822,36 @@
           "effects": {
             "goodwill": 2
           },
-          "result": "Elise commits ƒ150 and agrees routes with Mira. The announcement names both Bellaluxe and the Delegation; Celeste wanted the larger logo and Capital wanted the first line."
+          "result": "Elise commits ƒ150 and agrees routes with Mira. The announcement names both Bellaluxe and the Delegation; Celeste wanted the larger logo and Capital wanted the first line.",
+          "counts": ["credit"]
         },
         {
           "id": "decline",
           "label": "Decline the contribution and keep embassy resources free",
           "trust": -1,
           "effects": {},
-          "result": "Bellaluxe keeps its funds and staff time. Celeste seeks another partner, and Mira has no Bellaluxe commitment to schedule."
+          "result": "Bellaluxe keeps its funds and staff time. Celeste seeks another partner, and Mira has no Bellaluxe commitment to schedule.",
+          "counts": ["formal"]
+        },
+        {
+          "favour": {
+            "character": "eu",
+            "delta": 1
+          },
+          "label": "Cite Capital’s Reliable Correspondent",
+          "staff": "development",
+          "cashCost": 200,
+          "trust": 4,
+          "contact": "port-officer",
+          "contactTrust": 1,
+          "effects": {
+            "confidence": -2,
+            "goodwill": 1
+          },
+          "result": "Capital’s Reliable Correspondent is entered in the margin of the decision.",
+          "counts": ["capital"],
+          "id": "reputation-capital-pleaser",
+          "requiresReputation": "capital-pleaser"
         }
       ]
     },
@@ -791,7 +875,8 @@
             "confidence": 1
           },
           "result": "Mira sends a corrected list of contributors. Celeste says a list can still have a Team Europe heading.",
-          "formal": true
+          "formal": true,
+          "counts": ["formal"]
         },
         {
           "id": "deliver",
@@ -805,7 +890,20 @@
             "goodwill": 1
           },
           "result": "The crews start work without revising the announcement. Capital files a small but very legible complaint.",
-          "formal": true
+          "formal": true,
+          "counts": ["formal"]
+        },
+        {
+          "label": "Cite The Annex Wrangler",
+          "trust": 3,
+          "effects": {
+            "confidence": 1
+          },
+          "result": "The Annex Wrangler is entered in the margin of the decision.",
+          "formal": true,
+          "counts": ["formal"],
+          "id": "reputation-rule-bender",
+          "requiresReputation": "rule-bender"
         }
       ]
     },
@@ -833,7 +931,8 @@
             "goodwill": 2
           },
           "result": "Mira puts the plan to work while the logos remain under discussion. Bellaluxe keeps a named role.",
-          "formal": true
+          "formal": true,
+          "counts": ["formal"]
         },
         {
           "id": "hold",
@@ -843,7 +942,24 @@
             "confidence": 1
           },
           "result": "Capital welcomes the firm position. Mira postpones the crews and asks who will pay for another week of storage.",
-          "formal": true
+          "formal": true,
+          "counts": ["formal"]
+        },
+        {
+          "favour": {
+            "character": "port-officer",
+            "delta": 1
+          },
+          "label": "Cite The Unread Diplomat",
+          "trust": 4,
+          "effects": {
+            "goodwill": 2
+          },
+          "result": "The Unread Diplomat is entered in the margin of the decision.",
+          "formal": true,
+          "counts": ["formal"],
+          "id": "reputation-absent",
+          "requiresReputation": "absent"
         }
       ]
     },
@@ -871,7 +987,8 @@
             "goodwill": 2
           },
           "result": "Mira adds the crews and the collection begins. The revised credit line is longer than the route description.",
-          "formal": true
+          "formal": true,
+          "counts": ["credit"]
         },
         {
           "id": "publish",
@@ -881,7 +998,24 @@
             "confidence": 1
           },
           "result": "The announcement appears on schedule. The crews start work, but Mira notes whose names were omitted.",
-          "formal": true
+          "formal": true,
+          "counts": ["team"]
+        },
+        {
+          "favour": {
+            "character": "port-officer",
+            "delta": 1
+          },
+          "label": "Cite Owes Half the Corps",
+          "trust": 4,
+          "effects": {
+            "goodwill": 2
+          },
+          "result": "Owes Half the Corps is entered in the margin of the decision.",
+          "formal": true,
+          "counts": ["team"],
+          "id": "reputation-debtor",
+          "requiresReputation": "debtor"
         }
       ]
     },
@@ -905,7 +1039,8 @@
             "goodwill": 1
           },
           "result": "Mira receives a useful contact; the port still needs a funded partner before expanding collection.",
-          "formal": true
+          "formal": true,
+          "counts": ["formal"]
         },
         {
           "id": "wait",
@@ -913,7 +1048,20 @@
           "trust": 0,
           "effects": {},
           "result": "Mira adjusts the port timetable. Bellaluxe makes no further commitment.",
-          "formal": true
+          "formal": true,
+          "counts": ["formal"]
+        },
+        {
+          "label": "Cite The Discreet Source",
+          "trust": 3,
+          "effects": {
+            "goodwill": 1
+          },
+          "result": "The Discreet Source is entered in the margin of the decision.",
+          "formal": true,
+          "counts": ["formal"],
+          "id": "reputation-gossip",
+          "requiresReputation": "gossip"
         }
       ]
     },
@@ -936,7 +1084,8 @@
           "effects": {
             "goodwill": 1
           },
-          "result": "Sola contacts the partners before the proposal is finalised. Elise agrees to revise it, although her timetable is now rather less beautiful."
+          "result": "Sola contacts the partners before the proposal is finalised. Elise agrees to revise it, although her timetable is now rather less beautiful.",
+          "counts": ["team"]
         },
         {
           "id": "instruct",
@@ -949,7 +1098,12 @@
           "effects": {
             "confidence": 1
           },
-          "result": "Sola translates the proposal. Elise meets her deadline, but the partners have not yet been asked what they need."
+          "result": "Sola translates the proposal. Elise meets her deadline, but the partners have not yet been asked what they need.",
+          "counts": ["rules"],
+          "statDrift": {
+            "stat": "charm",
+            "delta": -1
+          }
         },
         {
           "id": "pause",
@@ -958,7 +1112,23 @@
           "pair": 2,
           "pairTarget": "development",
           "effects": {},
-          "result": "Sola and Elise agree to discuss the process. The proposal waits; neither has promised an immediate answer."
+          "result": "Sola and Elise agree to discuss the process. The proposal waits; neither has promised an immediate answer.",
+          "counts": ["team"]
+        },
+        {
+          "label": "Cite The Walking Note",
+          "trust": 5,
+          "pair": 8,
+          "pairTarget": "development",
+          "contact": "development",
+          "contactTrust": 1,
+          "effects": {
+            "goodwill": 1
+          },
+          "result": "The Walking Note is entered in the margin of the decision.",
+          "counts": ["formal"],
+          "id": "reputation-envoy",
+          "requiresReputation": "envoy"
         }
       ]
     },
@@ -984,7 +1154,8 @@
             "goodwill": 2,
             "confidence": -1
           },
-          "result": "Elise and Sola name the partners as contributors. Capital receives a revised proposal and a less flattering timeline."
+          "result": "Elise and Sola name the partners as contributors. Capital receives a revised proposal and a less flattering timeline.",
+          "counts": ["team"]
         },
         {
           "id": "credit",
@@ -996,7 +1167,22 @@
             "confidence": 1,
             "goodwill": -1
           },
-          "result": "The draft leaves on time. Sola points out that acknowledgement is not the same as using the partners’ advice."
+          "result": "The draft leaves on time. Sola points out that acknowledgement is not the same as using the partners’ advice.",
+          "counts": ["credit"]
+        },
+        {
+          "label": "Cite The Expedited Official",
+          "trust": 4,
+          "pair": 4,
+          "pairTarget": "sola",
+          "effects": {
+            "goodwill": 2,
+            "confidence": -1
+          },
+          "result": "The Expedited Official is entered in the margin of the decision.",
+          "counts": ["team"],
+          "id": "reputation-expediter",
+          "requiresReputation": "expediter"
         }
       ]
     },
@@ -1022,7 +1208,8 @@
             "goodwill": 1,
             "confidence": -1
           },
-          "result": "Sola accepts the apology and arranges a revision with Elise. The delay is real; so is the improvement."
+          "result": "Sola accepts the apology and arranges a revision with Elise. The delay is real; so is the improvement.",
+          "counts": ["team"]
         },
         {
           "id": "send",
@@ -1034,7 +1221,22 @@
             "confidence": 1,
             "goodwill": -2
           },
-          "result": "Capital gets the proposal on time. Sola sends the partners a separate explanation of why their comments were not included."
+          "result": "Capital gets the proposal on time. Sola sends the partners a separate explanation of why their comments were not included.",
+          "counts": ["rules"]
+        },
+        {
+          "label": "Cite The Distribution List",
+          "trust": 5,
+          "pair": 5,
+          "pairTarget": "development",
+          "effects": {
+            "goodwill": 1,
+            "confidence": -1
+          },
+          "result": "The Distribution List is entered in the margin of the decision.",
+          "counts": ["rules"],
+          "id": "reputation-reply-all",
+          "requiresReputation": "reply-all"
         }
       ]
     },
@@ -1060,7 +1262,8 @@
             "confidence": -1,
             "morale": 1
           },
-          "result": "You take the call from Capital. Sola and Elise agree who will consult the partners and when."
+          "result": "You take the call from Capital. Sola and Elise agree who will consult the partners and when.",
+          "counts": ["formal"]
         },
         {
           "id": "blame",
@@ -1072,7 +1275,22 @@
             "confidence": 1,
             "morale": -2
           },
-          "result": "Capital gets two names. Elise and Sola get a reason to be wary of their next joint brief."
+          "result": "Capital gets two names. Elise and Sola get a reason to be wary of their next joint brief.",
+          "counts": ["capital"]
+        },
+        {
+          "label": "Cite The Protocol Exception",
+          "trust": 3,
+          "pair": 4,
+          "pairTarget": "sola",
+          "effects": {
+            "confidence": -1,
+            "morale": 1
+          },
+          "result": "The Protocol Exception is entered in the margin of the decision.",
+          "counts": ["formal"],
+          "id": "reputation-protocol",
+          "requiresReputation": "protocol"
         }
       ]
     },
@@ -1097,7 +1315,8 @@
           "effects": {
             "morale": 2
           },
-          "result": "The briefing names both authors. Pavel checks the figures; Anselm discovers that an edit is not an accusation."
+          "result": "The briefing names both authors. Pavel checks the figures; Anselm discovers that an edit is not an accusation.",
+          "counts": ["credit"]
         },
         {
           "id": "anonymous",
@@ -1109,7 +1328,21 @@
             "confidence": 1,
             "morale": -1
           },
-          "result": "Capital gets the briefing. Anselm and Pavel compare notes about your interpretation of shared credit."
+          "result": "Capital gets the briefing. Anselm and Pavel compare notes about your interpretation of shared credit.",
+          "counts": ["team"]
+        },
+        {
+          "label": "Cite The Last Toast",
+          "trust": 5,
+          "pair": 4,
+          "pairTarget": "pavel",
+          "effects": {
+            "morale": 2
+          },
+          "result": "The Last Toast is entered in the margin of the decision.",
+          "counts": ["team"],
+          "id": "reputation-host",
+          "requiresReputation": "host"
         }
       ]
     },
@@ -1135,7 +1368,8 @@
             "morale": 1,
             "confidence": -1
           },
-          "result": "Pavel and Anselm agree on a fact check. The repair takes time, and neither calls it a friendship."
+          "result": "Pavel and Anselm agree on a fact check. The repair takes time, and neither calls it a friendship.",
+          "counts": ["team"]
         },
         {
           "id": "override",
@@ -1149,7 +1383,8 @@
             "confidence": 1,
             "morale": -2
           },
-          "result": "Pavel’s version goes to Capital. Anselm files his correction and starts keeping a careful record of whose name is on which draft."
+          "result": "Pavel’s version goes to Capital. Anselm files his correction and starts keeping a careful record of whose name is on which draft.",
+          "counts": ["rules"]
         }
       ]
     },
@@ -1168,7 +1403,8 @@
             "goodwill": 5
           },
           "result": "You attend the ceremony. Your planned work must wait.",
-          "formal": true
+          "formal": true,
+          "counts": ["formal"]
         },
         {
           "id": "delegate",
@@ -1179,7 +1415,8 @@
           },
           "trust": 2,
           "result": "Anselm represents the mission. The strict brief limits his promises.",
-          "formal": true
+          "formal": true,
+          "counts": ["formal"]
         },
         {
           "id": "decline",
@@ -1188,7 +1425,8 @@
             "goodwill": -4
           },
           "result": "Protocol records your absence with considerable courtesy.",
-          "formal": true
+          "formal": true,
+          "counts": ["formal"]
         },
         {
           "id": "trait-replyall",
@@ -1199,7 +1437,8 @@
             "goodwill": 1,
             "sanity": -1
           },
-          "trust": 1
+          "trust": 1,
+          "counts": ["capital"]
         }
       ]
     },
@@ -1218,7 +1457,12 @@
           "effects": {
             "morale": 2
           },
-          "result": "A clear lead and shared credit begin repairing the Pavel–Anselm feud."
+          "result": "A clear lead and shared credit begin repairing the Pavel–Anselm feud.",
+          "counts": ["credit"],
+          "statDrift": {
+            "stat": "charm",
+            "delta": 1
+          }
         },
         {
           "id": "order",
@@ -1228,7 +1472,8 @@
             "confidence": 1,
             "morale": -3
           },
-          "result": "One document appears. They stop speaking to each other."
+          "result": "One document appears. They stop speaking to each other.",
+          "counts": ["rules"]
         },
         {
           "id": "trait-namedrop",
@@ -1239,7 +1484,8 @@
             "morale": 1,
             "sanity": -1
           },
-          "trust": 1
+          "trust": 1,
+          "counts": ["formal"]
         }
       ]
     },
@@ -1256,7 +1502,12 @@
           "flag": "supplier-check",
           "trust": 4,
           "effects": {},
-          "result": "Sola traces the supplier. Marcel at the Quiet Amendment can explain the connection starting Day 2."
+          "result": "Sola traces the supplier. Marcel at the Quiet Amendment can explain the connection starting Day 2.",
+          "counts": ["rules"],
+          "statDrift": {
+            "stat": "gravitas",
+            "delta": 1
+          }
         },
         {
           "id": "accept",
@@ -1265,7 +1516,8 @@
           "effects": {
             "budget": 3
           },
-          "result": "The bargain is accepted. Marcel at the Quiet Amendment has questions about its strings starting Day 2."
+          "result": "The bargain is accepted. Marcel at the Quiet Amendment has questions about its strings starting Day 2.",
+          "counts": ["rules"]
         }
       ]
     },
@@ -1291,7 +1543,8 @@
             "confidence": 3
           },
           "score": 4,
-          "result": "Transparent procurement costs more but prevents a scandal."
+          "result": "Transparent procurement costs more but prevents a scandal.",
+          "counts": ["rules"]
         },
         {
           "id": "bury",
@@ -1301,7 +1554,8 @@
             "confidence": -5,
             "goodwill": 2
           },
-          "result": "The cousin is delighted. Capital is less amused by the eventual questions."
+          "result": "The cousin is delighted. Capital is less amused by the eventual questions.",
+          "counts": ["rules"]
         }
       ]
     },
@@ -1326,7 +1580,8 @@
             "budget": -2
           },
           "trust": 2,
-          "result": "Capital admires your transparency after asking why the chairs cost extra."
+          "result": "Capital admires your transparency after asking why the chairs cost extra.",
+          "counts": ["capital"]
         },
         {
           "id": "pay",
@@ -1336,7 +1591,8 @@
             "budget": -4,
             "confidence": -3
           },
-          "result": "The chairs arrive. So does an invoice for sitting on them twice."
+          "result": "The chairs arrive. So does an invoice for sitting on them twice.",
+          "counts": ["hospitality"]
         }
       ]
     },
@@ -1355,7 +1611,8 @@
           },
           "trust": 2,
           "result": "Ndao accepts the apology and invites you to review the seating plan at the Foreign Ministry from Day 4.",
-          "formal": true
+          "formal": true,
+          "counts": ["hospitality"]
         },
         {
           "id": "capital",
@@ -1366,7 +1623,12 @@
           },
           "trust": -2,
           "result": "Ndao requests your presence at the Foreign Ministry from Day 4, with the seating plan and a larger fern.",
-          "formal": true
+          "formal": true,
+          "counts": ["hospitality"],
+          "statDrift": {
+            "stat": "charm",
+            "delta": -1
+          }
         }
       ]
     },
@@ -1396,7 +1658,8 @@
           },
           "trust": 3,
           "result": "Ndao approves the revised seating plan. Capital asks whether the fern can be photoshopped back in.",
-          "formal": true
+          "formal": true,
+          "counts": ["team"]
         },
         {
           "id": "unchanged",
@@ -1408,7 +1671,8 @@
           },
           "trust": -3,
           "result": "Ndao restores the original plan, carefully placing the fern where it can witness the consequences.",
-          "formal": true
+          "formal": true,
+          "counts": ["hospitality"]
         }
       ]
     },
@@ -1438,7 +1702,8 @@
           },
           "trust": 2,
           "result": "A compromise emerges. Both ministries describe it as their original idea.",
-          "formal": true
+          "formal": true,
+          "counts": ["team"]
         },
         {
           "id": "unchanged",
@@ -1450,7 +1715,8 @@
           },
           "trust": -3,
           "result": "Ndao signs the plan with a pen that seems to be under considerable pressure.",
-          "formal": true
+          "formal": true,
+          "counts": ["hospitality"]
         }
       ]
     },
@@ -1470,7 +1736,8 @@
           },
           "trust": 5,
           "score": 4,
-          "result": "Elise asks the UN partners to reserve time for beneficiaries. From Day 3, Amara can discuss the programme at UN House."
+          "result": "Elise asks the UN partners to reserve time for beneficiaries. From Day 3, Amara can discuss the programme at UN House.",
+          "counts": ["formal"]
         },
         {
           "id": "photo",
@@ -1480,7 +1747,8 @@
             "morale": -3
           },
           "trust": -6,
-          "result": "The photograph is secured provisionally. From Day 3, Amara wants to discuss what the visit will actually include at UN House."
+          "result": "The photograph is secured provisionally. From Day 3, Amara wants to discuss what the visit will actually include at UN House.",
+          "counts": ["credit"]
         }
       ]
     },
@@ -1505,7 +1773,8 @@
             "confidence": -1
           },
           "trust": 3,
-          "result": "Amara revises the programme so the community can speak. The speeches are shortened under protest."
+          "result": "Amara revises the programme so the community can speak. The speeches are shortened under protest.",
+          "counts": ["formal"]
         },
         {
           "id": "speeches",
@@ -1516,7 +1785,8 @@
             "goodwill": -2
           },
           "trust": -2,
-          "result": "Every partner receives a speaking slot. The community is allotted a photograph."
+          "result": "Every partner receives a speaking slot. The community is allotted a photograph.",
+          "counts": ["formal"]
         }
       ]
     },
@@ -1541,7 +1811,8 @@
             "confidence": -1
           },
           "trust": 3,
-          "result": "Amara makes space for a real discussion. Capital asks if the camera can listen as well."
+          "result": "Amara makes space for a real discussion. Capital asks if the camera can listen as well.",
+          "counts": ["credit"]
         },
         {
           "id": "speeches",
@@ -1552,7 +1823,8 @@
             "goodwill": -2
           },
           "trust": -2,
-          "result": "The photograph is perfectly framed. The project team waits politely just outside it."
+          "result": "The photograph is perfectly framed. The project team waits politely just outside it.",
+          "counts": ["credit"]
         }
       ]
     },
@@ -1572,7 +1844,8 @@
           },
           "trust": 2,
           "score": 1,
-          "result": "Pained expressions all round. Your self-deprecation briefly softens the coalition."
+          "result": "Pained expressions all round. Your self-deprecation briefly softens the coalition.",
+          "counts": ["credit"]
         },
         {
           "id": "serious",
@@ -1582,7 +1855,8 @@
           },
           "trust": 1,
           "score": 2,
-          "result": "The room agrees on the clause. Nobody misses the joke quite enough to admit it."
+          "result": "The room agrees on the clause. Nobody misses the joke quite enough to admit it.",
+          "counts": ["hospitality"]
         }
       ]
     },
@@ -1607,7 +1881,8 @@
             "goodwill": 1
           },
           "trust": 4,
-          "result": "Niko includes your amendment. The footnote shrinks by a historic three lines."
+          "result": "Niko includes your amendment. The footnote shrinks by a historic three lines.",
+          "counts": ["team"]
         },
         {
           "id": "credit",
@@ -1618,7 +1893,8 @@
             "goodwill": -1
           },
           "trust": -4,
-          "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags."
+          "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags.",
+          "counts": ["credit"]
         }
       ]
     },
@@ -1643,7 +1919,8 @@
             "goodwill": 1
           },
           "trust": 4,
-          "result": "Niko includes your amendment. The footnote shrinks by a historic three lines."
+          "result": "Niko includes your amendment. The footnote shrinks by a historic three lines.",
+          "counts": ["team"]
         },
         {
           "id": "credit",
@@ -1654,7 +1931,8 @@
             "goodwill": -1
           },
           "trust": -4,
-          "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags."
+          "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags.",
+          "counts": ["credit"]
         }
       ]
     },
@@ -1679,7 +1957,8 @@
             "goodwill": 2
           },
           "trust": 4,
-          "result": "Ruth checks her notes. The background may make a better story than the rumour."
+          "result": "Ruth checks her notes. The background may make a better story than the rumour.",
+          "counts": ["formal"]
         },
         {
           "id": "reserved",
@@ -1689,7 +1968,8 @@
             "confidence": 2
           },
           "trust": -1,
-          "result": "Ruth writes down your public line and draws a small question mark beside it."
+          "result": "Ruth writes down your public line and draws a small question mark beside it.",
+          "counts": ["formal"]
         }
       ]
     },
@@ -1714,7 +1994,8 @@
             "goodwill": 1
           },
           "trust": 3,
-          "result": "The correction is less glamorous than the promise. It is also considerably more accurate."
+          "result": "The correction is less glamorous than the promise. It is also considerably more accurate.",
+          "counts": ["credit"]
         },
         {
           "id": "double-down",
@@ -1725,7 +2006,8 @@
             "goodwill": -1
           },
           "trust": -3,
-          "result": "Ruth underlines 'entirely'. The second underline is audible."
+          "result": "Ruth underlines 'entirely'. The second underline is audible.",
+          "counts": ["formal"]
         }
       ]
     },
@@ -1744,7 +2026,8 @@
           },
           "trust": 3,
           "score": 2,
-          "result": "Your careful distinction survives the headline. From Day 2, Ruth offers a longer conversation at the Press Correspondents Club."
+          "result": "Your careful distinction survives the headline. From Day 2, Ruth offers a longer conversation at the Press Correspondents Club.",
+          "counts": ["formal"]
         },
         {
           "id": "promise",
@@ -1754,7 +2037,8 @@
             "goodwill": -2
           },
           "trust": -3,
-          "result": "The claim is printed. From Day 2, Ruth wants an explanation at the Press Correspondents Club."
+          "result": "The claim is printed. From Day 2, Ruth wants an explanation at the Press Correspondents Club.",
+          "counts": ["formal"]
         }
       ]
     },
@@ -1772,7 +2056,8 @@
           "label": "Buy fuel early",
           "cashCost": 300,
           "flag": "fuel-bought",
-          "result": "The early fuel purchase protects the generator delivery."
+          "result": "The early fuel purchase protects the generator delivery.",
+          "counts": ["formal"]
         },
         {
           "id": "coordinate",
@@ -1784,12 +2069,18 @@
           "contact": "port-officer",
           "contactTrust": 5,
           "flag": "fuel-mira",
-          "result": "Mira coordinates the inspected fuel delivery."
+          "result": "Mira coordinates the inspected fuel delivery.",
+          "counts": ["formal"],
+          "statDrift": {
+            "stat": "gravitas",
+            "delta": 1
+          }
         },
         {
           "id": "ignore",
           "label": "Leave the matter alone",
-          "result": "Mira files the timetable without a Bellaluxe request."
+          "result": "Mira files the timetable without a Bellaluxe request.",
+          "counts": ["formal"]
         }
       ],
       "requiresFlag": "fuel-lead"
@@ -1806,14 +2097,16 @@
           "id": "honour",
           "label": "Make time for the request",
           "replace": true,
-          "result": "You give the request the time it was said not to require."
+          "result": "You give the request the time it was said not to require.",
+          "counts": ["formal"]
         },
         {
           "id": "refuse",
           "label": "Decline the request",
           "trust": -8,
           "flag": "refused-favour-protocol",
-          "result": "The request is withdrawn. The memory is retained."
+          "result": "The request is withdrawn. The memory is retained.",
+          "counts": ["formal"]
         }
       ]
     },
@@ -1829,14 +2122,16 @@
           "id": "honour",
           "label": "Make time for the request",
           "replace": true,
-          "result": "You give the request the time it was said not to require."
+          "result": "You give the request the time it was said not to require.",
+          "counts": ["formal"]
         },
         {
           "id": "refuse",
           "label": "Decline the request",
           "trust": -8,
           "flag": "refused-favour-golf",
-          "result": "The request is withdrawn. The memory is retained."
+          "result": "The request is withdrawn. The memory is retained.",
+          "counts": ["formal"]
         }
       ]
     },
@@ -1852,14 +2147,16 @@
           "id": "honour",
           "label": "Make time for the request",
           "replace": true,
-          "result": "You give the request the time it was said not to require."
+          "result": "You give the request the time it was said not to require.",
+          "counts": ["formal"]
         },
         {
           "id": "refuse",
           "label": "Decline the request",
           "trust": -8,
           "flag": "refused-favour-fixer",
-          "result": "The request is withdrawn. The memory is retained."
+          "result": "The request is withdrawn. The memory is retained.",
+          "counts": ["formal"]
         }
       ]
     },
@@ -1875,14 +2172,16 @@
           "id": "honour",
           "label": "Make time for the request",
           "replace": true,
-          "result": "You give the request the time it was said not to require."
+          "result": "You give the request the time it was said not to require.",
+          "counts": ["formal"]
         },
         {
           "id": "refuse",
           "label": "Decline the request",
           "trust": -8,
           "flag": "refused-favour-eu",
-          "result": "The request is withdrawn. The memory is retained."
+          "result": "The request is withdrawn. The memory is retained.",
+          "counts": ["formal"]
         }
       ]
     },
@@ -1898,14 +2197,16 @@
           "id": "honour",
           "label": "Make time for the request",
           "replace": true,
-          "result": "You give the request the time it was said not to require."
+          "result": "You give the request the time it was said not to require.",
+          "counts": ["formal"]
         },
         {
           "id": "refuse",
           "label": "Decline the request",
           "trust": -8,
           "flag": "refused-favour-bianca",
-          "result": "The request is withdrawn. The memory is retained."
+          "result": "The request is withdrawn. The memory is retained.",
+          "counts": ["formal"]
         }
       ]
     },
@@ -1930,7 +2231,8 @@
           "result": "Both names fit on the cover. Pavel keeps the receipt for the ink.",
           "effects": {
             "confidence": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -1938,7 +2240,8 @@
           "pair": -10,
           "pairTarget": "pavel",
           "result": "Anselm sends Pavel a copy marked for information only.",
-          "effects": {}
+          "effects": {},
+          "counts": ["team"]
         }
       ],
       "onMiss": {
@@ -1970,7 +2273,8 @@
           "result": "The cupboard has two labels and one key.",
           "effects": {
             "confidence": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -1978,7 +2282,8 @@
           "pair": -10,
           "pairTarget": "press",
           "result": "Pavel files an objection to the asset register.",
-          "effects": {}
+          "effects": {},
+          "counts": ["formal"]
         }
       ],
       "onMiss": {
@@ -2009,7 +2314,8 @@
           "result": "Both drafts circulate under a single cover sheet.",
           "effects": {
             "confidence": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -2017,7 +2323,8 @@
           "pair": -10,
           "pairTarget": "bianca",
           "result": "The quieter version is recirculated with a louder subject line.",
-          "effects": {}
+          "effects": {},
+          "counts": ["team"]
         }
       ],
       "onMiss": {
@@ -2049,7 +2356,8 @@
           "result": "Each signs with a different pen. The letterhead remains unsigned.",
           "effects": {
             "confidence": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -2057,7 +2365,8 @@
           "pair": -10,
           "pairTarget": "eu-germany",
           "result": "Celeste signs; the ambassadors agree only about their objection.",
-          "effects": {}
+          "effects": {},
+          "counts": ["formal"]
         }
       ],
       "onMiss": {
@@ -2088,7 +2397,8 @@
           "result": "Sola and Elise agree to correct the same paragraph.",
           "effects": {
             "confidence": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -2096,7 +2406,8 @@
           "pair": -10,
           "pairTarget": "development",
           "result": "Sola hears the endorsement before the folder closes.",
-          "effects": {}
+          "effects": {},
+          "counts": ["formal"]
         }
       ],
       "onMiss": {
@@ -2131,7 +2442,8 @@
           "favour": {
             "character": "pavel",
             "delta": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -2139,7 +2451,8 @@
           "pair": -10,
           "pairTarget": "pavel",
           "result": "Both objections become annexes to the revised briefing.",
-          "effects": {}
+          "effects": {},
+          "counts": ["team"]
         }
       ],
       "onMiss": {
@@ -2174,7 +2487,8 @@
           "result": "The microphone moves; the seating chart remains valid.",
           "effects": {
             "confidence": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -2182,7 +2496,8 @@
           "pair": -10,
           "pairTarget": "golf",
           "result": "The officials address their remarks to opposite walls.",
-          "effects": {}
+          "effects": {},
+          "counts": ["hospitality"]
         }
       ],
       "onMiss": {
@@ -2214,7 +2529,8 @@
           "result": "Mira receives the old rule and its unwritten exception.",
           "effects": {
             "confidence": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -2222,7 +2538,8 @@
           "pair": -10,
           "pairTarget": "port-officer",
           "result": "A new edition arrives; the exception remains verbal.",
-          "effects": {}
+          "effects": {},
+          "counts": ["rules"]
         }
       ],
       "onMiss": {
@@ -2253,7 +2570,8 @@
           "result": "The queue starts at one, which everyone can locate.",
           "effects": {
             "confidence": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -2261,7 +2579,8 @@
           "pair": -10,
           "pairTarget": "ines",
           "result": "Each queue starts first according to its own sign.",
-          "effects": {}
+          "effects": {},
+          "counts": ["formal"]
         }
       ],
       "onMiss": {
@@ -2292,7 +2611,8 @@
           "result": "The signatures appear on separate pages of the same agreement.",
           "effects": {
             "confidence": 1
-          }
+          },
+          "counts": ["team"]
         },
         {
           "id": "side",
@@ -2300,7 +2620,8 @@
           "pair": -10,
           "pairTarget": "amb-valdoria",
           "result": "Each side waits for the other to decide where to sign.",
-          "effects": {}
+          "effects": {},
+          "counts": ["hospitality"]
         }
       ],
       "onMiss": {

@@ -13,20 +13,23 @@
           "confidence": 6,
           "sanity": -3
         },
-        "formal": true
+        "formal": true,
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Anselm drafts it. A copy somehow reaches the Capital first, signed by him.",
         "effects": {
           "confidence": -4,
           "morale": 2
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "Noted. The Capital notes that you noted.",
         "effects": {
           "confidence": -6
-        }
+        },
+        "counts": ["formal"]
       },
       "trait": {
         "label": "Mention your contacts in Capital",
@@ -36,7 +39,8 @@
           "confidence": 2,
           "sanity": -1
         },
-        "formal": true
+        "formal": true,
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -60,20 +64,23 @@
           "sanity": -6,
           "confidence": 2
         },
-        "formal": true
+        "formal": true,
+        "counts": ["capital"]
       },
       "reply": {
         "text": "You politely request the attachment. They politely ignore you.",
         "effects": {
           "confidence": 3
         },
-        "formal": true
+        "formal": true,
+        "counts": ["formal"]
       },
       "note": {
         "text": "You take note of nothing, which is technically compliant.",
         "effects": {
           "sanity": 2
-        }
+        },
+        "counts": ["formal"]
       },
       "trait": {
         "label": "Copy the full instructions unit",
@@ -83,7 +90,8 @@
           "confidence": 2,
           "sanity": -2
         },
-        "formal": true
+        "formal": true,
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -106,21 +114,24 @@
         "effects": {
           "budget": -12,
           "morale": 4
-        }
+        },
+        "counts": ["formal"]
       },
       "forward": {
         "text": "The Capital opens a tender for diesel. Expected completion: Q3.",
         "effects": {
           "goodwill": -2,
           "morale": -6
-        }
+        },
+        "counts": ["capital"]
       },
       "delegate": {
         "text": "Sola Dewrin quietly arranges diesel from a cousin of a supplier. Cheaper, faster.",
         "effects": {
           "budget": -5,
           "morale": 3
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -144,20 +155,23 @@
         "effects": {
           "confidence": 5,
           "sanity": -8
-        }
+        },
+        "counts": ["formal"]
       },
       "replyall": {
         "text": "Your reply-all triggers 37 replies-all about reply-all etiquette.",
         "effects": {
           "sanity": -10,
           "goodwill": 2
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "Bellaluxe 'takes note with interest' — the strongest form of no.",
         "effects": {
           "goodwill": -1
-        }
+        },
+        "counts": ["formal"]
       },
       "trait": {
         "label": "Offer to discuss coordination over drinks",
@@ -167,7 +181,8 @@
           "goodwill": 2,
           "sanity": -1
         },
-        "formal": false
+        "formal": false,
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -192,7 +207,8 @@
           "sanity": -3
         },
         "formal": true,
-        "confirmsStep": "clearance.note-verbale"
+        "confirmsStep": "clearance.note-verbale",
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Sola Dewrin knows the stamp order. It works. Nobody asks how.",
@@ -200,14 +216,16 @@
           "goodwill": 6,
           "morale": 2
         },
-        "confirmsStep": "clearance.note-verbale"
+        "confirmsStep": "clearance.note-verbale",
+        "counts": ["formal"]
       },
       "forward": {
         "text": "The Capital replies in Format 7-B. Diplomatic silence follows.",
         "effects": {
           "goodwill": -6
         },
-        "formal": true
+        "formal": true,
+        "counts": ["capital"]
       }
     },
     "ignore": {
@@ -231,20 +249,23 @@
           "goodwill": 4,
           "confidence": 4,
           "sanity": -6
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Colonel Montefiore attends with a tank model. Valdoria is confused.",
         "effects": {
           "goodwill": -2,
           "morale": 3
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "You decline graciously. Valdoria seats you near the coat rack forever.",
         "effects": {
           "goodwill": -3
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -266,20 +287,23 @@
         "text": "You declare it part of the Strategic Cheese Reserve. Morale is oddly lifted.",
         "effects": {
           "morale": 8
-        }
+        },
+        "counts": ["formal"]
       },
       "replyall": {
         "text": "Your reply-all becomes a 90-message thread titled 'Cheesegate'.",
         "effects": {
           "morale": -4,
           "sanity": -6
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "Noted. The cheese continues its independent existence.",
         "effects": {
           "morale": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -302,21 +326,24 @@
         "effects": {
           "goodwill": 6,
           "budget": -4
-        }
+        },
+        "counts": ["formal"]
       },
       "forward": {
         "text": "The Capital asks for a study on window demand.",
         "effects": {
           "goodwill": -6,
           "morale": -4
-        }
+        },
+        "counts": ["capital"]
       },
       "delegate": {
         "text": "Intern Maxim reads the manual aloud to the queue. It does not help.",
         "effects": {
           "goodwill": -2,
           "morale": 2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -339,21 +366,24 @@
         "effects": {
           "goodwill": -2,
           "confidence": 2
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "You let it stand. The volcano's fan account rechirps it.",
         "effects": {
           "goodwill": 3,
           "confidence": -3
-        }
+        },
+        "counts": ["formal"]
       },
       "forward": {
         "text": "The Capital drafts a clarification of the clarification.",
         "effects": {
           "confidence": -2,
           "sanity": -4
-        }
+        },
+        "counts": ["capital"]
       }
     },
     "ignore": {
@@ -377,19 +407,22 @@
           "confidence": 4,
           "sanity": -4
         },
-        "formal": true
+        "formal": true,
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Anselm replies. He mentions you 'are coping, considering'.",
         "effects": {
           "confidence": -8
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "You take note. The Capital takes notice.",
         "effects": {
           "confidence": -5
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -414,7 +447,8 @@
           "goodwill": 3,
           "sanity": -3
         },
-        "confirmsStep": "clearance.landing-form"
+        "confirmsStep": "clearance.landing-form",
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Sola obtains the signed landing permission. The stamp is finally the right stamp.",
@@ -422,13 +456,15 @@
           "confidence": 2,
           "morale": 2
         },
-        "confirmsStep": "clearance.landing-form"
+        "confirmsStep": "clearance.landing-form",
+        "counts": ["formal"]
       },
       "note": {
         "text": "The request remains on your desk. No clearance has been granted.",
         "effects": {
           "confidence": -3
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -452,20 +488,23 @@
         "effects": {
           "confidence": 3
         },
-        "confirmsStep": "lounge.deposit"
+        "confirmsStep": "lounge.deposit",
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Pavel negotiates the official rate and secures written lounge confirmation.",
         "effects": {
           "confidence": 2
         },
-        "confirmsStep": "lounge.deposit"
+        "confirmsStep": "lounge.deposit",
+        "counts": ["formal"]
       },
       "note": {
         "text": "Noted is not reserved. The airport releases its provisional hold.",
         "effects": {
           "confidence": -3
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -490,7 +529,8 @@
           "sanity": -4
         },
         "confirmsStep": "programme.amendments",
-        "formal": true
+        "formal": true,
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Anselm absorbs the amendments overnight. Capital notes the speed and queries the thoroughness.",
@@ -498,13 +538,15 @@
           "confidence": 2,
           "morale": -1
         },
-        "confirmsStep": "programme.amendments"
+        "confirmsStep": "programme.amendments",
+        "counts": ["formal"]
       },
       "note": {
         "text": "The amendments are noted. Capital notes that they were noted.",
         "effects": {
           "confidence": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -528,7 +570,8 @@
           "confidence": 3,
           "goodwill": 2
         },
-        "confirmsStep": "security.route-recon"
+        "confirmsStep": "security.route-recon",
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "The security team drives the route twice and returns a signed approval. Both directions are satisfactory.",
@@ -536,13 +579,15 @@
           "confidence": 2,
           "morale": -2
         },
-        "confirmsStep": "security.route-recon"
+        "confirmsStep": "security.route-recon",
+        "counts": ["formal"]
       },
       "note": {
         "text": "The convoy plan remains unapproved.",
         "effects": {
           "confidence": -3
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -566,20 +611,23 @@
         "effects": {
           "confidence": 3,
           "sanity": -2
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Anselm circulates the new time. Two people receive it, one of them the Minister's office.",
         "effects": {
           "confidence": 1,
           "morale": -1
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "The change is noted. The Minister's aircraft does not note it.",
         "effects": {
           "confidence": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -602,20 +650,23 @@
         "effects": {
           "goodwill": 3,
           "sanity": -2
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Sola obtains version 7.3 from a drawer that was not on the list.",
         "effects": {
           "goodwill": 2,
           "morale": 1
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "The new version is noted. The old version is also noted, for balance.",
         "effects": {
           "goodwill": -1
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -639,7 +690,8 @@
           "confidence": 3,
           "sanity": -2
         },
-        "confirmsStep": "lounge.guest-list"
+        "confirmsStep": "lounge.guest-list",
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Ketu drafts the list with the menu in mind. The airport approves it, mostly for the catering.",
@@ -647,13 +699,15 @@
           "confidence": 2,
           "morale": 2
         },
-        "confirmsStep": "lounge.guest-list"
+        "confirmsStep": "lounge.guest-list",
+        "counts": ["formal"]
       },
       "note": {
         "text": "The guest list remains a category. The airport waits.",
         "effects": {
           "confidence": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -679,7 +733,8 @@
           "sanity": -4
         },
         "formal": true,
-        "confirmsStep": "programme.host-agreement"
+        "confirmsStep": "programme.host-agreement",
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Pavel checks the timings with Sola. Both ministries issue written confirmation of the programme.",
@@ -687,13 +742,15 @@
           "confidence": 4,
           "morale": 2
         },
-        "confirmsStep": "programme.host-agreement"
+        "confirmsStep": "programme.host-agreement",
+        "counts": ["formal"]
       },
       "note": {
         "text": "The draft is filed without approval. The visit still has no confirmed programme.",
         "effects": {
           "confidence": -6
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -718,7 +775,8 @@
           "goodwill": 3,
           "sanity": -2
         },
-        "confirmsStep": "clearance.protocol-stamp"
+        "confirmsStep": "clearance.protocol-stamp",
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Ines submits the request through the consular channel. The stamp arrives by bag, still warm.",
@@ -726,13 +784,15 @@
           "confidence": 2,
           "morale": 1
         },
-        "confirmsStep": "clearance.protocol-stamp"
+        "confirmsStep": "clearance.protocol-stamp",
+        "counts": ["formal"]
       },
       "note": {
         "text": "The request waits for a stamp that nobody has ordered.",
         "effects": {
           "confidence": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -756,20 +816,23 @@
         "effects": {
           "confidence": 3,
           "sanity": -3
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Pavel advises the lounge and the escort. The printer finds out from the lounge.",
         "effects": {
           "confidence": 1,
           "morale": -1
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "The delegation is noted. It is noted again on arrival.",
         "effects": {
           "confidence": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -792,20 +855,23 @@
         "effects": {
           "goodwill": 3,
           "sanity": -2
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Bianca finds a route that crosses the parade only twice. The Office finds this acceptable.",
         "effects": {
           "goodwill": 2,
           "morale": 1
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "The parade is noted. It proceeds regardless.",
         "effects": {
           "goodwill": -1
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -831,7 +897,8 @@
           "sanity": -3
         },
         "confirmsStep": "programme.final-print",
-        "formal": true
+        "formal": true,
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Pavel and Sola take the programme to the printer. Both sides initial it. Nobody reads it.",
@@ -839,13 +906,15 @@
           "confidence": 3,
           "morale": 1
         },
-        "confirmsStep": "programme.final-print"
+        "confirmsStep": "programme.final-print",
+        "counts": ["formal"]
       },
       "note": {
         "text": "The programme stays in draft. Drafts do not land.",
         "effects": {
           "confidence": -4
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -869,7 +938,8 @@
           "confidence": 3,
           "goodwill": 2
         },
-        "confirmsStep": "security.motorcade"
+        "confirmsStep": "security.motorcade",
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Bianca books the escort with the Desk's liaison. The vehicles are described as available in principle.",
@@ -877,13 +947,15 @@
           "confidence": 2,
           "morale": -1
         },
-        "confirmsStep": "security.motorcade"
+        "confirmsStep": "security.motorcade",
+        "counts": ["formal"]
       },
       "note": {
         "text": "The motorcade stays a plan. The Minister's driver is a hope.",
         "effects": {
           "confidence": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -907,20 +979,23 @@
         "effects": {
           "confidence": 2,
           "sanity": -2
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Pavel sends the headcount with a map of the chairs. The airport admires the map.",
         "effects": {
           "confidence": 1,
           "morale": 1
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "The headcount is noted. The lounge notes the delegation instead.",
         "effects": {
           "confidence": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -943,20 +1018,23 @@
         "effects": {
           "confidence": 3,
           "sanity": -2
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Anselm confirms on your behalf. Protocol asks who you are.",
         "effects": {
           "confidence": -1,
           "morale": 1
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "You take note. The note is read as a confirmation, which is generous.",
         "effects": {
           "confidence": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -980,20 +1058,23 @@
           "confidence": 4,
           "goodwill": 2,
           "sanity": -2
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Pavel meets the aircraft with the lounge manager. The Minister is received by a clipboard.",
         "effects": {
           "confidence": 1,
           "morale": 1
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "You take note of the aircraft. The aircraft takes note of you, from above.",
         "effects": {
           "confidence": -3
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -1017,20 +1098,23 @@
         "effects": {
           "confidence": 4,
           "goodwill": 2
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Anselm hands over a copy. The Minister asks who Anselm is and keeps the copy.",
         "effects": {
           "confidence": 1,
           "morale": 1
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "The request is noted. The Minister's aide supplies a programme of his own.",
         "effects": {
           "confidence": -3
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {
@@ -1054,20 +1138,23 @@
           "confidence": 3,
           "goodwill": 3,
           "sanity": -2
-        }
+        },
+        "counts": ["formal"]
       },
       "delegate": {
         "text": "Sola moves three place cards. The dinner is described as 'cordial' by all three.",
         "effects": {
           "goodwill": 2,
           "morale": 1
-        }
+        },
+        "counts": ["formal"]
       },
       "note": {
         "text": "The seating is noted. It is also occupied.",
         "effects": {
           "goodwill": -2
-        }
+        },
+        "counts": ["formal"]
       }
     },
     "ignore": {

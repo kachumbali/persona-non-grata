@@ -7,6 +7,8 @@ import { moodOpener, pickTopic, splitEffects, type TalkChoice } from "../dialogu
 import { useGame } from "../store";
 import { capacityLedger, staffDuty, STAFF_DP } from "../economy";
 import { Portrait } from "./Portrait";
+import { REPUTATIONS } from "../personnel";
+import { relationshipState } from "../relationships";
 
 /** Adventure-style dialogue box; each character raises their own topics. */
 export function Conversation() {
@@ -39,8 +41,15 @@ export function Conversation() {
   const greeting = g.storyFlags.includes(`refused-favour-${npc.id}`)
     ? npc.refusalGreeting
     : undefined;
+  const reputationGreeting = g.personnel.reputations
+    .map(
+      (id) =>
+        REPUTATIONS.find((rep) => rep.id === id)?.greeting?.[relationshipState(trust)] ??
+        REPUTATIONS.find((rep) => rep.id === id)?.greeting?.["neutral"],
+    )
+    .find(Boolean);
   const text =
-    (isStart ? (greeting ?? moodOpener(trust, npc.traits)) : "") +
+    (isStart ? (greeting ?? reputationGreeting ?? moodOpener(trust, npc.traits)) : "") +
     current.text.replace("{line}", npc.line);
   const choose = (choice: TalkChoice) => {
     if (choice.next) {
@@ -67,6 +76,8 @@ export function Conversation() {
       pairTarget: choice.pairTarget,
       formal: choice.formal,
       traitChoice: choice.requiresTrait,
+      counts: choice.counts,
+      statDrift: choice.statDrift,
       score: choice.score,
       composure: 3,
       energy: energy || undefined,
@@ -173,7 +184,12 @@ export function Conversation() {
           <div className="flex flex-col gap-1">
             {(current.choices as TalkChoice[])
               .filter((c) =>
-                eligible(c, g.character?.traits ?? [], computeStats(g.character?.traits ?? [])),
+                eligible(
+                  c,
+                  g.character?.traits ?? [],
+                  computeStats(g.character?.traits ?? [], g.character?.statDrift),
+                  g.personnel.reputations,
+                ),
               )
               .map((c, i) => (
                 <Button

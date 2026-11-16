@@ -160,7 +160,6 @@ export const socialiser: Bot = {
     p.skipPress();
     if (p.s.day >= 5) missionWork(p, { suitable: true, max: 2, self: true });
     p.handleDemarche("eu");
-    if (p.freeDP() >= 1) p.passGossip();
     // A change of scenery is half the fun; the other half is being found at the embassy.
     if (s.location !== p.office && !p.leadsHere().length && p.rng.chance(0.5) && p.freeDP() >= 2)
       p.travel(p.office);
@@ -168,6 +167,7 @@ export const socialiser: Bot = {
     if (event) p.respondEvent(event, event.relationshipGate ? "best" : "random");
     attendInvitations(p, 0.4);
     p.answerMail("random");
+    if (p.freeDP() >= 1) p.passGossip();
     for (const lead of p.leadsHere()) if (p.freeDP() >= 1) p.respondLead(lead, "random");
     // Wanders into town now and then: to a lead, or just to see who is at the bar.
     if (p.s.location === p.office && p.freeDP() >= 3 && p.rng.chance(0.35)) {

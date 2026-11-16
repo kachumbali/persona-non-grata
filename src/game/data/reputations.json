@@ -1,0 +1,156 @@
+[
+  {
+    "id": "biscuit-hawk",
+    "name": "The Biscuit Hawk",
+    "description": "Hospitality budgets now come with a covering note.",
+    "counter": "hospitality",
+    "threshold": 3,
+    "unlocks": "biscuit-hawk",
+    "greeting": {
+      "neutral": "The Biscuit Hawk. We have heard of you. "
+    }
+  },
+  {
+    "id": "team-europe",
+    "name": "Celeste’s Favourite",
+    "description": "Shared credit has become a private achievement.",
+    "counter": "team",
+    "threshold": 3,
+    "unlocks": "team-europe",
+    "greeting": {
+      "neutral": "Celeste’s Favourite. We have heard of you. "
+    }
+  },
+  {
+    "id": "known-to-fax",
+    "name": "Known to Fax",
+    "description": "The secure fax recognises your handwriting.",
+    "counter": "formal",
+    "threshold": 14,
+    "unlocks": "known-to-fax",
+    "greeting": {
+      "neutral": "Known to Fax. We have heard of you. "
+    }
+  },
+  {
+    "id": "credit-taker",
+    "name": "First Among Signatories",
+    "description": "Your name appears before the attached decision.",
+    "counter": "credit",
+    "threshold": 3,
+    "unlocks": "credit-taker",
+    "greeting": {
+      "neutral": "First Among Signatories. We have heard of you. "
+    }
+  },
+  {
+    "id": "capital-pleaser",
+    "name": "Capital’s Reliable Correspondent",
+    "description": "Capital has started to notice your forwarding habits.",
+    "counter": "capital",
+    "threshold": 4,
+    "unlocks": "capital-pleaser",
+    "greeting": {
+      "neutral": "Capital’s Reliable Correspondent. We have heard of you. "
+    }
+  },
+  {
+    "id": "rule-bender",
+    "name": "The Annex Wrangler",
+    "description": "Procedures have learned to move around you.",
+    "counter": "rules",
+    "threshold": 3,
+    "unlocks": "rule-bender",
+    "greeting": {
+      "neutral": "The Annex Wrangler. We have heard of you. "
+    }
+  },
+  {
+    "id": "absent",
+    "name": "The Unread Diplomat",
+    "description": "Several instructions are still looking for you.",
+    "counter": "ignored_mail",
+    "threshold": 12,
+    "unlocks": "absent",
+    "greeting": {
+      "neutral": "The Unread Diplomat. We have heard of you. "
+    }
+  },
+  {
+    "id": "debtor",
+    "name": "Owes Half the Corps",
+    "description": "Your favours ledger needs its own ledger.",
+    "counter": "favours_owed",
+    "threshold": 2,
+    "unlocks": "debtor",
+    "greeting": {
+      "neutral": "Owes Half the Corps. We have heard of you. "
+    }
+  },
+  {
+    "id": "gossip",
+    "name": "The Discreet Source",
+    "description": "Your discretion is widely quoted.",
+    "counter": "gossip_passed",
+    "threshold": 3,
+    "unlocks": "gossip",
+    "greeting": {
+      "neutral": "The Discreet Source. We have heard of you. "
+    }
+  },
+  {
+    "id": "envoy",
+    "name": "The Walking Note",
+    "description": "You are increasingly delivered in person.",
+    "counter": "demarche_self",
+    "threshold": 2,
+    "unlocks": "envoy",
+    "greeting": {
+      "neutral": "The Walking Note. We have heard of you. "
+    }
+  },
+  {
+    "id": "expediter",
+    "name": "The Expedited Official",
+    "description": "Your paperwork arrives with an invoice.",
+    "counter": "money_routes",
+    "threshold": 2,
+    "unlocks": "expediter",
+    "greeting": {
+      "neutral": "The Expedited Official. We have heard of you. "
+    }
+  },
+  {
+    "id": "reply-all",
+    "name": "The Distribution List",
+    "description": "Your replies have an extensive readership.",
+    "counter": "replyall_accidents",
+    "threshold": 2,
+    "unlocks": "reply-all",
+    "greeting": {
+      "neutral": "The Distribution List. We have heard of you. "
+    }
+  },
+  {
+    "id": "protocol",
+    "name": "The Protocol Exception",
+    "description": "Protocol has added an exception for you.",
+    "counter": "protocol_incidents",
+    "threshold": 2,
+    "unlocks": "protocol",
+    "greeting": {
+      "neutral": "The Protocol Exception. We have heard of you. "
+    }
+  },
+  {
+    "id": "host",
+    "name": "The Last Toast",
+    "description": "The reception has requested your glass be registered.",
+    "counter": "drinks",
+    "threshold": 3,
+    "unlocks": "host",
+    "greeting": {
+      "neutral": "The Last Toast. We have heard of you. "
+    }
+  }
+]

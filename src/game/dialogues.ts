@@ -14,6 +14,8 @@ export interface TalkChoice extends ChoiceGate {
   formal?: boolean;
   favour?: { character: string; delta: number };
   teaches?: string;
+  counts?: string[];
+  statDrift?: { stat: import("./rules").StatKey; delta: number };
   effects?: Record<string, number>;
 }
 export interface TalkNode {

@@ -52,6 +52,7 @@ export interface DeliveryContext {
   day: number;
   block: number;
   traits: string[];
+  statDrift?: Partial<Record<import("./rules").StatKey, number>> | undefined;
   recipientTrust: number;
   euTrust: number;
   partnerTrust: number;
@@ -74,7 +75,7 @@ export function resolveDemarche(
   route: DemarcheRoute,
   ctx: DeliveryContext,
 ): DeliveryOutcome {
-  const stats = computeStats(ctx.traits);
+  const stats = computeStats(ctx.traits, ctx.statDrift);
   const letterheadDelay = route.kind === "eu" && ctx.euTrust + ctx.partnerTrust < 100;
   const late =
     tick(ctx.day, ctx.block) + (letterheadDelay && !ctx.delayApplied ? 1 : 0) >

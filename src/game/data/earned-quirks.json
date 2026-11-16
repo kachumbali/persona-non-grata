@@ -1,0 +1,132 @@
+[
+  {
+    "id": "recovering-replyall",
+    "name": "Recovering Reply-All-ic",
+    "description": "Personnel has removed Reply-All Reflex after five successful recalls.",
+    "stats": {
+      "deniability": 1
+    },
+    "trigger": {
+      "counter": "recalls",
+      "threshold": 5
+    },
+    "mail": "Personnel has removed Reply-All Reflex after five successful recalls.",
+    "cures": "replyall"
+  },
+  {
+    "id": "annex-reader",
+    "name": "Reads Annexes",
+    "description": "Personnel records your unusual familiarity with annexes.",
+    "stats": {
+      "liver": 1
+    },
+    "trigger": {
+      "counter": "formal",
+      "threshold": 4
+    },
+    "mail": "Personnel records your unusual familiarity with annexes."
+  },
+  {
+    "id": "quiet-source",
+    "name": "Cited Off the Record",
+    "description": "Your discretion is now part of the permanent record.",
+    "stats": {
+      "liver": 1
+    },
+    "trigger": {
+      "counter": "gossip_passed",
+      "threshold": 4
+    },
+    "mail": "Your discretion is now part of the permanent record."
+  },
+  {
+    "id": "dispatches",
+    "name": "Mentioned in Dispatches",
+    "description": "Capital mentions your reports in its own report.",
+    "stats": {
+      "gravitas": 1
+    },
+    "trigger": {
+      "reputation": "capital-pleaser",
+      "days": 2
+    },
+    "mail": "Capital mentions your reports in its own report."
+  },
+  {
+    "id": "reliable-host",
+    "name": "Keeper of the Coffee",
+    "description": "Personnel notes that the coffee arrived on time.",
+    "stats": {
+      "stamina": 1
+    },
+    "trigger": {
+      "counter": "hospitality",
+      "threshold": 4
+    },
+    "mail": "Personnel notes that the coffee arrived on time."
+  },
+  {
+    "id": "owe-corps",
+    "name": "Owes Half the Corps",
+    "description": "The Directorate has attached your outstanding obligations.",
+    "stats": {
+      "deniability": -1
+    },
+    "trigger": {
+      "counter": "favours_owed",
+      "threshold": 3
+    },
+    "mail": "The Directorate has attached your outstanding obligations."
+  },
+  {
+    "id": "paper-cut",
+    "name": "Administrative Abrasion",
+    "description": "Your unopened correspondence has acquired a case number.",
+    "stats": {
+      "stamina": -1
+    },
+    "trigger": {
+      "counter": "ignored_mail",
+      "threshold": 15
+    },
+    "mail": "Your unopened correspondence has acquired a case number."
+  },
+  {
+    "id": "incident-prone",
+    "name": "Protocol’s Special Case",
+    "description": "Protocol requests advance notice of your future arrivals.",
+    "stats": {
+      "charm": -1
+    },
+    "trigger": {
+      "flag": "refused-favour-protocol"
+    },
+    "mail": "Protocol requests advance notice of your future arrivals."
+  },
+  {
+    "id": "over-explainer",
+    "name": "Explains the Annex",
+    "description": "Your explanation has been attached to its own annex.",
+    "stats": {
+      "charm": -1
+    },
+    "trigger": {
+      "counter": "rules",
+      "threshold": 4
+    },
+    "mail": "Your explanation has been attached to its own annex."
+  },
+  {
+    "id": "morning-after",
+    "name": "The Morning After",
+    "description": "The Directorate has approved a later morning.",
+    "stats": {
+      "stamina": -1
+    },
+    "trigger": {
+      "counter": "drinks",
+      "threshold": 4
+    },
+    "mail": "The Directorate has approved a later morning."
+  }
+]

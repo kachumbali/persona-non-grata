@@ -57,6 +57,29 @@ function replaceViaZeroGoodwill() {
 }
 
 describe("save slots", () => {
+  it("persists an earned quirk, a cured flaw and drift through a reload and the next posting", () => {
+    beginNewCareer(0);
+    startCareer(ann, {});
+    useGame.getState().queue({
+      id: "test-personnel",
+      kind: "event",
+      source: "Test",
+      text: "Filed.",
+      effects: {},
+      counts: ["recalls", "recalls", "recalls", "recalls", "recalls"],
+      statDrift: { stat: "gravitas", delta: 1 },
+    });
+    useGame.getState().advance();
+    expect(slotAt(0)?.career.earnedQuirks).toContain("recovering-replyall");
+    reloadSaves();
+    continueSlot(0);
+    expect(useGame.getState().character?.traits).not.toContain("replyall");
+    expect(useGame.getState().character?.statDrift?.gravitas).toBe(1);
+    newPosting();
+    expect(useGame.getState().character?.traits).toContain("recovering-replyall");
+    expect(useGame.getState().character?.traits).not.toContain("replyall");
+    expect(useGame.getState().character?.statDrift?.gravitas).toBe(1);
+  });
   it("round-trips relationship discoveries and gossip facts", () => {
     beginNewCareer(0);
     startCareer(ann, {});

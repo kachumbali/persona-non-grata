@@ -20,28 +20,32 @@
           "label": "Deliver personally",
           "kind": "self",
           "dp": 2,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "colleague",
           "label": "Assign a colleague",
           "kind": "colleague",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "eu",
           "label": "Joint EU démarche",
           "kind": "eu",
           "dp": 1,
-          "days": 0
+          "days": 0,
+          "counts": ["team"]
         },
         {
           "id": "note",
           "label": "Send a note verbale",
           "kind": "note",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         }
       ],
       "report": {
@@ -85,28 +89,32 @@
           "label": "Deliver personally",
           "kind": "self",
           "dp": 2,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "colleague",
           "label": "Assign a colleague",
           "kind": "colleague",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "eu",
           "label": "Joint EU démarche",
           "kind": "eu",
           "dp": 1,
-          "days": 0
+          "days": 0,
+          "counts": ["team"]
         },
         {
           "id": "note",
           "label": "Send a note verbale",
           "kind": "note",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         }
       ],
       "report": {
@@ -155,28 +163,32 @@
           "label": "Deliver personally",
           "kind": "self",
           "dp": 2,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "colleague",
           "label": "Assign a colleague",
           "kind": "colleague",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "eu",
           "label": "Joint EU démarche",
           "kind": "eu",
           "dp": 1,
-          "days": 0
+          "days": 0,
+          "counts": ["team"]
         },
         {
           "id": "note",
           "label": "Send a note verbale",
           "kind": "note",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         }
       ],
       "report": {
@@ -216,28 +228,32 @@
           "label": "Deliver personally",
           "kind": "self",
           "dp": 2,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "colleague",
           "label": "Assign a colleague",
           "kind": "colleague",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "eu",
           "label": "Joint EU démarche",
           "kind": "eu",
           "dp": 1,
-          "days": 0
+          "days": 0,
+          "counts": ["team"]
         },
         {
           "id": "note",
           "label": "Send a note verbale",
           "kind": "note",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         }
       ],
       "report": {
@@ -285,28 +301,32 @@
           "label": "Deliver personally",
           "kind": "self",
           "dp": 2,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "colleague",
           "label": "Assign a colleague",
           "kind": "colleague",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "eu",
           "label": "Joint EU démarche",
           "kind": "eu",
           "dp": 1,
-          "days": 0
+          "days": 0,
+          "counts": ["team"]
         },
         {
           "id": "note",
           "label": "Send a note verbale",
           "kind": "note",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         }
       ],
       "report": {
@@ -349,28 +369,32 @@
           "label": "Deliver personally",
           "kind": "self",
           "dp": 2,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "colleague",
           "label": "Assign a colleague",
           "kind": "colleague",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "eu",
           "label": "Joint EU démarche",
           "kind": "eu",
           "dp": 1,
-          "days": 0
+          "days": 0,
+          "counts": ["team"]
         },
         {
           "id": "note",
           "label": "Send a note verbale",
           "kind": "note",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         }
       ],
       "report": {
@@ -404,28 +428,32 @@
           "label": "Deliver personally",
           "kind": "self",
           "dp": 2,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "colleague",
           "label": "Assign a colleague",
           "kind": "colleague",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "eu",
           "label": "Joint EU démarche",
           "kind": "eu",
           "dp": 1,
-          "days": 0
+          "days": 0,
+          "counts": ["team"]
         },
         {
           "id": "note",
           "label": "Send a note verbale",
           "kind": "note",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         }
       ],
       "report": {
@@ -466,28 +494,32 @@
           "label": "Deliver personally",
           "kind": "self",
           "dp": 2,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "colleague",
           "label": "Assign a colleague",
           "kind": "colleague",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         },
         {
           "id": "eu",
           "label": "Joint EU démarche",
           "kind": "eu",
           "dp": 1,
-          "days": 0
+          "days": 0,
+          "counts": ["team"]
         },
         {
           "id": "note",
           "label": "Send a note verbale",
           "kind": "note",
           "dp": 0,
-          "days": 0
+          "days": 0,
+          "counts": ["formal"]
         }
       ],
       "report": {

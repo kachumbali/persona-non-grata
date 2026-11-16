@@ -1,5 +1,12 @@
 import { pressReview, clippings } from "./press";
 import {
+  advancePersonnel,
+  createPersonnel,
+  effectiveTraits,
+  type Drift,
+  type PersonnelState,
+} from "./personnel";
+import {
   firstImpression,
   relationshipState,
   teamworkChange,
@@ -105,6 +112,11 @@ export interface Character {
   portrait: string;
   bio: string;
   traits: string[];
+  startingTraits?: string[] | undefined;
+  earnedQuirks?: string[] | undefined;
+  curedTraits?: string[] | undefined;
+  statDrift?: Drift | undefined;
+  reputations?: string[] | undefined;
 }
 export interface LogEntry {
   day: number;
@@ -115,6 +127,7 @@ export interface GameState {
   /** Which chapter pack this save belongs to. */
   chapterId: string;
   character: Character | null;
+  personnel: PersonnelState;
   day: number;
   minute: number;
   block: number;
@@ -225,6 +238,7 @@ const initialState = () => {
     yesterday: {},
     todayPlans: {},
     character: null,
+    personnel: createPersonnel([], computeStats([])),
     day: 1,
     minute: m.blocks[0].time,
     block: 0,
@@ -320,6 +334,8 @@ export function resolveStep(s: GameState, decision: PendingDecision): PendingDec
     const cash = route.cash + (decision.cashCost ?? 0);
     return {
       ...decision,
+      counts: [...(decision.counts ?? []), ...(route.counts ?? [])],
+      statDrift: route.statDrift ?? decision.statDrift,
       step: step.id,
       route: route.id,
       timeCost: route.dp,
@@ -420,6 +436,14 @@ export const useGame = create<GameState>()(
         set({
           ...initialState(),
           character,
+          personnel: createPersonnel(
+            character.traits,
+            computeStats(character.traits, character.statDrift),
+            character.earnedQuirks,
+            character.curedTraits,
+            character.statDrift,
+            character.reputations,
+          ),
           log: [
             {
               day: 1,
@@ -491,7 +515,11 @@ export const useGame = create<GameState>()(
           const colleague = s.colleagues[person.id];
           const trust = clamp(
             (colleague?.trust ?? 50) +
-              firstImpression(person, s.character.traits, computeStats(s.character.traits)),
+              firstImpression(
+                person,
+                s.character.traits,
+                computeStats(s.character.traits, s.character.statDrift),
+              ),
           );
           const before = relationshipState(colleague?.trust ?? 50);
           const after = relationshipState(trust);
@@ -522,6 +550,23 @@ export const useGame = create<GameState>()(
       queue: (requested, replacePlayer = false) => {
         const s = get();
         if (!s.character || s.ending) return false;
+        if (requested.eventId && requested.eventChoice) {
+          const choice = campaign()
+            .events.find((event) => event.id === requested.eventId)
+            ?.choices.find((item) => item.id === requested.eventChoice);
+          if (
+            choice &&
+            !eligible(
+              choice,
+              s.character.traits,
+              computeStats(s.character.traits, s.character.statDrift),
+              s.personnel.reputations,
+            )
+          ) {
+            set({ planError: "That choice is not available to your personnel file." });
+            return false;
+          }
+        }
         if (
           requested.gossipId &&
           (!s.knownFacts.includes(`gossip:${requested.gossipId}`) ||
@@ -710,7 +755,12 @@ export const useGame = create<GameState>()(
           !o ||
           (e.issuedBlock !== undefined && e.day === s.day && s.block < e.issuedBlock) ||
           !s.character ||
-          !eligible(o, s.character.traits, computeStats(s.character.traits)) ||
+          !eligible(
+            o,
+            s.character.traits,
+            computeStats(s.character.traits, s.character.statDrift),
+            s.personnel.reputations,
+          ) ||
           s.handled[id] ||
           absTime(s.day, cutoff - 1) < absTime(e.day, e.time)
         )
@@ -738,6 +788,8 @@ export const useGame = create<GameState>()(
           favour: actual.favour,
           teaches: actual.teaches,
           traitChoice: actual.requiresTrait,
+          counts: actual.counts,
+          statDrift: actual.statDrift,
           emailId: id,
           emailAction: accident ? "replyall" : action,
           recall: accident ? o : undefined,
@@ -761,6 +813,7 @@ export const useGame = create<GameState>()(
           favour: original.favour,
           teaches: original.teaches,
           traitChoice: original.requiresTrait,
+          counts: [...(original.counts ?? []), "recalls"],
           emailAction: "reply" as const,
           recall: undefined,
           timeCost: 2,
@@ -800,7 +853,12 @@ export const useGame = create<GameState>()(
           Object.entries(s.missionSteps).map(([task, ids]) => [task, [...ids]]),
         );
         let setbacksApplied = [...s.setbacksApplied];
-        const stats = computeStats(s.character.traits);
+        const stats = computeStats(s.character.traits, s.character.statDrift);
+        const personnelCounts: Record<string, number> = {};
+        const count = (key: string, n = 1) => {
+          personnelCounts[key] = (personnelCounts[key] ?? 0) + n;
+        };
+        const drift = { ...s.personnel.drift };
         let hangover = s.block === 0 ? false : s.hangover;
         const visit = { ...s.visit };
         let meters = { ...s.meters },
@@ -929,6 +987,7 @@ export const useGame = create<GameState>()(
             ) {
               storyFlags.push(`gossip:${item.id}:${p.gossipAction}`);
               if (p.gossipAction === "pass") {
+                count("gossip_passed");
                 const key = pairKey(p.worker, item.subject);
                 if (p.worker !== item.subject) {
                   relationships[key] = clamp(
@@ -941,7 +1000,7 @@ export const useGame = create<GameState>()(
                 if (listener) listener.trust = clamp(listener.trust + 2);
                 if (item.truth !== "true") {
                   record("Gossip", "Capital receives a correction to the correction.", {
-                    confidence: -item.sensitivity - 1,
+                    confidence: -item.sensitivity - 1 - (item.source === "press" ? 2 : 0),
                   });
                   storyFlags.push(`gossip:false:${item.id}`);
                 }
@@ -1036,6 +1095,7 @@ export const useGame = create<GameState>()(
               day: s.day,
               block: s.block,
               traits: s.character.traits,
+              statDrift: s.character.statDrift,
               recipientTrust: colleagues[instruction.recipient]?.trust ?? 0,
               euTrust: colleagues["eu"]?.trust ?? 0,
               partnerTrust,
@@ -1044,6 +1104,18 @@ export const useGame = create<GameState>()(
               delegationSucceeded: succeeded,
               delayApplied: p.remainingBlocks === 1,
             });
+            for (const key of route.counts ?? []) count(key);
+            if (route.statDrift) {
+              drift[route.statDrift.stat] =
+                (drift[route.statDrift.stat] ?? 0) + route.statDrift.delta;
+              results.push({
+                day: s.day,
+                time: s.minute,
+                text: `Personnel file: ${route.statDrift.stat} ${route.statDrift.delta > 0 ? "+" : ""}${route.statDrift.delta}.`,
+              });
+            }
+            if (route.kind === "self") count("demarche_self");
+            if (outcome.incident) count("protocol_incidents");
             const traitOption = instruction.traitOptions?.find(
               (option) => option.id === p.demarcheTrait,
             );
@@ -1123,6 +1195,20 @@ export const useGame = create<GameState>()(
             : { confidence: -2, morale: -1 };
           if (formal) text += ` (Gravitas +${formal} HQ goodwill)`;
           record(p.source, text, effects);
+          if (success) {
+            for (const key of p.counts ?? []) count(key);
+            if (p.statDrift) {
+              drift[p.statDrift.stat] = (drift[p.statDrift.stat] ?? 0) + p.statDrift.delta;
+              results.push({
+                day: s.day,
+                time: s.minute,
+                text: `Personnel file: ${p.statDrift.stat} ${p.statDrift.delta > 0 ? "+" : ""}${p.statDrift.delta}.`,
+              });
+            }
+            if (p.drinks) count("drinks");
+            if (p.recall) count("replyall_accidents");
+            if (route?.kind === "money") count("money_routes");
+          }
           if (success && p.task && stepDef && p.step) {
             // A step is done once; a second decision on it (a mail after the work) changes nothing.
             if (!stepDone(missionSteps, p.task, p.step)) {
@@ -1147,6 +1233,7 @@ export const useGame = create<GameState>()(
                   favours.owedToYou[who] = Math.max(0, (favours.owedToYou[who] ?? 0) - 1);
                 }
                 if (route.consequences?.oweFavour) {
+                  count("favours_owed");
                   const who = route.consequences.oweFavour;
                   favours.youOwe[who] = (favours.youOwe[who] ?? 0) + 1;
                   favourCalls.push({ character: who, dueDay: Math.min(lastDay(), s.day + 2) });
@@ -1437,6 +1524,7 @@ export const useGame = create<GameState>()(
             const cutoff = blocks()[s.block + 1]?.time ?? 24 * 60;
             if (handled[e.id] || absTime(e.day, e.time) >= absTime(s.day, cutoff)) continue;
             handled[e.id] = "ignored";
+            count("ignored_mail");
             const missed = missedEffects(e.ignore.effects, stats.deniability);
             economy.funds += (missed.budget ?? 0) * 100;
             record(
@@ -1659,8 +1747,32 @@ export const useGame = create<GameState>()(
             text: `Your relationship with ${name}: ${before} has become ${after}.`,
           });
         }
+        const progressed = advancePersonnel(
+          { ...s.personnel, drift },
+          personnelCounts,
+          s.day,
+          s.block,
+          storyFlags,
+        );
+        for (const line of progressed.lines)
+          results.push({ day: s.day, time: s.minute, text: line });
+        const character = {
+          ...s.character,
+          traits: effectiveTraits(
+            s.character.startingTraits ??
+              s.personnel.start.traits.filter((id) => !s.personnel.earnedQuirks.includes(id)),
+            progressed.state.earnedQuirks,
+            progressed.state.curedTraits,
+          ),
+          earnedQuirks: progressed.state.earnedQuirks,
+          curedTraits: progressed.state.curedTraits,
+          statDrift: drift,
+          reputations: progressed.state.reputations,
+        };
         set({
           hangover,
+          character,
+          personnel: progressed.state,
           economy,
           turn,
           planError: "",
@@ -1735,7 +1847,7 @@ export const useGame = create<GameState>()(
         setItem: () => {},
         removeItem: () => {},
       })),
-      version: 13,
+      version: 14,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = {
@@ -1787,6 +1899,16 @@ export const useGame = create<GameState>()(
         return {
           ...initialState(),
           ...old,
+          personnel:
+            old.personnel ??
+            createPersonnel(
+              old.character?.traits ?? [],
+              computeStats(old.character?.traits ?? [], old.character?.statDrift),
+              old.character?.earnedQuirks,
+              old.character?.curedTraits,
+              old.character?.statDrift,
+              old.character?.reputations,
+            ),
           missionSteps,
           demarches: old.demarches ?? migrateDemarches(old.day ?? 1, old.block ?? 0),
           unrequestedDemarches: old.unrequestedDemarches ?? 0,
@@ -1857,6 +1979,16 @@ export const useGame = create<GameState>()(
         return {
           ...current,
           ...old,
+          personnel:
+            old.personnel ??
+            createPersonnel(
+              old.character?.traits ?? [],
+              computeStats(old.character?.traits ?? [], old.character?.statDrift),
+              old.character?.earnedQuirks,
+              old.character?.curedTraits,
+              old.character?.statDrift,
+              old.character?.reputations,
+            ),
           economy,
           missionSteps,
           demarches: old.demarches ?? migrateDemarches(old.day ?? 1, old.block ?? 0),
@@ -1898,6 +2030,7 @@ export function inboxFor(
   minute: number,
   handled: Record<string, string>,
   progress: DemarcheProgress = {},
+  notices: PersonnelState["notices"] = [],
 ) {
   const cutoff = blocks().find((b) => b.time > minute)?.time ?? 24 * 60;
   const block = Math.max(
@@ -1937,5 +2070,16 @@ export function inboxFor(
       },
     ];
   });
-  return [...mail, ...reports].sort((a, b) => a.day - b.day || a.time - b.time);
+  const amendments = notices.map((notice) => ({
+    id: `personnel-amended-${notice.quirk}`,
+    day: notice.day,
+    time: blocks()[notice.block]?.time ?? 480,
+    from: "Capital · Personnel Directorate",
+    subject: "Personnel file amended",
+    body: notice.text,
+    options: {} as Partial<Record<Action, import("./rules").Outcome>>,
+    ignore: { text: "", effects: {} },
+    status: "report",
+  }));
+  return [...mail, ...reports, ...amendments].sort((a, b) => a.day - b.day || a.time - b.time);
 }

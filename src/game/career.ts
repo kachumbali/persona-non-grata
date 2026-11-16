@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { SavedGame } from "./store";
 import { activeChapter } from "./chapters";
 import { relationshipState } from "./relationships";
+import { effectiveTraits, type Drift } from "./personnel";
 
 /**
  * The career: everything about the diplomat that outlives one posting.
@@ -51,6 +52,8 @@ export interface Career {
   background: BackgroundChoice;
   traits: string[];
   earnedQuirks: string[];
+  curedTraits?: string[];
+  statDrift?: Drift;
   languages: Record<string, number>;
   rank: string;
   savings: number;
@@ -69,6 +72,11 @@ export interface SaveSlot {
 
 export interface CharacterLike extends CareerIdentity {
   traits: string[];
+  startingTraits?: string[] | undefined;
+  earnedQuirks?: string[] | undefined;
+  curedTraits?: string[] | undefined;
+  statDrift?: Drift | undefined;
+  reputations?: string[] | undefined;
 }
 
 /** Flag prefixes that are bookkeeping for the posting and never become legacy. */
@@ -113,7 +121,15 @@ export function newCareer(
 
 /** The character shown in play, derived from the career. */
 export function characterOf(career: Career): CharacterLike {
-  return { ...career.identity, traits: [...career.traits] };
+  return {
+    ...career.identity,
+    traits: effectiveTraits(career.traits, career.earnedQuirks, career.curedTraits ?? []),
+    startingTraits: [...career.traits],
+    earnedQuirks: [...career.earnedQuirks],
+    curedTraits: [...(career.curedTraits ?? [])],
+    statDrift: { ...(career.statDrift ?? {}) },
+    reputations: [...career.reputations],
+  };
 }
 
 type ResultSource = Pick<
@@ -228,6 +244,17 @@ const outcome = z.object({
 });
 const str = z.string().max(2000);
 const id = z.string().min(1).max(200);
+const personnelSchema = z.object({
+  counters: z.record(id, num),
+  reputations: z.array(id),
+  earnedReputations: z.array(id),
+  reputationSince: z.record(id, num),
+  earnedQuirks: z.array(id),
+  curedTraits: z.array(id),
+  drift: z.record(id, num),
+  start: z.object({ traits: z.array(id), stats: z.record(id, num), reputations: z.array(id) }),
+  notices: z.array(z.object({ day: num, block: num, quirk: id, text: str })).max(3),
+});
 const chapterResultSchema = z.object({
   chapterId: id,
   ending: id,
@@ -260,6 +287,8 @@ const careerSchema = z.object({
   }),
   traits: z.array(id).max(20),
   earnedQuirks: z.array(id).max(200),
+  curedTraits: z.array(id).max(20).optional(),
+  statDrift: z.record(id, num).optional(),
   languages: z.record(id, num),
   rank: str,
   savings: num,
@@ -291,6 +320,7 @@ const postingSchema = z
     storyOutcomes: z.record(id, outcome),
     favours: z.object({ owedToYou: z.record(id, num), youOwe: z.record(id, num) }).optional(),
     knownFacts: z.array(id).max(5000).optional(),
+    personnel: personnelSchema.optional(),
     metPeople: z.array(id).optional(),
     discoveredTraits: z.record(id, z.array(id)).optional(),
     knownRelationships: z.array(id).optional(),

@@ -7,6 +7,7 @@ import { newPosting } from "../saves";
 import { useGame } from "../store";
 import { Portrait } from "./Portrait";
 import { WhoIsWho } from "./WhoIsWho";
+import { PersonnelFile } from "./PersonnelFile";
 import { CityMap } from "./CityMap";
 import { PlaceScene } from "./PlaceScene";
 import { BlackBerry } from "./BlackBerry";
@@ -28,6 +29,7 @@ import {
 export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const g = useGame();
   const [peopleOpen, setPeopleOpen] = useState(false);
+  const [fileOpen, setFileOpen] = useState(false);
   const [briefingOpen, setBriefingOpen] = useState(g.day === 1 && g.block === 0);
   const [view, setView] = useState<"city" | "place">("city");
   const [reopened, setReopened] = useState(false);
@@ -115,6 +117,9 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
             {chapter.playerRank} · {chapter.post}
           </p>
         </div>
+        <Button variant="outline" onClick={() => setFileOpen(true)}>
+          Personnel file
+        </Button>
         <Button variant="outline" onClick={() => setPeopleOpen(true)}>
           Who is who
         </Button>
@@ -134,6 +139,15 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
         </div>
       </header>
 
+      <Dialog open={fileOpen} onOpenChange={setFileOpen}>
+        <DialogContent className="max-h-[85dvh] max-w-[calc(100vw-1rem)] overflow-y-auto bg-card sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Personnel file</DialogTitle>
+            <DialogDescription>Your current personnel record.</DialogDescription>
+          </DialogHeader>
+          <PersonnelFile />
+        </DialogContent>
+      </Dialog>
       <Dialog open={peopleOpen} onOpenChange={setPeopleOpen}>
         <DialogContent className="max-h-[85dvh] max-w-[calc(100vw-1rem)] overflow-y-auto bg-card sm:max-w-2xl">
           <DialogHeader>

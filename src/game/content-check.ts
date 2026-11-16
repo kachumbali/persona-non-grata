@@ -16,6 +16,8 @@ import type {
 } from "./chapters/types";
 import { parseStepRef } from "./mission";
 import npcTraits from "./data/npc-traits.json";
+import reputationData from "./data/reputations.json";
+import { EARNED_QUIRKS as quirkData } from "./personnel";
 
 export type Finding = {
   level: "error" | "warning";
@@ -104,6 +106,11 @@ function buildSchemas(strict: boolean) {
     requiresTrait: opt(str),
     blockedByTrait: opt(str),
     requiresStat: opt(obj({ stat: z.enum(STATS), min: num })),
+    requiresReputation: opt(str),
+  };
+  const personnelChoice = {
+    counts: opt(z.array(str)),
+    statDrift: opt(obj({ stat: z.enum(STATS), delta: z.union([z.literal(-1), z.literal(1)]) })),
   };
   const learning = { favour: opt(obj({ character: str, delta: int })), teaches: opt(str) };
   const storyChoice = obj({
@@ -126,6 +133,7 @@ function buildSchemas(strict: boolean) {
     formal: opt(z.boolean()),
     ...gate,
     ...learning,
+    ...personnelChoice,
   });
   const event = obj({
     callInFor: opt(str),
@@ -202,6 +210,7 @@ function buildSchemas(strict: boolean) {
     effects: opt(talkEffects),
     ...gate,
     ...learning,
+    ...personnelChoice,
   });
   const dialogues = z.record(
     str,
@@ -221,6 +230,7 @@ function buildSchemas(strict: boolean) {
     confirmsStep: opt(str),
     formal: opt(z.boolean()),
     ...gate,
+    ...personnelChoice,
   });
   const emails = z.array(
     obj({
@@ -266,6 +276,7 @@ function buildSchemas(strict: boolean) {
     trait: opt(str),
     meterBelow: opt(obj({ key: z.enum(METERS), value: num })),
     trustBelow: opt(obj({ id: str, value: num })),
+    reputation: opt(str),
   });
   const press = obj({
     outlets: z.array(obj({ id: str, name: str, voice: str })),
@@ -357,6 +368,7 @@ function buildSchemas(strict: boolean) {
                     }),
                   ),
                   result: str,
+                  ...personnelChoice,
                 }),
               )
               .min(2)
@@ -464,6 +476,7 @@ function buildSchemas(strict: boolean) {
               kind: z.enum(["self", "colleague", "eu", "note"]),
               dp: int.min(0),
               days: int.min(0),
+              ...personnelChoice,
             }),
           ),
           report: obj({ good: str, adequate: str, failed: str }),
@@ -541,7 +554,8 @@ const gated = (c: {
   requiresTrait?: string | undefined;
   blockedByTrait?: string | undefined;
   requiresStat?: unknown;
-}): boolean => !!(c.requiresTrait || c.blockedByTrait || c.requiresStat);
+  requiresReputation?: string | undefined;
+}): boolean => !!(c.requiresTrait || c.blockedByTrait || c.requiresStat || c.requiresReputation);
 
 type Gate = Parameters<typeof gated>[0];
 
@@ -665,7 +679,7 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
         error(portraitsFile, pathOf([i, "file"]), `Portrait file "${p.file}" does not exist`);
     });
   }
-  const traitIds = new Set(traits.map((t) => t.id));
+  const traitIds = new Set([...traits.map((t) => t.id), ...quirkData.map((q) => q.id)]);
   const portraitById = new Map(portraits.map((p) => [p.id, p]));
 
   // Chapter files.
@@ -1738,6 +1752,66 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
     if (!readNames.has(flag) && !(CODE_READ_FLAGS as readonly string[]).includes(flag))
       warn(where.file, where.path, `Flag "${flag}" is set but never read`);
 
+  const repIds = new Set(reputationData.map((r) => r.id));
+  const derivedCounters = new Set([
+    "ignored_mail",
+    "favours_owed",
+    "gossip_passed",
+    "demarche_self",
+    "money_routes",
+    "replyall_accidents",
+    "protocol_incidents",
+    "drinks",
+    "recalls",
+  ]);
+  const counters = new Set([...reputationData.map((r) => r.counter), ...derivedCounters]);
+  const occurrences: Record<string, number> = {},
+    unlocks = new Set<string>();
+  let driftUses = 0;
+  const inspect = (value: unknown, file: string, path: Part[]): void => {
+    if (Array.isArray(value)) {
+      value.forEach((item, i) => inspect(item, file, [...path, i]));
+      return;
+    }
+    if (!value || typeof value !== "object") return;
+    const obj = value as Record<string, unknown>;
+    if (Array.isArray(obj["counts"]))
+      for (const [i, id] of obj["counts"].entries()) {
+        if (typeof id === "string") {
+          occurrences[id] = (occurrences[id] ?? 0) + 1;
+          if (!counters.has(id))
+            error(file, pathOf([...path, "counts", i]), `Unknown counter "${id}"`);
+        }
+      }
+    if (obj["statDrift"]) driftUses++;
+    for (const field of ["requiresReputation", "reputation"])
+      if (typeof obj[field] === "string") {
+        const id = obj[field] as string;
+        if (!repIds.has(id)) error(file, pathOf([...path, field]), `Unknown reputation "${id}"`);
+        if (field === "requiresReputation") unlocks.add(id);
+      }
+    for (const [key, item] of Object.entries(obj)) inspect(item, file, [...path, key]);
+  };
+  for (const [key, value] of Object.entries(pack))
+    inspect(value, FILE_NAMES[key as keyof ChapterPack] ?? key, []);
+  if (driftUses > 8)
+    error(F.manifest, "statDrift", `At most 8 stat drift choices are allowed; found ${driftUses}`);
+  for (const rep of reputationData) {
+    if (!unlocks.has(rep.id)) error("reputations.json", rep.id, "Reputation has no unlock choice");
+    if (!derivedCounters.has(rep.counter) && (occurrences[rep.counter] ?? 0) < rep.threshold)
+      error("reputations.json", rep.id, "Reputation counter cannot reach its threshold");
+  }
+  for (const q of quirkData) {
+    const t = q.trigger;
+    if (t.counter && !counters.has(t.counter))
+      error("earned-quirks.json", q.id, "Quirk has an unknown trigger counter");
+    if (t.reputation && !repIds.has(t.reputation))
+      error("earned-quirks.json", q.id, "Quirk has an unknown trigger reputation");
+    if (t.flag && !JSON.stringify(pack).includes(`"${t.flag}"`))
+      error("earned-quirks.json", q.id, "Quirk trigger flag is never authored");
+    if (!t.counter && !t.reputation && !t.flag)
+      error("earned-quirks.json", q.id, "Quirk has no trigger");
+  }
   return findings;
 }
 

@@ -31,10 +31,10 @@ export function Mailbox({
   const [openId, setOpenId] = useState<string | null>(null);
   const inbox = useMemo(
     () =>
-      inboxFor(g.day, g.minute, g.handled, g.demarches)
+      inboxFor(g.day, g.minute, g.handled, g.demarches, g.personnel.notices)
         .filter((e) => (channel === "fax") === isFax(e.from))
         .reverse(),
-    [g.day, g.minute, g.handled, g.demarches, channel],
+    [g.day, g.minute, g.handled, g.demarches, g.personnel.notices, channel],
   );
   const open =
     inbox.find((e) => e.id === openId) ?? (singlePane ? undefined : inbox.find((e) => !e.status));
@@ -115,7 +115,8 @@ export function Mailbox({
                         !eligible(
                           outcome,
                           g.character?.traits ?? [],
-                          computeStats(g.character?.traits ?? []),
+                          computeStats(g.character?.traits ?? [], g.character?.statDrift),
+                          g.personnel.reputations,
                         )
                       )
                         return null;

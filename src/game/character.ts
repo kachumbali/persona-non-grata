@@ -1,17 +1,25 @@
 import traitsData from "./data/traits.json";
+import { REPUTATIONS } from "./personnel";
 import type { Effects, StatKey } from "./rules";
 
 export interface ChoiceGate {
   requiresTrait?: string;
   blockedByTrait?: string;
   requiresStat?: { stat: StatKey; min: number };
+  requiresReputation?: string;
 }
 export type Stats = Record<StatKey, number>;
-export function eligible(gate: ChoiceGate, traits: string[], stats: Stats): boolean {
+export function eligible(
+  gate: ChoiceGate,
+  traits: string[],
+  stats: Stats,
+  reputations: string[] = [],
+): boolean {
   return (
     (!gate.requiresTrait || traits.includes(gate.requiresTrait)) &&
     (!gate.blockedByTrait || !traits.includes(gate.blockedByTrait)) &&
-    (!gate.requiresStat || stats[gate.requiresStat.stat] >= gate.requiresStat.min)
+    (!gate.requiresStat || stats[gate.requiresStat.stat] >= gate.requiresStat.min) &&
+    (!gate.requiresReputation || reputations.includes(gate.requiresReputation))
   );
 }
 export function gateLabel(gate: ChoiceGate): string {
@@ -23,6 +31,8 @@ export function gateLabel(gate: ChoiceGate): string {
     liver: "Liver",
   };
   const labels = [
+    gate.requiresReputation &&
+      (REPUTATIONS.find((r) => r.id === gate.requiresReputation)?.name ?? gate.requiresReputation),
     gate.requiresTrait &&
       (traitsData.find((t) => t.id === gate.requiresTrait)?.name ?? gate.requiresTrait),
     gate.blockedByTrait &&

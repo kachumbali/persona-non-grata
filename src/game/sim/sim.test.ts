@@ -70,6 +70,34 @@ describe("simulated playthroughs", () => {
     const diligent = full.filter((run) => run.bot === "careful");
     const socialRuns = full.filter((run) => run.bot === "socialiser");
     const pressRuns = full.filter((run) => run.bot === "press-reader");
+    // S-05 targets: every competent run earns a reputation, none appears in over 70% of runs,
+    // and at least 80% of paired same-build files differ (measured 100%).
+    for (const run of full.filter((r) => COMPETENT.includes(r.bot)))
+      expect(run.personnel.earnedReputations.length).toBeGreaterThan(0);
+    const repIds = new Set(full.flatMap((r) => r.personnel.earnedReputations));
+    for (const id of repIds)
+      expect(
+        share(full, (r) => r.personnel.earnedReputations.includes(id)),
+        id,
+      ).toBeLessThanOrEqual(0.7);
+    const fingerprint = (r: RunResult) =>
+      JSON.stringify([
+        r.personnel.reputations,
+        r.personnel.earnedQuirks,
+        r.personnel.curedTraits,
+        r.personnel.drift,
+      ]);
+    const pairs = diligent.flatMap((a) =>
+      full
+        .filter(
+          (b) =>
+            b.build === a.build &&
+            b.seed === a.seed &&
+            (b.bot === "press-reader" || b.bot === "socialiser"),
+        )
+        .map((b) => fingerprint(a) !== fingerprint(b)),
+    );
+    expect(pairs.filter(Boolean).length / pairs.length).toBeGreaterThanOrEqual(0.8);
     // S-06 targets: six distinct player-changed pairs in each socialiser run; press promotion 70–90%.
     for (const run of socialRuns)
       expect(run.pairsChanged, `${run.build} ${run.seed}`).toBeGreaterThanOrEqual(6);
@@ -105,7 +133,7 @@ describe("simulated playthroughs", () => {
     const baselineMission: Record<string, number> = {
       careful: 42,
       "press-reader": 42,
-      socialiser: 22,
+      socialiser: 30,
       reckless: 0,
       ignorer: 0,
     };
@@ -268,16 +296,23 @@ describe("simulated playthroughs", () => {
     // target: no story event, dialogue topic or choice that no run reaches.
     // NOT met today in this reduced matrix: 1 story event, 1 topic, about 50 choices and 11
     // press clippings are never offered (the full `npm run sim` matrix reaches more).
-    expect(report.neverSeen.events.length).toBeLessThanOrEqual(4);
-    expect(report.neverSeen.topics.length).toBeLessThanOrEqual(8);
-    // The relationship scenes occupy some slots previously available to old choices: measured 78.
+    // Reputation-gated choices and the socialiser's expedited security route alter the reduced sample; six events remain unseen.
+    expect(report.neverSeen.events.length).toBeLessThanOrEqual(6);
+    // The socialiser reserves more time for the mission; one additional topic is unseen here.
+    expect(report.neverSeen.topics.length).toBeLessThanOrEqual(9);
+    // The socialiser now reserves time for mission security; the reduced sample leaves 86 old choices unseen.
     expect(
-      report.neverSeen.choices.filter((id) => !id.startsWith("choice:event:web-")).length,
-    ).toBeLessThanOrEqual(78);
+      report.neverSeen.choices.filter(
+        (id) => !id.startsWith("choice:event:web-") && !id.includes(":reputation-"),
+      ).length,
+    ).toBeLessThanOrEqual(86);
     // New leak and refusal clippings are conditional; keep the prior bound for legacy clippings.
     expect(
       report.neverSeen.clippings.filter(
-        (id) => !id.startsWith("press:report-") && !id.startsWith("press:press-"),
+        (id) =>
+          !id.startsWith("press:report-") &&
+          !id.startsWith("press:press-") &&
+          !id.startsWith("press:reputation-"),
       ).length,
     ).toBeLessThanOrEqual(16);
   });

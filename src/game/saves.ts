@@ -14,6 +14,8 @@ import {
 } from "./career";
 import { activeChapter, DEFAULT_CHAPTER_ID, getChapter, setActiveChapter } from "./chapters";
 import { useGame, type Character, type SavedGame } from "./store";
+import { createPersonnel } from "./personnel";
+import { computeStats } from "./rules";
 
 /**
  * Save slots. `useGame` stays the store for the posting being played; this module loads a slot into
@@ -162,7 +164,18 @@ function loadIntoGame(slot: SaveSlot | null) {
     } else {
       setActiveChapter(slot.posting.chapterId);
       const merged = postingOptions().merge!(slot.posting, game) as unknown as SavedGame;
-      useGame.setState({ ...merged, character: characterOf(slot.career) as Character });
+      const character = characterOf(slot.career) as Character;
+      const personnel =
+        slot.posting.personnel ??
+        createPersonnel(
+          character.traits,
+          computeStats(character.traits, character.statDrift),
+          character.earnedQuirks,
+          character.curedTraits,
+          character.statDrift,
+          character.reputations,
+        );
+      useGame.setState({ ...merged, character, personnel });
     }
   } finally {
     loading = false;
@@ -183,6 +196,13 @@ function onGameChange(state: ReturnType<typeof useGame.getState>, prev: typeof s
   }
   let career =
     slot?.career ?? newCareer(state.character, null, now(), activeChapter().manifest.playerRank);
+  career = {
+    ...career,
+    earnedQuirks: [...state.personnel.earnedQuirks],
+    curedTraits: [...state.personnel.curedTraits],
+    statDrift: { ...state.personnel.drift },
+    reputations: [...state.personnel.reputations],
+  };
   if (state.ending && !prev.ending)
     career = applyChapterResult(career, chapterResultFrom(state, now()));
   writeSlot(index, { career, posting: savedPosting(state) });

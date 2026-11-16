@@ -84,6 +84,8 @@ export function Interruption() {
         contactTrust: c.contactTrust,
         formal: c.formal,
         traitChoice: c.requiresTrait,
+        counts: c.counts,
+        statDrift: c.statDrift,
         overload,
         playerSlot: c.replace,
         timeCost: dpFor(event.id, c),
@@ -144,7 +146,12 @@ export function Interruption() {
               <div className="flex flex-col gap-2">
                 {event.choices
                   .filter((c) =>
-                    eligible(c, g.character?.traits ?? [], computeStats(g.character?.traits ?? [])),
+                    eligible(
+                      c,
+                      g.character?.traits ?? [],
+                      computeStats(g.character?.traits ?? [], g.character?.statDrift),
+                      g.personnel.reputations,
+                    ),
                   )
                   .map((c) => (
                     <Button

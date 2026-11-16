@@ -8,6 +8,7 @@ type Trigger = {
   trait?: string;
   meterBelow?: { key: keyof Meters; value: number };
   trustBelow?: { id: string; value: number };
+  reputation?: string;
 };
 export type Clipping = {
   id: string;
@@ -35,6 +36,7 @@ export type PressState = {
   colleagues: Record<string, ColleagueState>;
   yesterday: Record<number, PendingDecision[]>;
   pressSeen: string[];
+  personnel?: { reputations: string[] };
 };
 export const outlets = () => activeChapter().press.outlets;
 export const clippings = (): Clipping[] => activeChapter().press.clippings;
@@ -54,7 +56,8 @@ export function clippingTriggered(c: Clipping, s: PressState): boolean {
         (f) => f.startsWith(`trait:${t.trait}:`) || f.startsWith(`trait-${t.trait}:`),
       )) &&
     (!t.meterBelow || s.meters[t.meterBelow.key] < t.meterBelow.value) &&
-    (!t.trustBelow || (s.colleagues[t.trustBelow.id]?.trust ?? 100) < t.trustBelow.value)
+    (!t.trustBelow || (s.colleagues[t.trustBelow.id]?.trust ?? 100) < t.trustBelow.value) &&
+    (!t.reputation || (s.personnel?.reputations ?? []).includes(t.reputation))
   );
 }
 export function pressReview(

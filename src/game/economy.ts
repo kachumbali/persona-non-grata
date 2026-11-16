@@ -5,13 +5,16 @@ import { campaign, computeStats, type PendingDecision } from "./rules";
 export const PLAYER_DP = 4;
 export const STAFF_DP = 2;
 export function playerCapacity(
-  character: { traits: string[] } | null,
+  character: {
+    traits: string[];
+    statDrift?: Partial<Record<import("./rules").StatKey, number>> | undefined;
+  } | null,
   energy: number,
   composure: number,
   alcohol: number,
   hangover = false,
 ) {
-  const stats = computeStats(character?.traits ?? []);
+  const stats = computeStats(character?.traits ?? [], character?.statDrift);
   const factors: string[] = [];
   let capacity = PLAYER_DP;
   if (stats.stamina >= 4) {

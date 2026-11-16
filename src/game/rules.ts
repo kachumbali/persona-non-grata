@@ -2,6 +2,7 @@ import type { ChoiceGate } from "./character";
 import { activeChapter } from "./chapters";
 import type { ChapterManifest, EndingText } from "./chapters/types";
 import traitsData from "./data/traits.json";
+import quirksData from "./data/earned-quirks.json";
 import { relationshipState, type RelationshipState } from "./relationships";
 
 export type MeterKey = "confidence" | "goodwill" | "morale" | "sanity";
@@ -25,6 +26,8 @@ export interface Outcome extends ChoiceGate {
   formal?: boolean;
   favour?: { character: string; delta: number };
   teaches?: string;
+  counts?: string[];
+  statDrift?: { stat: StatKey; delta: number };
 }
 export interface GoodwillChange {
   day: number;
@@ -125,7 +128,10 @@ export function pointsLeft(traitIds: string[]): number {
   );
 }
 
-export function computeStats(traitIds: string[]): Record<StatKey, number> {
+export function computeStats(
+  traitIds: string[],
+  drift: Partial<Record<StatKey, number>> = {},
+): Record<StatKey, number> {
   const s: Record<StatKey, number> = {
     gravitas: 3,
     charm: 3,
@@ -134,11 +140,13 @@ export function computeStats(traitIds: string[]): Record<StatKey, number> {
     liver: 3,
   };
   for (const id of traitIds) {
-    const t = TRAITS.find((x) => x.id === id);
+    const t = [...TRAITS, ...quirksData].find((x) => x.id === id);
     if (t)
       for (const k of Object.keys(t.stats) as StatKey[])
-        s[k] = Math.max(0, s[k] + (t.stats[k] ?? 0));
+        s[k] = Math.max(0, s[k] + ((t.stats as Partial<Record<StatKey, number>>)[k] ?? 0));
   }
+  for (const key of Object.keys(drift) as StatKey[])
+    s[key] = Math.max(0, s[key] + (drift[key] ?? 0));
   return s;
 }
 
@@ -246,6 +254,8 @@ export interface PendingDecision {
   demarcheTrait?: string | undefined;
   gossipId?: string | undefined;
   gossipAction?: "pass" | "deny" | undefined;
+  counts?: string[] | undefined;
+  statDrift?: { stat: StatKey; delta: number } | undefined;
 }
 export interface StoryChoice extends ChoiceGate {
   id: string;
@@ -267,6 +277,8 @@ export interface StoryChoice extends ChoiceGate {
   formal?: boolean;
   favour?: { character: string; delta: number };
   teaches?: string;
+  counts?: string[];
+  statDrift?: { stat: StatKey; delta: number };
 }
 export type StoryOutcome = { status: "chosen" | "missed"; choice?: string };
 export type StoryEvent = {
