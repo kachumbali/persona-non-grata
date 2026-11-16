@@ -4,7 +4,7 @@ import { computeStats } from "../rules";
 import { useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ACTION_LABELS, formatClock, type Action } from "../rules";
+import { ACTION_LABELS, formatClock, isFax, type Action } from "../rules";
 import { inboxFor, useGame } from "../store";
 import { decisionCash, money } from "../economy";
 import { activeChapter } from "../chapters";
@@ -18,9 +18,7 @@ import {
   stepStatus,
 } from "../mission";
 
-/** Capital's instructions only arrive on the secure fax in the embassy office. */
-export const isFax = (from: string) => from.startsWith("Capital");
-
+export { isFax };
 export function Mailbox({
   channel,
   singlePane = false,

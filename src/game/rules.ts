@@ -94,6 +94,13 @@ export const emails = (): Email[] => [
     ignore: { text: "The instruction remains on the démarche board.", effects: {} },
   })),
 ];
+/** Capital's instructions only arrive on the secure fax in the embassy office. */
+export const isFax = (from: string) => from.startsWith("Capital");
+
+/** Mail that is never marked ignored at the end of a block: démarche notices and system reports. */
+export const neverIgnored = (e: { id: string; demarcheId?: string | undefined }) =>
+  !!e.demarcheId || e.id.startsWith("language-exam-result-") || e.id.startsWith("tutor-quit-");
+
 let firstDayRulesOff = false;
 /** Test and simulation only: switch the gentler first day (grace and halved first penalty) off. */
 export function setFirstDayGraceOffForTests(off: boolean): void {

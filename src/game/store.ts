@@ -67,6 +67,7 @@ import {
   firstDayGrace,
   halveFirstPenalty,
   inFirstDayGrace,
+  neverIgnored,
   blocks,
   campaign,
   clamp,
@@ -204,6 +205,13 @@ export interface GameState {
   pressRead: boolean;
   pressDismissedDay: number;
   dismissPress: () => void;
+  /** True once the posting briefing popup has been dismissed (old saves: true). */
+  briefingDismissed: boolean;
+  dismissBriefing: () => void;
+  /** The first-day checklist: what the player has opened, and whether it was dismissed (old saves: dismissed). */
+  firstHour: FirstHour;
+  markFirstHour: (item: FirstHourOpened) => void;
+  dismissChecklist: () => void;
   pressClippedDay: number;
   preparePress: () => void;
   readPress: () => void;
@@ -221,9 +229,17 @@ export interface GameState {
   advance: () => void;
 }
 const seed = 23;
+export type FirstHourOpened = "fax" | "pc";
+export interface FirstHour {
+  opened: FirstHourOpened[];
+  dismissed: boolean;
+}
 export type SavedGame = Omit<
   GameState,
   | "dismissPress"
+  | "dismissBriefing"
+  | "markFirstHour"
+  | "dismissChecklist"
   | "preparePress"
   | "readPress"
   | "clipPress"
@@ -310,6 +326,8 @@ const initialState = () => {
     pressCompiler: "press" as const,
     pressRead: false,
     pressDismissedDay: 0,
+    briefingDismissed: false,
+    firstHour: { opened: [], dismissed: false } as FirstHour,
     pressClippedDay: 0,
     storyOutcomes: {},
   };
@@ -379,6 +397,14 @@ export const useGame = create<GameState>()(
     (set, get) => ({
       ...initialState(),
       dismissPress: () => set((s) => ({ pressDismissedDay: s.day })),
+      dismissBriefing: () => set({ briefingDismissed: true }),
+      markFirstHour: (item) =>
+        set((s) =>
+          s.firstHour.opened.includes(item)
+            ? s
+            : { firstHour: { ...s.firstHour, opened: [...s.firstHour.opened, item] } },
+        ),
+      dismissChecklist: () => set((s) => ({ firstHour: { ...s.firstHour, dismissed: true } })),
       preparePress: () => {
         const s = get();
         if (s.block !== 0 || s.pressDay === s.day) return;
@@ -1927,12 +1953,7 @@ export const useGame = create<GameState>()(
           }
           for (const e of [...emails(), ...tutorHomework]) {
             if (ending) break;
-            if (
-              e.demarcheId ||
-              e.id.startsWith("language-exam-result-") ||
-              e.id.startsWith("tutor-quit-")
-            )
-              continue;
+            if (neverIgnored(e)) continue;
             const cutoff = blocks()[s.block + 1]?.time ?? 24 * 60;
             if (handled[e.id] || absTime(e.day, e.time) >= absTime(s.day, cutoff)) continue;
             // The first morning is gentler: Capital's mail waits until the end of the grace block.
@@ -2296,7 +2317,7 @@ export const useGame = create<GameState>()(
         setItem: () => {},
         removeItem: () => {},
       })),
-      version: 16,
+      version: 17,
       migrate: (saved) => {
         const old = saved as Partial<SavedGame>;
         const economy = {
@@ -2397,6 +2418,8 @@ export const useGame = create<GameState>()(
           pressCompiler: old.pressCompiler ?? "press",
           pressRead: old.pressRead ?? false,
           pressDismissedDay: old.pressDismissedDay ?? 0,
+          briefingDismissed: old.briefingDismissed ?? true,
+          firstHour: old.firstHour ?? { opened: [], dismissed: true },
           pressClippedDay: old.pressClippedDay ?? 0,
           hangover: old.hangover ?? false,
           economy,
