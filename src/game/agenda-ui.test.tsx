@@ -106,6 +106,8 @@ describe("agenda", () => {
       demarches: Object.fromEntries(
         activeChapter().demarches.instructions.map((d) => [d.id, { status: "delivered" as const }]),
       ),
+      // Mail still waiting would also trigger the confirmation (see first-hour-ui.test.tsx).
+      handled: Object.fromEntries(activeChapter().emails.map((e) => [e.id, "reply"])),
       events: [],
     });
     render(<BlackBerry />);

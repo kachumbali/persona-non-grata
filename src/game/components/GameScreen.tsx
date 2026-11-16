@@ -15,6 +15,8 @@ import { Interruption } from "./Interruption";
 import { PressReview } from "./PressReview";
 import { PostingBriefing } from "./PostingBriefing";
 import { MissionSteps } from "./MissionSteps";
+import { ArrivalNotice, FirstDayChecklist } from "./FirstHour";
+import { useUi } from "../ui";
 import {
   Dialog,
   DialogContent,
@@ -27,7 +29,13 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const g = useGame();
   const [peopleOpen, setPeopleOpen] = useState(false);
   const [fileOpen, setFileOpen] = useState(false);
-  const [briefingOpen, setBriefingOpen] = useState(g.day === 1 && g.block === 0);
+  const [briefingOpen, setBriefingOpen] = useState(
+    g.day === 1 && g.block === 0 && !g.briefingDismissed,
+  );
+  const closeBriefing = () => {
+    setBriefingOpen(false);
+    g.dismissBriefing();
+  };
   const [view, setView] = useState<"city" | "place">("city");
   const [reopened, setReopened] = useState(false);
   useEffect(() => {
@@ -96,14 +104,17 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
           <WhoIsWho />
         </DialogContent>
       </Dialog>
-      <Dialog open={briefingOpen} onOpenChange={setBriefingOpen}>
+      <Dialog
+        open={briefingOpen}
+        onOpenChange={(o) => (o ? setBriefingOpen(true) : closeBriefing())}
+      >
         <DialogContent className="max-h-[85dvh] overflow-y-auto bg-card sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>Courrielleur 98 · Welcome to your posting</DialogTitle>
             <DialogDescription>Personnel Directorate · Posting briefing</DialogDescription>
           </DialogHeader>
           <PostingBriefing />
-          <Button variant="outline" onClick={() => setBriefingOpen(false)}>
+          <Button variant="outline" onClick={closeBriefing}>
             Dismiss briefing
           </Button>
         </DialogContent>
@@ -116,6 +127,23 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
           }}
         />
       )}
+      <ArrivalNotice
+        onOpen={(part) => {
+          if (part.key === "fax" || part.key === "pc") setView("place");
+          useUi
+            .getState()
+            .open(
+              part.key === "fax"
+                ? "fax"
+                : part.key === "pc"
+                  ? "pc"
+                  : part.key === "invitation"
+                    ? "phone-diary"
+                    : "phone-mail",
+            );
+        }}
+      />
+      <FirstDayChecklist />
       <details className="paper mb-4 p-3">
         <summary className="cursor-pointer font-bold">
           Ministerial visit ·{" "}

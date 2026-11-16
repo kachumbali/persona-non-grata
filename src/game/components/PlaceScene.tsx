@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Monitor, Printer, DoorOpen } from "lucide-react";
 import office from "@/assets/scenes/embassy-office.jpg";
 import bar from "@/assets/scenes/quiet-amendment.png";
@@ -23,6 +23,9 @@ import { DemarcheBoard } from "./DemarcheBoard";
 import { Portrait } from "./Portrait";
 import { activeChapter } from "../chapters";
 import { relationshipState } from "../relationships";
+import { badgeLabel, waitingItems } from "../inbox";
+import { useUi } from "../ui";
+import { WaitingBadge } from "./WaitingBadge";
 
 type Win = null | "pc" | "fax" | "appointment";
 const PC_TABS = [
@@ -38,6 +41,20 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
   const [win, setWin] = useState<Win>(null);
   const rosterRef = useRef<HTMLElement>(null);
   const [tab, setTab] = useState<(typeof PC_TABS)[number][0]>("mail");
+  const request = useUi((u) => u.request);
+  const waiting = waitingItems(g, activeChapter());
+  const show = (w: Win) => {
+    if (w === "pc" || w === "fax") g.markFirstHour(w);
+    setWin(w);
+  };
+  useEffect(() => {
+    if (request?.target === "pc" || request?.target === "fax") {
+      if (request.target === "pc") setTab("mail");
+      g.markFirstHour(request.target);
+      setWin(request.target);
+      useUi.getState().clear();
+    }
+  }, [request]); // eslint-disable-line react-hooks/exhaustive-deps
   const place = campaign().locations.find((l) => l.id === g.location) ?? campaign().locations[0];
   const atEmbassy = g.location === "embassy";
   const atEu = g.location === "eu";
@@ -124,7 +141,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
               type="button"
               className="scene-hotspot"
               style={{ left: "3%", top: "42%", width: "12%", height: "22%" }}
-              onClick={() => setWin("pc")}
+              onClick={() => show("pc")}
               aria-label="Use your PC"
             >
               <span className="map-label">
@@ -135,13 +152,32 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
               type="button"
               className="scene-hotspot"
               style={{ left: "69%", top: "38%", width: "10%", height: "16%" }}
-              onClick={() => setWin("fax")}
+              onClick={() => show("fax")}
               aria-label="Read the secure fax"
             >
               <span className="map-label">
                 <Printer className="inline size-4" /> Secure fax
               </span>
             </button>
+            {(
+              [
+                ["pc", 15, 64],
+                ["fax", 79, 54],
+              ] as const
+            ).map(([device, x, y]) => (
+              <WaitingBadge
+                key={device}
+                className="scene-badge"
+                urgent={waiting[device].urgent.length}
+                unread={waiting[device].unread.length}
+                label={badgeLabel(
+                  device,
+                  waiting[device].urgent.length,
+                  waiting[device].unread.length,
+                )}
+                style={{ left: `${x}%`, top: `${y}%` }}
+              />
+            ))}
           </>
         )}
         {!atEmbassy && (
@@ -269,6 +305,14 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
                 onClick={() => setTab(id)}
               >
                 {label}
+                {id === "mail" && (
+                  <WaitingBadge
+                    className="ml-1"
+                    urgent={waiting.pc.urgent.length}
+                    unread={waiting.pc.unread.length}
+                    label={badgeLabel("pc", waiting.pc.urgent.length, waiting.pc.unread.length)}
+                  />
+                )}
               </Button>
             ))}
           </div>

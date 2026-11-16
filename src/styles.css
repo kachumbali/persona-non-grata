@@ -822,3 +822,37 @@
 .interrupt-badge {
   bottom: 96px;
 }
+
+/* Unread counts: strong when answering matters this block, quiet when it is merely unread. */
+.waiting-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
+  border: 2px solid var(--bevel-dark);
+}
+.waiting-badge[data-kind="urgent"] {
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+  font-weight: 700;
+}
+.waiting-badge[data-kind="unread"] {
+  background: var(--card);
+  color: var(--muted-foreground);
+  border-style: dashed;
+}
+.scene-badge {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-100%, -100%);
+  pointer-events: none;
+}
+.hud-phone .waiting-badge {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+}

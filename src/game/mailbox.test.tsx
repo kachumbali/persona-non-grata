@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { Mailbox, isFax } from "./components/Mailbox";
+import { Mailbox } from "./components/Mailbox";
+import { isFax } from "./rules";
 import { inboxFor, useGame } from "./store";
 
 beforeEach(() => {

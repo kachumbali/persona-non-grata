@@ -18,7 +18,6 @@ import {
   stepStatus,
 } from "../mission";
 
-export { isFax };
 export function Mailbox({
   channel,
   singlePane = false,

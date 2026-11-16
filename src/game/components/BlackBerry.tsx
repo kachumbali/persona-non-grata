@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Mail, Smartphone, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +20,16 @@ import { DiplomaticCalendar } from "./DiplomaticCalendar";
 import { PostingBriefing } from "./PostingBriefing";
 import { Agenda, CommitmentLine } from "./Agenda";
 import { agendaItems } from "../agenda";
+import { badgeLabel, ignoredAtBlockEnd, waitingItems, countNoun, type Device } from "../inbox";
+import { useUi } from "../ui";
+import { WaitingBadge } from "./WaitingBadge";
 import { activeChapter } from "../chapters";
+
+const DEVICE_NAMES: Record<Device, string> = {
+  fax: "Secure fax",
+  pc: "PC mail",
+  blackberry: "BlockBerry mail",
+};
 
 function Orb({ label, value, kind }: { label: string; value: number; kind: "hq" | "host" }) {
   return (
@@ -44,6 +53,23 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
   const urgent = agendaItems(g, activeChapter()).filter(
     (i) => i.urgent && i.day === g.day && i.block === g.block,
   );
+  const waiting = waitingItems(g, activeChapter());
+  const ignored = ignoredAtBlockEnd(waiting);
+  const away = g.location !== "embassy";
+  // What the phone can show: its own mail, and (away from the office) a reminder about the fax.
+  const phoneUrgent = waiting.blackberry.urgent.length + (away ? waiting.fax.urgent.length : 0);
+  const phoneUnread = waiting.blackberry.unread.length + (away ? waiting.fax.unread.length : 0);
+  const phoneLabel = badgeLabel("blackberry", phoneUrgent, phoneUnread);
+  const faxAway = away && waiting.fax.urgent.length + waiting.fax.unread.length > 0;
+  const request = useUi((u) => u.request);
+  useEffect(() => {
+    if (request?.target === "phone-mail" || request?.target === "phone-diary") {
+      setUp(true);
+      setTab(request.target === "phone-mail" ? "mail" : "calendar");
+      setBriefingOpen(false);
+      useUi.getState().clear();
+    }
+  }, [request]);
   const capacity = playerCapacity(g.character, g.energy, g.composure, g.alcohol, g.hangover);
   const used = g.pending.reduce((n, p) => n + playerTime(p), 0);
   const left = Math.max(0, capacity.total - used);
@@ -51,7 +77,6 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
   const due = dueInvitations(g.day, g.block, g.storyOutcomes).some(
     (invitation) => !g.pending.some((p) => p.eventId === invitation.id),
   );
-  const away = g.location !== "embassy";
   return (
     <>
       {up && (
@@ -81,6 +106,12 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
               }}
             >
               Mail
+              <WaitingBadge
+                className="ml-1"
+                urgent={phoneUrgent}
+                unread={phoneUnread}
+                label={phoneLabel}
+              />
             </Button>
             <Button
               size="icon"
@@ -106,6 +137,9 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
                   >
                     Press review {g.pressRead ? "· read" : "· unread"}
                   </Button>
+                )}
+                {faxAway && (
+                  <p>A fax from Capital is waiting. It can only be read at the embassy.</p>
                 )}
                 <p className="font-mono">
                   HQ {g.meters.confidence} · Host {g.meters.goodwill} · Morale {g.meters.morale} ·
@@ -189,6 +223,11 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
                   <Mail className="size-4 shrink-0" />
                   <span>Posting briefing · Welcome to your posting</span>
                 </Button>
+                {faxAway && (
+                  <p className="text-sm">
+                    A fax from Capital is waiting. It can only be read at the embassy.
+                  </p>
+                )}
                 {away ? (
                   <Mailbox channel="mail" singlePane />
                 ) : (
@@ -204,16 +243,32 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Still awaiting a response</AlertDialogTitle>
             <AlertDialogDescription>
-              These appointments will go unanswered if you end the block.
+              {urgent.length > 0 && "These appointments will go unanswered if you end the block. "}
+              {ignored.length > 0 &&
+                "Mail still unanswered will be marked ignored at the end of this block."}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <ul>
-            {urgent.map((i) => (
-              <li key={i.id}>
-                {i.what} · {i.where}
-              </li>
-            ))}
-          </ul>
+          {urgent.length > 0 && (
+            <ul aria-label="Unanswered appointments">
+              {urgent.map((i) => (
+                <li key={i.id}>
+                  {i.what} · {i.where}
+                </li>
+              ))}
+            </ul>
+          )}
+          {ignored.length > 0 && (
+            <ul aria-label="Mail that will be marked ignored">
+              {ignored.map(({ device, items }) => (
+                <li key={device}>
+                  <strong>
+                    {DEVICE_NAMES[device]}: {countNoun(device, items.length)}
+                  </strong>{" "}
+                  · {items.map((m) => m.subject).join("; ")}
+                </li>
+              ))}
+            </ul>
+          )}
           <AlertDialogFooter>
             <AlertDialogCancel>Go back</AlertDialogCancel>
             <AlertDialogAction
@@ -253,18 +308,23 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
             className="hud-phone"
             onClick={() => setUp(!up)}
             aria-expanded={up}
-            aria-label={
-              due ? "BlockBerry phone · invitation awaiting a response" : "BlockBerry phone"
-            }
+            aria-label={[
+              "BlockBerry phone",
+              due ? "invitation awaiting a response" : "",
+              phoneLabel,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
           >
             <Smartphone className="size-5" />
+            <WaitingBadge urgent={phoneUrgent} unread={phoneUnread} label={phoneLabel} />
             <span className="bb-led" data-on={g.report.length > 0 || !!g.planError || due} />
           </button>
           <Button
             size="sm"
             className="retro-button"
             onClick={() => {
-              if (urgent.length) setConfirmEnd(true);
+              if (urgent.length || ignored.length) setConfirmEnd(true);
               else {
                 g.advance();
                 setUp(true);
