@@ -27,10 +27,10 @@ import {
 } from "../mission";
 import { ResourceDesk } from "./ResourceDesk";
 import { LanguageExam } from "./LanguageExam";
+import { CommitmentLine } from "./Agenda";
 import {
   availableFunds,
   capacityLedger,
-  decisionCash,
   money,
   playerTime,
   playerCapacity,
@@ -588,8 +588,7 @@ export function PlanningDesk() {
               className="flex items-center justify-between gap-2 border-b border-border pb-1 text-sm"
             >
               <span>
-                {p.source} · {playerTime(p)} your DP · {money(decisionCash(p))}
-                {p.worker ? ` · ${p.worker}` : ""}
+                <CommitmentLine decision={p} />
               </span>
               <Button
                 variant="ghost"

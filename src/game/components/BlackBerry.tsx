@@ -1,13 +1,26 @@
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Mail, Smartphone, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { blocks } from "../rules";
 import { dueInvitations } from "../calendar";
-import { availableFunds, decisionCash, money, playerTime, playerCapacity } from "../economy";
+import { availableFunds, money, playerTime, playerCapacity } from "../economy";
 import { useGame } from "../store";
 import { Mailbox } from "./Mailbox";
 import { DiplomaticCalendar } from "./DiplomaticCalendar";
 import { PostingBriefing } from "./PostingBriefing";
+import { Agenda, CommitmentLine } from "./Agenda";
+import { agendaItems } from "../agenda";
+import { activeChapter } from "../chapters";
 
 function Orb({ label, value, kind }: { label: string; value: number; kind: "hq" | "host" }) {
   return (
@@ -27,6 +40,10 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
   const [up, setUp] = useState(false);
   const [tab, setTab] = useState<"status" | "mail" | "calendar">("status");
   const [briefingOpen, setBriefingOpen] = useState(false);
+  const [confirmEnd, setConfirmEnd] = useState(false);
+  const urgent = agendaItems(g, activeChapter()).filter(
+    (i) => i.urgent && i.day === g.day && i.block === g.block,
+  );
   const capacity = playerCapacity(g.character, g.energy, g.composure, g.alcohol, g.hangover);
   const used = g.pending.reduce((n, p) => n + playerTime(p), 0);
   const left = Math.max(0, capacity.total - used);
@@ -117,7 +134,7 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
                         className="flex items-center justify-between gap-1 border-b border-border py-0.5"
                       >
                         <span>
-                          {p.source} · {playerTime(p)} DP · {money(decisionCash(p))}
+                          <CommitmentLine decision={p} />
                         </span>
                         <Button
                           variant="ghost"
@@ -151,7 +168,10 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
                 )}
               </div>
             ) : tab === "calendar" ? (
-              <DiplomaticCalendar />
+              <div className="space-y-4">
+                <Agenda />
+                <DiplomaticCalendar />
+              </div>
             ) : briefingOpen ? (
               <div className="space-y-3">
                 <Button size="sm" variant="outline" onClick={() => setBriefingOpen(false)}>
@@ -179,6 +199,35 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
           </div>
         </section>
       )}
+      <AlertDialog open={confirmEnd} onOpenChange={setConfirmEnd}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Still awaiting a response</AlertDialogTitle>
+            <AlertDialogDescription>
+              These appointments will go unanswered if you end the block.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <ul>
+            {urgent.map((i) => (
+              <li key={i.id}>
+                {i.what} · {i.where}
+              </li>
+            ))}
+          </ul>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Go back</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                g.advance();
+                setUp(true);
+                setTab("status");
+              }}
+            >
+              End the block anyway
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <footer className="hud-bar" aria-label="Resources">
         <Orb label="HQ" value={g.meters.confidence} kind="hq" />
         <div className="hud-center">
@@ -215,9 +264,12 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
             size="sm"
             className="retro-button"
             onClick={() => {
-              g.advance();
-              setUp(true);
-              setTab("status");
+              if (urgent.length) setConfirmEnd(true);
+              else {
+                g.advance();
+                setUp(true);
+                setTab("status");
+              }
             }}
           >
             End {block.name.toLowerCase()} <ArrowRight className="size-4" />

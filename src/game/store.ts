@@ -484,9 +484,15 @@ export const useGame = create<GameState>()(
         const s = get();
         const place = campaign().locations.find((l) => l.id === location);
         if (s.ending || !place || location === s.location) return false;
-        if (s.pending.some((p) => p.location && !p.id.startsWith("travel-") && playerTime(p) > 0)) {
+        const appointment = s.pending.find(
+          (p) => p.location && !p.id.startsWith("travel-") && playerTime(p) > 0,
+        );
+        if (appointment) {
+          const placeName =
+            campaign().locations.find((l) => l.id === appointment.location)?.name ??
+            appointment.location;
           set({
-            planError: "You have an appointment here this block. Cancel it before travelling.",
+            planError: `You have an appointment: ${appointment.source} at ${placeName}. Cancel it before travelling.`,
           });
           return false;
         }
