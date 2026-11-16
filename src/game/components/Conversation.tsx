@@ -1,4 +1,4 @@
-import { eligible, gateLabel, withInterpreter } from "../character";
+import { eligible, gateLabel, needsInterpreter, withInterpreter } from "../character";
 import { computeStats } from "../rules";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -218,19 +218,21 @@ export function Conversation() {
             </Button>
           );
         })}
-        <label className="mb-2 block text-xs">
-          Interpreter for unfamiliar languages{" "}
-          <select
-            value={interpreter}
-            onChange={(event) => setInterpreter(event.target.value)}
-            className="border border-input bg-muted p-1"
-          >
-            <option value="">None</option>
-            <option value="sola">Sola · 1 staff DP</option>
-            <option value="anselm">Anselm · 1 staff DP</option>
-            <option value="maxim">Maxim · 1 staff DP</option>
-          </select>
-        </label>
+        {needsInterpreter(current.choices as TalkChoice[], g.character?.languages) && (
+          <label className="mb-2 block text-xs">
+            Interpreter for unfamiliar languages{" "}
+            <select
+              value={interpreter}
+              onChange={(event) => setInterpreter(event.target.value)}
+              className="border border-input bg-muted p-1"
+            >
+              <option value="">None</option>
+              <option value="sola">Sola · 1 staff DP</option>
+              <option value="anselm">Anselm · 1 staff DP</option>
+              <option value="maxim">Maxim · 1 staff DP</option>
+            </select>
+          </label>
+        )}
         {!notice &&
           (current.choices as TalkChoice[]).some(
             (choice) =>

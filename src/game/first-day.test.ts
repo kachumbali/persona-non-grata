@@ -78,3 +78,16 @@ describe("saves from before the gentler first day", () => {
     expect(useGame.getState().firstIgnoreUsed).toBe(false);
   });
 });
+
+describe("the interpreter picker", () => {
+  it("is needed only for a language-gated option the player cannot take unaided", async () => {
+    const { needsInterpreter } = await import("./character");
+    const gated = { requiresLanguage: { language: "ombrazian", min: 2 } };
+    expect(needsInterpreter([{}, {}], { ombrazian: 0 })).toBe(false);
+    expect(needsInterpreter([{}, gated], { ombrazian: 0 })).toBe(true);
+    expect(needsInterpreter([gated], { ombrazian: 2 })).toBe(false);
+    expect(needsInterpreter([{ requiresLanguage: { language: "communique", min: 1 } }], {})).toBe(
+      false,
+    );
+  });
+});

@@ -27,6 +27,18 @@ export function withInterpreter(
     ),
   };
 }
+/** True when a choice needs a language the player cannot manage unaided (an interpreter could help). */
+export function needsInterpreter(
+  choices: ChoiceGate[],
+  languages: Record<string, number> | undefined,
+): boolean {
+  return choices.some(
+    (choice) =>
+      !!choice.requiresLanguage &&
+      choice.requiresLanguage.language !== "communique" &&
+      (languages?.[choice.requiresLanguage.language] ?? 0) < choice.requiresLanguage.min,
+  );
+}
 export function eligible(
   gate: ChoiceGate,
   traits: string[],
