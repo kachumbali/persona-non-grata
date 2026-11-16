@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { blocks, campaign, locationStories } from "../rules";
 import { activeChapter } from "../chapters";
+import { agendaItems, describeCommitment } from "../agenda";
 import { playerTime, playerCapacity } from "../economy";
 import { visibleInvitations } from "../calendar";
 import { TRAVEL_DP, useGame } from "../store";
@@ -39,6 +40,13 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
     g.pending.reduce((n, p) => n + playerTime(p), 0);
   const invitations = visibleInvitations(g.day, g.block, g.storyOutcomes);
   const leads = locationStories(g.day, g.completedEvents, g.storyOutcomes);
+  const committed = g.pending.find(
+    (p) => p.eventId && activeChapter().invitations.some((i) => i.id === p.eventId),
+  );
+  const described = committed && describeCommitment(committed, activeChapter());
+  const next = described
+    ? { what: described.what, where: described.where ?? "BlockBerry", day: g.day, block: g.block }
+    : agendaItems(g, activeChapter()).find((item) => item.urgent);
   const dest = campaign().locations.find((l) => l.id === target);
   const travel = () => {
     if (!target) return;
@@ -51,7 +59,11 @@ export function CityMap({ onEnter }: { onEnter: () => void }) {
     <section className="embassy-window bg-card" aria-label="Town map">
       <div className="retro-titlebar justify-between">
         <h2>{activeChapter().manifest.city}</h2>
-        <span className="font-mono">{left} DP left this block</span>
+        <span className="font-mono">
+          {left} DP left this block
+          {next &&
+            ` · Next: ${next.what}, ${next.where}, Day ${next.day} ${blocks()[next.block]?.name}`}
+        </span>
       </div>
       <div className="relative">
         <img

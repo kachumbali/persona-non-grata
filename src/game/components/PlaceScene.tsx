@@ -18,6 +18,7 @@ import { LocationLead } from "./LocationLead";
 import { GoodwillDashboard } from "./GoodwillDashboard";
 import { Mailbox } from "./Mailbox";
 import { PlanningDesk } from "./PlanningDesk";
+import { Agenda } from "./Agenda";
 import { DemarcheBoard } from "./DemarcheBoard";
 import { Portrait } from "./Portrait";
 import { activeChapter } from "../chapters";
@@ -27,6 +28,7 @@ type Win = null | "pc" | "fax" | "appointment";
 const PC_TABS = [
   ["mail", "Courrielleur 98"],
   ["tasks", "Staff & diary"],
+  ["agenda", "Agenda"],
   ["watch", "Mission Watch"],
   ["demarches", "Démarches"],
 ] as const;
@@ -272,6 +274,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
           </div>
           {tab === "mail" && <Mailbox channel="mail" />}
           {tab === "tasks" && <PlanningDesk />}
+          {tab === "agenda" && <Agenda />}
           {tab === "watch" && <GoodwillDashboard />}
           {tab === "demarches" && <DemarcheBoard />}
         </DialogContent>
