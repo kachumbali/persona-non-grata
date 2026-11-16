@@ -131,6 +131,19 @@ Finish every system inside the one chapter that exists, then test it with five p
   - A 'Next:' line on the main screen with the next fixed commitment.
 - Done when: A player can always answer: what am I doing this block, where, with whom, and what is coming that I must not miss. No rule or outcome changes.
 
+### U-02 The first hour: see what is waiting, and a gentler first day
+
+- Type: Screens · Size: M · Depends on: U-01
+- Goal: A hand-played first day lost 21 points of HQ goodwill to faxes and mails the player never saw. Nothing shows that mail has arrived, and the briefing explains only the press review.
+- Work:
+  - Unread badges on the fax, the PC and the BlockBerry, and a one-line notice of what arrived when a block starts.
+  - A warning before ending a block with mail that will count as ignored.
+  - A grace period for Capital's first-day mail, and a halved first penalty.
+  - A rewritten posting briefing that covers every system in one screen, plus a first-day checklist.
+  - Small fixes found while playing: trait options that do not fit their scene, the interpreter picker shown with colleagues, a confusing lesson message.
+  - A 'newcomer' bot in the simulation that plays Day 1 like a first-time player.
+- Done when: A first-time player who follows the checklist is not replaced before Day 10 in at least 90% of simulated runs, and can always see what is waiting and where.
+
 ### P-01 Portrait cleanup
 
 - Type: Art · Size: S · Depends on: none

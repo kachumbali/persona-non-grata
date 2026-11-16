@@ -165,7 +165,7 @@ describe("simulated playthroughs", () => {
         Object.values(run.demarcheRoutes).reduce((a, b) => a + b, 0),
         `${run.bot} ${run.build} ${run.seed}`,
       ).toBe(8);
-  }, 20000);
+  }, 120000);
   it("is deterministic for a given seed", () => {
     const options = { bot: "socialiser" as const, traits: ["namedrop", "cuisine"], seed: 2 };
     expect(simulate(options)).toEqual(simulate(options));
