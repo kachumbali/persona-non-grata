@@ -43,3 +43,5 @@
 - [x] S-08: final debrief, promotion board, payslip and text export.
 
 - [x] S-03: languages, lessons, mistranslations and the examination.
+- [x] U-01: the agenda (what, where, who for every commitment; day view; coming up; end-of-block check).
+- [x] U-02: the first hour (unread badges, arrival notice, first-day grace, new briefing, checklist, newcomer bot).

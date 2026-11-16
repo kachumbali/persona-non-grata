@@ -119,7 +119,7 @@ Finish every system inside the one chapter that exists, then test it with five p
   - The guaranteed official route removes the dead end at Protocol's stamp. The simulation proves a steady player can always finish and that no single route is always best.
 - Done when: In the simulation a careful player no longer wins every game, every route is used by some bot, and no run is ever locked out of the mission.
 
-### U-01 The agenda: what you committed to, where and when
+### U-01 The agenda: what you committed to, where and when (done)
 
 - Type: Screens · Size: S · Depends on: none
 - Goal: A playtester committed to visit something and could not find out what or where. The commitment lists show only a title for the current block, and there is no view of the day.
@@ -131,7 +131,7 @@ Finish every system inside the one chapter that exists, then test it with five p
   - A 'Next:' line on the main screen with the next fixed commitment.
 - Done when: A player can always answer: what am I doing this block, where, with whom, and what is coming that I must not miss. No rule or outcome changes.
 
-### U-02 The first hour: see what is waiting, and a gentler first day
+### U-02 The first hour: see what is waiting, and a gentler first day (done)
 
 - Type: Screens · Size: M · Depends on: U-01
 - Goal: A hand-played first day lost 21 points of HQ goodwill to faxes and mails the player never saw. Nothing shows that mail has arrived, and the briefing explains only the press review.

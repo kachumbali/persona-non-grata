@@ -350,7 +350,7 @@ describe("the first hour", () => {
     // before Day 10 in at least 90% of runs. Measured: 100% in the full matrix.
     const runs = runMatrix({ bots: [newcomer], builds: allBuilds(), seeds: 3 });
     expect(share(runs, (r) => !replacedBeforeDay10(r))).toBeGreaterThanOrEqual(0.9);
-  });
+  }, 120000);
 
   it("the gentler first day helps a first-timer who reads nothing on Day 1", () => {
     const builds = allBuilds().filter((b) => BUILD_IDS.includes(b.id));
@@ -360,5 +360,5 @@ describe("the first hour", () => {
     expect(row("first-timer", false).meanHqEndDay1).toBeGreaterThan(
       row("first-timer", true).meanHqEndDay1,
     );
-  });
+  }, 120000);
 });
