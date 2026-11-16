@@ -1,4 +1,4 @@
-import { drawExam, languageRoll, learnLanguage, mistranslates } from "./languages";
+import { drawExam, languageRoll, learnLanguage, lessonReport, mistranslates } from "./languages";
 import { pressReview, clippings } from "./press";
 import {
   advancePersonnel,
@@ -1182,12 +1182,17 @@ export const useGame = create<GameState>()(
                     (teacher.id === "tutor" ? tutorIgnored : 0),
                 ) + (s.character.traits.includes("ear-accents") ? 1 : 0),
               );
+              const levelBefore = languages[language] ?? 0;
               languages[language] = learned.level;
               languageProgress[language] = learned.progress;
               results.push({
                 day: s.day,
                 time: s.minute,
-                text: `${teacher.name}: ${language === host.id ? host.name : "Communiqué"} is now level ${learned.level}.`,
+                text: lessonReport(
+                  language === host.id ? host.name : "Communiqué",
+                  levelBefore,
+                  learned,
+                ),
               });
             }
           }

@@ -91,3 +91,15 @@ describe("the interpreter picker", () => {
     );
   });
 });
+
+describe("language lesson reports", () => {
+  it("reports progress, and a level only when it changes", async () => {
+    const { lessonReport } = await import("./languages");
+    expect(lessonReport("Ombrazian", 0, { level: 0, progress: 2 })).toBe(
+      "Ombrazian: 2 of 4 points toward Phrasebook.",
+    );
+    expect(lessonReport("Ombrazian", 0, { level: 1, progress: 1 })).toBe(
+      "Ombrazian: now at level 1, Phrasebook.",
+    );
+  });
+});

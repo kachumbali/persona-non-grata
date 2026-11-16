@@ -7,6 +7,19 @@ export const LANGUAGE_LEVELS = [
   "Working",
   "Exam-certified",
 ] as const;
+/** The report line after a lesson: progress toward the next level, and a level only when it changes. */
+export function lessonReport(
+  name: string,
+  before: number,
+  after: { level: number; progress: number },
+): string {
+  if (after.level > before)
+    return `${name}: now at level ${after.level}, ${LANGUAGE_LEVELS[after.level]}.`;
+  const need = LANGUAGE_THRESHOLDS[after.level];
+  return need === undefined
+    ? `${name}: lesson taken.`
+    : `${name}: ${after.progress} of ${need} points toward ${LANGUAGE_LEVELS[after.level + 1]}.`;
+}
 export type LanguageProgress = Record<string, number>;
 
 /** Points carry over between levels. Level four is only awarded by an exam. */

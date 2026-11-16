@@ -31,7 +31,9 @@ export function LanguageExam() {
         languageRoll(g.seed, `${question.id}:${a.index}`) -
         languageRoll(g.seed, `${question.id}:${b.index}`),
     );
-  const lessons = g.log.filter((entry) => entry.text.includes(`${host.name} is now level`)).length;
+  const lessons = Object.entries(g.personnel.counters)
+    .filter(([key]) => key.startsWith("language_lesson_"))
+    .reduce((n, [, count]) => n + count, 0);
   const hint =
     question &&
     ((g.character?.languages?.[host.id] ?? 0) >= 3 || lessons >= 4) &&
