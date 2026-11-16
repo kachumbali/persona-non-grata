@@ -182,6 +182,26 @@ export interface ChapterManifest {
   missionSteps: Record<string, MissionStep[]>;
   setbacks: Setback[];
   endings: Record<string, EndingText>;
+  debrief?: {
+    epithets: {
+      id: string;
+      text: string;
+      trait?: string;
+      counter?: string;
+      threshold?: number;
+      flag?: string;
+      outcome?: { event: string; choice: string };
+    }[];
+    variants: Record<string, { trait?: string; reputation?: string; text: string }[]>;
+    board: Record<string, { good: string; mixed: string; bad: string }>;
+    payslip: {
+      base: number;
+      acting: number;
+      hardship: number;
+      drinkDeduction: number;
+      moneyRouteDeduction: number;
+    };
+  };
   endingRules: EndingRule[];
   startMeters: Meters;
   startEnergy: number;

@@ -28,6 +28,7 @@ import { useGame } from "../store";
 import { botById, type Bot, type BotId } from "./bots";
 import { Player, createTracker } from "./player";
 import { createRng, hashString } from "./rng";
+import { buildDebrief } from "../debrief";
 
 export const DEFAULT_CHAPTER = "port-hesperia-2006";
 /** The store ships with a fixed game seed; sim seed 1 plays exactly that game. */
@@ -126,6 +127,9 @@ export interface RunResult {
   falseGossipActed: number;
   relationshipScenesSeen: number;
   personnel: import("../personnel").PersonnelState;
+  epithet: string;
+  board: string[];
+  debriefText: string;
 }
 
 /** Cash that is spoken for: the visit reserves and the mission steps still to do. */
@@ -309,6 +313,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
   }
 
   const s = useGame.getState();
+  const debrief = buildDebrief(s);
   const traitChoices: Record<string, number> = {};
   for (const flag of s.storyFlags) {
     const m = /^trait:([^:]+):/.exec(flag);
@@ -383,6 +388,9 @@ function play(options: SimOptions, chapterId: string): RunResult {
     falseGossipActed: s.storyFlags.filter((f) => f.startsWith("gossip:false:")).length,
     relationshipScenesSeen: [...tracker.seen].filter((id) => id.startsWith("event:web-")).length,
     personnel: structuredClone(s.personnel),
+    epithet: debrief.epithet,
+    board: debrief.board.map((member) => member.id),
+    debriefText: debrief.text,
     demarcheRoutes: Object.values(s.demarches).reduce<Record<string, number>>((counts, item) => {
       if (item.status === "delivered" && item.route)
         counts[item.route] = (counts[item.route] ?? 0) + 1;

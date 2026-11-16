@@ -3,6 +3,7 @@ import type { SavedGame } from "./store";
 import { activeChapter } from "./chapters";
 import { relationshipState } from "./relationships";
 import { effectiveTraits, type Drift } from "./personnel";
+import { buildDebrief, type Payslip } from "./debrief";
 
 /**
  * The career: everything about the diplomat that outlives one posting.
@@ -44,6 +45,14 @@ export interface ChapterResult {
   favours?: { owedToYou: Record<string, number>; youOwe: Record<string, number> };
   demarcheCounts?: { delivered: number; failed: number; missed: number };
   relationshipStates?: Record<string, { value: number; state: string; tags: string[] }>;
+  personnel?: {
+    reputations: string[];
+    earnedQuirks: string[];
+    curedTraits: string[];
+    drift: Drift;
+  };
+  epithet?: string;
+  payslip?: Payslip;
   finishedAt: string;
 }
 export interface Career {
@@ -142,15 +151,29 @@ type ResultSource = Pick<
   | "storyFlags"
   | "storyOutcomes"
   | "colleagues"
-> & { favours?: SavedGame["favours"]; demarches?: SavedGame["demarches"] };
+> &
+  Partial<SavedGame>;
 
 export function chapterResultFrom(game: ResultSource, now: string): ChapterResult {
+  const debrief =
+    game.personnel && game.character && game.ending ? buildDebrief(game as SavedGame) : undefined;
   return {
     chapterId: game.chapterId,
     ending: game.ending ?? "unfinished",
     day: game.day,
     meters: { ...game.meters },
     score: game.score,
+    ...(game.personnel
+      ? {
+          personnel: {
+            reputations: [...game.personnel.reputations],
+            earnedQuirks: [...game.personnel.earnedQuirks],
+            curedTraits: [...game.personnel.curedTraits],
+            drift: { ...game.personnel.drift },
+          },
+        }
+      : {}),
+    ...(debrief ? { epithet: debrief.epithet, payslip: debrief.payslip } : {}),
     flags: [...new Set(game.storyFlags.filter(isLegacyFlag))],
     storyOutcomes: structuredClone(game.storyOutcomes),
     trust: Object.fromEntries(Object.entries(game.colleagues).map(([id, c]) => [id, c.trust])),
@@ -204,6 +227,7 @@ export function applyChapterResult(career: Career, result: ChapterResult): Caree
     chapters: [...career.chapters, structuredClone(result)],
     legacyFlags: [...new Set([...career.legacyFlags, ...result.flags])],
     people,
+    savings: career.savings + (result.payslip?.total ?? 0),
   };
 }
 
@@ -217,6 +241,9 @@ export function resultRecorded(career: Career, game: ResultSource): boolean {
     favours: mineFavours,
     demarcheCounts: mineCounts,
     relationshipStates: mineRelationships,
+    personnel: minePersonnel,
+    epithet: mineEpithet,
+    payslip: minePayslip,
     ...mineResult
   } = mine;
   const {
@@ -224,6 +251,9 @@ export function resultRecorded(career: Career, game: ResultSource): boolean {
     favours: lastFavours,
     demarcheCounts: lastCounts,
     relationshipStates: lastRelationships,
+    personnel: lastPersonnel,
+    epithet: lastEpithet,
+    payslip: lastPayslip,
     ...lastResult
   } = last;
   return (
@@ -231,7 +261,11 @@ export function resultRecorded(career: Career, game: ResultSource): boolean {
     JSON.stringify(mineFavours) === JSON.stringify(lastFavours ?? { owedToYou: {}, youOwe: {} }) &&
     JSON.stringify(mineCounts) ===
       JSON.stringify(lastCounts ?? { delivered: 0, failed: 0, missed: 0 }) &&
-    (!lastRelationships || JSON.stringify(mineRelationships) === JSON.stringify(lastRelationships))
+    (!lastRelationships ||
+      JSON.stringify(mineRelationships) === JSON.stringify(lastRelationships)) &&
+    (!lastPersonnel || JSON.stringify(minePersonnel) === JSON.stringify(lastPersonnel)) &&
+    (!lastEpithet || mineEpithet === lastEpithet) &&
+    (!lastPayslip || JSON.stringify(minePayslip) === JSON.stringify(lastPayslip))
   );
 }
 
@@ -268,6 +302,18 @@ const chapterResultSchema = z.object({
   demarcheCounts: z.object({ delivered: num, failed: num, missed: num }).optional(),
   relationshipStates: z
     .record(id, z.object({ value: num, state: str, tags: z.array(str) }))
+    .optional(),
+  personnel: z
+    .object({
+      reputations: z.array(id),
+      earnedQuirks: z.array(id),
+      curedTraits: z.array(id),
+      drift: z.record(id, num),
+    })
+    .optional(),
+  epithet: str.optional(),
+  payslip: z
+    .object({ base: num, acting: num, hardship: num, drinks: num, moneyRoutes: num, total: num })
     .optional(),
   finishedAt: z.string().max(64),
 });

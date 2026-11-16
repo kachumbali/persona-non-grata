@@ -1,5 +1,58 @@
 # Balance report: Port Hesperia
 
+S-05/S-08 measurement: 210 runs (five bots, 14 builds, three seeds) through the real store. Reproduce with `npm run sim`. Compared with S-06, careful mission completion remains 42/42, press-reader remains 42/42, and socialiser rises from 30/42 to 40/42. The socialiser now reserves time for security and uses an expedited route when the late parade closes the road; that policy change and the new content are measured together. Press-reader promotion is 36/42 (86%), inside the 70–90% target. No ending thresholds changed.
+
+| Bot          | Reputations earned/run | Quirks earned/run | Promoted | Missions completed |
+| ------------ | ---------------------: | ----------------: | -------: | -----------------: |
+| careful      |                   4.50 |              1.00 |    32/42 |              42/42 |
+| socialiser   |                   7.55 |              3.00 |     2/42 |              40/42 |
+| reckless     |                   2.95 |              2.81 |     0/42 |               0/42 |
+| ignorer      |                   1.00 |              0.00 |     0/42 |               0/42 |
+| press-reader |                   6.14 |              3.00 |    36/42 |              42/42 |
+
+Every competent run earns at least one reputation. The most common is Known to Fax, earned in 130/210 runs (62%), below the 70% ceiling. All 84 paired same-build, same-seed comparisons between careful and the other competent bots ended with different personnel files (target 80%). The matrix produced 15 different epithets (target eight). [Three complete plain-text debriefs](DEBRIEF_EXAMPLES.md) show different runs. Reputation-triggered clippings and options are conditional; reduced-matrix coverage bounds were adjusted to reflect the socialiser's mission-first policy and cured traits. Existing save-version tests now expect version 14, and the simulator's `endedEarly` correctly includes endings during the last day.
+
+## Reputations
+
+- **The Biscuit Hawk** (`biscuit-hawk`): `hospitality` at 3. Hospitality budgets now come with a covering note.
+- **Celeste’s Favourite** (`team-europe`): `team` at 3. Shared credit has become a private achievement.
+- **Known to Fax** (`known-to-fax`): `formal` at 14. The secure fax recognises your handwriting.
+- **First Among Signatories** (`credit-taker`): `credit` at 3. Your name appears before the attached decision.
+- **Capital’s Reliable Correspondent** (`capital-pleaser`): `capital` at 4. Capital has started to notice your forwarding habits.
+- **The Annex Wrangler** (`rule-bender`): `rules` at 3. Procedures have learned to move around you.
+- **The Unread Diplomat** (`absent`): `ignored_mail` at 12. Several instructions are still looking for you.
+- **Owes Half the Corps** (`debtor`): `favours_owed` at 2. Your favours ledger needs its own ledger.
+- **The Discreet Source** (`gossip`): `gossip_passed` at 3. Your discretion is widely quoted.
+- **The Walking Note** (`envoy`): `demarche_self` at 2. You are increasingly delivered in person.
+- **The Expedited Official** (`expediter`): `money_routes` at 2. Your paperwork arrives with an invoice.
+- **The Distribution List** (`reply-all`): `replyall_accidents` at 2. Your replies have an extensive readership.
+- **The Protocol Exception** (`protocol`): `protocol_incidents` at 2. Protocol has added an exception for you.
+- **The Last Toast** (`host`): `drinks` at 3. The reception has requested your glass be registered.
+
+## Earned quirks
+
+- **Recovering Reply-All-ic** (`recovering-replyall`): recalls ≥ 5; stats {'deniability': 1}; cures `replyall`.
+- **Reads Annexes** (`annex-reader`): formal ≥ 4; stats {'liver': 1}.
+- **Cited Off the Record** (`quiet-source`): gossip_passed ≥ 4; stats {'liver': 1}; replaces `namedrop` when present.
+- **Mentioned in Dispatches** (`dispatches`): capital-pleaser held 2 days; stats {'gravitas': 1}.
+- **Keeper of the Coffee** (`reliable-host`): hospitality ≥ 4; stats {'stamina': 1}.
+- **Owes Half the Corps** (`owe-corps`): favours_owed ≥ 3; stats {'deniability': -1}.
+- **Administrative Abrasion** (`paper-cut`): ignored_mail ≥ 15; stats {'stamina': -1}.
+- **Protocol’s Special Case** (`incident-prone`): flag refused-favour-protocol; stats {'charm': -1}.
+- **Explains the Annex** (`over-explainer`): rules ≥ 4; stats {'charm': -1}.
+- **The Morning After** (`morning-after`): drinks ≥ 4; stats {'stamina': -1}.
+
+## Stat drift choices
+
+- Whose project is it? / Tell Sola to translate Elise’s proposal as written: charm -1.
+- Two briefings, no shared facts / Give Pavel the lead and Anselm visible credit: charm +1.
+- The generous supplier · part I / Ask Sola to check the ownership: gravitas +1.
+- A chair of national importance / Defend Capital's seating instructions: charm -1.
+- The seating plan · a delicate compromise / Move the Deputy Minister forward and explain to Capital: gravitas +1.
+- Dinner for two / Wait for agreement: charm -1.
+
+## Previous S-06 findings
+
 S-06 measurement: 210 runs, five bots, 14 builds and three seeds through the real store. Reproduce with `npm run sim`. The S-02 baseline was commit `9c9b3d4`: careful promotion 27/42 (64%), press-reader promotion 42/42 (100%), and mission completions 42/42 for each. S-06 measures 29/42 (69%) and 37/42 (88%) promotions, respectively; both still complete 42/42 missions. The socialiser completes 30 missions, versus 33 in S-02 and 22 in B-02. False gossip is a deliberate new cost; ending thresholds were not changed.
 
 The socialiser changes at least seven distinct other-person pairs in each run (mean 14.5); all ten relationship-reading scenes are seen across the full matrix. In a mean run, the socialiser learns 10.0 stories, passes 9.7, holds 0.2 and acts on 5.0 unreliable ones; the press-reader learns 10.2, passes 10.2 and acts on 6.0. The careful bot learns and holds 7.0, and the ignorer learns none. Pair-change, state-transition and gossip metrics were not instrumented in S-02, so no comparable baseline exists. The report counts distinct pairs directly changed by the player's decisions separately from state transitions, which can include unattended disputes.
@@ -108,38 +161,49 @@ Simulated playthroughs: chapter port-hesperia-2006, 210 runs (5 bots x 14 builds
 
 bot           runs  png   replaced  cancelled  retired  ambassador  promoted
 ------------  ----  ---  ---------  ---------  -------  ----------  --------
-careful         42    .          .          .        .    13 (31%)  29 (69%)
-socialiser      42    .    5 (12%)   10 (24%)        .    26 (62%)    1 (2%)
+careful         42    .          .          .        .    10 (24%)  32 (76%)
+socialiser      42    .    8 (19%)          .        .    32 (76%)    2 (5%)
 reckless        42    .  42 (100%)          .        .           .         .
 ignorer         42    .  42 (100%)          .        .           .         .
-press-reader    42    .          .          .        .     5 (12%)  37 (88%)
+press-reader    42    .          .          .        .     6 (14%)  36 (86%)
+
+== Personnel records and debriefs ==
+
+careful: reputations {"credit-taker":39,"team-europe":42,"known-to-fax":42,"envoy":42,"absent":18,"reply-all":6}; quirks {"annex-reader":42}; stat drift {"gravitas":38,"charm":40}
+socialiser: reputations {"team-europe":42,"rule-bender":38,"gossip":41,"known-to-fax":42,"debtor":42,"absent":12,"expediter":25,"credit-taker":30,"host":32,"reply-all":3,"biscuit-hawk":7,"capital-pleaser":3}; quirks {"annex-reader":42,"quiet-source":36,"owe-corps":23,"morning-after":15,"over-explainer":5,"dispatches":3,"incident-prone":2}; stat drift {"gravitas":25,"charm":-21}
+reckless: reputations {"host":41,"rule-bender":41,"gossip":19,"protocol":6,"capital-pleaser":13,"known-to-fax":4}; quirks {"annex-reader":42,"morning-after":39,"over-explainer":37}; stat drift {"charm":-53,"gravitas":4}
+ignorer: reputations {"absent":42}; quirks {}; stat drift {}
+press-reader: reputations {"credit-taker":42,"team-europe":42,"known-to-fax":42,"gossip":42,"debtor":42,"envoy":42,"reply-all":6}; quirks {"annex-reader":42,"quiet-source":42,"owe-corps":42}; stat drift {"gravitas":80,"charm":41}
+Reputations by build: {"liver":{"credit-taker":7,"team-europe":9,"known-to-fax":9,"envoy":6,"rule-bender":5,"gossip":8,"debtor":6,"absent":6,"expediter":1,"host":4,"protocol":1},"replyall":{"team-europe":9,"known-to-fax":9,"credit-taker":9,"absent":6,"envoy":6,"reply-all":7,"host":6,"gossip":6,"debtor":6,"rule-bender":6,"expediter":1,"capital-pleaser":1},"punctual":{"team-europe":9,"credit-taker":8,"known-to-fax":10,"envoy":6,"gossip":7,"rule-bender":6,"host":6,"biscuit-hawk":2,"debtor":6,"expediter":1,"capital-pleaser":3,"protocol":1,"absent":3},"brussels":{"team-europe":9,"known-to-fax":9,"credit-taker":9,"absent":6,"envoy":6,"rule-bender":6,"debtor":6,"gossip":9,"host":5,"expediter":2,"capital-pleaser":1},"demarche":{"team-europe":9,"known-to-fax":9,"credit-taker":9,"absent":6,"envoy":6,"gossip":7,"host":5,"debtor":6,"rule-bender":6,"expediter":3,"capital-pleaser":1},"namedrop":{"team-europe":9,"known-to-fax":9,"absent":6,"envoy":6,"credit-taker":6,"gossip":6,"debtor":6,"rule-bender":5,"expediter":2,"host":5,"biscuit-hawk":1},"cuisine":{"team-europe":9,"known-to-fax":9,"credit-taker":8,"absent":6,"envoy":6,"rule-bender":6,"gossip":7,"host":6,"debtor":6,"expediter":2,"capital-pleaser":1,"biscuit-hawk":1},"novelist":{"credit-taker":8,"team-europe":9,"known-to-fax":9,"envoy":6,"debtor":6,"gossip":8,"absent":6,"rule-bender":5,"expediter":2,"host":4,"protocol":2},"sideevents":{"credit-taker":8,"known-to-fax":9,"team-europe":9,"envoy":6,"debtor":6,"absent":6,"gossip":6,"rule-bender":6,"expediter":2,"host":3},"eyesopen":{"team-europe":9,"credit-taker":8,"known-to-fax":9,"envoy":6,"capital-pleaser":4,"rule-bender":6,"host":6,"gossip":7,"debtor":6,"expediter":1,"absent":3},"ngo":{"team-europe":9,"known-to-fax":10,"credit-taker":7,"absent":6,"envoy":6,"rule-bender":6,"gossip":8,"host":6,"debtor":6,"expediter":3,"protocol":1},"mixed-social":{"credit-taker":7,"team-europe":9,"known-to-fax":9,"envoy":6,"debtor":6,"absent":6,"rule-bender":4,"expediter":2,"host":5,"gossip":6},"mixed-staff":{"team-europe":9,"credit-taker":8,"known-to-fax":10,"reply-all":8,"envoy":6,"rule-bender":6,"host":6,"gossip":8,"debtor":6,"biscuit-hawk":1,"expediter":1,"capital-pleaser":2,"absent":3},"mixed-formal":{"team-europe":9,"credit-taker":9,"known-to-fax":10,"envoy":6,"gossip":9,"host":6,"biscuit-hawk":2,"debtor":6,"rule-bender":6,"expediter":2,"capital-pleaser":3,"protocol":1,"absent":3}}
+Epithets: {"The diplomat who shared the credit in triplicate.":79,"The diplomat who copied the entire service.":8,"The diplomat who annotated every annex.":18,"The diplomat who trusted the supplier’s receipt.":33,"The diplomat who could not pass a ministry.":5,"The diplomat who negotiated with the canapé.":6,"The diplomat who declared a family interest.":3,"The diplomat who shared a confidence.":34,"The diplomat who registered the final toast.":12,"The diplomat who signed above the signature.":1,"The diplomat who kept the reception open.":1,"The diplomat who arrived before the agenda.":1,"The diplomat who mentioned the Commissioner.":1,"The diplomat who revised the official account.":3,"The diplomat who attended the side event.":5}
+Promotion-board appearances: {"sola":166,"development":56,"ines":43,"pavel":83,"anselm":113,"protocol":45,"press":18,"maxim":18,"bianca":34,"eu":25,"golf":21,"journalist":8}
 
 == Relationships and gossip per run ==
 
 bot           state changes  pairs changed  learned  passed  held  false acted  scenes
 ------------  -------------  -------------  -------  ------  ----  -----------  ------
-careful                15.0            5.3      7.0     0.0   7.0          0.0     9.0
-socialiser             30.2           14.5     10.0     9.7   0.2          5.0     9.9
-reckless                6.6            5.1      2.8     2.5   0.3          1.0     2.9
+careful                16.3            5.4      7.0     0.0   7.0          0.0     9.0
+socialiser             29.3           13.9      9.0     9.0   0.1          4.6    10.0
+reckless                6.3            5.0      2.8     2.5   0.3          1.0     2.8
 ignorer                 4.1            0.0      0.0     0.0   0.0          0.0     5.1
-press-reader           25.0           14.5     10.2    10.2   0.0          6.0     9.0
+press-reader           25.9           14.4     10.1    10.1   0.0          6.0     9.0
 
 == Démarche deliveries and outcomes ==
 
 bot           self  colleague   eu  note  good  adequate  failed  missed  incidents
 ------------  ----  ---------  ---  ----  ----  --------  ------  ------  ---------
-careful         84        168    0    84   223       113       0       0          0
-socialiser       0          0  290     0   206        84       0       0          0
-reckless         0         74    0     0     0         0      74       0         47
+careful         84        168    0    84   250        86       0       0          0
+socialiser       0          0  291     0   208        83       0       0          0
+reckless         0         73    0     0     0         0      73       0         48
 ignorer          0          0    0     0     0         0       0      81          0
-press-reader    84        168    0    84   222       114       0       0          0
+press-reader    84        168    0    84   252        84       0       0          0
 
 == Mission routes and quality ==
 
 bot           official  favour  money   eu  knowledge  favours owed  good tasks  adequate tasks  route changes
 ------------  --------  ------  -----  ---  ---------  ------------  ----------  --------------  -------------
 careful            336       0      0    0          0             0         168               0              0
-socialiser          64     151      0   82          0             2         153               0             43
+socialiser          26     145     65   84          0             9         124              40             45
 reckless             0       0     42    0          0            23           0               0              0
 ignorer              0       0      0    0          0             0           0               0              0
 press-reader       126       0      0  166         44             0         168               0             42
@@ -147,107 +211,107 @@ press-reader       126       0      0  166         44             0         168 
 Route lock-outs: 0
 task       good  adequate
 ---------  ----  --------
-clearance   125         0
+clearance   126         0
 lounge      125         0
-programme   125         0
-security    114         0
+programme   124         0
+security     85        40
 
 == Endings per trait build (all bots) ==
 
 build         runs  png  replaced  cancelled  retired  ambassador  promoted
 ------------  ----  ---  --------  ---------  -------  ----------  --------
-liver           15    .   6 (40%)     1 (7%)        .     3 (20%)   5 (33%)
+liver           15    .   6 (40%)          .        .     5 (33%)   4 (27%)
 replyall        15    .   8 (53%)          .        .     5 (33%)   2 (13%)
-punctual        15    .   6 (40%)          .        .     3 (20%)   6 (40%)
-brussels        15    .   7 (47%)          .        .     5 (33%)   3 (20%)
+punctual        15    .   7 (47%)          .        .     2 (13%)   6 (40%)
+brussels        15    .   6 (40%)          .        .     6 (40%)   3 (20%)
 demarche        15    .   6 (40%)          .        .     4 (27%)   5 (33%)
 namedrop        15    .   6 (40%)          .        .     4 (27%)   5 (33%)
-cuisine         15    .   7 (47%)          .        .     5 (33%)   3 (20%)
-novelist        15    .   6 (40%)    3 (20%)        .           .   6 (40%)
-sideevents      15    .   6 (40%)    3 (20%)        .     3 (20%)   3 (20%)
+cuisine         15    .   7 (47%)          .        .     4 (27%)   4 (27%)
+novelist        15    .   7 (47%)          .        .     2 (13%)   6 (40%)
+sideevents      15    .   7 (47%)          .        .     4 (27%)   4 (27%)
 eyesopen        15    .   6 (40%)          .        .     3 (20%)   6 (40%)
-ngo             15    .   7 (47%)          .        .     3 (20%)   5 (33%)
-mixed-social    15    .   6 (40%)    3 (20%)        .           .   6 (40%)
-mixed-staff     15    .   6 (40%)          .        .     3 (20%)   6 (40%)
-mixed-formal    15    .   6 (40%)          .        .     3 (20%)   6 (40%)
+ngo             15    .   7 (47%)          .        .     2 (13%)   6 (40%)
+mixed-social    15    .   6 (40%)          .        .     4 (27%)   5 (33%)
+mixed-staff     15    .   7 (47%)          .        .      1 (7%)   7 (47%)
+mixed-formal    15    .   6 (40%)          .        .     2 (13%)   7 (47%)
 
-Most lopsided builds: replyall replaced 53%, brussels replaced 47%, cuisine replaced 47%, ngo replaced 47%, liver replaced 40%
+Most lopsided builds: replyall replaced 53%, punctual replaced 47%, cuisine replaced 47%, novelist replaced 47%, sideevents replaced 47%
 
 == Endings per trait build (careful, socialiser and press-reader only) ==
 
 build         runs  png  replaced  cancelled  retired  ambassador  promoted
 ------------  ----  ---  --------  ---------  -------  ----------  --------
-liver            9    .         .    1 (11%)        .     3 (33%)   5 (56%)
+liver            9    .         .          .        .     5 (56%)   4 (44%)
 replyall         9    .   2 (22%)          .        .     5 (56%)   2 (22%)
-punctual         9    .         .          .        .     3 (33%)   6 (67%)
-brussels         9    .   1 (11%)          .        .     5 (56%)   3 (33%)
+punctual         9    .   1 (11%)          .        .     2 (22%)   6 (67%)
+brussels         9    .         .          .        .     6 (67%)   3 (33%)
 demarche         9    .         .          .        .     4 (44%)   5 (56%)
 namedrop         9    .         .          .        .     4 (44%)   5 (56%)
-cuisine          9    .   1 (11%)          .        .     5 (56%)   3 (33%)
-novelist         9    .         .    3 (33%)        .           .   6 (67%)
-sideevents       9    .         .    3 (33%)        .     3 (33%)   3 (33%)
+cuisine          9    .   1 (11%)          .        .     4 (44%)   4 (44%)
+novelist         9    .   1 (11%)          .        .     2 (22%)   6 (67%)
+sideevents       9    .   1 (11%)          .        .     4 (44%)   4 (44%)
 eyesopen         9    .         .          .        .     3 (33%)   6 (67%)
-ngo              9    .   1 (11%)          .        .     3 (33%)   5 (56%)
-mixed-social     9    .         .    3 (33%)        .           .   6 (67%)
-mixed-staff      9    .         .          .        .     3 (33%)   6 (67%)
-mixed-formal     9    .         .          .        .     3 (33%)   6 (67%)
+ngo              9    .   1 (11%)          .        .     2 (22%)   6 (67%)
+mixed-social     9    .         .          .        .     4 (44%)   5 (56%)
+mixed-staff      9    .   1 (11%)          .        .     1 (11%)   7 (78%)
+mixed-formal     9    .         .          .        .     2 (22%)   7 (78%)
 
 == Day reached (15 = played to the end) ==
 
 bot           mean  min  max
 ------------  ----  ---  ---
 careful         15   15   15
-socialiser    14.8    8   15
+socialiser    14.8   11   15
 reckless       4.1    3    6
 ignorer        6.1    6    8
 press-reader    15   15   15
-all           11.0    3   15
+all             11    3   15
 
 == Trait moments per run (trait-tagged choices taken), by build and bot ==
 
 build         all  careful  socialiser  reckless  ignorer  press-reader
 ------------  ---  -------  ----------  --------  -------  ------------
-liver           5      6.7          11       0.7        0           6.7
-replyall      2.5      3.7         5.3       0.3        0           3.3
-punctual      3.9        3        12.3         0        0             4
-brussels      1.1      1.7         2.7         0        0           1.3
-demarche      2.3        1         6.7         0        0           3.7
-namedrop      3.4      1.7          12       0.3        0             3
-cuisine       1.5      1.3         4.7         0        0           1.3
-novelist      1.8        3         3.7         0        0           2.3
-sideevents    0.8      0.3         2.7         0        0             1
-eyesopen      5.3        3        19.3         0        0             4
-ngo           2.9        3         8.7       0.7        0             2
-mixed-social  6.5      8.7        16.7       1.3        0             6
-mixed-staff   8.6      7.3        30.7       0.7        0           4.3
-mixed-formal  5.9      4.7        20.3         0        0           4.7
+liver         4.9      6.7        10.7       0.7        0           6.7
+replyall      2.3        3         4.7       0.3        0           3.3
+punctual      3.8        3        11.7       0.3        0             4
+brussels      1.5      1.7         4.7         0        0           1.3
+demarche      1.9        1           5         0        0           3.7
+namedrop      2.7        2         9.3       0.3        0             2
+cuisine       1.5      1.7         4.3         0        0           1.3
+novelist      1.7        3           3         0        0           2.3
+sideevents    0.6      0.3         1.7         0        0             1
+eyesopen      5.9        4        21.7         0        0             4
+ngo           2.9        3         9.3       0.3        0             2
+mixed-social  6.2      8.7          15       1.3        0             6
+mixed-staff   7.7      4.7        28.7       0.7        0           4.3
+mixed-formal  6.6      7.3        20.7       0.3        0           4.7
 
 == Trait coverage (runs of builds that include the trait) ==
 
 trait       gated choices  ever offered  ever taken  offered/run  taken/run
 ----------  -------------  ------------  ----------  -----------  ---------
-brussels                6             6           6          2.6        1.6
-cuisine                 6             6           6          1.8        1.3
-demarche                6             6           6          2.8        2.4
-eyesopen                5             5           5          2.8        1.7
-liver                  14            14          14          7.2        3.7
-namedrop                8             8           8          3.5        1.7
-ngo                     6             6           6          2.5        1.3
-novelist                6             6           6          2.6        1.6
+brussels                6             6           6          2.7        1.7
+cuisine                 6             6           6          1.9        1.2
+demarche                6             6           6          2.8        2.2
+eyesopen                5             5           5          2.9        1.8
+liver                  14            14          14          7.0        3.6
+namedrop                8             8           8          2.6        1.3
+ngo                     6             6           6          2.6        1.5
+novelist                6             6           6          1.9        1.1
 punctual                6             6           6          3.1        1.5
-replyall                8             8           8          4.4        2.4
-sideevents              5             5           5          1.3        0.7
+replyall                8             8           8          4.2        2.5
+sideevents              5             5           5          1.2        0.5
 
 == Content never reached ==
 
-Authored: 48 story events, 50 dialogue topics, 28 emails, 7 invitations, 49 clippings, 444 choices.
+Authored: 48 story events, 50 dialogue topics, 28 emails, 7 invitations, 63 clippings, 458 choices.
 Story events never seen (2):
   event:asteria-coffee-followup
   event:call-in-golf
 Dialogue topics never seen: none
 Emails never seen: none
 Invitations never seen: none
-Press clippings never seen (9):
+Press clippings never seen (16):
   press:fuel-bought
   press:consequence-double
   press:consequence-cold
@@ -257,50 +321,64 @@ Press clippings never seen (9):
   press:report-lounge-guest-list-expedited
   press:report-security-route-recon-expedited
   press:report-security-motorcade-expedited
-Choices never offered (4):
+  press:reputation-biscuit-hawk
+  press:reputation-capital-pleaser
+  press:reputation-rule-bender
+  press:reputation-absent
+  press:reputation-expediter
+  press:reputation-protocol
+  press:reputation-host
+Choices never offered (11):
+  choice:event:eu-budget-share-meeting:reputation-biscuit-hawk
+  choice:event:eu-clean-port:reputation-capital-pleaser
+  choice:event:clean-port-national-host:reputation-absent
+  choice:event:staff-sola-elise:reputation-envoy
+  choice:event:staff-sola-consult-followup:reputation-expediter
+  choice:event:staff-sola-instruct-followup:reputation-reply-all
+  choice:event:staff-sola-pause-followup:reputation-protocol
   choice:event:asteria-coffee-followup:compromise
   choice:event:asteria-coffee-followup:credit
   choice:event:call-in-golf:honour
   choice:event:call-in-golf:refuse
-Choices never taken (offered or not) (29):
+Choices never taken (offered or not) (37):
+  choice:event:eu-budget-share-meeting:reputation-biscuit-hawk
+  choice:event:eu-clean-port:reputation-capital-pleaser
+  choice:event:clean-port-accept-host:reputation-rule-bender
   choice:event:clean-port-national-host:release
+  choice:event:clean-port-national-host:reputation-absent
+  choice:event:clean-port-decline-host:reputation-gossip
+  choice:event:staff-sola-elise:reputation-envoy
+  choice:event:staff-sola-consult-followup:reputation-expediter
+  choice:event:staff-sola-instruct-followup:reputation-reply-all
+  choice:event:staff-sola-pause-followup:reputation-protocol
+  choice:event:staff-rivalry-mediate-followup:reputation-host
   choice:event:asteria-coffee-followup:compromise
   choice:event:asteria-coffee-followup:credit
   choice:event:fuel-quay:buy
   choice:event:call-in-golf:honour
   choice:event:call-in-golf:refuse
-  choice:event:call-in-fixer:honour
   choice:event:web-joint:side
   choice:event:web-repair:side
   choice:event:web-seating:side
   choice:event:web-mentor:side
   choice:event:web-allies:side
   choice:event:web-dinner:side
-  choice:dialogue:anselm:networking:a:0
-  choice:dialogue:press:hashtag:a:1
-  choice:dialogue:fixer:lounge:a:1
+  choice:dialogue:pavel:stapler:b:1
   choice:dialogue:journalist:drinks:a:1
   choice:dialogue:journalist:drinks:a:2
-  choice:email:visit-security:delegate
-  choice:email:visit-security:note
-  choice:email:setback-arrival:reply
-  choice:email:setback-arrival:delegate
-  choice:email:setback-arrival:note
-  choice:email:visit-programme:reply
-  choice:email:visit-programme:delegate
-  ... and 4 more
-Only counting the shipped game seed: 2 events, 0 topics, 5 choices never seen.
+  ... and 12 more
+Only counting the shipped game seed: 2 events, 0 topics, 13 choices never seen.
 
 == Blocks with nothing to decide per run (no mail, episode, invitation, lead or mission step waiting) ==
 
 bot           mean  min  max
 ------------  ----  ---  ---
 careful        7.8    6    9
-socialiser     4.6    1    8
-reckless       1.6    0    6
+socialiser     6.5    1   12
+reckless       1.5    0    6
 ignorer          0    0    0
 press-reader   9.4    8   10
-all            4.7    0   10
+all            5.0    0   12
 
 Days on which nothing at all was waiting (all four blocks idle), per run:
 bot           mean  min  max
@@ -315,31 +393,31 @@ all              0    0    0
 Idle blocks (of 4) by day, careful / socialiser / press-reader runs:
 day     1  2    3    4    5    6  7    8    9  10  11   12   13   14   15
 ----  ---  -  ---  ---  ---  ---  -  ---  ---  --  --  ---  ---  ---  ---
-idle  0.7  0  0.6  0.4  1.6  1.8  0  0.0  0.0   0   0  0.0  0.0  1.0  1.0
+idle  0.7  0  0.6  0.4  1.6  1.8  0  0.0  0.1   0   0  0.3  0.3  1.2  1.0
 
 Blocks with no mail, episode, invitation or lead waiting (mission steps not counted):
 bot           mean  min  max
 ------------  ----  ---  ---
 careful       24.2   21   26
-socialiser    16.8    7   22
-reckless       2.9    1    7
+socialiser    16.5    9   22
+reckless       2.6    1    7
 ignorer          1    1    1
 press-reader  25.4   24   27
-all           14.1    1   27
+all           13.9    1   27
 
 Same, by day, careful / socialiser / press-reader runs:
 day   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
 ----  -  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---
-idle  1  0.8  0.8  0.7  1.9  1.8  0.7  2.2  2.8  1.4  2.0  1.6  1.6  2.0  1.0
+idle  1  0.8  0.8  0.7  1.9  1.8  0.7  2.2  2.8  1.3  2.0  1.6  1.6  1.9  1.0
 
 Blocks in which the bot itself queued nothing:
 bot           mean  min  max
 ------------  ----  ---  ---
-careful       18.3   10   25
+careful       18.3   10   23
 socialiser       0    0    0
 reckless       0.0    0    1
 ignorer       20.4   19   27
-press-reader  11.1    4   17
+press-reader  11.2    4   17
 all           10.0    0   27
 
 == Days with a scheduling conflict per run (two or more time-bound things in one block) ==
@@ -347,7 +425,7 @@ all           10.0    0   27
 bot           mean  min  max
 ------------  ----  ---  ---
 careful         10   10   10
-socialiser    10.0    7   11
+socialiser    10.1    9   11
 reckless       3.1    2    5
 ignorer        5.1    5    7
 press-reader    11   11   11
@@ -357,73 +435,63 @@ Same, but ordinary mail arriving in the block also counts as time-bound:
 bot           mean  min  max
 ------------  ----  ---  ---
 careful         12   12   12
-socialiser    13.4    8   15
+socialiser    14.5   11   15
 reckless       4.1    3    6
 ignorer        6.1    6    8
 press-reader    13   13   13
-all            9.7    3   15
+all            9.9    3   15
 
 == Lowest funds seen per run (ƒ; the reserves are part of funds) ==
 
 bot            mean    min    max
 ------------  -----  -----  -----
 careful        7861   7750   8250
-socialiser     7046   5720   8760
-reckless       7846   5810   9390
+socialiser     6750   5400   8360
+reckless       8042   6420   9040
 ignorer       10000  10000  10000
 press-reader   7755   7500   8300
-all            8102   5720  10000
+all            8081   5400  10000
 
 Lowest funds above the reserves (visit reserves and mission steps):
 bot           mean   min   max
 ------------  ----  ----  ----
 careful       1561  1450  1950
-socialiser    1242   220  2280
-reckless       827    20  2190
+socialiser    1150  -100  2450
+reckless       965   150  1840
 ignorer       2600  2600  2600
 press-reader  1405  1350  1750
-all           1527    20  2600
+all           1536  -100  2600
 
 == Mission ==
 
 Careful bot confirmed all mission tasks in 100% of runs.
-Runs that ended with the mission unfinished: 96 of 210; of those, reached the final day unfinished: 10.
+Runs that ended with the mission unfinished: 86 of 210; of those, reached the final day unfinished: 0.
 Runs that left the mission unfinished after a step was refused for lack of money: 0.
 
 Day the mission was completed (runs that completed it; the chapter has 13 steps):
 bot           completed  mean day  earliest  latest  steps done
 ------------  ---------  --------  --------  ------  ----------
 careful            100%        14        14      14          13
-socialiser          71%      13.9        13      14        12.3
+socialiser          95%        13        13      13        12.9
 reckless             0%         -         -       -         3.5
 ignorer              0%         -         -       -           2
 press-reader       100%        14        14      14          13
-all                 54%      14.0        13      14         8.8
-  socialiser/liver/seed1: 3/4 tasks
-  socialiser/novelist/seed1: 3/4 tasks
-  socialiser/novelist/seed2: 3/4 tasks
-  socialiser/novelist/seed3: 3/4 tasks
-  socialiser/sideevents/seed1: 3/4 tasks
-  socialiser/sideevents/seed2: 3/4 tasks
-  socialiser/sideevents/seed3: 3/4 tasks
-  socialiser/mixed-social/seed1: 3/4 tasks
-  socialiser/mixed-social/seed2: 3/4 tasks
-  socialiser/mixed-social/seed3: 3/4 tasks
+all                 59%      13.7        13      14         8.9
 
 == Refusals and stalls ==
 
 advance() refused a plan 0 times.
-Work that stalled per run: careful 0, socialiser 0, reckless 6.8, ignorer 0, press-reader 0
+Work that stalled per run: careful 0, socialiser 0, reckless 6.6, ignorer 0, press-reader 0
 Most common refusals the bots hit:
-  654 x You have only 0 DP this block.
-  654 x You have only 2 DP this block.
-  575 x You have only 3 DP this block.
-  344 x You have only 4 DP this block.
-  302 x You cannot afford the time or money to attend.
-  292 x anselm has only 2 DP this block.
-  226 x Colleagues are off duty; dinner is social, not an extra work shift.
-  189 x Not yet: Motorcade and escort for the new arrival time (needs the route reconnaissance).
+  675 x You have only 0 DP this block.
+  626 x You have only 3 DP this block.
+  485 x You have only 2 DP this block.
+  296 x You cannot afford the time or money to attend.
+  293 x You have only 4 DP this block.
+  285 x anselm has only 2 DP this block.
+  235 x Colleagues are off duty; dinner is social, not an extra work shift.
+  164 x Not yet: Motorcade and escort for the new arrival time (needs the route reconnaissance).
 
-(210 runs in 8.4s)
-Raw results written to /private/tmp/s06-verified.json
+(210 runs in 8.7s)
+Raw results written to /private/tmp/s08-final-verified.json
 ```

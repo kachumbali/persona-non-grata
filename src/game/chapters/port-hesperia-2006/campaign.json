@@ -577,11 +577,7 @@
           "contact": "eu-malta",
           "contactTrust": -3,
           "result": "Your colleague starts the stopwatch. Tanya's Cyprus and Luxembourg briefs are postponed until after the biscuits. Capital appreciates the visible arithmetic.",
-          "counts": ["credit"],
-          "statDrift": {
-            "stat": "deniability",
-            "delta": -1
-          }
+          "counts": ["credit"]
         },
         {
           "id": "share",
@@ -1659,7 +1655,11 @@
           "trust": 3,
           "result": "Ndao approves the revised seating plan. Capital asks whether the fern can be photoshopped back in.",
           "formal": true,
-          "counts": ["team"]
+          "counts": ["team"],
+          "statDrift": {
+            "stat": "gravitas",
+            "delta": 1
+          }
         },
         {
           "id": "unchanged",
@@ -2070,11 +2070,7 @@
           "contactTrust": 5,
           "flag": "fuel-mira",
           "result": "Mira coordinates the inspected fuel delivery.",
-          "counts": ["formal"],
-          "statDrift": {
-            "stat": "gravitas",
-            "delta": 1
-          }
+          "counts": ["formal"]
         },
         {
           "id": "ignore",
@@ -2619,9 +2615,13 @@
           "label": "Wait for agreement",
           "pair": -10,
           "pairTarget": "amb-valdoria",
-          "result": "Each side waits for the other to decide where to sign.",
+          "result": "Dinner is served in two rooms. Each guest thanks you for avoiding the other.",
           "effects": {},
-          "counts": ["hospitality"]
+          "counts": ["hospitality"],
+          "statDrift": {
+            "stat": "charm",
+            "delta": -1
+          }
         }
       ],
       "onMiss": {

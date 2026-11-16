@@ -176,6 +176,35 @@ export function Conversation() {
               </Button>
             </div>
           ))}
+        {g.personnel.reputations.map((id) => {
+          const rep = REPUTATIONS.find((item) => item.id === id);
+          if (!rep?.unlocks || g.storyFlags.includes(`reputation-used:${id}:${npc.id}`))
+            return null;
+          return (
+            <Button
+              key={id}
+              variant="outline"
+              className="mb-2 h-auto w-full whitespace-normal text-left"
+              onClick={() => {
+                const ok = g.queue({
+                  id: `reputation-${id}-${npc.id}`,
+                  kind: "dialogue",
+                  source: `Reputation · ${rep.name}`,
+                  text: rep.description,
+                  effects: {},
+                  timeCost: 1,
+                  worker: npc.id,
+                  overload,
+                  trust: 1,
+                  flag: `reputation-used:${id}:${npc.id}`,
+                });
+                setNotice(ok ? "Added to the current block." : useGame.getState().planError);
+              }}
+            >
+              [{rep.name}] Refer to your reputation · 1 DP
+            </Button>
+          );
+        })}
         {notice ? (
           <p role="status" className="mt-2 text-sm">
             {notice}

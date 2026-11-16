@@ -54,15 +54,16 @@ export function createPersonnel(
   drift: Drift = {},
   reputations: string[] = [],
 ): PersonnelState {
+  const active = reputations.slice(-3);
   return {
     counters: {},
-    reputations: [...reputations],
-    earnedReputations: [...reputations],
-    reputationSince: Object.fromEntries(reputations.map((id) => [id, 1])),
+    reputations: [...active],
+    earnedReputations: [...active],
+    reputationSince: Object.fromEntries(active.map((id) => [id, 1])),
     earnedQuirks: [...earnedQuirks],
     curedTraits: [...curedTraits],
     drift: { ...drift },
-    start: { traits: [...traits], stats: { ...stats }, reputations: [...reputations] },
+    start: { traits: [...traits], stats: { ...stats }, reputations: [...active] },
     notices: [],
   };
 }
@@ -109,7 +110,12 @@ export function advancePersonnel(
     if (q.cures && !state.start.traits.includes(q.cures)) continue;
     state.earnedQuirks.push(q.id);
     if (q.cures && !state.curedTraits.includes(q.cures)) state.curedTraits.push(q.cures);
-    if (q.replaces && !state.curedTraits.includes(q.replaces)) state.curedTraits.push(q.replaces);
+    if (
+      q.replaces &&
+      state.start.traits.includes(q.replaces) &&
+      !state.curedTraits.includes(q.replaces)
+    )
+      state.curedTraits.push(q.replaces);
     state.notices.push({ day, block, quirk: q.id, text: q.mail });
     lines.push(`Personnel file amended: ${q.name}. ${q.mail}`);
   }

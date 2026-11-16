@@ -37,6 +37,21 @@ describe("content checker on the real chapter", () => {
 });
 
 describe("content checker catches mistakes", () => {
+  it("rejects unknown personnel counters and incomplete debriefs", () => {
+    const pack = fresh();
+    pack.campaign.events[0]!.choices[0]!.counts = ["misspelt-counter"];
+    pack.manifest.debrief!.variants["png"] = [];
+    pack.manifest.debrief!.board["nobody"] = { good: "Good.", mixed: "Mixed.", bad: "Bad." };
+    const errors = check(pack).filter((f) => f.level === "error");
+    expect(errors.some((f) => f.message.includes("misspelt-counter"))).toBe(true);
+    expect(errors.some((f) => f.message.includes("eight variants"))).toBe(true);
+    expect(errors.some((f) => f.message.includes("nobody"))).toBe(true);
+  });
+  it("requires a debrief for the chapter", () => {
+    const pack = fresh();
+    delete pack.manifest.debrief;
+    expect(check(pack).some((f) => f.level === "error" && f.path === "debrief")).toBe(true);
+  });
   it("rejects unknown NPC traits, duplicate pairs, and unreachable gossip", () => {
     const pack = fresh();
     pack.campaign.characters[0]!.traits = ["not-a-trait", "process"];

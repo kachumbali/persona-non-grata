@@ -94,6 +94,17 @@ function idleByDay(rs: RunResult[], pick: (r: RunResult) => number[]): number[] 
 }
 
 export interface Report {
+  personnelByBot: Record<
+    string,
+    {
+      reputations: Record<string, number>;
+      quirks: Record<string, number>;
+      drift: Record<string, number>;
+    }
+  >;
+  reputationsByBuild: Record<string, Record<string, number>>;
+  epithets: Record<string, number>;
+  boardMembers: Record<string, number>;
   relationshipStats: Record<
     string,
     {
@@ -266,6 +277,28 @@ export function aggregate(results: RunResult[]): Report {
     for (const [msg, n] of Object.entries(r.planErrors)) errors[msg] = (errors[msg] ?? 0) + n;
 
   return {
+    personnelByBot: Object.fromEntries(
+      Object.entries(byBot).map(([bot, runs]) => [
+        bot,
+        {
+          reputations: count(runs.flatMap((r) => r.personnel.earnedReputations)),
+          quirks: count(runs.flatMap((r) => r.personnel.earnedQuirks)),
+          drift: runs.reduce<Record<string, number>>((totals, run) => {
+            for (const [key, value] of Object.entries(run.personnel.drift))
+              totals[key] = (totals[key] ?? 0) + (value ?? 0);
+            return totals;
+          }, {}),
+        },
+      ]),
+    ),
+    reputationsByBuild: Object.fromEntries(
+      Object.entries(byBuild).map(([build, runs]) => [
+        build,
+        count(runs.flatMap((r) => r.personnel.earnedReputations)),
+      ]),
+    ),
+    epithets: count(results.map((r) => r.epithet)),
+    boardMembers: count(results.flatMap((r) => r.board)),
     relationshipStats: Object.fromEntries(
       Object.entries(byBot).map(([bot, runs]) => [
         bot,
@@ -482,6 +515,14 @@ export function formatReport(r: Report): string {
   );
   h("Endings per bot");
   out.push(endingTable(r.endingsByBot, r.endings, "bot"));
+  h("Personnel records and debriefs");
+  for (const [bot, data] of Object.entries(r.personnelByBot))
+    out.push(
+      `${bot}: reputations ${JSON.stringify(data.reputations)}; quirks ${JSON.stringify(data.quirks)}; stat drift ${JSON.stringify(data.drift)}`,
+    );
+  out.push(`Reputations by build: ${JSON.stringify(r.reputationsByBuild)}`);
+  out.push(`Epithets: ${JSON.stringify(r.epithets)}`);
+  out.push(`Promotion-board appearances: ${JSON.stringify(r.boardMembers)}`);
   h("Relationships and gossip per run");
   out.push(
     table(

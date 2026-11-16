@@ -21,7 +21,7 @@ export function PersonnelFile() {
           {(c.startingTraits ?? g.personnel.start.traits)
             .map(
               (id) =>
-                `${TRAITS.find((t) => t.id === id)?.name ?? id}${g.personnel.curedTraits.includes(id) ? " (cured)" : ""}`,
+                `${TRAITS.find((t) => t.id === id)?.name ?? id}${g.personnel.curedTraits.includes(id) ? (EARNED_QUIRKS.some((q) => g.personnel.earnedQuirks.includes(q.id) && q.replaces === id) ? " (replaced)" : " (cured)") : ""}`,
             )
             .join(", ") || "None"}
         </p>

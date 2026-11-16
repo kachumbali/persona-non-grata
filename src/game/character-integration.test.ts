@@ -45,6 +45,8 @@ describe("character effects during a posting", () => {
     });
     useGame.getState().advance();
     expect(useGame.getState().handled[email!.id]).toBe("reply");
+    expect(useGame.getState().personnel.counters["recalls"]).toBe(1);
+    expect(useGame.getState().personnel.counters["replyall_accidents"]).toBe(1);
   });
   it("applies and clears an evening-drinking hangover", () => {
     useGame.setState({ character: character(["liver"]), block: 3, minute: 1140 });

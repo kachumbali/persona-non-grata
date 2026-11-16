@@ -162,6 +162,10 @@ A campaign event may use `relationshipGate: { "a": "character-id", "b": "charact
 
 Gossip belongs in the chapter campaign's `gossip` array: unique `id`, short `text`, existing `subject`, existing `knowers`, `sensitivity` 1–3, `truth` (`true`, `false`, or `half-true`), first `day`, and `source` (`conversation`, `reception`, `press`, or `overheard`). Conversation sources need a gossipy knower; overheard sources need a knower and subject at the same place with an authored pair. A learned item is the fact `gossip:<id>`; use a known fact for an optional route or démarche approach, and give unreliable stories a specific institutional consequence. Never write a gossip item as a required mission gate.
 
+## Personnel fields
+
+Story and dialogue choices, email options, mission routes and démarche routes may add `counts: ["team", "formal"]` using counter ids from `src/game/data/reputations.json`; use tags that describe the actual decision. Story, dialogue, email and route choices may add `statDrift: { "stat": "gravitas", "delta": 1 }` (delta is exactly 1 or -1; at most eight authored drift choices per chapter). Optional choices may require `requiresReputation: "team-europe"`; keep a choice available without a reputation. Reputation clippings use `trigger: { "reputation": "team-europe" }`. Never make a mission step depend on a reputation or quirk. The content checker verifies counter and reputation references, unlocks, drift limits and debrief coverage.
+
 ## Output (all four parts required)
 
 1. **JSON.** One valid JSON object (or array of objects if the anecdote needs a follow-up scene and a press clipping), in the target format only. No comments.

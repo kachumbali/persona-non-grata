@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { blocks, endings, lastDay, missionTasks, type VisitTask } from "../rules";
+import { blocks, lastDay, missionTasks, type VisitTask } from "../rules";
 
 import { activeChapter } from "../chapters";
-import { newPosting } from "../saves";
 import { useGame } from "../store";
 import { Portrait } from "./Portrait";
 import { WhoIsWho } from "./WhoIsWho";
 import { PersonnelFile } from "./PersonnelFile";
+import { Debrief } from "./Debrief";
 import { CityMap } from "./CityMap";
 import { PlaceScene } from "./PlaceScene";
 import { BlackBerry } from "./BlackBerry";
 import { Interruption } from "./Interruption";
-import { DiplomaticRecord } from "./DiplomaticRecord";
-import { StoryRecord } from "./StoryRecord";
 import { PressReview } from "./PressReview";
 import { PostingBriefing } from "./PostingBriefing";
 import { MissionSteps } from "./MissionSteps";
-import { taskQuality } from "../mission";
 import {
   Dialog,
   DialogContent,
@@ -44,65 +41,7 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   const c = g.character;
   if (!c) return null;
   const chapter = activeChapter().manifest;
-  const payoffSources = new Set(activeChapter().conversationPayoffs.map((payoff) => payoff.source));
-
-  if (g.ending) {
-    const end = endings()[g.ending] ?? { title: g.ending, text: "" };
-    return (
-      <main className="mx-auto max-w-xl px-4 py-16 text-center">
-        <div className="paper p-8">
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            Persona Non Grata — {chapter.label} · Final cable · Day {g.day}
-          </p>
-          <Portrait portrait={c.portrait} size={96} />
-          <h1 className="mt-6 text-3xl text-destructive">{end.title}</h1>
-          <p className="mt-6 font-serif">
-            {c.title} {c.name}: {end.text}
-          </p>
-          <p className="mt-4 font-mono">
-            HQ goodwill: {g.meters.confidence} · Host goodwill: {g.meters.goodwill}
-          </p>
-          {g.goodwillHistory
-            .filter((entry) => payoffSources.has(entry.source))
-            .map((entry, i) => (
-              <p key={i} className="mt-4 font-serif">
-                {entry.text}
-              </p>
-            ))}
-          {g.goodwillHistory.at(-1) && !payoffSources.has(g.goodwillHistory.at(-1)!.source) && (
-            <p className="mt-3 text-sm">Last outcome: {g.goodwillHistory.at(-1)?.text}</p>
-          )}
-          {g.day >= lastDay() && (
-            <p className="mt-4 font-serif">
-              Fuel quay:{" "}
-              {g.storyFlags.includes("fuel-bought")
-                ? "Early buyers received their generator fuel before rationing."
-                : g.storyFlags.includes("fuel-mira")
-                  ? "Mira’s timetable kept the generator delivery on course."
-                  : "Late buyers faced rationing and higher generator fuel charges."}
-            </p>
-          )}
-          {g.day >= lastDay() &&
-            Object.entries(missionTasks())
-              .filter(([id]) => g.visit[id])
-              .map(([id, label]) => (
-                <p key={id} className="mt-2 text-sm">
-                  {label}:{" "}
-                  {chapter.missionQualityTexts?.[id]?.[taskQuality(g.stepQualities, id)] ??
-                    (taskQuality(g.stepQualities, id) === "adequate"
-                      ? "confirmed, with qualifications."
-                      : "confirmed as agreed.")}
-                </p>
-              ))}
-          <DiplomaticRecord outcomes={g.storyOutcomes} />
-          <StoryRecord outcomes={g.storyOutcomes} completed={g.completedEvents} day={g.day} />
-          <Button className="mt-8" onClick={newPosting}>
-            Request a new posting
-          </Button>
-        </div>
-      </main>
-    );
-  }
+  if (g.ending) return <Debrief />;
 
   return (
     <main className="mx-auto max-w-7xl retro-game px-3 py-4 sm:px-5">

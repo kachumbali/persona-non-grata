@@ -98,6 +98,8 @@ describe("simulated playthroughs", () => {
         .map((b) => fingerprint(a) !== fingerprint(b)),
     );
     expect(pairs.filter(Boolean).length / pairs.length).toBeGreaterThanOrEqual(0.8);
+    // S-08 target: at least eight distinct epithets in the full matrix.
+    expect(new Set(full.map((run) => run.epithet)).size).toBeGreaterThanOrEqual(8);
     // S-06 targets: six distinct player-changed pairs in each socialiser run; press promotion 70–90%.
     for (const run of socialRuns)
       expect(run.pairsChanged, `${run.build} ${run.seed}`).toBeGreaterThanOrEqual(6);
@@ -298,14 +300,14 @@ describe("simulated playthroughs", () => {
     // press clippings are never offered (the full `npm run sim` matrix reaches more).
     // Reputation-gated choices and the socialiser's expedited security route alter the reduced sample; six events remain unseen.
     expect(report.neverSeen.events.length).toBeLessThanOrEqual(6);
-    // The socialiser reserves more time for the mission; one additional topic is unseen here.
-    expect(report.neverSeen.topics.length).toBeLessThanOrEqual(9);
-    // The socialiser now reserves time for mission security; the reduced sample leaves 86 old choices unseen.
+    // Mission-first scheduling and replacement quirks change the reduced sample; ten topics are unseen.
+    expect(report.neverSeen.topics.length).toBeLessThanOrEqual(10);
+    // Mission-first scheduling and cured traits leave 89 old choices unseen in the reduced sample.
     expect(
       report.neverSeen.choices.filter(
         (id) => !id.startsWith("choice:event:web-") && !id.includes(":reputation-"),
       ).length,
-    ).toBeLessThanOrEqual(86);
+    ).toBeLessThanOrEqual(89);
     // New leak and refusal clippings are conditional; keep the prior bound for legacy clippings.
     expect(
       report.neverSeen.clippings.filter(

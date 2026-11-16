@@ -813,7 +813,7 @@ export const useGame = create<GameState>()(
           favour: original.favour,
           teaches: original.teaches,
           traitChoice: original.requiresTrait,
-          counts: [...(original.counts ?? []), "recalls"],
+          counts: [...(original.counts ?? []), "recalls", "replyall_accidents"],
           emailAction: "reply" as const,
           recall: undefined,
           timeCost: 2,

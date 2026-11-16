@@ -38,3 +38,6 @@
 - [x] S-02: démarche board, instructions, delivery consequences, saves and simulation.
 
 - [x] S-06: relationship web, gossip, relationship scenes and Who is who.
+
+- [x] S-05: reputations, earned quirks, stat drift and personnel file.
+- [x] S-08: final debrief, promotion board, payslip and text export.

@@ -37,7 +37,8 @@
       "counter": "gossip_passed",
       "threshold": 4
     },
-    "mail": "Your discretion is now part of the permanent record."
+    "mail": "Your discretion is on record. Where applicable, Cited Off the Record replaces Name-dropper.",
+    "replaces": "namedrop"
   },
   {
     "id": "dispatches",

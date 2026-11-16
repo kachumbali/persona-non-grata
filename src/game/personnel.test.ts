@@ -32,6 +32,18 @@ describe("personnel progression", () => {
     );
     expect(state.notices).toHaveLength(3);
   });
+  it("replaces a starting trait only when that trait is present", () => {
+    const starting = ["namedrop"];
+    const withName = advancePersonnel(
+      createPersonnel(starting, computeStats(starting)),
+      { gossip_passed: 4 },
+      3,
+      0,
+    ).state;
+    expect(withName.curedTraits).toContain("namedrop");
+    const withoutName = advancePersonnel(initial(), { gossip_passed: 4 }, 3, 0).state;
+    expect(withoutName.curedTraits).not.toContain("namedrop");
+  });
   it("migrates an old posting without backdated counters", async () => {
     const old = await useGame.persist.getOptions().migrate!(
       {

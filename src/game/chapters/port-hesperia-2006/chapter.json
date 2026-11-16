@@ -865,5 +865,575 @@
         }
       ]
     }
-  ]
+  ],
+  "debrief": {
+    "epithets": [
+      {
+        "id": "trait-liver",
+        "text": "The diplomat who kept the reception open.",
+        "trait": "liver"
+      },
+      {
+        "id": "trait-replyall",
+        "text": "The diplomat who copied the entire service.",
+        "trait": "replyall"
+      },
+      {
+        "id": "trait-punctual",
+        "text": "The diplomat who arrived before the agenda.",
+        "trait": "punctual"
+      },
+      {
+        "id": "trait-brussels",
+        "text": "The diplomat who annotated every annex.",
+        "trait": "brussels"
+      },
+      {
+        "id": "trait-demarche",
+        "text": "The diplomat who could not pass a ministry.",
+        "trait": "demarche"
+      },
+      {
+        "id": "trait-namedrop",
+        "text": "The diplomat who mentioned the Commissioner.",
+        "trait": "namedrop"
+      },
+      {
+        "id": "trait-cuisine",
+        "text": "The diplomat who negotiated with the canapé.",
+        "trait": "cuisine"
+      },
+      {
+        "id": "trait-novelist",
+        "text": "The diplomat who revised the official account.",
+        "trait": "novelist"
+      },
+      {
+        "id": "trait-sideevents",
+        "text": "The diplomat who attended the side event.",
+        "trait": "sideevents"
+      },
+      {
+        "id": "trait-eyesopen",
+        "text": "The diplomat who slept through the meeting unnoticed.",
+        "trait": "eyesopen"
+      },
+      {
+        "id": "trait-ngo",
+        "text": "The diplomat who declared a family interest.",
+        "trait": "ngo"
+      },
+      {
+        "id": "counter-credit",
+        "text": "The diplomat who signed above the signature.",
+        "counter": "credit",
+        "threshold": 3
+      },
+      {
+        "id": "counter-team",
+        "text": "The diplomat who shared the credit in triplicate.",
+        "counter": "team",
+        "threshold": 3
+      },
+      {
+        "id": "counter-hospitality",
+        "text": "The diplomat who accounted for the biscuits.",
+        "counter": "hospitality",
+        "threshold": 3
+      },
+      {
+        "id": "counter-capital",
+        "text": "The diplomat who wrote home frequently.",
+        "counter": "capital",
+        "threshold": 4
+      },
+      {
+        "id": "counter-rules",
+        "text": "The diplomat who found the appendix to the rule.",
+        "counter": "rules",
+        "threshold": 3
+      },
+      {
+        "id": "counter-gossip_passed",
+        "text": "The diplomat who shared a confidence.",
+        "counter": "gossip_passed",
+        "threshold": 3
+      },
+      {
+        "id": "counter-ignored_mail",
+        "text": "The diplomat who left the fax to mature.",
+        "counter": "ignored_mail",
+        "threshold": 12
+      },
+      {
+        "id": "counter-money_routes",
+        "text": "The diplomat who expedited the invoice.",
+        "counter": "money_routes",
+        "threshold": 2
+      },
+      {
+        "id": "counter-protocol_incidents",
+        "text": "The diplomat who introduced a protocol exception.",
+        "counter": "protocol_incidents",
+        "threshold": 2
+      },
+      {
+        "id": "counter-drinks",
+        "text": "The diplomat who registered the final toast.",
+        "counter": "drinks",
+        "threshold": 3
+      },
+      {
+        "id": "counter-demarche_self",
+        "text": "The diplomat who delivered the note in person.",
+        "counter": "demarche_self",
+        "threshold": 2
+      },
+      {
+        "id": "flag-fuel",
+        "text": "The diplomat who bought the fuel before the queue.",
+        "flag": "fuel-bought"
+      },
+      {
+        "id": "outcome-supplier",
+        "text": "The diplomat who trusted the supplier’s receipt.",
+        "outcome": {
+          "event": "supplier",
+          "choice": "accept"
+        }
+      },
+      {
+        "id": "outcome-rivalry",
+        "text": "The diplomat who chose the louder briefing.",
+        "outcome": {
+          "event": "web-joint",
+          "choice": "side"
+        }
+      }
+    ],
+    "variants": {
+      "png": [
+        {
+          "trait": "liver",
+          "text": "Kept the reception open; Personnel has included this in the png file."
+        },
+        {
+          "trait": "replyall",
+          "text": "Copied the entire service; Personnel has included this in the png file."
+        },
+        {
+          "trait": "punctual",
+          "text": "Arrived before the agenda; Personnel has included this in the png file."
+        },
+        {
+          "trait": "brussels",
+          "text": "Annotated every annex; Personnel has included this in the png file."
+        },
+        {
+          "trait": "demarche",
+          "text": "Could not pass a ministry; Personnel has included this in the png file."
+        },
+        {
+          "trait": "namedrop",
+          "text": "Mentioned the commissioner; Personnel has included this in the png file."
+        },
+        {
+          "trait": "cuisine",
+          "text": "Negotiated with the canapé; Personnel has included this in the png file."
+        },
+        {
+          "trait": "novelist",
+          "text": "Revised the official account; Personnel has included this in the png file."
+        },
+        {
+          "trait": "sideevents",
+          "text": "Attended the side event; Personnel has included this in the png file."
+        },
+        {
+          "trait": "eyesopen",
+          "text": "Slept through the meeting unnoticed; Personnel has included this in the png file."
+        },
+        {
+          "trait": "ngo",
+          "text": "Declared a family interest; Personnel has included this in the png file."
+        },
+        {
+          "reputation": "known-to-fax",
+          "text": "Your reputation accompanied the png file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "biscuit-hawk",
+          "text": "Your reputation accompanied the png file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "gossip",
+          "text": "Your reputation accompanied the png file; the Directorate filed both copies."
+        }
+      ],
+      "replaced": [
+        {
+          "trait": "liver",
+          "text": "Kept the reception open; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "replyall",
+          "text": "Copied the entire service; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "punctual",
+          "text": "Arrived before the agenda; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "brussels",
+          "text": "Annotated every annex; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "demarche",
+          "text": "Could not pass a ministry; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "namedrop",
+          "text": "Mentioned the commissioner; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "cuisine",
+          "text": "Negotiated with the canapé; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "novelist",
+          "text": "Revised the official account; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "sideevents",
+          "text": "Attended the side event; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "eyesopen",
+          "text": "Slept through the meeting unnoticed; Personnel has included this in the replaced file."
+        },
+        {
+          "trait": "ngo",
+          "text": "Declared a family interest; Personnel has included this in the replaced file."
+        },
+        {
+          "reputation": "known-to-fax",
+          "text": "Your reputation accompanied the replaced file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "biscuit-hawk",
+          "text": "Your reputation accompanied the replaced file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "gossip",
+          "text": "Your reputation accompanied the replaced file; the Directorate filed both copies."
+        }
+      ],
+      "cancelled": [
+        {
+          "trait": "liver",
+          "text": "Kept the reception open; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "replyall",
+          "text": "Copied the entire service; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "punctual",
+          "text": "Arrived before the agenda; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "brussels",
+          "text": "Annotated every annex; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "demarche",
+          "text": "Could not pass a ministry; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "namedrop",
+          "text": "Mentioned the commissioner; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "cuisine",
+          "text": "Negotiated with the canapé; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "novelist",
+          "text": "Revised the official account; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "sideevents",
+          "text": "Attended the side event; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "eyesopen",
+          "text": "Slept through the meeting unnoticed; Personnel has included this in the cancelled file."
+        },
+        {
+          "trait": "ngo",
+          "text": "Declared a family interest; Personnel has included this in the cancelled file."
+        },
+        {
+          "reputation": "known-to-fax",
+          "text": "Your reputation accompanied the cancelled file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "biscuit-hawk",
+          "text": "Your reputation accompanied the cancelled file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "gossip",
+          "text": "Your reputation accompanied the cancelled file; the Directorate filed both copies."
+        }
+      ],
+      "retired": [
+        {
+          "trait": "liver",
+          "text": "Kept the reception open; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "replyall",
+          "text": "Copied the entire service; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "punctual",
+          "text": "Arrived before the agenda; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "brussels",
+          "text": "Annotated every annex; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "demarche",
+          "text": "Could not pass a ministry; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "namedrop",
+          "text": "Mentioned the commissioner; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "cuisine",
+          "text": "Negotiated with the canapé; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "novelist",
+          "text": "Revised the official account; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "sideevents",
+          "text": "Attended the side event; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "eyesopen",
+          "text": "Slept through the meeting unnoticed; Personnel has included this in the retired file."
+        },
+        {
+          "trait": "ngo",
+          "text": "Declared a family interest; Personnel has included this in the retired file."
+        },
+        {
+          "reputation": "known-to-fax",
+          "text": "Your reputation accompanied the retired file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "biscuit-hawk",
+          "text": "Your reputation accompanied the retired file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "gossip",
+          "text": "Your reputation accompanied the retired file; the Directorate filed both copies."
+        }
+      ],
+      "ambassador": [
+        {
+          "trait": "liver",
+          "text": "Kept the reception open; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "replyall",
+          "text": "Copied the entire service; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "punctual",
+          "text": "Arrived before the agenda; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "brussels",
+          "text": "Annotated every annex; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "demarche",
+          "text": "Could not pass a ministry; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "namedrop",
+          "text": "Mentioned the commissioner; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "cuisine",
+          "text": "Negotiated with the canapé; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "novelist",
+          "text": "Revised the official account; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "sideevents",
+          "text": "Attended the side event; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "eyesopen",
+          "text": "Slept through the meeting unnoticed; Personnel has included this in the ambassador file."
+        },
+        {
+          "trait": "ngo",
+          "text": "Declared a family interest; Personnel has included this in the ambassador file."
+        },
+        {
+          "reputation": "known-to-fax",
+          "text": "Your reputation accompanied the ambassador file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "biscuit-hawk",
+          "text": "Your reputation accompanied the ambassador file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "gossip",
+          "text": "Your reputation accompanied the ambassador file; the Directorate filed both copies."
+        }
+      ],
+      "promoted": [
+        {
+          "trait": "liver",
+          "text": "Kept the reception open; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "replyall",
+          "text": "Copied the entire service; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "punctual",
+          "text": "Arrived before the agenda; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "brussels",
+          "text": "Annotated every annex; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "demarche",
+          "text": "Could not pass a ministry; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "namedrop",
+          "text": "Mentioned the commissioner; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "cuisine",
+          "text": "Negotiated with the canapé; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "novelist",
+          "text": "Revised the official account; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "sideevents",
+          "text": "Attended the side event; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "eyesopen",
+          "text": "Slept through the meeting unnoticed; Personnel has included this in the promoted file."
+        },
+        {
+          "trait": "ngo",
+          "text": "Declared a family interest; Personnel has included this in the promoted file."
+        },
+        {
+          "reputation": "known-to-fax",
+          "text": "Your reputation accompanied the promoted file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "biscuit-hawk",
+          "text": "Your reputation accompanied the promoted file; the Directorate filed both copies."
+        },
+        {
+          "reputation": "gossip",
+          "text": "Your reputation accompanied the promoted file; the Directorate filed both copies."
+        }
+      ]
+    },
+    "board": {
+      "anselm": {
+        "good": "I helped draft that success. My contribution is on the cover.",
+        "mixed": "The record is promising; I have amended the cover.",
+        "bad": "I drafted a better account and retained my name."
+      },
+      "pavel": {
+        "good": "Every claim has a receipt, including this one.",
+        "mixed": "Several claims remain attached to other claims.",
+        "bad": "The receipts have declined to reconcile."
+      },
+      "sola": {
+        "good": "The people who did the work can see the result.",
+        "mixed": "The work got done after the meeting about doing it.",
+        "bad": "The team is still looking for the decision."
+      },
+      "development": {
+        "good": "The beneficiaries were allowed to speak.",
+        "mixed": "We made progress on the wording of progress.",
+        "bad": "I would still like to know who benefited."
+      },
+      "bianca": {
+        "good": "The escort was where it was supposed to be.",
+        "mixed": "The plan had a plan, eventually.",
+        "bad": "I recommend an escort for the paperwork."
+      },
+      "ines": {
+        "good": "The queue moved and nobody lost their place.",
+        "mixed": "The queue moved sideways.",
+        "bad": "The queue remains open for complaints."
+      },
+      "press": {
+        "good": "The photographs support the official account.",
+        "mixed": "The official account needs a narrower crop.",
+        "bad": "The photograph has already been published."
+      },
+      "maxim": {
+        "good": "I filed your success under urgent and lunch.",
+        "mixed": "I filed the result at the other ministry.",
+        "bad": "I have requested the other ministry return the file."
+      },
+      "protocol": {
+        "good": "The order of precedence was maintained.",
+        "mixed": "The order was corrected before it became historical.",
+        "bad": "There will be a new form for your departure."
+      },
+      "eu": {
+        "good": "A fine Team Europe achievement, visibly shared.",
+        "mixed": "We agreed on the logo after the meeting.",
+        "bad": "The logo is available for the correction."
+      },
+      "golf": {
+        "good": "The visit stayed on the approved course.",
+        "mixed": "We found the ball after the delegation left.",
+        "bad": "The course has requested a different partner."
+      },
+      "journalist": {
+        "good": "The record is unusually close to the facts.",
+        "mixed": "The correction is shorter than the statement.",
+        "bad": "I will print the statement beside the correction."
+      },
+      "port-officer": {
+        "good": "The crews received the timetable.",
+        "mixed": "The timetable arrived after the crews.",
+        "bad": "The crews would like to see the actual plan."
+      }
+    },
+    "payslip": {
+      "base": 4800,
+      "acting": 600,
+      "hardship": 450,
+      "drinkDeduction": 75,
+      "moneyRouteDeduction": 100
+    }
+  }
 }

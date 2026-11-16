@@ -173,7 +173,7 @@ Finish every system inside the one chapter that exists, then test it with five p
   - NPC lines use the player's title and surname. Titles marked '(pending)' get a running correction gag from Protocol.
 - Done when: Every background choice changes at least one thing the player sees during the chapter.
 
-### S-05 Reputations and earned quirks
+### S-05 Reputations and earned quirks (done)
 
 - Type: Rules and code · Size: M · Depends on: F-03
 - Goal: The character should change during play. Your file at the end should not be the file you started with.
@@ -209,7 +209,7 @@ Finish every system inside the one chapter that exists, then test it with five p
   - Rules that guarantee at least one real conflict per day, checked by the simulation.
 - Done when: The simulation reports a scheduling conflict on at least 12 of 15 days, and every way of resolving one has its own consequence.
 
-### S-08 Debrief and endings
+### S-08 Debrief and endings (done)
 
 - Type: Screens · Size: M · Depends on: S-05
 - Goal: The ending should read your whole posting back to you and make you want another one.

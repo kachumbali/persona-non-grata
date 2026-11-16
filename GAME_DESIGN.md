@@ -31,6 +31,12 @@ Each person has two or three authored NPC traits and a chapter-specific want. A 
 
 Gossip is stored as known facts, with authored sources, subjects, knowers, sensitivity and reliability. Conversation, receptions, press and overhearing can reveal it. The player can keep it, pass it to a listener or deny it to its subject; false or half-true items cost Capital goodwill when passed. A subject can hear about a disclosure later. The supplier rumour opens an additional clean-port démarche approach. Relationship-gated episodes can change ties between other people, including a two-step repair; ignoring a dispute can worsen it. These side stories never gate the visit mission.
 
+## Evolving personnel file and debrief
+
+Resolved choices can increment authored counters. Reputations are earned at thresholds, affect greetings, unlock optional choices and can appear in the next press review; the oldest active reputation is replaced when a fourth is earned. A posting also produces at most three earned quirks, triggered by counters, sustained reputations or flags. A quirk can change stats or cure a starting trait. Selected high-stakes decisions can drift one stat by one point. Counters belong to the posting; earned quirks, cures, stat drift and active reputations are saved with the career and apply immediately and in later postings. Personnel Directorate amendments are available on the secure fax.
+
+The final cable leads a scrollable debrief. It compares the starting and final personnel file, chooses a deterministic epithet from recorded choices, and draws three promotion-board voices from people who know the player. Mission quality, démarches, relationships, debts, misinformation and consequences remain visible. The chapter defines the payslip amounts; its total is added to career savings once when the ending is recorded. The complete debrief can be copied as plain text.
+
 ## Diplomatic calendar
 
 Daily side stories can arise from the wider diplomatic community: other countries' national-day receptions, EU coordination meetings, UN and other multilateral meetings, and invitations from diplomats at other missions. These are opportunities for relationships, information and diplomacy as well as competing demands on the player's time. Depending on the event, the player may attend, send a colleague or decline, with consequences appropriate to the host and circumstances. Some encounters can lead to follow-up stories or affect the chapter mission.

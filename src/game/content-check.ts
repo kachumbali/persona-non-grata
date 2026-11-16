@@ -388,6 +388,30 @@ function buildSchemas(strict: boolean) {
       }),
     ),
     endings: z.record(str, obj({ title: str, text: str })),
+    debrief: opt(
+      obj({
+        epithets: z.array(
+          obj({
+            id: str,
+            text: str,
+            trait: opt(str),
+            counter: opt(str),
+            threshold: opt(int),
+            flag: opt(str),
+            outcome: opt(obj({ event: str, choice: str })),
+          }),
+        ),
+        variants: z.record(str, z.array(obj({ trait: opt(str), reputation: opt(str), text: str }))),
+        board: z.record(str, obj({ good: str, mixed: str, bad: str })),
+        payslip: obj({
+          base: num.min(0),
+          acting: num.min(0),
+          hardship: num.min(0),
+          drinkDeduction: num.min(0),
+          moneyRouteDeduction: num.min(0),
+        }),
+      }),
+    ),
     endingRules: z.array(
       obj({
         ending: str,
@@ -612,6 +636,53 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   // Global files.
   const traitsFile = "traits.json";
   const portraitsFile = "portraits.json";
+  const reputationSchema = z.array(
+    z
+      .object({
+        id: z.string().min(1),
+        name: z.string().min(1),
+        description: z.string().min(1),
+        counter: z.string().min(1),
+        threshold: z.number().int().positive(),
+        unlocks: z.string().optional(),
+        greeting: z.record(z.string(), z.string()).optional(),
+      })
+      .strict(),
+  );
+  const quirkSchema = z.array(
+    z
+      .object({
+        id: z.string().min(1),
+        name: z.string().min(1),
+        description: z.string().min(1),
+        stats: z.record(z.enum(STATS), z.number()),
+        trigger: z
+          .object({
+            counter: z.string().optional(),
+            threshold: z.number().int().positive().optional(),
+            reputation: z.string().optional(),
+            days: z.number().int().nonnegative().optional(),
+            flag: z.string().optional(),
+          })
+          .strict(),
+        mail: z.string().min(1),
+        cures: z.string().optional(),
+        replaces: z.string().optional(),
+      })
+      .strict(),
+  );
+  parseWith(reputationSchema, reputationSchema, reputationData, "reputations.json", add);
+  parseWith(quirkSchema, quirkSchema, quirkData, "earned-quirks.json", add);
+  duplicates(
+    reputationData,
+    (r) => r.id,
+    (i, id) => error("reputations.json", pathOf([i, "id"]), `Duplicate reputation "${id}"`),
+  );
+  duplicates(
+    quirkData,
+    (q) => q.id,
+    (i, id) => error("earned-quirks.json", pathOf([i, "id"]), `Duplicate quirk "${id}"`),
+  );
   const npcFile = "npc-traits.json";
   const statHook = z.object({ stat: z.enum(STATS), min: z.number() }).strict();
   const npcSchema = z.array(
@@ -866,6 +937,60 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
   // Manifest.
   if (manifest) {
     const f = F.manifest;
+    if (!manifest.debrief) error(f, "debrief", "A chapter needs debrief content for every ending");
+    if (manifest.debrief) {
+      const db = manifest.debrief;
+      if (db.epithets.length < 20)
+        error(f, "debrief.epithets", "At least 20 epithets are required");
+      if (Object.keys(db.board).length < 12)
+        error(f, "debrief.board", "At least 12 promotion-board voices are required");
+      for (const [id, lines] of Object.entries(db.board)) {
+        refCheck(characterIds, "character id", id, f, "debrief.board");
+        for (const tone of ["good", "mixed", "bad"] as const)
+          needText(lines[tone], f, ["debrief", "board", id, tone], "board line");
+      }
+      for (const id of Object.keys(manifest.endings))
+        if ((db.variants[id]?.length ?? 0) < 8)
+          error(f, `debrief.variants.${id}`, "Each ending needs at least eight variants");
+      for (const [id, rows] of Object.entries(db.variants)) {
+        if (!manifest.endings[id]) error(f, `debrief.variants.${id}`, "Unknown ending");
+        rows.forEach((row, i) => {
+          refCheck(
+            traitIds,
+            "trait id",
+            row.trait,
+            f,
+            pathOf(["debrief", "variants", id, i, "trait"]),
+          );
+          if (row.reputation && !reputationData.some((r) => r.id === row.reputation))
+            error(f, pathOf(["debrief", "variants", id, i, "reputation"]), "Unknown reputation");
+          if (!row.trait && !row.reputation)
+            error(f, pathOf(["debrief", "variants", id, i]), "Variant needs a trait or reputation");
+        });
+      }
+      duplicates(
+        db.epithets,
+        (item) => item.id,
+        (i, id) => error(f, pathOf(["debrief", "epithets", i, "id"]), `Duplicate epithet "${id}"`),
+      );
+      db.epithets.forEach((item, i) => {
+        if (item.trait)
+          refCheck(
+            traitIds,
+            "trait id",
+            item.trait,
+            f,
+            pathOf(["debrief", "epithets", i, "trait"]),
+          );
+        if (
+          item.outcome &&
+          !eventById.get(item.outcome.event)?.choices.some((c) => c.id === item.outcome?.choice)
+        )
+          error(f, pathOf(["debrief", "epithets", i, "outcome"]), "Epithet outcome does not exist");
+        if (!item.trait && !item.counter && !item.flag && !item.outcome)
+          error(f, pathOf(["debrief", "epithets", i]), "Epithet needs a condition");
+      });
+    }
     refCheck(locationIds, "location id", manifest.startLocation, f, "startLocation");
     refCheck(locationIds, "location id", manifest.officeLocation, f, "officeLocation");
     const rooms = new Set((embassy?.rooms ?? []).map((r) => r.id));
@@ -1775,6 +1900,8 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
     }
     if (!value || typeof value !== "object") return;
     const obj = value as Record<string, unknown>;
+    if (typeof obj["counter"] === "string" && !counters.has(obj["counter"]))
+      error(file, pathOf([...path, "counter"]), `Unknown counter "${obj["counter"]}"`);
     if (Array.isArray(obj["counts"]))
       for (const [i, id] of obj["counts"].entries()) {
         if (typeof id === "string") {
@@ -1811,6 +1938,15 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
       error("earned-quirks.json", q.id, "Quirk trigger flag is never authored");
     if (!t.counter && !t.reputation && !t.flag)
       error("earned-quirks.json", q.id, "Quirk has no trigger");
+    if ([t.counter, t.reputation, t.flag].filter(Boolean).length !== 1)
+      error("earned-quirks.json", q.id, "Quirk needs exactly one trigger");
+    if (t.counter && t.threshold === undefined)
+      error("earned-quirks.json", q.id, "Counter trigger needs a threshold");
+    if (t.reputation && t.days === undefined)
+      error("earned-quirks.json", q.id, "Reputation trigger needs a duration");
+    for (const id of [q.cures, q.replaces])
+      if (id && !traits.some((trait) => trait.id === id))
+        error("earned-quirks.json", q.id, `Unknown replaced trait "${id}"`);
   }
   return findings;
 }
