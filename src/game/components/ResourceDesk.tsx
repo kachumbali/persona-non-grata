@@ -20,6 +20,10 @@ export function ResourceDesk() {
   const capacity = playerCapacity(g.character, g.energy, g.composure, g.alcohol, g.hangover);
   const ledger = capacityLedger(g.pending, g.block, capacity.total);
   const reserved = g.pending.reduce((n, p) => n + decisionCash(p), 0);
+  const colleagues = ledger.filter(
+    (r) =>
+      r.id !== "self" && campaign().characters.find((c) => c.id === r.id)?.location === "embassy",
+  );
   return (
     <div className="border-b-2 border-border bg-muted p-3" aria-label="Time and money">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -42,14 +46,14 @@ export function ResourceDesk() {
         {capacity.factors.length ? ` · ${capacity.factors.join(" · ")}` : " · no modifiers"}.
         Changes from choices apply next block.
       </p>
-      <div className="mt-2 grid gap-1 text-xs sm:grid-cols-3">
-        {ledger
-          .filter(
-            (r) =>
-              r.id !== "self" &&
-              campaign().characters.find((c) => c.id === r.id)?.location === "embassy",
-          )
-          .map((r) => (
+      <details className="mt-2 text-xs">
+        <summary className="cursor-pointer">
+          {g.block === 3
+            ? "Staff capacity: colleagues are off duty this block"
+            : `Staff capacity: ${colleagues.filter((r) => r.free > 0).length} of ${colleagues.length} colleagues have free time`}
+        </summary>
+        <div className="mt-2 grid gap-1 sm:grid-cols-3">
+          {colleagues.map((r) => (
             <div key={r.id} className={r.displaced ? "text-destructive" : "text-muted-foreground"}>
               {campaign().characters.find((c) => c.id === r.id)?.name}:{" "}
               {g.block === 3
@@ -58,19 +62,19 @@ export function ResourceDesk() {
               {r.displaced > 0 ? ` · ${r.displaced} DP duties displaced` : ""}
             </div>
           ))}
-      </div>
-      <div
-        className="mt-3 flex flex-wrap gap-x-5 gap-y-1 border-t border-border pt-2 font-mono"
-        aria-label="Campaign budget"
-      >
-        <span>Funds {money(g.economy.funds)}</span>
-        <span>Visit reserve {money(g.economy.ringFence)}</span>
-        <span>Mission steps {money(g.economy.missionReserve ?? 0)}</span>
-        <span>Pending {money(reserved)}</span>
-        <strong>Available {money(availableFunds(g.economy, g.pending))}</strong>
-      </div>
+        </div>
+      </details>
+      <p className="mt-3 border-t border-border pt-2 font-mono" aria-label="Campaign budget">
+        <strong>Free to spend {money(availableFunds(g.economy, g.pending))}</strong>
+      </p>
       <details className="mt-2 text-xs">
         <summary className="cursor-pointer">Visit costs & Capital funding</summary>
+        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 font-mono">
+          <span>Funds {money(g.economy.funds)}</span>
+          <span>Visit reserve {money(g.economy.ringFence)}</span>
+          <span>Mission steps {money(g.economy.missionReserve ?? 0)}</span>
+          <span>Pending {money(reserved)}</span>
+        </div>
         <p className="mt-2">
           Mission steps reserve: cash for the steps still to do (
           {money(g.economy.missionReserve ?? 0)}), including what a setback could add. Steps are

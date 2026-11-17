@@ -27,7 +27,7 @@ import {
 } from "../mission";
 import { ResourceDesk } from "./ResourceDesk";
 import { LanguageExam } from "./LanguageExam";
-import { CommitmentLine } from "./Agenda";
+import { BlockAgenda, CommitmentLine } from "./Agenda";
 import {
   availableFunds,
   capacityLedger,
@@ -184,12 +184,12 @@ export function PlanningDesk() {
       )}
       <div className="grid gap-0 lg:grid-cols-[1.1fr_1fr]">
         <div className="min-w-0 border-b border-border lg:border-b-0 lg:border-r">
-          <div className="p-3">
+          <div className="space-y-2 p-3">
             <h3 className="flex items-center gap-2 text-xl">
               <MapPin className="size-4" />
               {location?.name}
             </h3>
-            <p className="my-3 text-sm">{location?.description}</p>
+            <BlockAgenda index={g.block} />
           </div>
         </div>
         <div className="min-w-0 p-3">

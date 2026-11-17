@@ -91,7 +91,8 @@ describe("agenda", () => {
       ],
     });
     render(<PlanningDesk />);
-    const line = screen.getByText(invitation.choices.decline.label, { exact: false });
+    // The block agenda on the left and the commitment list both show the choice.
+    const line = screen.getAllByText(invitation.choices.decline.label, { exact: false })[0]!;
     expect(line).toHaveTextContent(invitation.title);
     expect(line).toHaveTextContent("You");
     expect(line).toHaveTextContent(
