@@ -512,6 +512,10 @@
 .scene-hotspot:focus-visible {
   border-color: var(--accent);
 }
+/* The PC and the fax sit above the colleagues' portraits, so their labels and counts stay readable. */
+.scene-device {
+  z-index: 2;
+}
 @media (max-width: 640px) {
   .scene-hotspot .map-label {
     font-size: 12px;

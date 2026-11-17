@@ -160,7 +160,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
           <>
             <button
               type="button"
-              className="scene-hotspot"
+              className="scene-hotspot scene-device"
               style={{ left: "3%", top: "42%", width: "12%", height: "22%" }}
               onClick={() => show("pc")}
               aria-label="Use your PC"
@@ -172,7 +172,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
             </button>
             <button
               type="button"
-              className="scene-hotspot"
+              className="scene-hotspot scene-device"
               style={{ left: "69%", top: "38%", width: "10%", height: "16%" }}
               onClick={() => show("fax")}
               aria-label="Read the secure fax"
