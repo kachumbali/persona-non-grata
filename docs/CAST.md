@@ -334,7 +334,7 @@ Traits are listed by name from `npc-traits.json`. Locations are given as id and 
   - Hosts Denmark's national-day reception at the EU Delegation while the residence is repainted (`invite:5`).
   - Invites colleagues to a coffee with a single agenda item (`invite:3`).
   - Counted the coffee cups at the last EU meeting (`dialogue:amb-asteria/coffee/a`).
-  - Offers a joint statement after coffee (`event:asteria-coffee-followup`, requires `asteria-coffee`, see Open contradictions).
+  - Offers a joint statement after coffee (`event:asteria-coffee-followup`, after the invitation `asteria-coffee` in `invitations.json`).
 - **Relationships:**
   - None in the start relationships. Content: works with the EU Delegation on the joint statement (`payoff:asteria-compromise`).
 - **Contradictions:** None found.
@@ -566,5 +566,5 @@ Every contradiction found in the sections above, plus content issues found while
 **Other content issues (not about one person)**
 
 7. **Copied garbled text.** `gossip:protocol-apprentice`, `gossip:office-cupboard` and `gossip:briefing` all carry the same garbled text: "You heard that a meeting had been cancelled because the minutes requested leave." It does not match the content of any of the three.
-8. **Missing parent event.** `event:asteria-coffee-followup` and `event:asteria-coffee-delegated-followup` require `requiresChoice.eventId` "asteria-coffee". No event with that id exists in `campaign.json`.
+8. ~~Missing parent event.~~ Checked: `asteria-coffee` is an invitation in `invitations.json`; invitation outcomes share the event namespace. Not a contradiction.
 9. **Shared name, different costs.** The location `location:bar` and the venue `venue:shady` are both called "The Quiet Amendment". Their costs are 200 and 80. The data does not say whether they are the same place.
