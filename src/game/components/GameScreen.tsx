@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { blocks, lastDay, missionTasks, type VisitTask } from "../rules";
 
 import { activeChapter } from "../chapters";
@@ -53,35 +59,63 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
 
   return (
     <main className="mx-auto max-w-7xl retro-game px-3 py-4 sm:px-5">
-      <header className="paper mb-4 flex flex-wrap items-center gap-4 px-4 py-3">
-        <Portrait portrait={c.portrait} size={48} />
-        <div className="mr-auto min-w-0 flex-1 basis-[240px]">
-          <h1 className="text-xl font-bold leading-tight">Persona Non Grata — {chapter.label}</h1>
-          <p className="text-sm">
-            {c.title} {c.name} · Acting Head of Mission
+      <header className="paper mb-4 flex items-center gap-3 px-3 py-2 sm:flex-wrap sm:gap-4 sm:px-4 sm:py-3">
+        <Portrait portrait={c.portrait} size={40} />
+        <div className="mr-auto min-w-0 flex-1 sm:basis-[240px]">
+          <h1 className="sr-only sm:not-sr-only sm:text-xl sm:font-bold sm:leading-tight">
+            Persona Non Grata — {chapter.label}
+          </h1>
+          <p className="truncate text-sm font-bold sm:font-normal">
+            {c.title} {c.name}
+            <span className="hidden sm:inline"> · Acting Head of Mission</span>
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="hidden text-xs text-muted-foreground sm:block">
             {chapter.playerRank} · {chapter.post}
           </p>
         </div>
-        <Button variant="outline" onClick={() => setFileOpen(true)}>
+        <Button
+          variant="outline"
+          className="hidden sm:inline-flex"
+          onClick={() => setFileOpen(true)}
+        >
           Personnel file
         </Button>
-        <Button variant="outline" onClick={() => setPeopleOpen(true)}>
+        <Button
+          variant="outline"
+          className="hidden sm:inline-flex"
+          onClick={() => setPeopleOpen(true)}
+        >
           Who is who
         </Button>
         {onMenu && (
-          <Button variant="outline" className="retro-button" onClick={onMenu}>
+          <Button variant="outline" className="retro-button hidden sm:inline-flex" onClick={onMenu}>
             Menu
           </Button>
         )}
-        <div className="clock text-right font-mono">
-          <div className="text-2xl">{blocks()[g.block]?.name}</div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="sm:hidden" aria-label="Menu">
+              Menu
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onSelect={() => setFileOpen(true)}>Personnel file</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setPeopleOpen(true)}>Who is who</DropdownMenuItem>
+            {onMenu && <DropdownMenuItem onSelect={onMenu}>Main menu</DropdownMenuItem>}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <div className="clock shrink-0 text-right font-mono">
+          <div className="text-lg leading-tight sm:text-2xl">{blocks()[g.block]?.name}</div>
           <div className="text-xs text-muted-foreground">
-            Day {g.day} / {lastDay()} ·{" "}
-            {g.day >= lastDay()
-              ? `${chapter.missionActor} arrives today`
-              : `${chapter.missionActor} in ${lastDay() - g.day} days`}
+            <span className="sm:hidden">
+              Day {g.day} / {lastDay()}
+            </span>
+            <span className="hidden sm:inline">
+              Day {g.day} / {lastDay()} ·{" "}
+              {g.day >= lastDay()
+                ? `${chapter.missionActor} arrives today`
+                : `${chapter.missionActor} in ${lastDay() - g.day} days`}
+            </span>
           </div>
         </div>
       </header>

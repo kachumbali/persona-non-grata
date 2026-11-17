@@ -823,6 +823,12 @@
 .retro-game {
   padding-bottom: 100px;
 }
+/* Phones: the two-row resource bar is taller, so the page keeps clear of it. */
+@media (max-width: 639px) {
+  .retro-game {
+    padding-bottom: 170px;
+  }
+}
 .interrupt-badge {
   bottom: 96px;
 }

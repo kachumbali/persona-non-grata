@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { activeChapter } from "../chapters";
 import { arrivalParts, waitingItems, type ArrivalPart } from "../inbox";
 import { CHECKLIST_HEADING, firstDayChecklist, showChecklist } from "../first-hour";
@@ -38,17 +39,29 @@ export function ArrivalNotice({ onOpen }: { onOpen: (part: ArrivalPart) => void 
 /** Day 1 only: five lines that tick themselves off. Dismissed once, never shown again in the career. */
 export function FirstDayChecklist() {
   const g = useGame();
+  const [expanded, setExpanded] = useState(false);
   if (!showChecklist(g)) return null;
   const items = firstDayChecklist(g, activeChapter());
+  const done = items.filter((item) => item.done).length;
   return (
     <section className="paper mb-2 px-3 py-2 text-sm" aria-label="First-day checklist">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="font-bold">{CHECKLIST_HEADING}</h2>
+        <h2 className="hidden font-bold sm:block">{CHECKLIST_HEADING}</h2>
+        {/* Phones: one line, expandable. Desktop shows the whole list. */}
+        <button
+          type="button"
+          className="text-left font-bold sm:hidden"
+          aria-expanded={expanded}
+          aria-controls="first-day-list"
+          onClick={() => setExpanded(!expanded)}
+        >
+          First day: {done} of {items.length} done {expanded ? "▴" : "▾"}
+        </button>
         <Button size="sm" variant="ghost" onClick={() => g.dismissChecklist()}>
           Dismiss
         </Button>
       </div>
-      <ul className="mt-1 space-y-0.5">
+      <ul id="first-day-list" className={`mt-1 space-y-0.5 sm:block ${expanded ? "" : "hidden"}`}>
         {items.map((item) => (
           <li
             key={item.id}
