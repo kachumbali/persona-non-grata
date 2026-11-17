@@ -83,7 +83,8 @@ function attendInvitations(p: Player, variety = 0) {
   }
 }
 
-const hasCapitalMail = (p: Player) => p.openMail().some((e) => e.from.startsWith("Capital"));
+// The fax is not shown away from the embassy, but the bot knows it is waiting there.
+const hasCapitalMail = (p: Player) => p.openMail(true).some((e) => e.from.startsWith("Capital"));
 
 /** Walk back to the embassy when Capital's fax is waiting there and nothing keeps the bot away. */
 function goHomeForFax(p: Player) {
@@ -143,19 +144,23 @@ function languageStudy(p: Player, prioritise = false) {
 
 function carefulPlan(p: Player, extras: { press: boolean; leads: boolean }) {
   const exam = activeChapter().manifest.hostLanguage?.exam;
-  if ((p.s.day === exam?.day && p.s.block === exam.block) || (extras.press && p.s.day <= 5))
-    languageStudy(p, extras.press);
+  if (p.s.day === exam?.day && p.s.block === exam.block) languageStudy(p, extras.press);
   if (extras.press) p.readPress(true);
   else p.skipPress();
   goHomeForFax(p);
   restIfLow(p, 30);
-  // Mission first. Delegating costs staff time, not the player's.
+  // Mail first: a lesson or a mission step queued earlier can leave no DP for the day's mail.
+  p.answerMail("best");
+  if (extras.press && p.s.day <= 5) languageStudy(p, true);
+  // Then the mission. Delegating costs staff time, not the player's.
   missionWork(p, { suitable: true, max: 2, self: p.s.day >= 9 });
   p.handleDemarche("careful");
   if (extras.press && p.freeDP() >= 1) p.passGossip();
   const event = p.currentEvent();
   if (event) p.respondEvent(event, "best");
   attendInvitations(p);
+  // An invitation or call can take the bot away while Capital's fax waits at the embassy.
+  if (p.s.location !== p.office && hasCapitalMail(p) && p.freeDP() >= 2) p.travel(p.office);
   p.answerMail("best");
   p.recallAccidents();
   if (extras.leads) {

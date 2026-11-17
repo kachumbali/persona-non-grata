@@ -156,9 +156,19 @@ export const ACTION_LABELS: Record<Action, string> = {
 
 export const clamp = (n: number) => Math.max(0, Math.min(100, n));
 
+/** Measurement only: sees each meter change with the amount asked for and the amount the cap let through. */
+let capObserver: ((key: MeterKey, asked: number, applied: number) => void) | null = null;
+export function setCapObserver(observer: typeof capObserver): void {
+  capObserver = observer;
+}
+
 export function applyEffects(m: Meters, e: Partial<Meters>): Meters {
   const out = { ...m };
-  for (const k of Object.keys(m) as MeterKey[]) out[k] = clamp(out[k] + (e[k] ?? 0));
+  for (const k of Object.keys(m) as MeterKey[]) {
+    const next = clamp(out[k] + (e[k] ?? 0));
+    if (capObserver && e[k]) capObserver(k, e[k], next - out[k]);
+    out[k] = next;
+  }
   return out;
 }
 

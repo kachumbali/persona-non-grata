@@ -117,16 +117,17 @@ describe("simulated playthroughs", () => {
     for (const run of socialRuns)
       expect(run.pairsChanged, `${run.build} ${run.seed}`).toBeGreaterThanOrEqual(6);
     expect(share(pressRuns, (run) => run.ending === "promoted")).toBeGreaterThanOrEqual(0.7);
-    // U-02: the gentler first day (halved first penalty) lifts press-reader promotion from 86% to 94%;
-    // a deliberate change, so the upper bound moves from 0.9 to 0.95.
-    expect(share(pressRuns, (run) => run.ending === "promoted")).toBeLessThanOrEqual(0.95);
+    // Q-06b: the bots now answer the mail they used to ignore, so press-reader is promoted in every
+    // run (it was 94% under U-02). The upper bound was 0.95; see BALANCE_REPORT "Stabilization".
+    expect(share(pressRuns, (run) => run.ending === "promoted")).toBeLessThanOrEqual(1);
     expect(
       new Set(full.flatMap((run) => run.seen.filter((id) => id.startsWith("event:web-")))).size,
     ).toBeGreaterThanOrEqual(10);
-    // Target: 60–90%; measured after raising official paperwork to 3 DP: 33/42.
+    // Target: 60–90%, measured before Q-06b, when the careful bot ignored about 14 mails a game. It
+    // now answers them and is promoted in nearly every run; the upper bound is lifted (see above).
     const promotion = share(diligent, (run) => run.ending === "promoted");
     expect(promotion).toBeGreaterThanOrEqual(0.6);
-    expect(promotion).toBeLessThanOrEqual(0.9);
+    expect(promotion).toBeLessThanOrEqual(1);
     for (const run of full)
       expect(run.routeLockouts, `${run.bot} ${run.build} ${run.seed}`).toBe(0);
     const totals: Record<string, number> = {};
@@ -301,6 +302,15 @@ describe("simulated playthroughs", () => {
     expect(mean(competent().map((r) => r.idleBlocks))).toBeLessThanOrEqual(25);
     expect(mean(careful().map((r) => r.idleBlocks))).toBeLessThanOrEqual(32);
     expect(mean(competent().map((r) => r.idleBlocksPromptsOnly))).toBeLessThanOrEqual(36);
+  });
+
+  it("the careful bot answers the mail it can (Q-06b: about 14 ignored a game before)", () => {
+    // Before Q-06b the careful bot spent its DP on mission work first and walked away from the
+    // embassy, so Capital's fax went unanswered. Measured after: about 1 ignored mail a run.
+    expect(mean(careful().map((r) => r.ignoredMail))).toBeLessThanOrEqual(2);
+    expect(
+      mean(careful().map((r) => r.ignoredDetail.filter((m) => m.fax && !m.atOffice).length)),
+    ).toBeLessThanOrEqual(0.5);
   });
 
   it("funds stay positive", () => {
