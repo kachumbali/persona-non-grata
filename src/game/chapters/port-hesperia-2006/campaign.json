@@ -12,7 +12,9 @@
       "gender": "male",
       "portrait": "npc-anselm",
       "traits": ["credits", "social"],
-      "wants": "Get credit for the visit programme."
+      "wants": "Get credit for the visit programme.",
+      "bio": "On his first posting, Anselm drafted the Minister's speech, ran to eleven pages and quoted himself twice as ‘a promising young voice’. He is keen that the visit programme carries his name, and he has already offered to brief Capital himself.",
+      "voice": "Eager and self-regarding, he offers help that is mostly about his own credit, and he quotes himself whenever he can."
     },
     {
       "id": "pavel",
@@ -26,7 +28,9 @@
       "gender": "male",
       "portrait": "npc-pavel",
       "traits": ["receipt", "grudge"],
-      "wants": "Keep every expense supported by a receipt."
+      "wants": "Keep every expense supported by a receipt.",
+      "bio": "Pavel has outlasted six ambassadors and keeps a small book of what each of them promised. He still asks after the red stapler, issued in 1994, and keeps a receipt for every lost receipt. He shares the Generator Shed with Lucien Falk, which he regards as a procurement matter.",
+      "voice": "Dry and weary, he speaks in long-memory asides that run back through several ambassadors and a great deal of paperwork."
     },
     {
       "id": "sola",
@@ -40,7 +44,9 @@
       "gender": "female",
       "portrait": "npc-sola",
       "traits": ["initiative", "service"],
-      "wants": "Make the visit work with the staff available."
+      "wants": "Make the visit work with the staff available.",
+      "bio": "Sola runs the registry and local coordination, and holds the paperwork for most things that have happened at the embassy. She teaches Ombrazian for points and no fee, and she will tell you exactly what she cannot do. Form 7.3 came from a drawer that was not on the list.",
+      "voice": "Practical and tired of being everyone's fixer, she is precise about her limits and sharp about procedure."
     },
     {
       "id": "development",
@@ -54,12 +60,14 @@
       "gender": "female",
       "portrait": "npc-development",
       "traits": ["service", "curious"],
-      "wants": "Leave a project that local crews can maintain."
+      "wants": "Leave a project that local crews can maintain.",
+      "bio": "Elise works from the Residence Garden and asks who will benefit before anything else. She wants the Minister to stand beside a well, not to pose in front of it. Her finished proposal is still the subject of a quarrel with Sola.",
+      "voice": "Earnest and practical about the people her projects serve, she is quick to ask who will benefit."
     },
     {
       "id": "bianca",
       "name": "Bianca Montefiore",
-      "role": "Defence Attaché",
+      "role": "Defence Attaché (Colonel)",
       "location": "embassy",
       "likes": ["classic", "shady"],
       "dislikes": ["sushi"],
@@ -69,7 +77,9 @@
       "portrait": "npc-bianca",
       "refusalGreeting": "Bianca has recorded your refusal as an operational constraint. ",
       "traits": ["urgent", "seating"],
-      "wants": "Keep the motorcade under a clear chain of command."
+      "wants": "Keep the motorcade under a clear chain of command.",
+      "bio": "Colonel Montefiore, the Defence Attaché, runs the motorcade from the Motor Pool and wants seven cars, two decoys and a clear chain of command. Her convoy plan includes one goat, for local credibility. She and Lucien Falk are still disputing his sunset-gradient spreadsheet.",
+      "voice": "Brisk and operational, she wants vehicles and procedure rather than presentation, and she takes orders seriously."
     },
     {
       "id": "ines",
@@ -83,7 +93,9 @@
       "gender": "female",
       "portrait": "npc-ines",
       "traits": ["service", "process"],
-      "wants": "Reduce the consular queue without losing its paperwork."
+      "wants": "Reduce the consular queue without losing its paperwork.",
+      "bio": "Ines runs the Consular Section, where the queue stands at four hundred people and does not disappear when the Minister arrives. She shares the queue with Sola Dewrin. A painting of the Minister on a horse, fighting a dragon, has become the embassy mascot, and she denies all involvement.",
+      "voice": "Dry and overworked, she reports the queue in numbers and does not pretend it will go away."
     },
     {
       "id": "press",
@@ -97,7 +109,9 @@
       "gender": "male",
       "portrait": "npc-press",
       "traits": ["social", "gossip"],
-      "wants": "Get the visit photographed from its best side."
+      "wants": "Get the visit photographed from its best side.",
+      "bio": "Lucien Falk runs public diplomacy and the embassy's digital output, and writes slogans before he worries about Legal. He shares the Generator Shed with Pavel Oskarsen, whose cupboard he once filed as a media asset. He knows most people in town, and most of their gossip.",
+      "voice": "Image-first and cheerful about risk, he writes slogans and then worries about Legal."
     },
     {
       "id": "maxim",
@@ -111,7 +125,9 @@
       "gender": "male",
       "portrait": "npc-maxim",
       "traits": ["initiative", "curious"],
-      "wants": "Turn this internship into a recommendation."
+      "wants": "Turn this internship into a recommendation.",
+      "bio": "Maxim, the intern, handles technical support and filing, and makes a checklist of checklists. He laminates everything, and he has lost at least one checklist. He has practised waving for an ambassadorial career and hopes that counts towards a recommendation.",
+      "voice": "Eager and earnest, with a habit of making lists, he is cheerful about his own lack of clout."
     },
     {
       "id": "ketu",
@@ -125,7 +141,9 @@
       "gender": "female",
       "portrait": "npc-ketu",
       "traits": ["quiet", "gossip"],
-      "wants": "Serve dinner before the meeting overruns."
+      "wants": "Serve dinner before the meeting overruns.",
+      "bio": "Ketu runs the embassy kitchen, where she prepares the lunch and costs every absurd request before agreeing to it. She called the garlic an aromatic diplomatic misunderstanding, and her fish soup with ambition became the visit's triumph. Her pie-chart cookie is, precisely, 17.6% chocolate.",
+      "voice": "Dry and unflappable, she accepts every absurd request and then points out what it will cost."
     },
     {
       "id": "protocol",
@@ -141,7 +159,9 @@
       "refusalGreeting": "Ndao straightens the file you declined to help with. ",
       "traits": ["seating", "process"],
       "wants": "Keep the visiting delegation in the approved order.",
-      "age": 64
+      "age": 64,
+      "bio": "Director Ndao, who is 64, runs Protocol at the Foreign Ministry. He stamps arrival confirmations slowly and with feeling, and he has firm views on the seating plan and its decorative fern. He is Mira Sene's mentor in protocol matters.",
+      "voice": "Formal and rule-bound, quietly sardonic about forms, he answers with procedure and small ceremonial gestures."
     },
     {
       "id": "eu",
@@ -156,7 +176,9 @@
       "portrait": "npc-eu",
       "refusalGreeting": "Celeste has put your refusal in the minutes. ",
       "traits": ["branding", "social"],
-      "wants": "Get Team Europe credit for a common initiative."
+      "wants": "Get Team Europe credit for a common initiative.",
+      "bio": "Celeste Norren heads the EU Delegation and convenes its meetings, which she minutes in full. She proposes Team Europe initiatives and makes sure the Delegation gets the credit, and gossip says she has branded the rain. She is happy to remind you that 17.6% is not a biscuit quota.",
+      "voice": "Smooth and institutional, with a pointed joke about the 17.6% premise, she puts everything in the minutes."
     },
     {
       "id": "fixer",
@@ -171,7 +193,9 @@
       "portrait": "npc-fixer",
       "refusalGreeting": "Marcel produces the unpaid favour as a receipt. ",
       "traits": ["gossip", "caution"],
-      "wants": "Be consulted before anyone finds an official shortcut."
+      "wants": "Be consulted before anyone finds an official shortcut.",
+      "bio": "Marcel Deux is an unofficial intermediary who works from the bar and expects to be consulted before any official shortcut is found. He can explain the supplier connection from day two, and he treats every service as a favour owed. He also teaches Ombrazian, as the Fixer's taxi.",
+      "voice": "Suave and knowing, he offers shortcuts in a tone that makes them sound like favours he is granting."
     },
     {
       "id": "journalist",
@@ -185,7 +209,9 @@
       "gender": "female",
       "portrait": "npc-journalist",
       "traits": ["curious", "gossip"],
-      "wants": "Find the story behind the official statement."
+      "wants": "Find the story behind the official statement.",
+      "bio": "Ruth Vale is a press correspondent whose foreign column is read for the distance between quote and fact. She offers a longer conversation at the Press Correspondents Club from day two, and she expects to be bought a drink. She keeps score of promises, and of who made them.",
+      "voice": "Sharp and dry, she enjoys the distance between quote and fact, and she keeps score of promises."
     },
     {
       "id": "golf",
@@ -201,7 +227,9 @@
       "refusalGreeting": "Bako recalls the appointment you declined. ",
       "traits": ["seating", "grudge"],
       "wants": "Keep the reception on the proper course.",
-      "age": 62
+      "age": 62,
+      "bio": "Minister Bako, the Deputy Foreign Minister, is 62 and is usually found on the ninth green. He treats business as a game, with friendly bets, and his caddie disagrees with his secretary about his availability. He wants a constituency visit before the port announcement.",
+      "voice": "Jovial and evasive, he treats business as a game, with bets and jokes about his caddie."
     },
     {
       "id": "un",
@@ -215,7 +243,9 @@
       "gender": "female",
       "portrait": "npc-un",
       "traits": ["process", "service"],
-      "wants": "Publish a joint development plan."
+      "wants": "Publish a joint development plan.",
+      "bio": "Dr Amara Chen is the UN Resident Coordinator, who hosts the development roundtable and the final coordination meeting. She is willing to support the programme, but cannot promise six agencies will agree on one logo. She can discuss the programme at UN House from day three.",
+      "voice": "Diplomatic and tired of logos, she is honest about what agencies can and cannot agree."
     },
     {
       "id": "amb-valdoria",
@@ -229,7 +259,9 @@
       "gender": "female",
       "portrait": "npc-amb-valdoria",
       "traits": ["seating", "social"],
-      "wants": "Secure a seat that confirms the mission’s importance."
+      "wants": "Secure a seat that confirms the mission’s importance.",
+      "bio": "Ambassador Mara Velen of Valdoria hosts her national-day reception and a colleagues' lunch at the golf club. Her seating plan reserves a chair for each ambassador. Her national-day speech ran eight minutes, and she is wry about the locked exit that made the applause longer.",
+      "voice": "Witty and sharp about ceremony, she is wry about speeches and locked doors."
     },
     {
       "id": "amb-asteria",
@@ -243,7 +275,9 @@
       "gender": "male",
       "portrait": "npc-amb-asteria",
       "traits": ["quiet", "process"],
-      "wants": "Keep the Danish mission represented at every meeting."
+      "wants": "Keep the Danish mission represented at every meeting.",
+      "bio": "Niko Arden is Denmark's ambassador and resident representative at the EU Delegation. His residence is being repainted, so he hosts the Danish national-day reception here. He invites colleagues to coffee with a single agenda item, and he has counted the cups.",
+      "voice": "Quiet and dry, he compares coffee cups and footnotes, and he is pleased with small victories."
     },
     {
       "id": "port-officer",
@@ -258,7 +292,9 @@
       "portrait": "npc-port-officer",
       "traits": ["service", "initiative"],
       "wants": "Keep the port clean without overlooking its crews.",
-      "age": 49
+      "age": 49,
+      "bio": "Mira Sene, who is 49, is the Ombrazian Port Environment Officer, and she controls the inspection timetable. She cares more about port crews than about photographs of bins. Director Ndao mentors her in protocol, and she will offer a favour in exchange for a clean-port statement.",
+      "voice": "Blunt and practical about the port, she cares about crews more than photographs."
     },
     {
       "id": "bar-insurer",
@@ -272,7 +308,9 @@
       "gender": "female",
       "portrait": "npc-bar-insurer",
       "traits": ["receipt", "caution"],
-      "wants": "Make sure the quay and its cargo are insured."
+      "wants": "Make sure the quay and its cargo are insured.",
+      "bio": "Sofia da Costa is the Portuguese Maritime Liaison and works from the bar, where she knows which insurers will cover port cargo. She will not recommend a contract until she has reliable collection records. She is also deciding between an insurer and a musician for the last seat at her reception.",
+      "voice": "Careful and businesslike, she asks for evidence before offering introductions."
     },
     {
       "id": "un-coordinator",
@@ -286,7 +324,9 @@
       "gender": "male",
       "portrait": "npc-un-coordinator",
       "traits": ["template", "process"],
-      "wants": "Deliver the supplies before the coordination meeting."
+      "wants": "Deliver the supplies before the coordination meeting.",
+      "bio": "Idra Venn is the UN's Programme Logistics Officer. He tracks donated bins that the donor reports say have arrived and customs says have not. Each agency keeps its own spreadsheet of them, and he has noticed the empty maintenance line in the budget.",
+      "voice": "Drily exasperated by paperwork, he notices the gap between donor reports and reality."
     },
     {
       "id": "eu-germany",
@@ -300,7 +340,9 @@
       "gender": "male",
       "portrait": "npc-eu-germany",
       "traits": ["template", "process"],
-      "wants": "Use the approved template for every joint note."
+      "wants": "Use the approved template for every joint note.",
+      "bio": "Klaus Weber is Germany's ambassador and resident representative, and he is proud of the paperwork. He keeps the template for the joint logo, and once put the stopwatch in an annex. He and Henri de Valois are former partners, and must still co-sign a letter.",
+      "voice": "Procedural and fond of annexes, he dislikes a loose draft."
     },
     {
       "id": "eu-france",
@@ -314,7 +356,9 @@
       "gender": "male",
       "portrait": "npc-eu-france",
       "traits": ["credits", "seating"],
-      "wants": "Have the French signature recognised first."
+      "wants": "Have the French signature recognised first.",
+      "bio": "Henri de Valois is France's ambassador and resident representative, and he holds that the French signature should come first. He wants to reach the host ministry before it closes. A printer in the EU Delegation has refused three of his requests, and he keeps a screwdriver nearby.",
+      "voice": "Courteous and precise, with a fondness for French phrasing and a concern for who signs first."
     },
     {
       "id": "eu-malta",
@@ -328,7 +372,9 @@
       "gender": "female",
       "portrait": "npc-eu-malta",
       "traits": ["quiet", "curious"],
-      "wants": "Make sure the smaller missions are heard."
+      "wants": "Make sure the smaller missions are heard.",
+      "bio": "Tanya Farrugia is Malta's ambassador, and with permission she also presents the briefs of Cyprus and Luxembourg at the 17.6% meeting. She makes sure the smaller missions are heard. She taps rhythms on the meeting table, which is the most decisive thing the table has heard all morning.",
+      "voice": "Precise and generous, she speaks for others as well as for Malta and makes the smaller briefs heard."
     },
     {
       "id": "eu-sweden",
@@ -342,7 +388,9 @@
       "gender": "male",
       "portrait": "npc-eu-sweden",
       "traits": ["service", "caution"],
-      "wants": "Turn the discussion into an actual programme."
+      "wants": "Turn the discussion into an actual programme.",
+      "bio": "Lars Lindqvist is Sweden's ambassador and resident representative. He marks every absent mission on the agenda, with more pencil notes than agenda items. He runs an evening card game that is, he insists, strictly informal.",
+      "voice": "Careful and dry, he asks who has been left out before deciding anything."
     }
   ],
   "venues": [
