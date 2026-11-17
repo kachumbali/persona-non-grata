@@ -7,7 +7,6 @@ import {
   blocks,
   campaign,
   dailyEvents,
-  diminishedGains,
   expiredStories,
   goodwillRisk,
   locationStories,
@@ -182,40 +181,5 @@ describe("game rules", () => {
       expect(events.length).toBeLessThanOrEqual(3);
       expect(dailyEvents(day, 23, [])).toEqual(events);
     }
-  });
-});
-
-describe("diminishedGains (Q-06b: gains above the knee count for half)", () => {
-  const at = (confidence: number, goodwill = 50) => ({
-    confidence,
-    goodwill,
-    morale: 50,
-    sanity: 70,
-  });
-  it("keeps a gain in full while the meter stays below the knee", () => {
-    expect(diminishedGains(at(40), { confidence: 10 })).toEqual({ confidence: 10 });
-    expect(diminishedGains(at(40, 20), { goodwill: 10 })).toEqual({ goodwill: 10 });
-  });
-  it("counts the part above the knee for half, rounded up", () => {
-    expect(diminishedGains(at(60), { confidence: 10 }).confidence).toBe(5);
-    expect(diminishedGains(at(60), { confidence: 3 }).confidence).toBe(2);
-    // 45 + 10 crosses the knee at 50: 5 in full, then 5 counts as 3.
-    expect(diminishedGains(at(45), { confidence: 10 }).confidence).toBe(8);
-  });
-  it("applies to both goodwill meters and leaves everything else alone", () => {
-    const out = diminishedGains(at(90, 80), { confidence: 4, goodwill: 6, morale: 3, budget: 1 });
-    expect(out).toEqual({ confidence: 2, goodwill: 3, morale: 3, budget: 1 });
-  });
-  it("never changes losses, zero or missing effects", () => {
-    expect(diminishedGains(at(90), { confidence: -6, goodwill: 0 })).toEqual({
-      confidence: -6,
-      goodwill: 0,
-    });
-    expect(diminishedGains(at(90), {})).toEqual({});
-  });
-  it("cuts gains at the cap, so a full meter gains little", () => {
-    const after = applyEffects(at(100), diminishedGains(at(100), { confidence: 4 }));
-    expect(after.confidence).toBe(100);
-    expect(diminishedGains(at(100), { confidence: 4 }).confidence).toBe(2);
   });
 });

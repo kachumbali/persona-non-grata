@@ -26,8 +26,7 @@ describe("character effects during a posting", () => {
     const entry = useGame
       .getState()
       .goodwillHistory.find((e) => e.source === "URGENT: Political situation");
-    // Gains above the knee of 50 count for half (Q-06b), so the reply adds 4, not 7.
-    expect(entry?.after.confidence).toBe(59);
+    expect(entry?.after.confidence).toBe(62);
     expect(entry?.text).toContain("Gravitas +1");
   });
   it("allows an accidental reply-all to be recalled atomically for one additional DP", () => {

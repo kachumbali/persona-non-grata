@@ -156,27 +156,6 @@ export const ACTION_LABELS: Record<Action, string> = {
 
 export const clamp = (n: number) => Math.max(0, Math.min(100, n));
 
-/** Above this HQ or host goodwill, a positive gain counts for half (see diminishedGains). */
-export const GAIN_KNEE = 50;
-
-/**
- * The HQ and host goodwill gains of one decision, given the meters it lands on. The part of each
- * gain that stays below the knee is kept in full; the part above it counts for half, rounded up.
- * Losses, morale, sanity and budgets are unchanged. Without this, a careful player's meters sat at
- * the cap of 100 from mid-game, so later gains did nothing (Q-06b; measured by the simulation).
- */
-export function diminishedGains(current: Meters, effects: Effects, knee = GAIN_KNEE): Effects {
-  const out: Effects = { ...effects };
-  for (const key of ["confidence", "goodwill"] as const) {
-    const amount = effects[key];
-    if (amount === undefined || amount <= 0) continue;
-    const room = Math.max(0, knee - clamp(current[key]));
-    const below = Math.min(amount, room);
-    out[key] = below + Math.ceil((amount - below) / 2);
-  }
-  return out;
-}
-
 /** Measurement only: sees each meter change with the amount asked for and the amount the cap let through. */
 let capObserver: ((key: MeterKey, asked: number, applied: number) => void) | null = null;
 export function setCapObserver(observer: typeof capObserver): void {
