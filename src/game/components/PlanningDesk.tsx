@@ -609,9 +609,10 @@ export function PlanningDesk() {
         )}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <span className="font-mono">
-            Energy {g.energy} · Composure {g.composure} · {g.events.length} story episodes today
+            Energy {g.energy} · Composure {g.composure} · {g.events.length}{" "}
+            {g.events.length === 1 ? "story episode" : "story episodes"} today
           </span>
-          <span className="text-xs">End the block from your BlockBerry.</span>
+          <span className="text-xs">End the block from the bottom bar.</span>
         </div>
       </div>
     </section>

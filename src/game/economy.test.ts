@@ -97,7 +97,7 @@ describe("Chapter 1 time and money", () => {
     const second = action("second", { kind: "dialogue", worker: "pavel", overload: true });
     expect(validatePlan([first, second], 0, initialEconomy())).toBeNull();
     expect(validatePlan([first, { ...second, overload: false }], 0, initialEconomy())).toContain(
-      "duties conflict",
+      "has routine duties this block",
     );
   });
   it("caps each colleague at 2 DP even with displacement", () => {

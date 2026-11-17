@@ -129,7 +129,12 @@ export function agendaItems(g: GameState, chapter: ChapterPack): AgendaItem[] {
     result.push({
       id: event.id,
       what: event.title,
-      where: "On-screen call or reminder",
+      where:
+        event.channel === "message"
+          ? "Message"
+          : event.channel === "visit"
+            ? "At your door"
+            : "Phone call",
       day: g.day,
       block: g.block,
       urgent: true,

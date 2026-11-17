@@ -2339,8 +2339,8 @@
       "channel": "visit",
       "title": "A joint assignment",
       "npc": "anselm",
-      "text": "Anselm is at your door. The two officers must prepare one joint briefing, and each has already drafted a credit line.",
-      "remoteText": "Anselm's note: the two officers must prepare one joint briefing. Each has already drafted a credit line. Please advise.",
+      "text": "Anselm is at your door. He and Pavel must prepare one joint briefing, and each has already drafted a credit line.",
+      "remoteText": "Anselm's note: he and Pavel must prepare one joint briefing. Each has already drafted a credit line. Please advise.",
       "minDay": 2,
       "expiresDay": 2,
       "relationshipGate": {

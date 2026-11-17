@@ -174,6 +174,7 @@ export function Interruption() {
                   <label className="mt-1 flex gap-2">
                     <input
                       type="checkbox"
+                      className="mt-0.5 size-4 shrink-0"
                       checked={overload}
                       onChange={(e) => setOverload(e.target.checked)}
                     />

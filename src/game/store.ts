@@ -110,6 +110,7 @@ import {
   supplement,
   validatePlan,
   type Economy,
+  firstName,
 } from "./economy";
 
 export interface Character {
@@ -1120,7 +1121,7 @@ export const useGame = create<GameState>()(
             if (c) c.fatigue = clamp(c.fatigue + row.displaced * 10);
             record(
               "Baseline duties",
-              `${row.id}: ${row.displaced} DP of routine duties displaced. Backlog grows; fatigue rises.`,
+              `${firstName(row.id)}: ${row.displaced} DP of routine duties displaced. Backlog grows; fatigue rises.`,
               { morale: -row.displaced, confidence: -row.displaced },
             );
           }
@@ -1984,7 +1985,7 @@ export const useGame = create<GameState>()(
               firstIgnoreUsed = true;
               if (firstDayGrace()) {
                 missed = halveFirstPenalty(missed);
-                jammed = " Capital assumes the fax was jammed. Once.";
+                jammed = " Capital assumes the message went astray. Once.";
               }
             }
             economy.funds += (missed.budget ?? 0) * 100;

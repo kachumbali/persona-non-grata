@@ -191,7 +191,7 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
                 {g.report.length > 0 && (
                   <details open>
                     <summary className="cursor-pointer font-bold">
-                      Last round · {g.report.length} items
+                      Last round · {g.report.length} {g.report.length === 1 ? "item" : "items"}
                     </summary>
                     <ul className="max-h-40 overflow-y-auto">
                       {g.report.map((r, i) => (

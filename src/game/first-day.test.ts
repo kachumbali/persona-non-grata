@@ -45,7 +45,7 @@ describe("a gentler first day", () => {
     expect(faxLines()).toHaveLength(1);
     expect(useGame.getState().firstIgnoreUsed).toBe(true);
     const log = useGame.getState().log.filter((l) => l.text.includes("The Capital calls"));
-    expect(log[0]?.text).toContain("Capital assumes the fax was jammed. Once.");
+    expect(log[0]?.text).toContain("Capital assumes the message went astray. Once.");
   });
 
   it("changes nothing when the setting is off", () => {

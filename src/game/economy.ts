@@ -167,9 +167,15 @@ export function validatePlan(
     for (const p of plan) {
       const time = participantTime(p, row.id, block);
       if (time && row.baseline + scheduled + time > capacity && !p.overload)
-        return `${row.id}'s baseline duties conflict. Explicitly authorise displacement of their routine duties.`;
+        return `${firstName(row.id)} has routine duties this block. Tick ‘Allow displaced routine work’ to take ${firstName(row.id)} off them.`;
       scheduled += time;
     }
   }
   return null;
+}
+
+/** A colleague's first name for player-facing messages; falls back to the id. */
+export function firstName(id: string): string {
+  const name = campaign().characters.find((c) => c.id === id)?.name ?? id;
+  return name.replace(/^(Director|Minister|Dr|Ambassador)\s+/, "").split(" ")[0] ?? id;
 }

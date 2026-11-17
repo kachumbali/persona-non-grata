@@ -63,7 +63,7 @@ describe("clean-port coordination", () => {
     render(<PlaceScene onLeave={() => {}} />);
     openPort();
     fireEvent.click(screen.getByRole("button", { name: /Negotiate shared credit/ }));
-    expect(screen.getByText(/Explicitly authorise displacement/)).toBeInTheDocument();
+    expect(screen.getByText(/Allow displaced routine work’ to take/)).toBeInTheDocument();
     expect(useGame.getState().pending).toHaveLength(0);
     fireEvent.click(screen.getByLabelText(/Allow displaced routine work/));
     act(() => {

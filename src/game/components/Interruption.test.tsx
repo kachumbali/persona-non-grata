@@ -29,9 +29,9 @@ describe("story pop-up options", () => {
     render(<Interruption />);
     const delegate = screen.getByRole("button", { name: /Ask Anselm to handle it/ });
     expect(delegate).toBeDisabled();
-    expect(delegate).toHaveAccessibleDescription(/baseline duties conflict/);
+    expect(delegate).toHaveAccessibleDescription(/has routine duties this block/);
     expect(screen.getByRole("button", { name: /Handle it yourself/ })).toBeEnabled();
-    expect(screen.getAllByText(/baseline duties conflict/)).toHaveLength(1);
+    expect(screen.getAllByText(/has routine duties this block/)).toHaveLength(1);
   });
 
   it("enables the option once the displacement is allowed, and taking it closes the pop-up", () => {
@@ -39,7 +39,7 @@ describe("story pop-up options", () => {
     fireEvent.click(screen.getByRole("checkbox", { name: /Allow displaced routine work/ }));
     const delegate = screen.getByRole("button", { name: /Ask Anselm to handle it/ });
     expect(delegate).toBeEnabled();
-    expect(screen.queryByText(/baseline duties conflict/)).toBeNull();
+    expect(screen.queryByText(/has routine duties this block/)).toBeNull();
     fireEvent.click(delegate);
     expect(useGame.getState().pending.some((p) => p.eventId === event.id)).toBe(true);
     expect(useGame.getState().planError).toBe("");
