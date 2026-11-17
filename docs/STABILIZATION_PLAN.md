@@ -61,7 +61,7 @@ One reference that every later check reads against. Built from the existing cont
 - Give every event without a location a `channel`: `call`, `message` or `visit`.
   - `call`: a phone call. The text is what the caller says or what the call is about. No physical actions in the room.
   - `message`: a note, a fax or a BlockBerry message. Written as such.
-  - `visit`: someone at your door. Only for embassy staff, and only shown while the player is at the embassy. If the player is elsewhere, the event waits for the next block in which they are at the embassy, within its day range. If it would expire, it arrives as a `message` with a short `remoteText`.
+  - `visit`: someone at your door. Only for embassy staff. When the player is elsewhere, it is shown as a `message` with a short `remoteText`.
 - The pop-up header follows the channel: "Phone call · Celeste Norren", "Message · Celeste Norren", "At your door · Pavel Oskarsen".
 - Read all 24 pop-up events. Rewrite the text of any that does not work in its channel. Move to a location (making it a lead) any that can only happen in a specific place.
 - `cookies`: remove the duplicate of the 17.6% meeting. Either turn it into Celeste's call ahead of the meeting, inviting the player and setting up the joke, or delete it if nothing depends on it. Check flags, press triggers and reputations that read it.

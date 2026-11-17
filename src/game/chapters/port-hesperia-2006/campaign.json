@@ -2360,7 +2360,7 @@
       "channel": "message",
       "title": "The separate signatures",
       "npc": "eu-france",
-      "text": "The former couple must co-sign one letter. Neither will sign first, and each has asked for a separate copy.",
+      "text": "Henri's office writes: he and Klaus, once a couple and now two missions, must co-sign one letter. Neither will sign first, and each has asked for a separate copy.",
       "minDay": 5,
       "expiresDay": 5,
       "relationshipGate": {
