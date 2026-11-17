@@ -25,7 +25,7 @@ The freeze ends when all of these are true:
 
 ## Packages
 
-Done so far: Q-01, Q-02, Q-04, Q-05a, Q-05b, Q-05c (marked ✓). Findings are in `docs/audit/`.
+Done so far: Q-01 to Q-07 (marked ✓). Remaining: Q-08, the hand playtest. Findings are in `docs/audit/`.
 
 Each package is small and has one owner at a time. Packages in the same wave touch different files and can run in parallel.
 

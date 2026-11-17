@@ -14,6 +14,8 @@ Every competent run earns at least one reputation. The most common is Known to F
 
 ## Stabilization (Q-06b, U-04 items 1, 2 and 7)
 
+> **Update after review:** the diminishing-gains rule described in this section was taken back during the feature freeze. It changed gameplay without reaching its target. With the bots now answering their mail, the careful, press-reader and newcomer bots are promoted in 98–100% of runs even without it. Competent play is too safe. This is the first balance task after the freeze (meter ceiling and win rate together), not a stabilization fix.
+
 Measured on 306 runs (6 bots, 17 builds, 3 seeds). Reproduce with `npm run sim`; the full-matrix thresholds run with `npm run sim:check` (CI runs it). Numbers below are from before and after this package.
 
 ### Item 1: why careful players ignored about 14 mails a game
