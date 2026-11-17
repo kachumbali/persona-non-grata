@@ -635,6 +635,7 @@
     },
     {
       "id": "eu-budget-share-claim-followup",
+      "channel": "call",
       "title": "The missing Cyprus paragraph",
       "npc": "eu-malta",
       "minDay": 2,
@@ -642,7 +643,7 @@
         "eventId": "eu-budget-share-meeting",
         "choiceId": "claim"
       },
-      "text": "Tanya calls: Cyprus's authorised position was left out after Bellaluxe's stopwatch expired. The statement is still a draft, but the biscuits are not.",
+      "text": "Cyprus's authorised position was left out after Bellaluxe's stopwatch expired, she says. The statement is still a draft, but the biscuits are not.",
       "choices": [
         {
           "id": "amend",
@@ -679,6 +680,7 @@
     },
     {
       "id": "eu-budget-share-share-followup",
+      "channel": "call",
       "title": "Two briefs and a cup of coffee",
       "npc": "eu-malta",
       "minDay": 2,
@@ -723,6 +725,7 @@
     },
     {
       "id": "eu-budget-share-reform-followup",
+      "channel": "message",
       "title": "The annex on equal time",
       "npc": "eu-germany",
       "minDay": 2,
@@ -730,7 +733,7 @@
         "eventId": "eu-budget-share-meeting",
         "choiceId": "reform"
       },
-      "text": "Klaus has reduced the equal-time proposal to one page, plus an annex defining a page. Celeste asks whether Bellaluxe will endorse the rule before the next meeting.",
+      "text": "Circulated by Klaus: the equal-time proposal is reduced to one page, plus an annex defining a page. Celeste asks whether Bellaluxe will endorse the rule before the next meeting.",
       "choices": [
         {
           "id": "endorse",
@@ -1389,6 +1392,7 @@
     },
     {
       "id": "invitation",
+      "channel": "message",
       "title": "Your presence is requested immediately",
       "npc": "protocol",
       "text": "The host ministry unveils a plaque in twenty minutes. Your absence would be noticed. Your schedule is not their concern.",
@@ -1443,9 +1447,11 @@
     },
     {
       "id": "rivalry",
+      "channel": "visit",
       "title": "Two briefings, no shared facts",
       "npc": "pavel",
-      "text": "Pavel and Anselm each wrote a briefing and refuse to combine them. The Minister cannot hold two contradictory positions.",
+      "text": "Pavel is at your door with his briefing. Anselm wrote one too, and neither will combine them. The Minister cannot hold two contradictory positions.",
+      "remoteText": "Pavel's note: his briefing and Anselm's contradict each other, and neither will combine them. The Minister cannot hold both positions. Please advise.",
       "minDay": 1,
       "choices": [
         {
@@ -1490,9 +1496,11 @@
     },
     {
       "id": "supplier",
+      "channel": "visit",
       "title": "The generous supplier · part I",
       "npc": "sola",
-      "text": "A caterer offers an unusually cheap reception. Sola recognises the surname. Investigate or take the bargain?",
+      "text": "Sola is at your door. A caterer offers an unusually cheap reception, and she recognises the surname. Investigate or take the bargain?",
+      "remoteText": "Sola's note: a caterer offers an unusually cheap reception. She recognises the surname. Please advise before someone else accepts it.",
       "minDay": 1,
       "choices": [
         {
@@ -1597,6 +1605,7 @@
     },
     {
       "id": "seating-complaint",
+      "channel": "call",
       "title": "A chair of national importance",
       "npc": "protocol",
       "text": "Director Ndao calls: the draft visit plan seats Ombrazia's Deputy Minister behind a decorative fern. The fern is not accredited. How will you respond?",
@@ -1725,9 +1734,11 @@
     },
     {
       "id": "elise",
+      "channel": "visit",
       "title": "A project, not a photo opportunity",
       "npc": "development",
-      "text": "Elise wants the Minister to meet project beneficiaries, not merely unveil a donor plaque. UN partners demand their own speaking slots.",
+      "text": "Elise is at your door. She wants the Minister to meet project beneficiaries, not merely unveil a donor plaque. UN partners demand their own speaking slots.",
+      "remoteText": "Elise's note: the Minister should meet project beneficiaries, not merely unveil a donor plaque. The UN partners want their own speaking slots. Please call.",
       "minDay": 2,
       "choices": [
         {
@@ -1833,9 +1844,10 @@
     },
     {
       "id": "cookies",
+      "channel": "call",
       "title": "The 17.6% entitlement",
       "npc": "eu",
-      "text": "Celeste slides the biscuit plate towards you. 'Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework,' she says. 'That does not make 17.6% of the biscuits, the speaking time, or the minutes of the meeting your national allocation.' The room braces itself.",
+      "text": "Celeste calls ahead of the coordination meeting. 'Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework,' she says. 'That is not 17.6% of the biscuits, the speaking time or the minutes. I mention it now so you can be disappointed in private.'",
       "minDay": 1,
       "choices": [
         {
@@ -1847,7 +1859,7 @@
           },
           "trust": 2,
           "score": 1,
-          "result": "Pained expressions all round. Your self-deprecation briefly softens the coalition.",
+          "result": "Celeste sighs audibly down the line. Your self-deprecation briefly softens the coalition.",
           "counts": ["credit"]
         },
         {
@@ -1858,7 +1870,7 @@
           },
           "trust": 1,
           "score": 2,
-          "result": "The room agrees on the clause. Nobody misses the joke quite enough to admit it.",
+          "result": "The clause is agreed by phone. The joke is saved for the meeting, where it will be minuted.",
           "counts": ["hospitality"]
         }
       ]
@@ -2016,9 +2028,10 @@
     },
     {
       "id": "press",
+      "channel": "call",
       "title": "A casual quote",
       "npc": "journalist",
-      "text": "Ruth asks whether the Minister’s visit is really confirmed. The microphone looks switched off. It is not.",
+      "text": "Ruth asks, in the tone of someone not recording, whether the Minister's visit is really confirmed. She is recording.",
       "minDay": 1,
       "choices": [
         {
@@ -2086,10 +2099,11 @@
     },
     {
       "id": "call-in-protocol",
+      "channel": "call",
       "title": "Ndao calls in a favour",
       "npc": "protocol",
       "callInFor": "protocol",
-      "text": "Ndao would like you to review a seating chart. The request has acquired the status of a reminder.",
+      "text": "Ndao calls to ask you to review a seating chart. The request has acquired the status of a reminder.",
       "minDay": 1,
       "choices": [
         {
@@ -2111,10 +2125,11 @@
     },
     {
       "id": "call-in-golf",
+      "channel": "call",
       "title": "Bako calls in a favour",
       "npc": "golf",
       "callInFor": "golf",
-      "text": "Bako would like you to attend a constituency briefing. The request has acquired the status of a reminder.",
+      "text": "Bako calls to ask you to attend a constituency briefing. The request has acquired the status of a reminder.",
       "minDay": 1,
       "choices": [
         {
@@ -2136,10 +2151,11 @@
     },
     {
       "id": "call-in-fixer",
+      "channel": "call",
       "title": "Marcel calls in a favour",
       "npc": "fixer",
       "callInFor": "fixer",
-      "text": "Marcel would like you to sit through a supplier meeting. The request has acquired the status of a reminder.",
+      "text": "Marcel calls to ask you to sit through a supplier meeting. The request has acquired the status of a reminder.",
       "minDay": 1,
       "choices": [
         {
@@ -2161,10 +2177,11 @@
     },
     {
       "id": "call-in-eu",
+      "channel": "call",
       "title": "Celeste calls in a favour",
       "npc": "eu",
       "callInFor": "eu",
-      "text": "Celeste would like you to review a joint announcement. The request has acquired the status of a reminder.",
+      "text": "Celeste calls to ask you to review a joint announcement. The request has acquired the status of a reminder.",
       "minDay": 1,
       "choices": [
         {
@@ -2186,10 +2203,11 @@
     },
     {
       "id": "call-in-bianca",
+      "channel": "call",
       "title": "Bianca calls in a favour",
       "npc": "bianca",
       "callInFor": "bianca",
-      "text": "Bianca would like you to review an exercise plan. The request has acquired the status of a reminder.",
+      "text": "Bianca calls on the internal line to ask you to review an exercise plan. The request has acquired the status of a reminder.",
       "minDay": 1,
       "choices": [
         {
@@ -2211,9 +2229,11 @@
     },
     {
       "id": "web-joint",
+      "channel": "visit",
       "title": "A joint assignment",
       "npc": "anselm",
-      "text": "The two officers must prepare one joint briefing. Each has already drafted a credit line.",
+      "text": "Anselm is at your door. The two officers must prepare one joint briefing, and each has already drafted a credit line.",
+      "remoteText": "Anselm's note: the two officers must prepare one joint briefing. Each has already drafted a credit line. Please advise.",
       "minDay": 2,
       "expiresDay": 2,
       "relationshipGate": {
@@ -2252,9 +2272,10 @@
     },
     {
       "id": "web-office",
+      "channel": "message",
       "title": "The shared office",
       "npc": "pavel",
-      "text": "Pavel finds that Lucien has described their shared cupboard as a communications platform.",
+      "text": "Pavel's note: Lucien has described the shared cupboard as a communications platform.",
       "minDay": 3,
       "expiresDay": 3,
       "relationshipGate": {
@@ -2294,9 +2315,10 @@
     },
     {
       "id": "web-team",
+      "channel": "message",
       "title": "Two versions",
       "npc": "anselm",
-      "text": "Anselm and Bianca have each sent a final version. Both say the other version is provisional.",
+      "text": "Anselm reports that he and Bianca have each sent a final version. Both say the other version is provisional.",
       "minDay": 4,
       "expiresDay": 4,
       "relationshipGate": {
@@ -2335,9 +2357,10 @@
     },
     {
       "id": "web-partners",
+      "channel": "message",
       "title": "The separate signatures",
       "npc": "eu-france",
-      "text": "The former couple must co-sign a common letter. Neither will hand the pen to the other.",
+      "text": "The former couple must co-sign one letter. Neither will sign first, and each has asked for a separate copy.",
       "minDay": 5,
       "expiresDay": 5,
       "relationshipGate": {
@@ -2377,9 +2400,11 @@
     },
     {
       "id": "web-side",
+      "channel": "visit",
       "title": "Take a side",
       "npc": "sola",
-      "text": "Elise asks you to support her plan over Sola’s. Sola is standing behind the folder.",
+      "text": "Sola is at your door, standing behind the folder. Elise asks you to support her plan over Sola's.",
+      "remoteText": "Sola's note: Elise has asked you to support her plan over mine. The folder stays closed until you reply.",
       "minDay": 6,
       "expiresDay": 6,
       "relationshipGate": {
@@ -2418,9 +2443,11 @@
     },
     {
       "id": "web-repair",
+      "channel": "visit",
       "title": "A second draft",
       "npc": "anselm",
-      "text": "Anselm and Pavel will revisit the briefing if the first draft can remain unsigned.",
+      "text": "Anselm is at your door. He and Pavel will revisit the briefing if the first draft can remain unsigned.",
+      "remoteText": "Anselm's note: he and Pavel will revisit the briefing if the first draft can remain unsigned. Please reply.",
       "minDay": 7,
       "expiresDay": 7,
       "relationshipGate": {
@@ -2467,6 +2494,7 @@
     },
     {
       "id": "web-seating",
+      "channel": "message",
       "title": "The seating test",
       "npc": "protocol",
       "text": "The reception seating chart puts two officials who are not speaking beside one microphone.",
@@ -2508,9 +2536,10 @@
     },
     {
       "id": "web-mentor",
+      "channel": "call",
       "title": "The reluctant mentor",
       "npc": "protocol",
-      "text": "Mira has asked Ndao to explain a protocol rule. He has brought the previous edition.",
+      "text": "Mira has asked Ndao to explain a protocol rule. He calls to say he has the previous edition, and the exception is unwritten.",
       "minDay": 9,
       "expiresDay": 9,
       "relationshipGate": {
@@ -2550,9 +2579,10 @@
     },
     {
       "id": "web-allies",
+      "channel": "message",
       "title": "An orderly queue",
       "npc": "sola",
-      "text": "Ines and Sola have agreed to share a queue. Each has printed a different first number.",
+      "text": "The front desk reports that Ines and Sola have agreed to share a queue. Each has printed a different first number.",
       "minDay": 10,
       "expiresDay": 10,
       "relationshipGate": {
@@ -2591,9 +2621,10 @@
     },
     {
       "id": "web-dinner",
+      "channel": "call",
       "title": "Dinner for two",
       "npc": "golf",
-      "text": "A dinner needs two signatures from people who disagree about where the signatures should sit.",
+      "text": "Bako's office calls: a dinner needs two signatures from people who disagree about where the signatures should sit.",
       "minDay": 11,
       "expiresDay": 11,
       "relationshipGate": {

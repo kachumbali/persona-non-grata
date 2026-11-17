@@ -336,6 +336,12 @@ export type StoryEvent = {
   minDay: number;
   expiresDay?: number;
   location?: string;
+  /**
+   * How a pop-up without a location reaches the player: a phone call, a written message, or
+   * someone at the embassy door. Visits need `remoteText` for when the player is elsewhere.
+   */
+  channel?: StoryChannel;
+  remoteText?: string;
   requires?: string;
   requiresFlag?: string;
   requiresChoice?: { eventId: string; choiceId: string };
@@ -343,6 +349,7 @@ export type StoryEvent = {
   onMiss?: { text: string; effects: Effects; pair?: number; pairTarget?: string };
   choices: StoryChoice[];
 };
+export type StoryChannel = "call" | "message" | "visit";
 /** A prerequisite must have succeeded; missed episodes cannot unlock continuations. */
 export function storyPrerequisitesMet(
   event: StoryEvent,

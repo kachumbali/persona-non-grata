@@ -361,3 +361,47 @@ describe("content checker on mission steps and setbacks", () => {
     expect(found.length).toBeGreaterThan(0);
   });
 });
+
+describe("pop-up channels", () => {
+  const popUp = (pack: ChapterPack, id: string) => pack.campaign.events.find((e) => e.id === id)!;
+
+  it("requires a channel on every event without a location", () => {
+    const pack = fresh();
+    delete popUp(pack, "cookies").channel;
+    const errors = check(pack).filter((f) => f.level === "error");
+    expect(errors.some((f) => f.path.endsWith("channel") && f.message.includes("cookies"))).toBe(
+      true,
+    );
+  });
+  it("allows a visit only from someone who works at the embassy", () => {
+    const pack = fresh();
+    Object.assign(popUp(pack, "cookies"), { channel: "visit", remoteText: "A note." });
+    const errors = check(pack).filter((f) => f.level === "error");
+    expect(errors.some((f) => f.message.includes("does not work at the embassy"))).toBe(true);
+  });
+  it("accepts a visit from embassy staff with a remoteText", () => {
+    const pack = fresh();
+    Object.assign(popUp(pack, "rivalry"), { channel: "visit", remoteText: "A note." });
+    expect(check(pack).filter((f) => f.level === "error")).toEqual([]);
+  });
+  it("requires a remoteText for a visit", () => {
+    const pack = fresh();
+    Object.assign(popUp(pack, "rivalry"), { channel: "visit" });
+    delete popUp(pack, "rivalry").remoteText;
+    const errors = check(pack).filter((f) => f.level === "error");
+    expect(errors.some((f) => f.message.includes("needs a remoteText"))).toBe(true);
+  });
+  it("warns on stage directions in a call or message", () => {
+    const pack = fresh();
+    popUp(pack, "cookies").text = "Celeste leans across the table and mentions the room.";
+    const warnings = check(pack).filter((f) => f.level === "warning");
+    expect(warnings.some((f) => f.message.includes("stage direction"))).toBe(true);
+  });
+  it("does not check a visit's text for stage directions", () => {
+    const pack = fresh();
+    Object.assign(popUp(pack, "rivalry"), { channel: "visit", remoteText: "A note." });
+    popUp(pack, "rivalry").text = "Pavel leans across the table.";
+    const warnings = check(pack).filter((f) => f.message.includes("stage direction"));
+    expect(warnings).toEqual([]);
+  });
+});

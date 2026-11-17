@@ -37,6 +37,23 @@ export type ContentGlobals = {
   portraitFiles?: string[];
 };
 
+/** Physical stage directions that cannot happen on a phone call or in a message. */
+export const STAGE_DIRECTIONS = [
+  "slides",
+  "hands you",
+  "across the table",
+  "the room",
+  "leans",
+  "sits down",
+  "walks in",
+];
+
+/** The stage directions in a text, matched case-insensitively. */
+export function stageDirections(text: string): string[] {
+  const lower = text.toLowerCase();
+  return STAGE_DIRECTIONS.filter((phrase) => lower.includes(phrase));
+}
+
 /** Length limits from docs/WRITING_GUIDE.md, in words. Going over is a warning. */
 export const TEXT_LIMITS = {
   eventTitle: 6,
@@ -159,6 +176,8 @@ function buildSchemas(strict: boolean) {
     minDay: day,
     expiresDay: opt(day),
     location: opt(str),
+    channel: opt(z.enum(["call", "message", "visit"])),
+    remoteText: opt(str),
     requires: opt(str),
     requiresFlag: opt(str),
     requiresChoice: opt(obj({ eventId: str, choiceId: str })),
@@ -1347,6 +1366,45 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
       if (e.onMiss) needText(e.onMiss.text, f, ["events", i, "onMiss", "text"], "onMiss text");
       limit(e.title, TEXT_LIMITS.eventTitle, f, ["events", i, "title"], "Event title");
       limit(e.text, TEXT_LIMITS.eventText, f, ["events", i, "text"], "Event text");
+      if (!e.location && !e.channel)
+        error(f, at("channel"), `Pop-up event "${e.id}" needs a channel (call, message or visit)`);
+      if (e.channel === "visit") {
+        const speaker = characters.find((c) => c.id === e.npc);
+        if (speaker && speaker.location !== "embassy")
+          error(
+            f,
+            at("channel"),
+            `Visit event "${e.id}" is from "${e.npc}", who does not work at the embassy`,
+          );
+        if (!e.remoteText?.trim())
+          error(f, at("remoteText"), `Visit event "${e.id}" needs a remoteText`);
+      }
+      if (e.remoteText !== undefined) {
+        needText(e.remoteText, f, ["events", i, "remoteText"], "Event remoteText");
+        limit(
+          e.remoteText,
+          TEXT_LIMITS.eventText,
+          f,
+          ["events", i, "remoteText"],
+          "Event remoteText",
+        );
+      }
+      // Calls and messages cannot contain physical stage directions. A visit's remoteText is a message.
+      const spoken: [string, string | undefined][] =
+        e.channel === "visit"
+          ? [["remoteText", e.remoteText]]
+          : e.channel === "call" || e.channel === "message"
+            ? [["text", e.text]]
+            : [];
+      for (const [label, body] of spoken) {
+        const found = body ? stageDirections(body) : [];
+        if (found.length)
+          warn(
+            f,
+            at(label),
+            `Event ${label} reads as a stage direction in a call or message: ${found.map((w) => `"${w}"`).join(", ")}`,
+          );
+      }
       if (!e.choices.length) error(f, at("choices"), `Event "${e.id}" has no choices`);
       duplicates(
         e.choices,
