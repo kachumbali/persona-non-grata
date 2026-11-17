@@ -441,75 +441,134 @@
     {
       "id": "embassy",
       "name": "Embassy",
-      "description": "Your team, your in-tray, your responsibility.",
+      "description": "The Bellaluxe embassy in Port Hesperia, and your office for the next fifteen days. The Ambassador is absent, the cat has assumed responsibility for the Ambassador's office, and every document exists in triplicate. Your team, your in-tray, your responsibility.",
       "work": "Prepare visit arrangements",
       "effects": {},
-      "cost": 0
+      "cost": 0,
+      "regulars": [
+        "anselm",
+        "pavel",
+        "sola",
+        "development",
+        "bianca",
+        "ines",
+        "press",
+        "maxim",
+        "ketu"
+      ],
+      "atmosphere": {
+        "morning": "Coffee is a legal right, and the registry opens with a queue already in it.",
+        "midday": "Lunch is assembled in the kitchen, and the in-tray has grown while you ate it.",
+        "afternoon": "The cat has taken the Ambassador's chair again, and nobody has asked it to leave.",
+        "evening": "Staff go home one floor at a time. The parrot stays, and it knows the password."
+      }
     },
     {
       "id": "ministry",
       "name": "Foreign Ministry / Protocol",
-      "description": "Appointments, landing permissions and wounded precedence.",
+      "description": "The host ministry's protocol side, where landing permissions are stamped and seating plans are argued over. Permission has three stamps, and you will be asked for each one. Appointments, landing permissions and wounded precedence.",
       "work": "Negotiate protocol approval",
       "effects": {
         "goodwill": 4,
         "confidence": 2
       },
-      "cost": 0
+      "cost": 0,
+      "regulars": ["protocol", "port-officer"],
+      "atmosphere": {
+        "morning": "Stamps are being applied slowly, with feeling, to documents nobody has read.",
+        "midday": "The seating plan is under review, and the decorative fern is holding its position.",
+        "afternoon": "Each appointment requires a second appointment, which is noted and filed.",
+        "evening": "The office closes on time. The approval, it is noted, does not."
+      }
     },
     {
       "id": "eu",
       "name": "EU Delegation",
-      "description": "Coordination, contested clauses and exactly 17.6% of the refreshments.",
+      "description": "The EU's local coordination office, where joint positions are made and minutes are kept. Celeste Norren convenes the meetings, the biscuits are counted, and every clause is contested in its proper order. Coordination, contested clauses and exactly 17.6% of the refreshments.",
       "work": "Build a coalition",
       "effects": {
         "confidence": 3,
         "goodwill": 1
       },
-      "cost": 0
+      "cost": 0,
+      "regulars": ["eu", "amb-asteria", "eu-germany", "eu-france", "eu-malta", "eu-sweden"],
+      "atmosphere": {
+        "morning": "The biscuits are laid out before the agenda, and the agenda before the chairs.",
+        "midday": "Niko Arden is counting the coffee cups again, with a footnote in preparation.",
+        "afternoon": "The joint draft has a footnote longer than the consensus it describes.",
+        "evening": "The room is empty, but the minutes of it are still being written."
+      }
     },
     {
       "id": "bar",
       "name": "The Quiet Amendment",
-      "description": "Rumours and favours that never quite stay unofficial.",
+      "description": "A bar where unofficial favours are arranged, and where you eat if you choose the venue of the same name. Marcel Deux is usually on hand to explain who owes whom. Rumours and favours that never quite stay unofficial.",
       "work": "Gather unofficial information",
       "effects": {
         "confidence": 1,
         "goodwill": 2
       },
-      "cost": 200
+      "cost": 200,
+      "regulars": ["fixer", "bar-insurer"],
+      "atmosphere": {
+        "morning": "Nobody is here in the morning, which is how Marcel prefers it.",
+        "midday": "Lunch is served, and the regulars are already keeping score.",
+        "afternoon": "Sofia wants collection records, and Marcel wants cash, and neither is getting it.",
+        "evening": "Rumours are strongest after dark, and most of them are only half-true."
+      }
     },
     {
       "id": "pressclub",
       "name": "Press Correspondents Club",
-      "description": "Access, credibility and the dangerous phrase “off the record”.",
+      "description": "The Press Correspondents Club, where the press corps meets, drinks and keeps score. Ruth Vale is usually there, and her offers of a longer conversation begin on day two. Access, credibility and the dangerous phrase “off the record”.",
       "work": "Brief the correspondents",
       "effects": {
         "confidence": 3,
         "goodwill": 2
       },
-      "cost": 100
+      "cost": 100,
+      "regulars": ["journalist"],
+      "atmosphere": {
+        "morning": "The news board is updated before the coffee, and corrected after lunch.",
+        "midday": "The microphone looks switched off. It is not.",
+        "afternoon": "Off-the-record conversations are being held on the record, mostly by accident.",
+        "evening": "Ruth Vale is buying nothing this evening, and noting everyone who is."
+      }
     },
     {
       "id": "golf",
       "name": "Precedence Golf Club",
-      "description": "The people who never answer letters are available on the ninth green.",
+      "description": "The Precedence Golf Club, where the host's officials can be found and where the embassy's receptions are held. Appointments are informal, the bets are friendly and the terrace is always full. The people who never answer letters are available on the ninth green.",
       "work": "Seek an informal appointment",
       "effects": {
         "goodwill": 4
       },
-      "cost": 400
+      "cost": 400,
+      "regulars": ["golf", "amb-valdoria"],
+      "atmosphere": {
+        "morning": "The ninth green is busy before breakfast, and nobody has an appointment.",
+        "midday": "The terrace is set for a reception, and the seating is already being disputed.",
+        "afternoon": "The secretary says the Minister is unavailable. The caddie disagrees.",
+        "evening": "The bets are friendly, the score is disputed, and the bar tab is large."
+      }
     },
     {
       "id": "un",
       "name": "UN House & multilateral circuit",
-      "description": "Programmes, funding, mandates and competing logos.",
+      "description": "UN House, where the Resident Coordinator and the logistics officer keep the development programme and its coordination meetings. Six agencies share one programme and several logos, and each agency keeps its own spreadsheet. Programmes, funding, mandates and competing logos.",
       "work": "Negotiate a development programme",
       "effects": {
         "confidence": 4,
         "goodwill": 2
       },
-      "cost": 0
+      "cost": 0,
+      "regulars": ["un", "un-coordinator"],
+      "atmosphere": {
+        "morning": "Six agencies have arrived with six logos and one shared programme.",
+        "midday": "A spreadsheet of bins stuck in customs is updated, and each agency has its own.",
+        "afternoon": "The roundtable agenda has seven annexes, and the logos are being resized.",
+        "evening": "The coordination minutes are circulated, with one logo larger than the rest."
+      }
     }
   ],
   "dialogue": {
