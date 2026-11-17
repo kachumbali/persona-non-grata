@@ -13,7 +13,7 @@
       "portrait": "npc-anselm",
       "traits": ["credits", "social"],
       "wants": "Get credit for the visit programme.",
-      "bio": "On his first posting, Anselm drafted the Minister's speech, ran to eleven pages and quoted himself twice as ‘a promising young voice’. He is keen that the visit programme carries his name, and he has already offered to brief Capital himself.",
+      "bio": "On his first posting, Anselm has drafted the Minister's speech: eleven pages, quoting himself twice as ‘a promising young voice’. He is keen that the visit programme carries his name, and he has already offered to brief Capital himself.",
       "voice": "Eager and self-regarding, he offers help that is mostly about his own credit, and he quotes himself whenever he can."
     },
     {
@@ -45,7 +45,7 @@
       "portrait": "npc-sola",
       "traits": ["initiative", "service"],
       "wants": "Make the visit work with the staff available.",
-      "bio": "Sola runs the registry and local coordination, and holds the paperwork for most things that have happened at the embassy. She teaches Ombrazian for points and no fee, and she will tell you exactly what she cannot do. Form 7.3 came from a drawer that was not on the list.",
+      "bio": "Sola runs the registry and local coordination, and holds the paperwork for most things that have happened at the embassy. She teaches Ombrazian for points and no fee, and she will tell you exactly what she cannot do. She knows which drawer holds which form, including the drawers that are not on the list.",
       "voice": "Practical and tired of being everyone's fixer, she is precise about her limits and sharp about procedure."
     },
     {
@@ -110,7 +110,7 @@
       "portrait": "npc-press",
       "traits": ["social", "gossip"],
       "wants": "Get the visit photographed from its best side.",
-      "bio": "Lucien Falk runs public diplomacy and the embassy's digital output, and writes slogans before he worries about Legal. He shares the Generator Shed with Pavel Oskarsen, whose cupboard he once filed as a media asset. He knows most people in town, and most of their gossip.",
+      "bio": "Lucien Falk runs public diplomacy and the embassy's digital output, and writes slogans before he worries about Legal. He shares the Generator Shed with Pavel Oskarsen, and the cupboard in it is a matter of dispute. He knows most people in town, and most of their gossip.",
       "voice": "Image-first and cheerful about risk, he writes slogans and then worries about Legal."
     },
     {
@@ -142,7 +142,7 @@
       "portrait": "npc-ketu",
       "traits": ["quiet", "gossip"],
       "wants": "Serve dinner before the meeting overruns.",
-      "bio": "Ketu runs the embassy kitchen, where she prepares the lunch and costs every absurd request before agreeing to it. She called the garlic an aromatic diplomatic misunderstanding, and her fish soup with ambition became the visit's triumph. Her pie-chart cookie is, precisely, 17.6% chocolate.",
+      "bio": "Ketu runs the embassy kitchen, where she prepares the lunch and costs every absurd request before agreeing to it. She calls garlic an aromatic diplomatic misunderstanding, and has a fish soup with ambition in reserve. Her pie-chart cookie is, precisely, 17.6% chocolate.",
       "voice": "Dry and unflappable, she accepts every absurd request and then points out what it will cost."
     },
     {
@@ -194,7 +194,7 @@
       "refusalGreeting": "Marcel produces the unpaid favour as a receipt. ",
       "traits": ["gossip", "caution"],
       "wants": "Be consulted before anyone finds an official shortcut.",
-      "bio": "Marcel Deux is an unofficial intermediary who works from the bar and expects to be consulted before any official shortcut is found. He can explain the supplier connection from day two, and he treats every service as a favour owed. He also teaches Ombrazian, as the Fixer's taxi.",
+      "bio": "Marcel Deux is an unofficial intermediary who works from the bar and expects to be consulted before any official shortcut is found. He knows who supplies whom, and he treats every service as a favour owed. He also teaches Ombrazian, as the Fixer's taxi.",
       "voice": "Suave and knowing, he offers shortcuts in a tone that makes them sound like favours he is granting."
     },
     {
@@ -210,7 +210,7 @@
       "portrait": "npc-journalist",
       "traits": ["curious", "gossip"],
       "wants": "Find the story behind the official statement.",
-      "bio": "Ruth Vale is a press correspondent whose foreign column is read for the distance between quote and fact. She offers a longer conversation at the Press Correspondents Club from day two, and she expects to be bought a drink. She keeps score of promises, and of who made them.",
+      "bio": "Ruth Vale is a press correspondent whose foreign column is read for the distance between quote and fact. She prefers longer conversations at the Press Correspondents Club, and she expects to be bought a drink. She keeps score of promises, and of who made them.",
       "voice": "Sharp and dry, she enjoys the distance between quote and fact, and she keeps score of promises."
     },
     {
@@ -244,7 +244,7 @@
       "portrait": "npc-un",
       "traits": ["process", "service"],
       "wants": "Publish a joint development plan.",
-      "bio": "Dr Amara Chen is the UN Resident Coordinator, who hosts the development roundtable and the final coordination meeting. She is willing to support the programme, but cannot promise six agencies will agree on one logo. She can discuss the programme at UN House from day three.",
+      "bio": "Dr Amara Chen is the UN Resident Coordinator, who hosts the development roundtable and the final coordination meeting. She is willing to support the programme, but cannot promise six agencies will agree on one logo. She prefers to discuss it at UN House, with the agencies in the room.",
       "voice": "Diplomatic and tired of logos, she is honest about what agencies can and cannot agree."
     },
     {
@@ -260,7 +260,7 @@
       "portrait": "npc-amb-valdoria",
       "traits": ["seating", "social"],
       "wants": "Secure a seat that confirms the mission’s importance.",
-      "bio": "Ambassador Mara Velen of Valdoria hosts her national-day reception and a colleagues' lunch at the golf club. Her seating plan reserves a chair for each ambassador. Her national-day speech ran eight minutes, and she is wry about the locked exit that made the applause longer.",
+      "bio": "Ambassador Mara Velen of Valdoria hosts her national-day reception and a colleagues' lunch at the golf club. Her seating plan reserves a chair for each ambassador. Her national-day speeches are timed, and so is the applause.",
       "voice": "Witty and sharp about ceremony, she is wry about speeches and locked doors."
     },
     {
@@ -520,7 +520,7 @@
     {
       "id": "pressclub",
       "name": "Press Correspondents Club",
-      "description": "The Press Correspondents Club, where the press corps meets, drinks and keeps score. Ruth Vale is usually there, and her offers of a longer conversation begin on day two. Access, credibility and the dangerous phrase “off the record”.",
+      "description": "The Press Correspondents Club, where the press corps meets, drinks and keeps score. Ruth Vale is usually there, and rarely off the record. Access, credibility and the dangerous phrase “off the record”.",
       "work": "Brief the correspondents",
       "effects": {
         "confidence": 3,

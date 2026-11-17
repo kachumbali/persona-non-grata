@@ -556,7 +556,7 @@ Every contradiction found in the sections above, plus content issues found while
 1. **Pronouns for the visiting Minister (not one of the 24).** `email:e10` says "Please confirm the Ambassador will greet her personally", which makes the Minister female. `email:arrival-programme` (option note) says "The Minister's aide supplies a programme of his own", which makes the Minister male. Source ids: `email:e10` and `email:arrival-programme`.
 2. **Pavel and Lucien: shared office versus separate rooms (weak).** `chapter:startRelationships` tags them `shares-an-office`. `embassy:staff[2]` puts Pavel in the Generator Shed and `embassy:staff[7]` puts Lucien on the Rooftop. The content calls the shared space a cupboard (`event:web-office`, `gossip:office-cupboard`), so the two may not be in conflict. Source ids: `chapter:startRelationships`, `embassy:staff[2]`, `embassy:staff[7]`.
 3. **Anselm and press monitoring (weak).** `duties:anselm` gives "Political reporting and press monitoring" to Anselm. `briefing:sections[7]` says Lucien "compiles the local press, or Maxim the intern does". Source ids: `duties:anselm`, `briefing:sections[7]`.
-4. **Bianca's rank (weak, a title only).** `email:e6` and `mail:e6` refer to "Colonel Montefiore". `char:bianca` gives the role "Defence Attaché" and no rank. Source ids: `email:e6`, `mail:e6`, `char:bianca`.
+4. Resolved in Q-04: Bianca's role is now "Defence Attaché (Colonel)" in `campaign.json` and `embassy.json`.
 
 **About setting and dates**
 

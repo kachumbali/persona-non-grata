@@ -21,6 +21,6 @@ describe("Who is who", () => {
       .start({ title: "Mx", name: "Tester", portrait: "diplomat-1", bio: "", traits: [] });
     useGame.getState().selectNpc("anselm");
     render(<WhoIsWho />);
-    expect(screen.getByText(/On his first posting, Anselm drafted/)).toBeInTheDocument();
+    expect(screen.getByText(/On his first posting, Anselm has drafted/)).toBeInTheDocument();
   });
 });
