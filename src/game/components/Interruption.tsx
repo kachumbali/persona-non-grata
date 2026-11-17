@@ -28,6 +28,20 @@ const dpFor = (eventId: string, c: StoryChoice) =>
         ? 0
         : 1;
 
+/**
+ * The store's refusal, with a colleague named by first name instead of by id:
+ * "anselm's baseline duties conflict" reads "Anselm's baseline duties conflict".
+ */
+const displayReason = (reason: string | undefined): string | undefined => {
+  if (!reason) return reason;
+  const person = campaign().characters.find(
+    (c) => reason.startsWith(`${c.id}'s `) || reason.startsWith(`${c.id} has `),
+  );
+  if (!person) return reason;
+  const first = person.name.split(" ")[0] ?? person.name;
+  return first + reason.slice(person.id.length);
+};
+
 /** Story episodes arrive in the main game as a call, a fax or someone at your door. */
 export function Interruption() {
   const g = useGame();
@@ -111,7 +125,7 @@ export function Interruption() {
     )
     .map((c) => ({
       choice: c,
-      reason: checkQueue(g, decisionFor(c), c.replace).error,
+      reason: displayReason(checkQueue(g, decisionFor(c), c.replace).error),
     }));
 
   const choose = (c: StoryChoice) => {
