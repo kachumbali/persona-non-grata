@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { BellRing, DoorOpen, Mail, Phone, Printer, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { campaign, type StoryChoice, type StoryEvent } from "../rules";
-import { useGame } from "../store";
+import { campaign, type PendingDecision, type StoryChoice, type StoryEvent } from "../rules";
+import { checkQueue, useGame } from "../store";
 import { capacityLedger, staffDuty } from "../economy";
 import { interruptionView, type InterruptionKind } from "../interruption";
 import { Portrait } from "./Portrait";
@@ -66,42 +66,56 @@ export function Interruption() {
   ];
   const ledger = capacityLedger(g.pending, g.block);
 
+  const decisionFor = (c: StoryChoice): PendingDecision => ({
+    id: `event-${event.id}`,
+    kind: "event",
+    source: event.title,
+    text: c.result ?? "Event resolved.",
+    effects: c.effects ?? {},
+    eventId: event.id,
+    eventChoice: c.id,
+    worker: c.worker ?? (event.id === "invitation" ? undefined : event.npc),
+    partner: event.id === "rivalry" ? "anselm" : undefined,
+    pairTarget: c.pairTarget,
+    trust: c.trust,
+    pair: c.pair,
+    flag: c.flag,
+    favour: c.favour,
+    teaches: c.teaches,
+    score: c.score,
+    contact: c.contact,
+    contactTrust: c.contactTrust,
+    formal: c.formal,
+    traitChoice: c.requiresTrait,
+    languageGate: c.requiresLanguage,
+    interpreter:
+      c.requiresLanguage && (g.character?.languages?.[c.requiresLanguage.language] ?? 0) === 0
+        ? interpreter || undefined
+        : undefined,
+    counts: c.counts,
+    statDrift: c.statDrift,
+    overload,
+    playerSlot: c.replace,
+    timeCost: dpFor(event.id, c),
+  });
+  // The same checks the store runs on a click, so an option is disabled exactly when it would be refused.
+  const options = event.choices
+    .filter((c) =>
+      eligible(
+        c,
+        g.character?.traits ?? [],
+        computeStats(g.character?.traits ?? [], g.character?.statDrift),
+        g.personnel.reputations,
+        withInterpreter(c, g.character?.languages, interpreter),
+      ),
+    )
+    .map((c) => ({
+      choice: c,
+      reason: checkQueue(g, decisionFor(c), c.replace).error,
+    }));
+
   const choose = (c: StoryChoice) => {
-    const ok = useGame.getState().queue(
-      {
-        id: `event-${event.id}`,
-        kind: "event",
-        source: event.title,
-        text: c.result ?? "Event resolved.",
-        effects: c.effects ?? {},
-        eventId: event.id,
-        eventChoice: c.id,
-        worker: c.worker ?? (event.id === "invitation" ? undefined : event.npc),
-        partner: event.id === "rivalry" ? "anselm" : undefined,
-        pairTarget: c.pairTarget,
-        trust: c.trust,
-        pair: c.pair,
-        flag: c.flag,
-        favour: c.favour,
-        teaches: c.teaches,
-        score: c.score,
-        contact: c.contact,
-        contactTrust: c.contactTrust,
-        formal: c.formal,
-        traitChoice: c.requiresTrait,
-        languageGate: c.requiresLanguage,
-        interpreter:
-          c.requiresLanguage && (g.character?.languages?.[c.requiresLanguage.language] ?? 0) === 0
-            ? interpreter || undefined
-            : undefined,
-        counts: c.counts,
-        statDrift: c.statDrift,
-        overload,
-        playerSlot: c.replace,
-        timeCost: dpFor(event.id, c),
-      },
-      c.replace,
-    );
+    const ok = useGame.getState().queue(decisionFor(c), c.replace);
     if (ok) setOpen(false);
     else setNotice(useGame.getState().planError);
   };
@@ -157,20 +171,12 @@ export function Interruption() {
                 {event.choices.some((option) => option.requiresLanguage) && (
                   <InterpreterSelect value={interpreter} onChange={setInterpreter} />
                 )}
-                {event.choices
-                  .filter((c) =>
-                    eligible(
-                      c,
-                      g.character?.traits ?? [],
-                      computeStats(g.character?.traits ?? [], g.character?.statDrift),
-                      g.personnel.reputations,
-                      withInterpreter(c, g.character?.languages, interpreter),
-                    ),
-                  )
-                  .map((c) => (
+                {options.map(({ choice: c, reason }) => (
+                  <div key={c.id} className="flex flex-col gap-1">
                     <Button
-                      key={c.id}
                       variant="outline"
+                      disabled={!!reason}
+                      aria-describedby={reason ? `option-reason-${c.id}` : undefined}
                       className="h-auto justify-start whitespace-normal py-2 text-left"
                       onClick={() => choose(c)}
                     >
@@ -182,7 +188,13 @@ export function Interruption() {
                         ? " · 2 colleague DP"
                         : ""}
                     </Button>
-                  ))}
+                    {reason && (
+                      <p id={`option-reason-${c.id}`} className="px-1 text-xs text-destructive">
+                        {reason}
+                      </p>
+                    )}
+                  </div>
+                ))}
               </div>
               {notice && (
                 <p role="alert" className="mt-2 text-sm text-destructive">

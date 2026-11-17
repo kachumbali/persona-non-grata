@@ -393,6 +393,197 @@ export function resolveStep(s: GameState, decision: PendingDecision): PendingDec
   return { ...decision, step: step.id, stepCost, cashCost: base + stepCost };
 }
 
+/** The checks a queued decision must pass, as pure data: the plan it would make, or why not. */
+type QueueResult =
+  { plan: PendingDecision[]; error?: undefined } | { error: string; plan?: undefined };
+export function checkQueue(
+  s: GameState,
+  requested: PendingDecision,
+  replacePlayer = false,
+): QueueResult {
+  if (!s.character || s.ending) return { error: "" };
+  if (
+    requested.interpreter &&
+    (!requested.languageGate ||
+      !["sola", "anselm", "maxim"].includes(requested.interpreter) ||
+      (s.character.languages?.[requested.languageGate.language] ?? 0) !== 0)
+  ) {
+    return { error: "That interpreter is not available for this choice." };
+  }
+  if (requested.examAnswers) {
+    const host = activeChapter().manifest.hostLanguage;
+    const exam = host?.exam;
+    const attempt = s.character.examAttempts ?? 0;
+    const questions = exam ? drawExam(exam.questions, s.seed, attempt) : [];
+    if (
+      !host ||
+      !exam ||
+      s.day !== exam.day ||
+      s.block !== exam.block ||
+      (s.character.languages?.[host.id] ?? 0) < 2 ||
+      requested.timeCost !== 2 ||
+      requested.examAnswers.length !== 5 ||
+      s.pending.some((item) => !!item.examAnswers) ||
+      questions.some(
+        (question) =>
+          !requested.examAnswers?.some(
+            (answer) =>
+              answer.question === question.id &&
+              Number.isInteger(answer.answer) &&
+              answer.answer >= 0 &&
+              answer.answer < question.answers.length,
+          ),
+      ) ||
+      s.storyFlags.some((flag) => flag.startsWith("language-exam:"))
+    ) {
+      return { error: "The language examination is unavailable." };
+    }
+  }
+  if (requested.languageLesson) {
+    const teacher = activeChapter().manifest.hostLanguage?.teachers?.find(
+      (item) => item.id === requested.languageLesson,
+    );
+    if (
+      !teacher ||
+      (requested.lessonLanguage !== undefined &&
+        requested.lessonLanguage !== "communique" &&
+        requested.lessonLanguage !== activeChapter().manifest.hostLanguage?.id) ||
+      (requested.lessonLanguage === "communique" && teacher.id === "fixer") ||
+      (teacher.id === "tutor" && s.tutorIgnored >= 3) ||
+      (teacher.id === "fixer" && (!requested.id.startsWith("travel-") || !requested.location)) ||
+      (teacher.id !== "fixer" && teacher.character && requested.worker !== teacher.character) ||
+      requested.timeCost !== 1 ||
+      s.personalFunds <
+        teacher.fee +
+          s.pending.reduce(
+            (sum, item) =>
+              sum +
+              (activeChapter().manifest.hostLanguage?.teachers?.find(
+                (entry) => entry.id === item.languageLesson,
+              )?.fee ?? 0),
+            0,
+          )
+    ) {
+      return { error: "That language lesson is not available." };
+    }
+  }
+  if (requested.eventId && requested.eventChoice) {
+    const choice = campaign()
+      .events.find((event) => event.id === requested.eventId)
+      ?.choices.find((item) => item.id === requested.eventChoice);
+    if (
+      choice &&
+      !eligible(
+        choice,
+        s.character.traits,
+        computeStats(s.character.traits, s.character.statDrift),
+        s.personnel.reputations,
+        choice.requiresLanguage &&
+          requested.interpreter &&
+          choice.requiresLanguage.language !== "communique"
+          ? {
+              ...s.character.languages,
+              [choice.requiresLanguage.language]: Math.max(
+                1,
+                s.character.languages?.[choice.requiresLanguage.language] ?? 0,
+              ),
+            }
+          : s.character.languages,
+      )
+    ) {
+      return { error: "That choice is not available to your personnel file." };
+    }
+  }
+  if (
+    requested.gossipId &&
+    (!s.knownFacts.includes(`gossip:${requested.gossipId}`) ||
+      !campaign().gossip?.some((g) => g.id === requested.gossipId) ||
+      !requested.worker ||
+      !campaign().characters.some((c) => c.id === requested.worker && c.location === s.location))
+  ) {
+    return { error: "That gossip or listener is not available here." };
+  }
+  const stepped = resolveStep(s, requested);
+  if (typeof stepped === "string") {
+    return { error: stepped };
+  }
+  let decision = stepped;
+  if (replacePlayer && s.pending.some((p) => p.remainingBlocks === 1)) {
+    return { error: "A commitment is already in progress; finish it before replacing the plan." };
+  }
+  const old = s.pending.filter(
+    (p) =>
+      !(decision.kind === "social" && p.kind === "social") &&
+      !(replacePlayer && playerTime(p) > 0 && !p.id.startsWith("travel-")),
+  );
+  const prepared = planDemarche({ ...s, pending: old }, decision);
+  if (typeof prepared === "string") {
+    return { error: prepared };
+  }
+  decision = prepared;
+  if (
+    decision.route &&
+    old.some((p) => p.task === decision.task && p.step === decision.step && p.route)
+  ) {
+    return { error: "A route for this step is already in the plan." };
+  }
+  if (decision.route && decision.task && decision.step) {
+    const route = findStep(decision.task, decision.step)?.routes?.find(
+      (r) => r.id === decision.route,
+    );
+    const who = route && routeFavourToSpend(route, routeContext(s, decision.task, decision.step));
+    const reserved = who
+      ? old.filter(
+          (p) =>
+            p.task &&
+            p.step &&
+            p.route &&
+            (() => {
+              const other = findStep(p.task!, p.step!)?.routes?.find((r) => r.id === p.route);
+              return other && routeFavourToSpend(other, routeContext(s, p.task!, p.step!)) === who;
+            })(),
+        ).length
+      : 0;
+    if (who && reserved >= (s.favours.owedToYou[who] ?? 0)) {
+      return { error: "That favour is already promised to another route." };
+    }
+    const newFlag = route?.consequences?.flag;
+    const conflicts = old.some((p) => {
+      const other =
+        p.task && p.step && p.route
+          ? findStep(p.task, p.step)?.routes?.find((r) => r.id === p.route)
+          : undefined;
+      return (
+        (route?.requires?.expiresOnFlag &&
+          [p.flag, other?.consequences?.flag].includes(route.requires.expiresOnFlag)) ||
+        route?.requires?.expiresOnFlags?.some((flag) =>
+          [p.flag, other?.consequences?.flag].includes(flag),
+        ) ||
+        (newFlag &&
+          (other?.requires?.expiresOnFlag === newFlag ||
+            other?.requires?.expiresOnFlags?.includes(newFlag)))
+      );
+    });
+    if (conflicts) {
+      return { error: "Those routes make conflicting commitments. Choose one." };
+    }
+  }
+  const plan = [...old, decision];
+  const error =
+    decision.special === "supplement" && s.economy.supplementUsed
+      ? "Capital has already granted your supplement."
+      : validatePlan(
+          plan,
+          s.block,
+          s.economy,
+          playerCapacity(s.character, s.energy, s.composure, s.alcohol, s.hangover).total,
+        );
+  if (error) {
+    return { error: error };
+  }
+  return { plan };
+}
+
 export const useGame = create<GameState>()(
   persist<GameState, [], [], SavedGame>(
     (set, get) => ({
@@ -629,211 +820,13 @@ export const useGame = create<GameState>()(
           };
         }),
       queue: (requested, replacePlayer = false) => {
-        const s = get();
-        if (!s.character || s.ending) return false;
-        if (
-          requested.interpreter &&
-          (!requested.languageGate ||
-            !["sola", "anselm", "maxim"].includes(requested.interpreter) ||
-            (s.character.languages?.[requested.languageGate.language] ?? 0) !== 0)
-        ) {
-          set({ planError: "That interpreter is not available for this choice." });
-          return false;
+        const result = checkQueue(get(), requested, replacePlayer);
+        if (result.plan) {
+          set({ pending: result.plan, planError: "" });
+          return true;
         }
-        if (requested.examAnswers) {
-          const host = activeChapter().manifest.hostLanguage;
-          const exam = host?.exam;
-          const attempt = s.character.examAttempts ?? 0;
-          const questions = exam ? drawExam(exam.questions, s.seed, attempt) : [];
-          if (
-            !host ||
-            !exam ||
-            s.day !== exam.day ||
-            s.block !== exam.block ||
-            (s.character.languages?.[host.id] ?? 0) < 2 ||
-            requested.timeCost !== 2 ||
-            requested.examAnswers.length !== 5 ||
-            s.pending.some((item) => !!item.examAnswers) ||
-            questions.some(
-              (question) =>
-                !requested.examAnswers?.some(
-                  (answer) =>
-                    answer.question === question.id &&
-                    Number.isInteger(answer.answer) &&
-                    answer.answer >= 0 &&
-                    answer.answer < question.answers.length,
-                ),
-            ) ||
-            s.storyFlags.some((flag) => flag.startsWith("language-exam:"))
-          ) {
-            set({ planError: "The language examination is unavailable." });
-            return false;
-          }
-        }
-        if (requested.languageLesson) {
-          const teacher = activeChapter().manifest.hostLanguage?.teachers?.find(
-            (item) => item.id === requested.languageLesson,
-          );
-          if (
-            !teacher ||
-            (requested.lessonLanguage !== undefined &&
-              requested.lessonLanguage !== "communique" &&
-              requested.lessonLanguage !== activeChapter().manifest.hostLanguage?.id) ||
-            (requested.lessonLanguage === "communique" && teacher.id === "fixer") ||
-            (teacher.id === "tutor" && s.tutorIgnored >= 3) ||
-            (teacher.id === "fixer" &&
-              (!requested.id.startsWith("travel-") || !requested.location)) ||
-            (teacher.id !== "fixer" &&
-              teacher.character &&
-              requested.worker !== teacher.character) ||
-            requested.timeCost !== 1 ||
-            s.personalFunds <
-              teacher.fee +
-                s.pending.reduce(
-                  (sum, item) =>
-                    sum +
-                    (activeChapter().manifest.hostLanguage?.teachers?.find(
-                      (entry) => entry.id === item.languageLesson,
-                    )?.fee ?? 0),
-                  0,
-                )
-          ) {
-            set({ planError: "That language lesson is not available." });
-            return false;
-          }
-        }
-        if (requested.eventId && requested.eventChoice) {
-          const choice = campaign()
-            .events.find((event) => event.id === requested.eventId)
-            ?.choices.find((item) => item.id === requested.eventChoice);
-          if (
-            choice &&
-            !eligible(
-              choice,
-              s.character.traits,
-              computeStats(s.character.traits, s.character.statDrift),
-              s.personnel.reputations,
-              choice.requiresLanguage &&
-                requested.interpreter &&
-                choice.requiresLanguage.language !== "communique"
-                ? {
-                    ...s.character.languages,
-                    [choice.requiresLanguage.language]: Math.max(
-                      1,
-                      s.character.languages?.[choice.requiresLanguage.language] ?? 0,
-                    ),
-                  }
-                : s.character.languages,
-            )
-          ) {
-            set({ planError: "That choice is not available to your personnel file." });
-            return false;
-          }
-        }
-        if (
-          requested.gossipId &&
-          (!s.knownFacts.includes(`gossip:${requested.gossipId}`) ||
-            !campaign().gossip?.some((g) => g.id === requested.gossipId) ||
-            !requested.worker ||
-            !campaign().characters.some(
-              (c) => c.id === requested.worker && c.location === s.location,
-            ))
-        ) {
-          set({ planError: "That gossip or listener is not available here." });
-          return false;
-        }
-        const stepped = resolveStep(s, requested);
-        if (typeof stepped === "string") {
-          set({ planError: stepped });
-          return false;
-        }
-        let decision = stepped;
-        if (replacePlayer && s.pending.some((p) => p.remainingBlocks === 1)) {
-          set({
-            planError: "A commitment is already in progress; finish it before replacing the plan.",
-          });
-          return false;
-        }
-        const old = s.pending.filter(
-          (p) =>
-            !(decision.kind === "social" && p.kind === "social") &&
-            !(replacePlayer && playerTime(p) > 0 && !p.id.startsWith("travel-")),
-        );
-        const prepared = planDemarche({ ...s, pending: old }, decision);
-        if (typeof prepared === "string") {
-          set({ planError: prepared });
-          return false;
-        }
-        decision = prepared;
-        if (
-          decision.route &&
-          old.some((p) => p.task === decision.task && p.step === decision.step && p.route)
-        ) {
-          set({ planError: "A route for this step is already in the plan." });
-          return false;
-        }
-        if (decision.route && decision.task && decision.step) {
-          const route = findStep(decision.task, decision.step)?.routes?.find(
-            (r) => r.id === decision.route,
-          );
-          const who =
-            route && routeFavourToSpend(route, routeContext(s, decision.task, decision.step));
-          const reserved = who
-            ? old.filter(
-                (p) =>
-                  p.task &&
-                  p.step &&
-                  p.route &&
-                  (() => {
-                    const other = findStep(p.task!, p.step!)?.routes?.find((r) => r.id === p.route);
-                    return (
-                      other && routeFavourToSpend(other, routeContext(s, p.task!, p.step!)) === who
-                    );
-                  })(),
-              ).length
-            : 0;
-          if (who && reserved >= (s.favours.owedToYou[who] ?? 0)) {
-            set({ planError: "That favour is already promised to another route." });
-            return false;
-          }
-          const newFlag = route?.consequences?.flag;
-          const conflicts = old.some((p) => {
-            const other =
-              p.task && p.step && p.route
-                ? findStep(p.task, p.step)?.routes?.find((r) => r.id === p.route)
-                : undefined;
-            return (
-              (route?.requires?.expiresOnFlag &&
-                [p.flag, other?.consequences?.flag].includes(route.requires.expiresOnFlag)) ||
-              route?.requires?.expiresOnFlags?.some((flag) =>
-                [p.flag, other?.consequences?.flag].includes(flag),
-              ) ||
-              (newFlag &&
-                (other?.requires?.expiresOnFlag === newFlag ||
-                  other?.requires?.expiresOnFlags?.includes(newFlag)))
-            );
-          });
-          if (conflicts) {
-            set({ planError: "Those routes make conflicting commitments. Choose one." });
-            return false;
-          }
-        }
-        const plan = [...old, decision];
-        const error =
-          decision.special === "supplement" && s.economy.supplementUsed
-            ? "Capital has already granted your supplement."
-            : validatePlan(
-                plan,
-                s.block,
-                s.economy,
-                playerCapacity(s.character, s.energy, s.composure, s.alcohol, s.hangover).total,
-              );
-        if (error) {
-          set({ planError: error });
-          return false;
-        }
-        set({ pending: plan, planError: "" });
-        return true;
+        if (result.error) set({ planError: result.error });
+        return false;
       },
       repeatYesterday: () => {
         const s = get();
