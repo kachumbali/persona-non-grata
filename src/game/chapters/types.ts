@@ -272,6 +272,10 @@ export interface CampaignCharacter {
   wants: string;
   gender: string;
   portrait: string;
+  /** Two or three sentences shown in the notebook once the player has met them. */
+  bio?: string;
+  /** One sentence for writers on how they speak. Not shown to players. */
+  voice?: string;
 }
 export interface CampaignVenue {
   id: string;
@@ -284,10 +288,16 @@ export interface CampaignLocation {
   id: string;
   name: string;
   description: string;
+  /** Character ids usually found here. */
+  regulars?: string[];
+  /** One short line per block of the day. */
+  atmosphere?: Partial<Record<PlaceBlock, string>>;
   work: string;
   effects: Effects;
   cost: number;
 }
+export const PLACE_BLOCKS = ["morning", "midday", "afternoon", "evening"] as const;
+export type PlaceBlock = (typeof PLACE_BLOCKS)[number];
 export interface Campaign {
   characters: CampaignCharacter[];
   venues: CampaignVenue[];

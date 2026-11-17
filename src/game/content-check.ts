@@ -7,12 +7,13 @@ import { z } from "zod";
 import type { Invitation } from "./calendar";
 import type { Topic } from "./dialogues";
 import type { Email, StoryChoice, StoryEvent } from "./rules";
-import type {
-  Campaign,
-  ChapterManifest,
-  ChapterPack,
-  DemarchePack,
-  PressData,
+import {
+  PLACE_BLOCKS,
+  type Campaign,
+  type ChapterManifest,
+  type ChapterPack,
+  type DemarchePack,
+  type PressData,
 } from "./chapters/types";
 import { parseStepRef } from "./mission";
 import npcTraits from "./data/npc-traits.json";
@@ -66,6 +67,9 @@ export const TEXT_LIMITS = {
   emailOptionText: 30,
   pressHeadline: 6,
   pressBody: 40,
+  characterBio: 55,
+  placeDescription: 50,
+  placeAtmosphere: 18,
 } as const;
 
 /**
@@ -209,11 +213,29 @@ function buildSchemas(strict: boolean) {
         wants: str,
         gender: z.enum(GENDERS),
         portrait: str,
+        bio: opt(str),
+        voice: opt(str),
       }),
     ),
     venues: z.array(obj({ id: str, name: str, setting: str, cost: num, description: str })),
     locations: z.array(
-      obj({ id: str, name: str, description: str, work: str, effects, cost: num }),
+      obj({
+        id: str,
+        name: str,
+        description: str,
+        regulars: opt(z.array(str)),
+        atmosphere: opt(
+          obj({
+            morning: opt(str),
+            midday: opt(str),
+            afternoon: opt(str),
+            evening: opt(str),
+          }),
+        ),
+        work: str,
+        effects,
+        cost: num,
+      }),
     ),
     dialogue: z.record(str, obj({ text: str, choices: z.array(storyChoice) })),
     events: z.array(event),
@@ -1205,6 +1227,9 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
         ),
       );
       if (c.refusalGreeting) readFlag(`refused-favour-${c.id}`, f, at("refusalGreeting"));
+      needText(c.bio, f, ["characters", i, "bio"], "character bio");
+      limit(c.bio, TEXT_LIMITS.characterBio, f, ["characters", i, "bio"], "Character bio");
+      needText(c.voice, f, ["characters", i, "voice"], "character voice");
       refCheck(locationIds, "location id", c.location, f, at("location"));
       c.likes.forEach((v, j) =>
         refCheck(venueIds, "venue id", v, f, pathOf(["characters", i, "likes", j])),
@@ -1231,6 +1256,30 @@ export function checkChapter(pack: RawChapterPack, globals: ContentGlobals): Fin
             `Portrait "${c.portrait}" is reserved for "${portrait.reservedFor}"`,
           );
       }
+    });
+    campaign.locations.forEach((l, i) => {
+      const at = (k: string) => ["locations", i, k];
+      needText(l.description, f, at("description"), "location description");
+      limit(
+        l.description,
+        TEXT_LIMITS.placeDescription,
+        f,
+        at("description"),
+        "Location description",
+      );
+      if (!l.regulars) error(f, pathOf(at("regulars")), "Missing location regulars");
+      else
+        l.regulars.forEach((id, j) =>
+          refCheck(characterIds, "character id", id, f, pathOf([...at("regulars"), j])),
+        );
+      if (!l.atmosphere) error(f, pathOf(at("atmosphere")), "Missing location atmosphere");
+      else
+        for (const block of PLACE_BLOCKS) {
+          const path = [...at("atmosphere"), block];
+          const text = l.atmosphere[block];
+          needText(text, f, path, `atmosphere for ${block}`);
+          limit(text, TEXT_LIMITS.placeAtmosphere, f, path, "Atmosphere line");
+        }
     });
     duplicates(
       campaign.gossip ?? [],

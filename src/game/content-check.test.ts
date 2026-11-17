@@ -405,3 +405,62 @@ describe("pop-up channels", () => {
     expect(warnings).toEqual([]);
   });
 });
+
+describe("content checker on character bios and place substance", () => {
+  const errorsOf = (pack: ChapterPack) => check(pack).filter((f) => f.level === "error");
+  it("requires a bio and a voice for every character", () => {
+    const pack = fresh();
+    delete pack.campaign.characters[0]!.bio;
+    delete pack.campaign.characters[0]!.voice;
+    const errors = errorsOf(pack);
+    expect(has(errors, "error", "campaign.json", "characters[0].bio")).toHaveLength(1);
+    expect(has(errors, "error", "campaign.json", "characters[0].voice")).toHaveLength(1);
+  });
+  it("warns when a bio is over its word limit", () => {
+    const pack = fresh();
+    pack.campaign.characters[0]!.bio = Array(TEXT_LIMITS.characterBio + 1)
+      .fill("word")
+      .join(" ");
+    expect(has(check(pack), "warning", "campaign.json", "characters[0].bio")).toHaveLength(1);
+  });
+  it("requires a description, regulars and atmosphere for a place", () => {
+    const pack = fresh();
+    const place = pack.campaign.locations[0]!;
+    place.description = " ";
+    delete place.regulars;
+    delete place.atmosphere;
+    const errors = errorsOf(pack);
+    expect(has(errors, "error", "campaign.json", "locations[0].description")).toHaveLength(1);
+    expect(has(errors, "error", "campaign.json", "locations[0].regulars")).toHaveLength(1);
+    expect(has(errors, "error", "campaign.json", "locations[0].atmosphere")).toHaveLength(1);
+  });
+  it("requires each of the four atmosphere keys", () => {
+    const pack = fresh();
+    delete pack.campaign.locations[0]!.atmosphere!.evening;
+    expect(
+      has(errorsOf(pack), "error", "campaign.json", "locations[0].atmosphere.evening"),
+    ).toHaveLength(1);
+  });
+  it("rejects regulars that are not characters", () => {
+    const pack = fresh();
+    pack.campaign.locations[0]!.regulars = ["nobody"];
+    expect(has(errorsOf(pack), "error", "campaign.json", "locations[0].regulars[0]")).toHaveLength(
+      1,
+    );
+  });
+  it("warns about over-long place text", () => {
+    const pack = fresh();
+    const place = pack.campaign.locations[0]!;
+    place.description = Array(TEXT_LIMITS.placeDescription + 1)
+      .fill("word")
+      .join(" ");
+    place.atmosphere!.morning = Array(TEXT_LIMITS.placeAtmosphere + 1)
+      .fill("word")
+      .join(" ");
+    const warnings = check(pack);
+    expect(has(warnings, "warning", "campaign.json", "locations[0].description")).toHaveLength(1);
+    expect(
+      has(warnings, "warning", "campaign.json", "locations[0].atmosphere.morning"),
+    ).toHaveLength(1);
+  });
+});
