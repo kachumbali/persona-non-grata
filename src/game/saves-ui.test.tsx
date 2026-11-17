@@ -1,7 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { TitleScreen } from "./components/TitleScreen";
-import { beginNewCareer, initSaves, reloadSaves, slotAt, startCareer, useSaves } from "./saves";
+import {
+  beginNewCareer,
+  initSaves,
+  reloadSaves,
+  SAVE_KEY,
+  slotAt,
+  startCareer,
+  useSaves,
+} from "./saves";
 import { useGame } from "./store";
 
 const ann = {
@@ -125,5 +133,15 @@ describe("title screen save slots", () => {
     fireEvent.click(target.getByRole("button", { name: "Import into slot 3" }));
     expect(target.getByRole("alert")).toHaveTextContent(/incomplete/i);
     expect(slotAt(2)).toBeNull();
+  });
+
+  it("says on the title screen when the stored save could not be read", () => {
+    localStorage.setItem(SAVE_KEY, '{"version":1,"activeSlot":0,"slots":{}');
+    reloadSaves();
+    render(<TitleScreen onNew={() => {}} onLoad={() => {}} />);
+    expect(screen.getByRole("alert")).toHaveTextContent(/could not be read/);
+    expect(screen.getByRole("alert")).toHaveTextContent(/backup/);
+    expect(within(slotItem(1)).getByText("Empty")).toBeInTheDocument();
+    expect(localStorage.getItem(`${SAVE_KEY}.unreadable`)).not.toBeNull();
   });
 });

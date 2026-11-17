@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CharacterBuilder } from "@/game/components/CharacterBuilder";
 import { TitleScreen } from "@/game/components/TitleScreen";
 import { GameScreen } from "@/game/components/GameScreen";
+import { ErrorBoundary } from "@/game/components/ErrorBoundary";
 import { activeChapter } from "@/game/chapters";
 import { initSaves } from "@/game/saves";
 import { useGame } from "@/game/store";
@@ -30,9 +31,26 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const hasCharacter = useGame((s) => s.character !== null);
   const [screen, setScreen] = useState<"title" | "play">("title");
-  if (screen === "title")
-    return <TitleScreen onNew={() => setScreen("play")} onLoad={() => setScreen("play")} />;
-  return hasCharacter ? <GameScreen onMenu={() => setScreen("title")} /> : <CharacterBuilder />;
+  const toTitle = () => setScreen("title");
+  // A render error on either screen shows the apology; "Back to the title screen" leaves the save as it was.
+  return (
+    <ErrorBoundary onBackToTitle={toTitle}>
+      <Screen screen={screen} onPlay={() => setScreen("play")} onTitle={toTitle} />
+    </ErrorBoundary>
+  );
+}
+
+function Screen({
+  screen,
+  onPlay,
+  onTitle,
+}: {
+  screen: "title" | "play";
+  onPlay: () => void;
+  onTitle: () => void;
+}) {
+  const hasCharacter = useGame((s) => s.character !== null);
+  if (screen === "title") return <TitleScreen onNew={onPlay} onLoad={onPlay} />;
+  return hasCharacter ? <GameScreen onMenu={onTitle} /> : <CharacterBuilder />;
 }

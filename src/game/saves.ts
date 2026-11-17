@@ -33,10 +33,11 @@ export interface SaveFile {
   slots: Slots;
 }
 
-const fileSchema = z.object({
+/** The file's own fields. Each slot is checked separately, so one damaged slot leaves the others. */
+const fileHeaderSchema = z.object({
   version: z.literal(SAVE_VERSION),
   activeSlot: z.union([z.literal(0), z.literal(1), z.literal(2)]),
-  slots: z.tuple([saveSlotSchema.nullable(), saveSlotSchema.nullable(), saveSlotSchema.nullable()]),
+  slots: z.array(z.unknown()).length(SLOT_COUNT),
 });
 
 const emptyFile = (): SaveFile => ({
@@ -45,6 +46,11 @@ const emptyFile = (): SaveFile => ({
   slots: [null, null, null],
 });
 export const useSaves = create<SaveFile>()(() => emptyFile());
+
+/** Set when the stored save could not be read in full: the title screen says so. */
+export const useSaveNotice = create<{ message: string | null }>()(() => ({ message: null }));
+const UNREADABLE_NOTICE =
+  "A saved game could not be read, so the affected slots are shown empty. The damaged data was kept as a backup in this browser.";
 
 const now = () => new Date().toISOString();
 const storage = () => {
@@ -106,8 +112,37 @@ function migrateLegacy(raw: string): SaveFile | null {
   }
 }
 
+/**
+ * Read the slot file slot by slot. A slot that does not validate loads as empty; the others are kept.
+ * Anything that is not a slot file at all loads as no slots. Either way the damaged text is reported.
+ */
+function parseSaveFile(raw: string): { file: SaveFile; damaged: boolean } {
+  let data: unknown;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    return { file: emptyFile(), damaged: true };
+  }
+  const header = fileHeaderSchema.safeParse(data);
+  if (!header.success) return { file: emptyFile(), damaged: true };
+  const file: SaveFile = {
+    version: SAVE_VERSION,
+    activeSlot: header.data.activeSlot,
+    slots: [null, null, null],
+  };
+  let damaged = false;
+  header.data.slots.forEach((value, i) => {
+    if (value === null) return;
+    const slot = saveSlotSchema.safeParse(value);
+    if (slot.success) file.slots[i as SlotIndex] = slot.data as unknown as SaveSlot;
+    else damaged = true;
+  });
+  return { file, damaged };
+}
+
 function readFile(): SaveFile {
   const store = storage();
+  useSaveNotice.setState({ message: null });
   if (!store) return emptyFile();
   let raw: string | null = null;
   try {
@@ -132,17 +167,17 @@ function readFile(): SaveFile {
     }
     return migrated ?? emptyFile();
   }
-  try {
-    return fileSchema.parse(JSON.parse(raw)) as unknown as SaveFile;
-  } catch {
-    // Keep the unreadable data for recovery instead of overwriting it.
+  const { file, damaged } = parseSaveFile(raw);
+  if (damaged) {
+    // Keep the damaged text for recovery instead of overwriting it with the next save.
     try {
       store.setItem(`${SAVE_KEY}.unreadable`, raw);
     } catch {
       /* ignore */
     }
-    return emptyFile();
+    useSaveNotice.setState({ message: UNREADABLE_NOTICE });
   }
+  return file;
 }
 
 /** Record the ending of a finished posting unless the career already holds it. */
