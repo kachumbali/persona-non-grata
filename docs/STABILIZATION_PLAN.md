@@ -25,7 +25,7 @@ The freeze ends when all of these are true:
 
 ## Packages
 
-Done so far: Q-01 to Q-07 (marked ✓). Remaining: Q-08, the hand playtest. Findings are in `docs/audit/`.
+Done so far: Q-01 to Q-07 (marked ✓). Q-08: Claude played Day 1 and part of Day 2 by hand and fixed what it found; release notes are in `docs/RELEASE_NOTES.md`. Remaining: the human playtest (criterion 8). The freeze ends when it reports nothing new that blocks play. Findings are in `docs/audit/`.
 
 Each package is small and has one owner at a time. Packages in the same wave touch different files and can run in parallel.
 
