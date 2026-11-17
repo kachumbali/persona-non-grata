@@ -9,6 +9,7 @@ import {
   exportSlot,
   importIntoSlot,
   SLOT_COUNT,
+  useSaveNotice,
   useSaves,
   type SlotIndex,
 } from "../saves";
@@ -19,6 +20,7 @@ type Panel = { slot: SlotIndex; kind: "delete" | "replace" | "export" };
 
 export function TitleScreen({ onNew, onLoad }: { onNew: () => void; onLoad: () => void }) {
   const slots = useSaves((s) => s.slots);
+  const notice = useSaveNotice((s) => s.message);
   const chapter = activeChapter().manifest;
   const [panel, setPanel] = useState<Panel | null>(null);
   const [code, setCode] = useState("");
@@ -56,6 +58,11 @@ export function TitleScreen({ onNew, onLoad }: { onNew: () => void; onLoad: () =
           <p className="font-mono text-2xl">
             {chapter.label} · {chapter.title}
           </p>
+          {notice && (
+            <div className="mt-6 border-l-2 border-destructive pl-3 text-left" role="alert">
+              <p className="text-sm">{notice}</p>
+            </div>
+          )}
           <ul className="mt-6 flex flex-col gap-3 text-left" aria-label="Save slots">
             {Array.from({ length: SLOT_COUNT }, (_, i) => i as SlotIndex).map((i) => {
               const slot = slots[i];
