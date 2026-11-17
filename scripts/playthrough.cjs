@@ -255,6 +255,34 @@ function add(rec, type, text, extra = "") {
 
 /* ---------- text and layout checks ---------- */
 
+// Pure. The raw ids in a page's text, as [id, index] pairs. A colon id (trait:x, flag:x) is always
+// raw. A content id with hyphens is raw only where it stands alone (a line or label of at most two
+// words): "Mira cancelled the clean-port programme." is ordinary prose, so it is not flagged.
+function standsAlone(body, start) {
+  const lineStart = body.lastIndexOf("\n", start - 1) + 1;
+  let lineEnd = body.indexOf("\n", start);
+  if (lineEnd < 0) lineEnd = body.length;
+  return body.slice(lineStart, lineEnd).trim().split(/\s+/).filter(Boolean).length <= 2;
+}
+function rawIdHits(body, ids) {
+  const hits = new Map();
+  RAW_PREFIX_RE.lastIndex = 0;
+  let m;
+  while ((m = RAW_PREFIX_RE.exec(body))) hits.set(m[0], m.index);
+  for (const id of ids) {
+    if (!body.includes(id)) continue;
+    const re = new RegExp("(?<![\\w-])" + esc(id) + "(?![\\w-])", "g");
+    let hit;
+    while ((hit = re.exec(body))) {
+      if (standsAlone(body, hit.index)) {
+        hits.set(id, hit.index);
+        break;
+      }
+    }
+  }
+  return [...hits];
+}
+
 async function scanText(page, rec) {
   let body = "";
   try {
@@ -277,18 +305,7 @@ async function scanText(page, rec) {
     }
   }
   if (!CONTENT_IDS) CONTENT_IDS = loadContentIds();
-  const hits = new Set();
-  RAW_PREFIX_RE.lastIndex = 0;
-  let m;
-  while ((m = RAW_PREFIX_RE.exec(body))) hits.add(m[0]);
-  for (const id of CONTENT_IDS) {
-    if (body.includes(id)) {
-      const re = new RegExp("(?<![\\w-])" + esc(id) + "(?![\\w-])");
-      if (re.test(body)) hits.add(id);
-    }
-  }
-  for (const id of hits) {
-    const i = body.indexOf(id);
+  for (const [id, i] of rawIdHits(body, CONTENT_IDS)) {
     const snippet = body.slice(Math.max(0, i - 35), i + id.length + 35).replace(/\s+/g, " ");
     add(rec, "raw-id", `"${id}" in "...${snippet}..."`);
   }

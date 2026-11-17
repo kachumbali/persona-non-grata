@@ -1,6 +1,6 @@
 /** Aggregate many RunResults into the numbers a designer reads. Pure: no store, no randomness. */
 import { activeChapter, getChapter } from "../chapters";
-import type { RunResult } from "./run";
+import type { IgnoredMail, RunResult } from "./run";
 import { SHIPPED_GAME_SEED } from "./run";
 
 export interface ContentUniverse {
@@ -212,6 +212,24 @@ export interface Report {
   /** Mails marked ignored per run, in all and on Day 1. */
   ignoredMail: { byBot: Record<string, Stat>; overall: Stat };
   ignoredMailDay1: { byBot: Record<string, Stat>; overall: Stat };
+  /** Why mail was marked ignored: bot -> reason -> mean per run on each day (index = day). */
+  ignoredReasons: Record<string, Record<string, number[]>>;
+  /** Meters at the cap, per bot: positive gains asked for, the part lost to the cap, and first-95 days. */
+  ceiling: Record<
+    string,
+    {
+      askedHq: number;
+      lostHq: number;
+      askedHost: number;
+      lostHost: number;
+      reach95Hq: number;
+      reach95Host: number;
+      before12Hq: number;
+      before12Host: number;
+      before12Either: number;
+      meanDayHq: number | null;
+    }
+  >;
   /** Days on which no block had anything waiting, per run. */
   emptyDays: { byBot: Record<string, Stat>; overall: Stat };
   emptyPlans: { byBot: Record<string, Stat>; overall: Stat };
@@ -233,6 +251,61 @@ export interface Report {
 }
 
 export const runLabel = (r: RunResult) => `${r.bot}/${r.build}/seed${r.seed}`;
+
+/** Why a mail was ignored, from what the bot had in the block that ended without an answer. */
+export const IGNORED_REASONS = [
+  "fax, away from the embassy",
+  "no DP left",
+  "issued this block",
+  "bot skipped it, DP left",
+] as const;
+export type IgnoredReason = (typeof IGNORED_REASONS)[number];
+export function ignoredReason(m: IgnoredMail): IgnoredReason {
+  if (m.fax && !m.atOffice) return "fax, away from the embassy";
+  if (m.dpShort) return "no DP left";
+  if (m.issuedHere) return "issued this block";
+  return "bot skipped it, DP left";
+}
+
+function ceilingByBot(results: RunResult[]): Report["ceiling"] {
+  const out: Report["ceiling"] = {};
+  for (const [bot, rs] of Object.entries(group(results, (r) => r.bot))) {
+    const n = rs.length || 1;
+    const share = (f: (r: RunResult) => boolean) => rs.filter(f).length / n;
+    const hq = (r: RunResult) => r.ceiling.firstAt95.confidence;
+    const host = (r: RunResult) => r.ceiling.firstAt95.goodwill;
+    const days = rs.flatMap((r) => (hq(r) === null ? [] : [hq(r)!]));
+    out[bot] = {
+      askedHq: sum(rs.map((r) => r.ceiling.asked.confidence)) / n,
+      lostHq: sum(rs.map((r) => r.ceiling.lost.confidence)) / n,
+      askedHost: sum(rs.map((r) => r.ceiling.asked.goodwill)) / n,
+      lostHost: sum(rs.map((r) => r.ceiling.lost.goodwill)) / n,
+      reach95Hq: share((r) => hq(r) !== null),
+      reach95Host: share((r) => host(r) !== null),
+      before12Hq: share((r) => hq(r) !== null && hq(r)! < 12),
+      before12Host: share((r) => host(r) !== null && host(r)! < 12),
+      before12Either: share(
+        (r) => (hq(r) !== null && hq(r)! < 12) || (host(r) !== null && host(r)! < 12),
+      ),
+      meanDayHq: days.length ? mean(days) : null,
+    };
+  }
+  return out;
+}
+
+function ignoredReasons(results: RunResult[]): Record<string, Record<string, number[]>> {
+  const days = Math.max(0, ...results.flatMap((r) => r.ignoredDetail.map((m) => m.day))) + 1;
+  const out: Record<string, Record<string, number[]>> = {};
+  for (const [bot, rs] of Object.entries(group(results, (r) => r.bot))) {
+    const byReason: Record<string, number[]> = Object.fromEntries(
+      IGNORED_REASONS.map((reason) => [reason, Array.from({ length: days }, () => 0)]),
+    );
+    for (const r of rs)
+      for (const m of r.ignoredDetail) byReason[ignoredReason(m)]![m.day]! += 1 / rs.length;
+    out[bot] = byReason;
+  }
+  return out;
+}
 
 export function aggregate(results: RunResult[]): Report {
   const first = results[0];
@@ -462,6 +535,8 @@ export function aggregate(results: RunResult[]): Report {
       .map((r) => runLabel(r)),
     ignoredMail: statsBy((r) => r.ignoredMail),
     ignoredMailDay1: statsBy((r) => r.ignoredMailDay1),
+    ignoredReasons: ignoredReasons(results),
+    ceiling: ceilingByBot(results),
     emptyDays: statsBy((r) => r.idleByDay.filter((n) => n >= 4).length),
     emptyPlans: statsBy((r) => r.emptyPlans),
     conflictDays: statsBy((r) => r.conflictDays),
@@ -501,6 +576,7 @@ export function aggregate(results: RunResult[]): Report {
 // ---- text ---------------------------------------------------------------------------------
 
 const pct = (n: number, of: number) => (of ? `${Math.round((100 * n) / of)}%` : "-");
+const percentOf = (share: number) => `${Math.round(100 * share)}%`;
 const num = (n: number, digits = 1) => (Number.isInteger(n) ? String(n) : n.toFixed(digits));
 
 /** A plain-text table with padded columns. The first column is left-aligned. */
@@ -716,6 +792,56 @@ export function formatReport(r: Report): string {
   out.push(statTable("bot", r.ignoredMail.byBot, r.ignoredMail.overall));
   out.push("\nOf those, marked ignored on Day 1:");
   out.push(statTable("bot", r.ignoredMailDay1.byBot, r.ignoredMailDay1.overall));
+  h("Meters at the cap of 100: positive gains asked for, lost to the cap, and first day at 95");
+  out.push(
+    table(
+      [
+        "bot",
+        "HQ asked",
+        "HQ lost",
+        "host asked",
+        "host lost",
+        "HQ at 95",
+        "host at 95",
+        "HQ mean day",
+        "HQ before D12",
+        "host before D12",
+        "either before D12",
+      ],
+      Object.entries(r.ceiling).map(([bot, c]) => [
+        bot,
+        num(c.askedHq),
+        num(c.lostHq),
+        num(c.askedHost),
+        num(c.lostHost),
+        percentOf(c.reach95Hq),
+        percentOf(c.reach95Host),
+        c.meanDayHq === null ? "-" : num(c.meanDayHq),
+        percentOf(c.before12Hq),
+        percentOf(c.before12Host),
+        percentOf(c.before12Either),
+      ]),
+    ),
+  );
+  h("Mails marked ignored, by reason and day (mean per run)");
+  for (const bot of Object.keys(r.ignoredReasons)) {
+    const byReason = r.ignoredReasons[bot]!;
+    const days = byReason[IGNORED_REASONS[0]]!.length;
+    out.push(`${bot}:`);
+    out.push(
+      table(
+        ["reason", ...Array.from({ length: days - 1 }, (_, i) => String(i + 1)), "total"],
+        IGNORED_REASONS.map((reason) => {
+          const counts = byReason[reason]!;
+          return [
+            reason,
+            ...counts.slice(1).map((n) => (n ? num(n, 2) : ".")),
+            num(sum(counts), 2),
+          ];
+        }),
+      ),
+    );
+  }
   out.push("\nDays on which nothing at all was waiting (all four blocks idle), per run:");
   out.push(statTable("bot", r.emptyDays.byBot, r.emptyDays.overall));
   out.push("\nIdle blocks (of 4) by day, careful / socialiser / press-reader runs:");

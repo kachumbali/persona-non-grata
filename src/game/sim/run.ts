@@ -7,6 +7,8 @@ import { activeChapterId, setActiveChapter } from "../chapters";
 import {
   blocks,
   computeStats,
+  isFax,
+  setCapObserver,
   dailyEvents,
   emails,
   lastDay,
@@ -26,6 +28,8 @@ import {
 } from "../mission";
 import type { Meters } from "../rules";
 import { useGame } from "../store";
+import { playerTime } from "../economy";
+import type { PendingDecision } from "../rules";
 import { botById, type Bot, type BotId } from "./bots";
 import { Player, createTracker } from "./player";
 import { createRng, hashString } from "./rng";
@@ -52,6 +56,61 @@ export interface SimOptions {
   firstDayGraceOff?: boolean;
 }
 
+/** What queued decisions spend DP on, for the ignored-mail diagnostics. */
+function dpByCategory(pending: PendingDecision[]): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const p of pending) {
+    const category = p.emailId
+      ? "mail"
+      : p.eventId
+        ? "call or visit"
+        : p.task
+          ? "mission"
+          : p.id === "rest"
+            ? "rest"
+            : p.languageLesson || p.id.startsWith("language")
+              ? "language"
+              : p.kind === "social"
+                ? "social"
+                : p.kind === "dialogue"
+                  ? "conversation"
+                  : p.location
+                    ? "travel"
+                    : "other";
+    out[category] = (out[category] ?? 0) + playerTime(p);
+  }
+  return out;
+}
+
+export type CeilingMeter = "confidence" | "goodwill";
+export interface Ceiling {
+  /** Positive changes asked for, and the part the cap of 100 removed, per goodwill meter. */
+  asked: Record<CeilingMeter, number>;
+  lost: Record<CeilingMeter, number>;
+  /** The day (as played) on which the meter first ended a block at 95 or more; null if never. */
+  firstAt95: Record<CeilingMeter, number | null>;
+}
+
+export interface IgnoredMail {
+  id: string;
+  day: number;
+  block: number;
+  /** Capital's mail, which is read on the secure fax at the embassy only. */
+  fax: boolean;
+  /** The bot was at the embassy when its planning ended in this block. */
+  atOffice: boolean;
+  /** Where the bot was when its planning ended in this block. */
+  location: string;
+  /** The bot ran out of DP while answering mail in this block. */
+  dpShort: boolean;
+  /** Free DP when the bot's planning ended in this block. */
+  dpLeft: number;
+  /** DP queued in this block, by what it was spent on. */
+  spent: Record<string, number>;
+  /** The mail was issued by an earlier decision, so the block it was time-stamped in had already passed. */
+  issuedHere: boolean;
+}
+
 export interface RunResult {
   chapterId: string;
   bot: string;
@@ -68,6 +127,10 @@ export interface RunResult {
   /** Mails marked ignored over the whole run, and how many of them on Day 1. */
   ignoredMail: number;
   ignoredMailDay1: number;
+  /** Each mail marked ignored, with what the bot had in the block that ended without an answer. */
+  ignoredDetail: IgnoredMail[];
+  /** HQ goodwill (confidence) and host goodwill: gains lost to the cap of 100, and the day each first reached 95. */
+  ceiling: Ceiling;
   turns: number;
   meters: Meters;
   lowestMeters: Meters;
@@ -161,6 +224,7 @@ export function simulate(options: SimOptions): RunResult {
     return play(options, chapterId);
   } finally {
     setFirstDayGraceOffForTests(false);
+    setCapObserver(null);
     setActiveChapter(previousChapter);
   }
 }
@@ -207,8 +271,20 @@ function play(options: SimOptions, chapterId: string): RunResult {
   const countIgnored = (handled: Record<string, string>) =>
     Object.values(handled).filter((v) => v === "ignored").length;
   let ignoredMailDay1: number | null = null;
+  const ignoredDetail: IgnoredMail[] = [];
   let lowestFunds = useGame.getState().economy.funds;
   let lowestAvailable = lowestFunds - reserved(useGame.getState().economy);
+  const ceiling: Ceiling = {
+    asked: { confidence: 0, goodwill: 0 },
+    lost: { confidence: 0, goodwill: 0 },
+    firstAt95: { confidence: null, goodwill: null },
+  };
+  setCapObserver((key, asked, applied) => {
+    if (key !== "confidence" && key !== "goodwill") return;
+    if (asked <= 0) return;
+    ceiling.asked[key] += asked;
+    ceiling.lost[key] += asked - applied;
+  });
   const lowestMeters = zeroMeters();
   const startedWith = startMeters();
   for (const key of Object.keys(lowestMeters) as (keyof Meters)[])
@@ -220,6 +296,7 @@ function play(options: SimOptions, chapterId: string): RunResult {
     // The press review is prepared when the morning screen opens.
     if (s.block === 0) s.preparePress();
     observe();
+    player.dpShort = false;
     bot.plan(player);
     s = useGame.getState();
     // Raiding the reserves can end the posting before the block does.
@@ -227,8 +304,36 @@ function play(options: SimOptions, chapterId: string): RunResult {
     if (s.pending.length === 0) emptyPlans++;
     const before = s.turn;
     const dayBefore = s.day;
+    const handledBefore = s.handled;
+    const detailContext = {
+      day: s.day,
+      block: s.block,
+      atOffice: s.location === player.office,
+      location: s.location,
+      dpShort: player.dpShort,
+      dpLeft: player.freeDP(),
+      spent: dpByCategory(s.pending),
+    };
     useGame.getState().advance();
     s = useGame.getState();
+    for (const [id, status] of Object.entries(s.handled))
+      if (status === "ignored" && handledBefore[id] !== "ignored") {
+        const mail = [...emails(), ...s.tutorHomework].find((e) => e.id === id);
+        if (mail)
+          ignoredDetail.push({
+            id,
+            day: detailContext.day,
+            block: detailContext.block,
+            fax: isFax(mail.from),
+            atOffice: detailContext.atOffice,
+            location: detailContext.location,
+            dpShort: detailContext.dpShort,
+            dpLeft: detailContext.dpLeft,
+            spent: detailContext.spent,
+            issuedHere: mail.issuedBlock === detailContext.block,
+          });
+      }
+    player.dpShort = false;
     if (hqEndDay1 === null && (s.day > 1 || s.ending)) {
       hqEndDay1 = s.meters.confidence;
       ignoredMailDay1 = countIgnored(s.handled);
@@ -249,6 +354,9 @@ function play(options: SimOptions, chapterId: string): RunResult {
     }
     blocksPlayed++;
     s = useGame.getState();
+    for (const key of ["confidence", "goodwill"] as const)
+      if (ceiling.firstAt95[key] === null && s.meters[key] >= 95)
+        ceiling.firstAt95[key] = dayBefore;
     lowestFunds = Math.min(lowestFunds, s.economy.funds);
     lowestAvailable = Math.min(lowestAvailable, s.economy.funds - reserved(s.economy));
     for (const key of Object.keys(lowestMeters) as (keyof Meters)[])
@@ -359,6 +467,8 @@ function play(options: SimOptions, chapterId: string): RunResult {
     hqEndDay1: hqEndDay1 ?? s.meters.confidence,
     ignoredMail: countIgnored(s.handled),
     ignoredMailDay1: ignoredMailDay1 ?? countIgnored(s.handled),
+    ignoredDetail,
+    ceiling,
     turns: s.turn,
     meters: { ...s.meters },
     lowestMeters,

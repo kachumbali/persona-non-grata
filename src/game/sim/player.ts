@@ -105,6 +105,9 @@ export const eventDP = (eventId: string, c: StoryChoice): number =>
         : 1;
 
 export class Player {
+  /** Set when answering mail stopped for lack of DP in this block (diagnostics for ignored mail). */
+  dpShort = false;
+
   constructor(
     readonly rng: Rng,
     readonly options: PlayerOptions,
@@ -829,7 +832,7 @@ export class Player {
 
   // ---- mail (Mailbox) ---------------------------------------------------------------------
   /** Unanswered mail the person can answer this block; Capital's only comes through the embassy fax. */
-  openMail() {
+  openMail(anywhere = false) {
     const s = this.s;
     return inboxFor(
       s.day,
@@ -842,7 +845,7 @@ export class Player {
       (e) =>
         !("demarcheId" in e && e.demarcheId) &&
         !e.status &&
-        (s.location === this.office || !e.from.startsWith("Capital")),
+        (anywhere || s.location === this.office || !e.from.startsWith("Capital")),
     );
   }
   answerMail(style: Style, limit = Infinity): number {
@@ -860,6 +863,7 @@ export class Player {
       for (const [action] of ranked) this.see(`choice:email:${email.id}:${action}`);
       for (const [action] of ranked) {
         if (this.freeDP() < 1) {
+          this.dpShort = true;
           this.note("You have only 0 DP this block.");
           return answered;
         }

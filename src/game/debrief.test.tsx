@@ -53,7 +53,10 @@ describe("debrief", () => {
       name: "Debrief text to copy",
     }) as HTMLTextAreaElement;
     expect(area.value).toContain("Promotion board");
-    expect(area.selectionEnd).toBe(area.value.length);
+    // The component selects the text in an effect after it renders, which can land after the
+    // textbox appears (slow runs), so wait for the selection itself.
+    await waitFor(() => expect(area.selectionEnd).toBe(area.value.length));
+    expect(area.selectionStart).toBe(0);
   });
   it("copies the entire debrief when the clipboard is available", async () => {
     useGame.setState({ ending: "promoted" });
