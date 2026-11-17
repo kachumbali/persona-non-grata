@@ -1,0 +1,988 @@
+{
+  "state": {
+    "chapterId": "port-hesperia-2006",
+    "hangover": false,
+    "economy": {
+      "funds": 10000,
+      "ringFence": 5500,
+      "supplementDue": null,
+      "supplementUsed": false
+    },
+    "turn": 13,
+    "planError": "",
+    "yesterday": {
+      "0": [
+        {
+          "id": "work-pavel",
+          "kind": "work",
+          "worker": "pavel",
+          "task": "security",
+          "source": "Pavel Oskarsen · Security and transport",
+          "text": "",
+          "effects": {
+            "confidence": 3
+          },
+          "timeCost": 0,
+          "overload": true,
+          "step": "advance-team",
+          "stepCost": 0,
+          "cashCost": 0
+        }
+      ],
+      "1": [],
+      "2": [
+        {
+          "id": "email-e10",
+          "kind": "email",
+          "source": "Ministerial Visit (Day 15)",
+          "text": "'The Ambassador is on consultations.' Technically true. Deniability holds.",
+          "effects": {
+            "confidence": 4,
+            "sanity": -4
+          },
+          "formal": true,
+          "counts": ["formal"],
+          "emailId": "e10",
+          "emailAction": "reply"
+        }
+      ],
+      "3": []
+    },
+    "todayPlans": {
+      "0": [
+        {
+          "id": "email-demarche-fax-clean-port-note",
+          "kind": "email",
+          "source": "The clean port",
+          "text": "The instruction remains on the démarche board.",
+          "effects": {},
+          "emailId": "demarche-fax-clean-port-note",
+          "emailAction": "note"
+        }
+      ]
+    },
+    "character": {
+      "title": "Ms",
+      "name": "Ann Ferrier",
+      "portrait": "diplomat-2",
+      "bio": "Ann bio",
+      "traits": ["replyall", "punctual"],
+      "startingTraits": ["replyall", "punctual"]
+    },
+    "day": 4,
+    "minute": 720,
+    "block": 1,
+    "meters": {
+      "confidence": 66,
+      "goodwill": 15,
+      "morale": 29,
+      "sanity": 48
+    },
+    "handled": {
+      "e1": "replyall",
+      "e2": "forward",
+      "e3": "ignored",
+      "e4": "reply",
+      "demarche-fax-fuel-quay-note": "note",
+      "e5": "ignored",
+      "e6": "ignored",
+      "e7": "ignored",
+      "e8": "ignored",
+      "e9": "ignored",
+      "e10": "reply",
+      "demarche-fax-clean-port-note": "note"
+    },
+    "log": [
+      {
+        "day": 1,
+        "time": 480,
+        "text": "The Ambassador is absent. You are the Deputy, now acting head of mission. Plan your first morning."
+      },
+      {
+        "day": 1,
+        "time": 480,
+        "text": "anselm: 2 DP of routine duties displaced. Backlog grows; fatigue rises."
+      },
+      {
+        "day": 1,
+        "time": 480,
+        "text": "sola: 1 DP of routine duties displaced. Backlog grows; fatigue rises."
+      },
+      {
+        "day": 1,
+        "time": 480,
+        "text": "Sola Dewrin · Plane landing clearance: The note verbale is delivered and receives a reference number. A reference number is not an answer, but it is filed like one."
+      },
+      {
+        "day": 1,
+        "time": 480,
+        "text": "Anselm Voss-Rietveld · Confirmed visit programme: The first draft reaches Capital, which acknowledges receipt and reserves its position."
+      },
+      {
+        "day": 1,
+        "time": 480,
+        "text": "Unresolved: Your presence is requested immediately. Protocol records that nobody attended. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 1,
+        "time": 720,
+        "text": "Your reply reaches the entire distribution list. Capital requests an explanation of the subject line. (Reply-All Reflex: accidental reply all.)"
+      },
+      {
+        "day": 1,
+        "time": 720,
+        "text": "You forward it back. They forward it back. A loop is formed."
+      },
+      {
+        "day": 1,
+        "time": 720,
+        "text": "Scheduled power cut. Nobody knew the schedule. The servers sulk. Capital assumes the fax was jammed. Once. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 1,
+        "time": 900,
+        "text": "Bellaluxe agrees to co-chair. You now own four extra meetings a week."
+      },
+      {
+        "day": 1,
+        "time": 1140,
+        "text": "Overnight energy recovery +30 (Stamina +5)."
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "text": "You · Provisional lounge reservation: The request joins the official queue."
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "text": "The instruction remains on the démarche board."
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "text": "The briefing arrives with two covers and no pages. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "text": "Your request is filed under 'Day of the Founding Mango'. Indefinitely. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "text": "Valdoria tells everyone you are 'very busy'. It is not a compliment. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "text": "Anselm Voss-Rietveld and Pavel Oskarsen: rival has become feud."
+      },
+      {
+        "day": 2,
+        "time": 720,
+        "text": "Unresolved: The 17.6% entitlement. The problem carries a cost even when ignored. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 2,
+        "time": 720,
+        "text": "Someone throws the cheese away. A strike is called. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 2,
+        "time": 900,
+        "text": "Unresolved: The generous supplier: part I. The problem carries a cost even when ignored. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "text": "File a provisional request: confirmation has arrived."
+      },
+      {
+        "day": 2,
+        "time": 1140,
+        "text": "Overnight energy recovery +30 (Stamina +5)."
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "text": "pavel: 1 DP of routine duties displaced. Backlog grows; fatigue rises."
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "text": "Pavel Oskarsen · Security and transport: The advance team request is filed. The Security Desk acknowledges it with a request for the advance team."
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "text": "The office acquires a queue for the cupboard. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "text": "The queue forms its own National Dialogue. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "text": "The chirp trends. For the wrong reasons. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "text": "Pavel Oskarsen and Lucien Falk: wary has become rival."
+      },
+      {
+        "day": 3,
+        "time": 720,
+        "text": "Unresolved: Two briefings, no shared facts. The problem carries a cost even when ignored. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 3,
+        "time": 720,
+        "text": "Nobody from Bellaluxe attends the EU meeting. The delegation notices. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 3,
+        "time": 900,
+        "text": "'The Ambassador is on consultations.' Technically true. Deniability holds."
+      },
+      {
+        "day": 3,
+        "time": 900,
+        "text": "Unresolved: A casual quote. The problem carries a cost even when ignored. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 3,
+        "time": 1140,
+        "text": "Overnight energy recovery +30 (Stamina +5)."
+      },
+      {
+        "day": 4,
+        "time": 480,
+        "text": "The instruction remains on the démarche board."
+      },
+      {
+        "day": 4,
+        "time": 480,
+        "text": "Two final versions are delivered to the Minister. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 4,
+        "time": 480,
+        "text": "Anselm Voss-Rietveld and Bianca Montefiore: friendly has become neutral."
+      }
+    ],
+    "goodwillHistory": [
+      {
+        "day": 1,
+        "time": 480,
+        "source": "Baseline duties",
+        "text": "anselm: 2 DP of routine duties displaced. Backlog grows; fatigue rises.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 55,
+          "goodwill": 50
+        },
+        "after": {
+          "confidence": 53,
+          "goodwill": 50
+        }
+      },
+      {
+        "day": 1,
+        "time": 480,
+        "source": "Baseline duties",
+        "text": "sola: 1 DP of routine duties displaced. Backlog grows; fatigue rises.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 53,
+          "goodwill": 50
+        },
+        "after": {
+          "confidence": 52,
+          "goodwill": 50
+        }
+      },
+      {
+        "day": 1,
+        "time": 480,
+        "source": "Sola Dewrin · Plane landing clearance",
+        "text": "Sola Dewrin · Plane landing clearance: The note verbale is delivered and receives a reference number. A reference number is not an answer, but it is filed like one.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 52,
+          "goodwill": 50
+        },
+        "after": {
+          "confidence": 55,
+          "goodwill": 50
+        }
+      },
+      {
+        "day": 1,
+        "time": 480,
+        "source": "Anselm Voss-Rietveld · Confirmed visit programme",
+        "text": "Anselm Voss-Rietveld · Confirmed visit programme: The first draft reaches Capital, which acknowledges receipt and reserves its position.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 55,
+          "goodwill": 50
+        },
+        "after": {
+          "confidence": 58,
+          "goodwill": 50
+        }
+      },
+      {
+        "day": 1,
+        "time": 480,
+        "source": "Your presence is requested immediately",
+        "text": "Unresolved: Your presence is requested immediately. Protocol records that nobody attended. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 58,
+          "goodwill": 50
+        },
+        "after": {
+          "confidence": 58,
+          "goodwill": 46
+        }
+      },
+      {
+        "day": 1,
+        "time": 720,
+        "source": "URGENT: Political situation",
+        "text": "Your reply reaches the entire distribution list. Capital requests an explanation of the subject line. (Reply-All Reflex: accidental reply all.)",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 58,
+          "goodwill": 46
+        },
+        "after": {
+          "confidence": 56,
+          "goodwill": 46
+        }
+      },
+      {
+        "day": 1,
+        "time": 720,
+        "source": "URGENT-URGENT: Ignore previous instruction",
+        "text": "You forward it back. They forward it back. A loop is formed.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 56,
+          "goodwill": 46
+        },
+        "after": {
+          "confidence": 58,
+          "goodwill": 46
+        }
+      },
+      {
+        "day": 1,
+        "time": 720,
+        "source": "Generator",
+        "text": "Scheduled power cut. Nobody knew the schedule. The servers sulk. Capital assumes the fax was jammed. Once. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Missed instruction",
+        "before": {
+          "confidence": 58,
+          "goodwill": 46
+        },
+        "after": {
+          "confidence": 58,
+          "goodwill": 46
+        }
+      },
+      {
+        "day": 1,
+        "time": 900,
+        "source": "Co-chairing proposal",
+        "text": "Bellaluxe agrees to co-chair. You now own four extra meetings a week.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 58,
+          "goodwill": 46
+        },
+        "after": {
+          "confidence": 63,
+          "goodwill": 46
+        }
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "source": "You · Provisional lounge reservation",
+        "text": "You · Provisional lounge reservation: The request joins the official queue.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 63,
+          "goodwill": 46
+        },
+        "after": {
+          "confidence": 63,
+          "goodwill": 46
+        }
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "source": "Fuel inspection",
+        "text": "The instruction remains on the démarche board.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 63,
+          "goodwill": 46
+        },
+        "after": {
+          "confidence": 63,
+          "goodwill": 46
+        }
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "source": "A joint assignment",
+        "text": "The briefing arrives with two covers and no pages. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 63,
+          "goodwill": 46
+        },
+        "after": {
+          "confidence": 63,
+          "goodwill": 46
+        }
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "source": "Note Verbale No. 0/0/OM",
+        "text": "Your request is filed under 'Day of the Founding Mango'. Indefinitely. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Missed instruction",
+        "before": {
+          "confidence": 63,
+          "goodwill": 46
+        },
+        "after": {
+          "confidence": 63,
+          "goodwill": 34
+        }
+      },
+      {
+        "day": 2,
+        "time": 480,
+        "source": "Light lunch?",
+        "text": "Valdoria tells everyone you are 'very busy'. It is not a compliment. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Missed instruction",
+        "before": {
+          "confidence": 63,
+          "goodwill": 34
+        },
+        "after": {
+          "confidence": 63,
+          "goodwill": 28
+        }
+      },
+      {
+        "day": 2,
+        "time": 720,
+        "source": "The 17.6% entitlement",
+        "text": "Unresolved: The 17.6% entitlement. The problem carries a cost even when ignored. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 63,
+          "goodwill": 28
+        },
+        "after": {
+          "confidence": 63,
+          "goodwill": 28
+        }
+      },
+      {
+        "day": 2,
+        "time": 720,
+        "source": "Re: Re: Re: The cheese",
+        "text": "Someone throws the cheese away. A strike is called. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Missed instruction",
+        "before": {
+          "confidence": 63,
+          "goodwill": 28
+        },
+        "after": {
+          "confidence": 63,
+          "goodwill": 28
+        }
+      },
+      {
+        "day": 2,
+        "time": 900,
+        "source": "The generous supplier: part I",
+        "text": "Unresolved: The generous supplier: part I. The problem carries a cost even when ignored. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 63,
+          "goodwill": 28
+        },
+        "after": {
+          "confidence": 63,
+          "goodwill": 28
+        }
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "source": "Baseline duties",
+        "text": "pavel: 1 DP of routine duties displaced. Backlog grows; fatigue rises.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 63,
+          "goodwill": 28
+        },
+        "after": {
+          "confidence": 62,
+          "goodwill": 28
+        }
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "source": "Pavel Oskarsen · Security and transport",
+        "text": "Pavel Oskarsen · Security and transport: The advance team request is filed. The Security Desk acknowledges it with a request for the advance team.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 62,
+          "goodwill": 28
+        },
+        "after": {
+          "confidence": 65,
+          "goodwill": 28
+        }
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "source": "The shared office",
+        "text": "The office acquires a queue for the cupboard. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 65,
+          "goodwill": 28
+        },
+        "after": {
+          "confidence": 65,
+          "goodwill": 28
+        }
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "source": "The queue",
+        "text": "The queue forms its own National Dialogue. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Missed instruction",
+        "before": {
+          "confidence": 65,
+          "goodwill": 28
+        },
+        "after": {
+          "confidence": 65,
+          "goodwill": 19
+        }
+      },
+      {
+        "day": 3,
+        "time": 480,
+        "source": "Chirp (already posted)",
+        "text": "The chirp trends. For the wrong reasons. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Missed instruction",
+        "before": {
+          "confidence": 65,
+          "goodwill": 19
+        },
+        "after": {
+          "confidence": 65,
+          "goodwill": 15
+        }
+      },
+      {
+        "day": 3,
+        "time": 720,
+        "source": "Two briefings, no shared facts",
+        "text": "Unresolved: Two briefings, no shared facts. The problem carries a cost even when ignored. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 65,
+          "goodwill": 15
+        },
+        "after": {
+          "confidence": 65,
+          "goodwill": 15
+        }
+      },
+      {
+        "day": 3,
+        "time": 720,
+        "source": "EU coordination meeting",
+        "text": "Nobody from Bellaluxe attends the EU meeting. The delegation notices. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Missed instruction",
+        "before": {
+          "confidence": 65,
+          "goodwill": 15
+        },
+        "after": {
+          "confidence": 62,
+          "goodwill": 15
+        }
+      },
+      {
+        "day": 3,
+        "time": 900,
+        "source": "Ministerial Visit (Day 15)",
+        "text": "'The Ambassador is on consultations.' Technically true. Deniability holds.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 62,
+          "goodwill": 15
+        },
+        "after": {
+          "confidence": 66,
+          "goodwill": 15
+        }
+      },
+      {
+        "day": 3,
+        "time": 900,
+        "source": "A casual quote",
+        "text": "Unresolved: A casual quote. The problem carries a cost even when ignored. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 66,
+          "goodwill": 15
+        },
+        "after": {
+          "confidence": 66,
+          "goodwill": 15
+        }
+      },
+      {
+        "day": 4,
+        "time": 480,
+        "source": "The clean port",
+        "text": "The instruction remains on the démarche board.",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 66,
+          "goodwill": 15
+        },
+        "after": {
+          "confidence": 66,
+          "goodwill": 15
+        }
+      },
+      {
+        "day": 4,
+        "time": 480,
+        "source": "Two versions",
+        "text": "Two final versions are delivered to the Minister. (Plausible Deniability: missed penalties +20%)",
+        "kind": "Outcome",
+        "before": {
+          "confidence": 66,
+          "goodwill": 15
+        },
+        "after": {
+          "confidence": 66,
+          "goodwill": 15
+        }
+      }
+    ],
+    "visit": {},
+    "ending": null,
+    "location": "embassy",
+    "room": "office",
+    "selectedNpc": null,
+    "colleagues": {
+      "anselm": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "pavel": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "sola": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "development": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "bianca": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "ines": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "press": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "maxim": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "ketu": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "protocol": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "eu": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "fixer": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "journalist": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "golf": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "un": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "amb-valdoria": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "amb-asteria": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "port-officer": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "bar-insurer": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "un-coordinator": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "eu-germany": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "eu-france": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "eu-malta": {
+        "trust": 50,
+        "fatigue": 0
+      },
+      "eu-sweden": {
+        "trust": 50,
+        "fatigue": 0
+      }
+    },
+    "relationships": {
+      "anselm:pavel": 12,
+      "development:sola": 35,
+      "pavel:press": 27,
+      "anselm:bianca": 57,
+      "ines:sola": 70,
+      "development:ines": 65,
+      "maxim:pavel": 30,
+      "ketu:sola": 75,
+      "port-officer:protocol": 65,
+      "golf:protocol": 30,
+      "fixer:port-officer": 30,
+      "eu-france:eu-germany": 25,
+      "eu:eu-france": 70,
+      "eu:eu-germany": 65,
+      "eu-malta:eu-sweden": 70,
+      "amb-valdoria:golf": 30
+    },
+    "pending": [],
+    "report": [
+      {
+        "day": 4,
+        "time": 480,
+        "text": "The instruction remains on the démarche board."
+      },
+      {
+        "day": 4,
+        "time": 480,
+        "text": "Two final versions are delivered to the Minister. (Plausible Deniability: missed penalties +20%)"
+      },
+      {
+        "day": 4,
+        "time": 480,
+        "text": "Anselm Voss-Rietveld and Bianca Montefiore: friendly has become neutral."
+      }
+    ],
+    "score": 0,
+    "energy": 95,
+    "composure": 100,
+    "alcohol": 0,
+    "seed": 23,
+    "events": [
+      {
+        "id": "web-team",
+        "channel": "message",
+        "title": "Two versions",
+        "npc": "anselm",
+        "text": "Anselm reports that he and Bianca have each sent a final version. Both say the other version is provisional.",
+        "minDay": 4,
+        "expiresDay": 4,
+        "relationshipGate": {
+          "a": "anselm",
+          "b": "bianca",
+          "states": ["neutral", "friendly", "ally"]
+        },
+        "choices": [
+          {
+            "id": "repair",
+            "label": "Circulate both versions",
+            "pair": 18,
+            "pairTarget": "bianca",
+            "result": "Both drafts circulate under a single cover sheet.",
+            "effects": {
+              "confidence": 1
+            },
+            "counts": ["team"]
+          },
+          {
+            "id": "side",
+            "label": "Choose the louder one",
+            "pair": -10,
+            "pairTarget": "bianca",
+            "result": "The quieter version is recirculated with a louder subject line.",
+            "effects": {},
+            "counts": ["team"]
+          }
+        ],
+        "onMiss": {
+          "text": "Two final versions are delivered to the Minister.",
+          "effects": {},
+          "pair": -8,
+          "pairTarget": "bianca"
+        }
+      },
+      {
+        "id": "elise",
+        "channel": "visit",
+        "title": "A project, not a photo opportunity",
+        "npc": "development",
+        "text": "Elise is at your door. She wants the Minister to meet project beneficiaries, not merely unveil a donor plaque. UN partners demand their own speaking slots.",
+        "remoteText": "Elise's note: the Minister should meet project beneficiaries, not merely unveil a donor plaque. The UN partners want their own speaking slots. Please call.",
+        "minDay": 2,
+        "choices": [
+          {
+            "id": "useful",
+            "label": "Protect time for beneficiaries",
+            "effects": {
+              "goodwill": 3,
+              "confidence": 2
+            },
+            "trust": 5,
+            "score": 4,
+            "result": "Elise asks the UN partners to reserve time for beneficiaries. From Day 3, Amara can discuss the programme at UN House.",
+            "counts": ["formal"]
+          },
+          {
+            "id": "photo",
+            "label": "Prioritise the Minister’s photograph",
+            "effects": {
+              "confidence": 3,
+              "morale": -3
+            },
+            "trust": -6,
+            "result": "The photograph is secured provisionally. From Day 3, Amara wants to discuss what the visit will actually include at UN House.",
+            "counts": ["credit"]
+          }
+        ]
+      }
+    ],
+    "completedEvents": [
+      "invitation",
+      "web-joint",
+      "cookies",
+      "supplier",
+      "web-office",
+      "rivalry",
+      "eu27-coordination",
+      "press",
+      "web-team"
+    ],
+    "storyFlags": [
+      "reward:Sola Dewrin · Plane landing clearance",
+      "reward:Anselm Voss-Rietveld · Confirmed visit programme",
+      "reward:URGENT: Political situation",
+      "trait-accident:replyall:e1",
+      "reward:URGENT-URGENT: Ignore previous instruction",
+      "reward:Co-chairing proposal",
+      "reward:You · Provisional lounge reservation",
+      "reward:Fuel inspection",
+      "reward:Pavel Oskarsen · Security and transport",
+      "reward:Ministerial Visit (Day 15)",
+      "reward:The clean port"
+    ],
+    "pressSeen": [],
+    "pressDay": 0,
+    "pressIds": [],
+    "pressCompiler": "press",
+    "pressRead": false,
+    "pressDismissedDay": 0,
+    "pressClippedDay": 0,
+    "storyOutcomes": {
+      "invitation": {
+        "status": "missed"
+      },
+      "web-joint": {
+        "status": "missed"
+      },
+      "cookies": {
+        "status": "missed"
+      },
+      "supplier": {
+        "status": "chosen",
+        "choice": "check"
+      },
+      "web-office": {
+        "status": "missed"
+      },
+      "rivalry": {
+        "status": "missed"
+      },
+      "eu27-coordination": {
+        "status": "missed"
+      },
+      "press": {
+        "status": "missed"
+      },
+      "web-team": {
+        "status": "missed"
+      },
+      "eu-budget-share-meeting": {
+        "status": "chosen",
+        "choice": "claim"
+      }
+    }
+  },
+  "version": 9
+}
