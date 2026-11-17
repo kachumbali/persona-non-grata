@@ -34,6 +34,9 @@ describe("debrief", () => {
     expect(d.board).toHaveLength(3);
     expect(d.text).toContain("Démarches: 1 delivered");
     expect(d.payslip.total).toBe(5850);
+    const payslip = d.sections.find((s) => s.heading === "Payslip")!.lines;
+    expect(payslip.some((line) => /: (−?ƒ)0$/.test(line))).toBe(false);
+    expect(payslip.at(-1)).toBe("Total: ƒ5850");
   });
   it("offers a selected text fallback if clipboard access fails", async () => {
     useGame.setState({ ending: "promoted" });

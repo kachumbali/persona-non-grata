@@ -6,16 +6,10 @@ import { computeStats, pointsLeft, TRAITS, TRAIT_POINTS } from "../rules";
 import { activeChapter } from "../chapters";
 import { startCareer } from "../saves";
 import { playerCapacity } from "../economy";
+import { STAT_LABELS } from "../personnel";
 import { Portrait } from "./Portrait";
 
 const TITLES = ["Mr", "Ms", "Mx", "Dr", "His Excellency (pending)", "Her Excellency (pending)"];
-const STAT_LABELS = {
-  gravitas: "Gravitas",
-  charm: "Charm",
-  stamina: "Bureaucratic Stamina",
-  deniability: "Plausible Deniability",
-  liver: "Liver",
-} as const;
 const rand = (n: number) => Math.floor(Math.random() * n);
 
 export function CharacterBuilder() {

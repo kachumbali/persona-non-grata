@@ -195,13 +195,20 @@ export function buildDebrief(g: Game): Debrief {
       heading: "Payslip",
       lines: [
         `Base salary (${chapter.playerRank}): ƒ${payslip.base}`,
-        `Acting allowance: ƒ${payslip.acting}`,
-        `Hardship allowance: ƒ${payslip.hardship}`,
-        `Dry cleaning after toasts: −ƒ${payslip.drinks}`,
-        `Rejected expedited claims: −ƒ${payslip.moneyRoutes}`,
-        `Advance made available during posting: ƒ${payslip.advance ?? 0}`,
-        `Private tuition: −ƒ${payslip.tutorFees ?? 0}`,
-        `Language allowance: ƒ${payslip.languageAllowance ?? 0}`,
+        // Lines whose amount is zero are left out.
+        ...(
+          [
+            ["Acting allowance", "ƒ", payslip.acting],
+            ["Hardship allowance", "ƒ", payslip.hardship],
+            ["Dry cleaning after toasts", "−ƒ", payslip.drinks],
+            ["Rejected expedited claims", "−ƒ", payslip.moneyRoutes],
+            ["Advance made available during posting", "ƒ", payslip.advance ?? 0],
+            ["Private tuition", "−ƒ", payslip.tutorFees ?? 0],
+            ["Language allowance", "ƒ", payslip.languageAllowance ?? 0],
+          ] as const
+        )
+          .filter(([, , amount]) => amount !== 0)
+          .map(([label, sign, amount]) => `${label}: ${sign}${amount}`),
         `Total: ƒ${payslip.total}`,
       ],
     },

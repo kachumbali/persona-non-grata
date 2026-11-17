@@ -1,6 +1,22 @@
-import { computeStats, TRAITS } from "../rules";
-import { EARNED_QUIRKS, REPUTATIONS } from "../personnel";
+import { computeStats, TRAITS, type StatKey } from "../rules";
+import { EARNED_QUIRKS, REPUTATIONS, STAT_LABELS } from "../personnel";
+import { LANGUAGE_LEVELS } from "../languages";
+import { activeChapter } from "../chapters";
+import languagesData from "../data/languages.json";
 import { useGame } from "../store";
+
+/** The language's name: the host language from the chapter, the others from the language data. */
+const languageName = (id: string) => {
+  const host = activeChapter().manifest.hostLanguage;
+  if (host?.id === id) return host.name;
+  return languagesData.find((l) => l.id === id)?.name ?? id;
+};
+
+/** The level as a word. Bellaluxian is the native tongue, whatever the level. */
+const languageLevel = (id: string, level: number) => {
+  if (id === "bellaluxian") return "native";
+  return LANGUAGE_LEVELS[level]?.toLowerCase() ?? String(level);
+};
 
 export function PersonnelFile() {
   const g = useGame();
@@ -19,8 +35,9 @@ export function PersonnelFile() {
         <h3 className="font-bold">Languages</h3>
         <p>
           {Object.entries(c.languages ?? { bellaluxian: 3 })
-            .map(([id, level]) => `${id}: ${level}`)
-            .join(", ")}
+            .map(([id, level]) => `${languageName(id)}: ${languageLevel(id, level)}`)
+            .join(". ")}
+          .
         </p>
       </div>
       <div>
@@ -48,16 +65,22 @@ export function PersonnelFile() {
       </div>
       <div>
         <h3 className="font-bold">Stats</h3>
-        <ul>
-          {Object.entries(stats).map(([id, value]) => (
-            <li key={id}>
-              {id}: {value}
-              {g.personnel.drift[id as keyof typeof stats]
-                ? ` (drift ${g.personnel.drift[id as keyof typeof stats]! > 0 ? "+" : ""}${g.personnel.drift[id as keyof typeof stats]})`
-                : ""}
-            </li>
+        <dl className="grid gap-x-4 gap-y-1 font-mono">
+          {(Object.keys(STAT_LABELS) as StatKey[]).map((k) => (
+            <div key={k} className="flex flex-wrap justify-between gap-x-2">
+              <dt>{STAT_LABELS[k]}</dt>
+              <dd>
+                {"■".repeat(stats[k])}
+                <span className="text-muted-foreground">
+                  {"□".repeat(Math.max(0, 6 - stats[k]))}
+                </span>
+                {g.personnel.drift[k]
+                  ? ` (drift ${g.personnel.drift[k]! > 0 ? "+" : ""}${g.personnel.drift[k]})`
+                  : ""}
+              </dd>
+            </div>
           ))}
-        </ul>
+        </dl>
       </div>
       <div>
         <h3 className="font-bold">Active reputations</h3>

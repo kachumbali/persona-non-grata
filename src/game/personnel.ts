@@ -2,6 +2,15 @@
 import reputationData from "./data/reputations.json";
 import quirkData from "./data/earned-quirks.json";
 import type { StatKey } from "./rules";
+
+/** The stat names as the character builder and the personnel file show them. */
+export const STAT_LABELS: Record<StatKey, string> = {
+  gravitas: "Gravitas",
+  charm: "Charm",
+  stamina: "Bureaucratic Stamina",
+  deniability: "Plausible Deniability",
+  liver: "Liver",
+};
 export type Drift = Partial<Record<StatKey, number>>;
 export interface Reputation {
   id: string;
