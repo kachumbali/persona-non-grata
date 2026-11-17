@@ -33,3 +33,4 @@ dist-ssr
 
 # Q-03 playthrough screenshots and results
 playthrough-output/
+.claude/
