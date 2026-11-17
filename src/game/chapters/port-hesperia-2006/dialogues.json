@@ -22,7 +22,7 @@
             },
             {
               "label": "Brilliant. Send it straight to Capital under your name.",
-              "result": "Capital receives eleven pages from a junior. Someone in HQ laughs out loud.",
+              "result": "Capital receives eleven pages signed by you and written by a junior. Someone in HQ laughs out loud.",
               "trust": 6,
               "pair": 0,
               "score": 0,
@@ -96,7 +96,7 @@
             {
               "label": "Quote his best sentence back to him",
               "requiresTrait": "ear-accents",
-              "result": "Anselm is flattered, then wary. The quotation was accurate; so, regrettably, was the impression.",
+              "result": "Anselm is flattered, then wary. The quotation was accurate; so, regrettably, was your summary of him.",
               "effects": {
                 "sanity": -1
               },
@@ -251,7 +251,7 @@
             {
               "label": "Say the Commissioner once lost a stapler too",
               "requiresTrait": "namedrop",
-              "result": "The anecdote opens the conversation. It also appears in Ruth’s notebook.",
+              "result": "The anecdote opens the conversation. It also appears in Ruth's notebook.",
               "trust": 1,
               "effects": {
                 "morale": 1,
@@ -474,7 +474,7 @@
             {
               "label": "Translate the love letter in textbook formal register",
               "requiresTrait": "old-textbook",
-              "result": "The letter is correct, courteous and addressed to a ministry that was abolished. Sola files it under history.",
+              "result": "The letter is correct and courteous, and quotes an ambassador since retired to a lighthouse. Sola files it under history.",
               "effects": {
                 "sanity": -1
               },
@@ -536,7 +536,7 @@
             },
             {
               "label": "What kind of band?",
-              "result": "'Ska-fusion with nose flute.' You ask Ines to look at the application. Gently.",
+              "result": "'Ska-fusion with kazoo.' You ask Ines to look at the application. Gently.",
               "trust": 3,
               "pair": 0,
               "score": 2,
@@ -660,7 +660,7 @@
             {
               "label": "Learn the greeting for the well site",
               "requiresTrait": "ear-accents",
-              "result": "You practise the greeting until the engineers can tell where you learned it. They are impressed. Mostly.",
+              "result": "You practise the greeting until the engineers can tell which textbook you learned it from. They are impressed. Mostly.",
               "effects": {
                 "sanity": -1
               },
@@ -669,7 +669,7 @@
           ]
         },
         "b": {
-          "text": "That the pump was donated in 2009, broke in 2010, and has been photographed 47 times since.",
+          "text": "Understand that the pump was donated in 2001, broke in 2002, and has been photographed 47 times since.",
           "choices": [
             {
               "label": "Then we repair it before the visit. Quietly.",
@@ -760,7 +760,7 @@
             {
               "label": "Ask your spouse's NGO to run the next workshop",
               "requiresTrait": "ngo",
-              "result": "The offer is promising. Your colleague requests a conflict check.",
+              "result": "The offer is promising. Sola asks for the agenda, and then for the agenda's agenda.",
               "trust": -1,
               "effects": {
                 "goodwill": 1,
@@ -864,7 +864,7 @@
             {
               "label": "Brief the drivers in your textbook's formal register",
               "requiresTrait": "old-textbook",
-              "result": "The briefing is grammatical and addressed to an abolished ministry. The drivers salute anyway.",
+              "result": "The briefing is grammatical and quotes a 1974 regulation. The drivers salute anyway.",
               "effects": {
                 "sanity": -1
               },
@@ -882,7 +882,7 @@
           ]
         },
         "b": {
-          "text": "Rural roadblocks wave through anything with a goat. Field-tested in 2011. Do not ask about 2012.",
+          "text": "Rural roadblocks wave through anything with a goat. Field-tested in 2001. Do not ask about 2002.",
           "choices": [
             {
               "label": "Keep the goat. Lose the decoys.",
@@ -895,7 +895,7 @@
               }
             },
             {
-              "label": "What happened in 2012?",
+              "label": "What happened in 2002?",
               "result": "'Classified,' says Bianca. Her eye twitches. You drop it.",
               "trust": 2,
               "pair": 0,
@@ -1114,7 +1114,7 @@
             {
               "label": "Offer your spouse's NGO volunteers for the queue",
               "requiresTrait": "ngo",
-              "result": "The queue gains a practical perspective and a question about interests.",
+              "result": "The volunteers arrive with clipboards. Ines asks them to take a number.",
               "trust": -1,
               "effects": {
                 "goodwill": 1,
@@ -1292,7 +1292,7 @@
       "start": "a",
       "nodes": {
         "a": {
-          "text": "Lucien has clipped the port coverage. The ministry signs the papers; Mira’s office controls the inspection timetable.",
+          "text": "Lucien has clipped the port coverage. The ministry signs the papers; Mira's office controls the inspection timetable.",
           "choices": [
             {
               "label": "Ask what Bako wants from the programme",
@@ -1550,7 +1550,7 @@
       "start": "a",
       "nodes": {
         "a": {
-          "text": "At the EU coffee morning, you ate exactly 17.6% of the cookies again. Yes, Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework. Celeste says that doesn't make it a biscuit entitlement.",
+          "text": "At the EU coffee morning you ate exactly 17.6% of the cookies again. Celeste has asked for the minutes to say so.",
           "choices": [
             {
               "label": "It's not shameless, it's budget proportional.",
@@ -1644,7 +1644,7 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "The official names one office, then the office that replaced it, then a committee.",
               "trust": 1,
               "effects": {},
               "formal": true
@@ -1655,7 +1655,7 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "The official explains, in clear Ombrazian, that the signature is a formality. The form disagrees.",
               "trust": 1,
               "effects": {},
               "formal": true
@@ -1739,7 +1739,7 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Ndao accepts it in person, then asks for it again in writing.",
               "trust": 1,
               "effects": {},
               "formal": true
@@ -1750,7 +1750,7 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Ndao accepts your thanks on the ministry's behalf and enters the time on a form.",
               "trust": 1,
               "effects": {},
               "formal": true
@@ -1761,7 +1761,7 @@
                 "language": "communique",
                 "min": 2
               },
-              "result": "The constructive exchange of views is welcomed. The minutes will reflect this.",
+              "result": "Ndao adds the phrase to the minutes, then to the seating plan.",
               "effects": {}
             }
           ]
@@ -1775,7 +1775,7 @@
       "start": "a",
       "nodes": {
         "a": {
-          "text": "Yes, Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework. That does not entitle you to 17.6% of the biscuits, speaking time and meeting chairs. Please do not bring a calculator again.",
+          "text": "Yes, Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework. That does not entitle you to 17.6% of the biscuits, speaking time or chairs. Do not bring a calculator again.",
           "choices": [
             {
               "label": "I would never bring a calculator.",
@@ -1793,7 +1793,7 @@
             },
             {
               "label": "17.6%, Celeste. We contribute that share of the EU budget.",
-              "result": "Pained expressions all round. A Nordic colleague sighs in three languages.",
+              "result": "Pained expressions all round. A colleague sighs in three languages.",
               "trust": -3,
               "pair": 0,
               "score": 1,
@@ -2036,7 +2036,7 @@
           ]
         },
         "b": {
-          "text": "Ruth: 'Everything is a real question in this bar.'",
+          "text": "'Everything is a real question in this bar.'",
           "choices": [
             {
               "label": "Then the real answer is: ask the cat.",
@@ -2143,7 +2143,7 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Bako says yes, then no, then that the first tee is a matter of opinion.",
               "trust": 1,
               "effects": {}
             },
@@ -2153,14 +2153,14 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Bako accepts the compliment and asks whether the programme is also par.",
               "trust": 1,
               "effects": {}
             }
           ]
         },
         "b": {
-          "text": "'Handicap is a colonial concept,' says Bako. 'I count only good shots.'",
+          "text": "'Handicap is a bureaucratic concept,' says Bako. 'I count only good shots.'",
           "choices": [
             {
               "label": "Then you're unbeaten. Like our friendship.",
@@ -2230,7 +2230,7 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Bako says the shorter route is the one he takes, then takes the longer one.",
               "trust": 1,
               "effects": {}
             },
@@ -2240,7 +2240,7 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Bako nods gravely. He has never finished punctually, and says so with pride.",
               "trust": 1,
               "effects": {}
             }
@@ -2411,8 +2411,8 @@
               }
             },
             {
-              "label": "Propose a footnote to the footnote.",
-              "result": "Niko reaches for a second page. Nobody gets lunch.",
+              "label": "Propose a second consensus, shorter.",
+              "result": "Niko agrees to a second consensus. It is longer.",
               "trust": -2,
               "effects": {
                 "sanity": -1
@@ -2480,7 +2480,7 @@
                 "language": "german",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Klaus confirms the deadline in German, then in an annex.",
               "trust": 1,
               "effects": {}
             },
@@ -2490,7 +2490,7 @@
                 "language": "german",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Klaus lays both versions side by side and finds one comma that differs.",
               "trust": 1,
               "effects": {}
             }
@@ -2525,7 +2525,7 @@
                 "language": "german",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Klaus agrees, in German, that one signature is missing. He has circled it twice.",
               "trust": 1,
               "effects": {}
             }
@@ -2562,7 +2562,7 @@
                 "language": "french",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Henri nods. In French, the word is considerably more elegant.",
               "trust": 1,
               "effects": {}
             },
@@ -2572,7 +2572,7 @@
                 "language": "french",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Henri accepts the offer, then sends back the draft with three accents corrected.",
               "trust": 1,
               "effects": {}
             }
@@ -2607,7 +2607,7 @@
                 "language": "french",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Henri says 'constructive' means the printer is still under discussion, in principle.",
               "trust": 1,
               "effects": {}
             }
@@ -2749,7 +2749,7 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Mira gives a date, then a later date for reviewing the first.",
               "trust": 1,
               "effects": {},
               "formal": true
@@ -2760,7 +2760,7 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Mira names the wrong office first, then the right one, with feeling.",
               "trust": 1,
               "effects": {},
               "formal": true
@@ -2777,7 +2777,7 @@
           "text": "Mira says port crews have practical ideas but rarely appear in project announcements.",
           "choices": [
             {
-              "label": "Ask to hear the crews’ suggestions.",
+              "label": "Ask to hear the crews' suggestions.",
               "result": "Mira offers to arrange a practical briefing.",
               "trust": 2,
               "effects": {
@@ -2796,18 +2796,18 @@
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Mira accepts the list, and asks for it stamped by the crews.",
               "trust": 1,
               "effects": {},
               "formal": true
             },
             {
-              "label": "Thank the officer for explaining the delay.",
+              "label": "Thank the officer for her frankness.",
               "requiresLanguage": {
                 "language": "ombrazian",
                 "min": 2
               },
-              "result": "The observation is understood. The official makes a note in the margin.",
+              "result": "Mira nods once. In the port, that counts as a speech.",
               "trust": 1,
               "effects": {},
               "formal": true
@@ -2860,7 +2860,7 @@
             },
             {
               "label": "Reserve the seat for your own delegation.",
-              "result": "Sofia notes your request in a very small notebook.",
+              "result": "Sofia notes your request and asks for the delegation's receipts.",
               "trust": -1,
               "effects": {}
             }
