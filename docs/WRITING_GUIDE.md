@@ -103,8 +103,8 @@ Shorter is nearly always funnier. Put the joke at the end of the sentence.
 - Call the group **the EU**. No membership numbers.
 - Use real country names only for EU member states (as in the current cast: Germany, France, Malta, Sweden).
 - Every other country is fictional and non-obvious. No thinly veiled real states.
-- No real individuals, no real office holders, no real companies or newspapers.
-- The default setting is around 2006: BlockBerry, fax, desktop computers. "Team Europe" is a deliberate anachronism.
+- No real individuals, no real office holders, no real companies or newspapers. Satirical stand-ins for real brands are fine when the name is changed and the joke is on the habit, not the company: BlockBerry, Chirper, Chercheur.
+- The default setting is around 2006: BlockBerry, fax, desktop computers. "Team Europe" is a deliberate anachronism, and so is Lucien's social-media vocabulary ("hashtag", "selfie", "goes viral"). Keep anachronisms deliberate and rare: one character's habit, not the setting.
 - Other eras (1980s, around 2001, 2013, 2022) may be used when a chapter calls for them. Keep technology and vocabulary consistent with the era.
 
 ## Recurring comic devices
@@ -120,3 +120,7 @@ Reuse these. A running gag is a reward for the player who has been paying attent
 - **"Taking note."** The diplomatic act of doing nothing, minuted.
 - **The annex.** Where problems go to be filed, and where a stopwatch ends up.
 - **The useful exchange of views.** Nobody changed their mind.
+
+## Quote marks
+
+Player-visible text mixes straight and typographic quotes. Do not fix it in bulk. When you write or edit a line, use typographic quotes (‘ ’ “ ”) and the typographic apostrophe (’).
