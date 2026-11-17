@@ -12,6 +12,89 @@ S-05/S-08 measurement (the matrix now has six bots, see "First hour"): 210 runs 
 
 Every competent run earns at least one reputation. The most common is Known to Fax, earned in 130/210 runs (62%), below the 70% ceiling. All 84 paired same-build, same-seed comparisons between careful and the other competent bots ended with different personnel files (target 80%). The matrix produced 15 different epithets (target eight). [Three complete plain-text debriefs](DEBRIEF_EXAMPLES.md) show different runs. Reputation-triggered clippings and options are conditional; reduced-matrix coverage bounds were adjusted to reflect the socialiser's mission-first policy and cured traits. Existing save-version tests now expect version 14, and the simulator's `endedEarly` correctly includes endings during the last day.
 
+## Stabilization (Q-06b, U-04 items 1, 2 and 7)
+
+Measured on 306 runs (6 bots, 17 builds, 3 seeds). Reproduce with `npm run sim`; the full-matrix thresholds run with `npm run sim:check` (CI runs it). Numbers below are from before and after this package.
+
+### Item 1: why careful players ignored about 14 mails a game
+
+The ignored-mail count was almost entirely the bots' fault, not the design's. For each ignored mail the simulation now records what the bot had in that block: where it was, how much DP was left, and whether it ran out while answering mail. Those rows are in the "Mails marked ignored, by reason and day" table of `npm run sim`.
+
+Before the fix, the careful bot (and press-reader, which shares its plan) did three things that cost it mail:
+
+- It spent its DP on mission steps (self-done from Day 9, or by fallback), restIfLow and the Day 1 to 5 language lessons before it answered any mail. Its 4 DP were gone by the time Day 2 and Day 8 to 12 mail was read: "no DP left".
+- `goHomeForFax` checked `openMail()`, which hides Capital's fax away from the embassy, so the bot never walked home for it. That check was dead code.
+- An invitation or call after the bot's first mail reply took it away from the embassy, and the fax was never answered that block: "fax, away from the embassy".
+
+The fix is in the bot (`src/game/sim/bots.ts`, `player.ts`): answer mail before mission work and lessons, walk home for the fax, and walk home again after an invitation if the fax is still waiting and DP allows. No game rule changed.
+
+Ignored mails per run, all days (before, then after):
+
+| Bot          | Before | After | Ignored on Day 1, before / after |
+| ------------ | -----: | ----: | -------------------------------: |
+| careful      |   14.4 |   0.8 |                            0 / 0 |
+| press-reader |   14.4 |   3.4 |                            0 / 0 |
+| newcomer     |   13.8 |   2.7 |                            2 / 2 |
+| socialiser   |    9.6 |   9.6 |                            0 / 0 |
+| reckless     |    5.1 |   5.1 |                            2 / 2 |
+| ignorer      |   12.1 |  12.1 |                            4 / 4 |
+
+Careful after the fix: 0.7 ignored in the Day 2 Morning (no DP left), 0.1 elsewhere. Press-reader's remaining 3.4 are mostly Day 2 Morning (1.5), Day 3 (0.7) and Day 13 (0.9), when it has run out of DP before the last mail is answered. Why its DP is short on those mornings was not traced further. Socialiser still ignores 9.6 a run, mostly "no DP left" from Day 8 (its plan spends DP on conversations and calls before mail). It is not one of the bots this package was about and was not changed.
+
+Design fixes: neither was implemented. The two fixes allowed by the brief (an extra block for mail that arrives while the player is away from the embassy, and free second answers on the same device) would hide a bot problem that is now small: after the bot fix, fax-away mail is 0.08 a run for careful. The remaining press-reader DP shortage is "more mail than DP allows" on a few mornings; the brief's second fix (a second answer on the same device costs no DP) would fix it, but the numbers do not yet justify changing the game's DP rule. Left for a decision.
+
+### Item 2: meters at the ceiling
+
+Per bot, from the simulation's cap observer (`setCapObserver`, which sees each meter change before the clamp): positive gains asked for, the part lost to the cap, and the day a meter first ended a block at 95 or more.
+
+| Bot          | Version                  | HQ asked | HQ lost | Host asked | Host lost | HQ at 95 (mean day) | HQ before D12 | Host before D12 | Either before D12 |
+| ------------ | ------------------------ | -------: | ------: | ---------: | --------: | ------------------: | ------------: | --------------: | ----------------: |
+| careful      | before (HEAD)            |    113.7 |     0.4 |       66.9 |       1.2 |          13.5 (12%) |            2% |              0% |                2% |
+| careful      | bots fixed, no rebalance |    147.5 |    56.3 |       87.9 |      35.2 |          6.2 (100%) |          100% |             98% |              100% |
+| careful      | final (knee at 50)       |    104.8 |    14.4 |       59.4 |       7.1 |          10.3 (94%) |           80% |             12% |               80% |
+| press-reader | before (HEAD)            |    140.9 |     0.0 |       71.7 |       2.1 |           15.0 (2%) |            0% |              0% |                0% |
+| press-reader | final                    |    129.2 |    13.4 |       59.8 |       3.5 |          11.4 (88%) |           57% |             12% |               65% |
+| newcomer     | final                    |    101.7 |     9.3 |       59.3 |       4.1 |          11.4 (92%) |           63% |              2% |               63% |
+| socialiser   | before (HEAD)            |    102.1 |       0 |       56.0 |       0.2 |              - (0%) |            0% |              2% |                2% |
+| socialiser   | final                    |     92.2 |       0 |       44.1 |         0 |              - (0%) |            0% |              0% |                0% |
+
+The careful bot is the reason for the change. Answering the mail it used to ignore adds about 40 HQ and 30 host goodwill of positive gains a run, and the meters hit the cap by Day 6 on average (HQ 100% and host 98% before Day 12). The cap then discarded 56 HQ and 35 host goodwill a run.
+
+The rebalance: a positive HQ or host goodwill gain counts in full while the meter is below 50, and the part above 50 counts for half, rounded up (`diminishedGains` in `rules.ts`, applied to every decision's effects in `store.ts`). Losses, morale, sanity, budgets, ending thresholds and the cap of 100 are unchanged.
+
+Target not met. For the careful bot, neither meter reaches 95 before Day 12 in 20% of runs or fewer is the target; the final rule gives 80% (HQ). The cap now discards 14.4 HQ and 7.1 host a run (from 56 and 35). Tested alternatives (not shipped):
+
+- Halving every positive gain above the knee at 40 or 50 gives the same numbers, since the careful meters are above 50 from early on. The HQ gains come from mail, mission steps, invitations and calls alike; restricting the rule to routine work (mail, mission work, staff talks) did not reach the target either (94% before Day 12).
+- A flat multiplier of 0.35 on every positive gain reaches the target (0% before Day 12) and keeps careful and press-reader promoted, but the socialiser falls from 84% ambassador to 80% replaced (its HQ depends on the gains it loses). This was not shipped; it needs a decision on the socialiser.
+
+Ending rates, per bot (51 runs each; before, then final):
+
+| Bot          | Before                                            | Final                                 |
+| ------------ | ------------------------------------------------- | ------------------------------------- |
+| careful      | promoted 37 (73%), ambassador 14 (27%)            | promoted 50 (98%), cancelled 1 (2%)   |
+| press-reader | promoted 48 (94%), ambassador 3 (6%)              | promoted 51 (100%)                    |
+| newcomer     | promoted 23 (45%), ambassador 28 (55%)            | promoted 51 (100%)                    |
+| socialiser   | ambassador 43 (84%), replaced 7 (14%), promoted 1 | ambassador 42 (82%), replaced 9 (18%) |
+| reckless     | png 30 (59%), replaced 21 (41%)                   | unchanged                             |
+| ignorer      | replaced 51 (100%)                                | unchanged                             |
+
+Almost all the careful and press-reader movement comes from item 1 (the bots now answer their mail); the knee moves the socialiser by two runs. Careful mission completion: 100% before, 98% after (within the 5-point limit). Press-reader and careful are now promoted in nearly every run, above the 70 to 90% and 60 to 90% targets that were set when the bots ignored mail. Those upper bounds are lifted in `full-matrix.test.ts` and this is a finding for the owner: a player who answers their mail is now almost certain to be promoted, so the game's remaining challenge is elsewhere. The first-timer variant (not in the matrix; it reads nothing on Day 1) moves the same way: promoted 3 and ambassador 47 before, promoted 50 and cancelled 1 after.
+
+Known side effect to fix in the UI, not in this package: talk choices show their authored meter effects (`Conversation.tsx`, via `splitEffects`), so a gain above 50 is now displayed larger than it lands. Components are owned by another package; a follow-up should show the applied gain.
+
+### Item 7: tests and simulation
+
+- The full-matrix threshold test (about 35 s, the longest test in the suite) moved to `src/game/sim/full-matrix.test.ts`. It is skipped in `npm test` and runs with `npm run sim:check` (`SIM_FULL=1`), which CI now runs after `npm test`. The reduced matrix in `sim.test.ts` stays in `npm test`; the slowest test there is the newcomer check at about 6 s.
+- A new reduced-matrix check: the careful bot's ignored mail stays at 2 or fewer a run, with no fax ignored from away.
+- `debrief.test.tsx` (selected text fallback): waits for the selection itself with `waitFor` instead of checking it once after the textbox appears; the assertion is unchanged.
+- The simulation report has two new tables: ignored mail by reason and day, and the meter ceiling per bot.
+
+Balance thresholds changed deliberately: press-reader promotion upper bound 0.95 to 1, careful promotion upper bound 0.9 to 1 (see item 2).
+
+### Item 4: playthrough raw-id detector
+
+`scripts/playthrough.cjs` no longer flags a hyphenated content id inside a sentence ("Mira cancelled the clean-port programme."). It flags it only where it stands alone (a line or label of at most two words); colon ids such as `trait:x` are still always flagged. Checked with a quick script on the pure `rawIdHits` helper: prose passes, a standalone id, a labelled id and a colon id are flagged. The full playthrough was not run.
+
 ## Reputations
 
 - **The Biscuit Hawk** (`biscuit-hawk`): `hospitality` at 3. Hospitality budgets now come with a covering note.
