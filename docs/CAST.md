@@ -553,7 +553,7 @@ Every contradiction found in the sections above, plus content issues found while
 
 **About characters**
 
-1. **Pronouns for the visiting Minister (not one of the 24).** `email:e10` says "Please confirm the Ambassador will greet her personally", which makes the Minister female. `email:arrival-programme` (option note) says "The Minister's aide supplies a programme of his own", which makes the Minister male. Source ids: `email:e10` and `email:arrival-programme`.
+1. Resolved in Q-05: the visiting Minister is female ("her") throughout.
 2. **Pavel and Lucien: shared office versus separate rooms (weak).** `chapter:startRelationships` tags them `shares-an-office`. `embassy:staff[2]` puts Pavel in the Generator Shed and `embassy:staff[7]` puts Lucien on the Rooftop. The content calls the shared space a cupboard (`event:web-office`, `gossip:office-cupboard`), so the two may not be in conflict. Source ids: `chapter:startRelationships`, `embassy:staff[2]`, `embassy:staff[7]`.
 3. **Anselm and press monitoring (weak).** `duties:anselm` gives "Political reporting and press monitoring" to Anselm. `briefing:sections[7]` says Lucien "compiles the local press, or Maxim the intern does". Source ids: `duties:anselm`, `briefing:sections[7]`.
 4. Resolved in Q-04: Bianca's role is now "Defence Attaché (Colonel)" in `campaign.json` and `embassy.json`.
@@ -568,3 +568,11 @@ Every contradiction found in the sections above, plus content issues found while
 7. **Copied garbled text.** `gossip:protocol-apprentice`, `gossip:office-cupboard` and `gossip:briefing` all carry the same garbled text: "You heard that a meeting had been cancelled because the minutes requested leave." It does not match the content of any of the three.
 8. ~~Missing parent event.~~ Checked: `asteria-coffee` is an invitation in `invitations.json`; invitation outcomes share the event namespace. Not a contradiction.
 9. **Shared name, different costs.** The location `location:bar` and the venue `venue:shady` are both called "The Quiet Amendment". Their costs are 200 and 80. The data does not say whether they are the same place.
+
+## Offstage figures
+
+People who are mentioned but never appear. They need no further facts.
+
+- The visiting Minister of Bellaluxe: female; arrives on Day 15.
+- The Ambassador of Bellaluxe: absent for the whole chapter.
+- The Commissioner (in Brussels), the President and the Minister of Fisheries (of Ombrazia): named only in dialogue.
