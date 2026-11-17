@@ -64,6 +64,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import {
   absTime,
   applyEffects,
+  diminishedGains,
   firstDayGrace,
   halveFirstPenalty,
   inFirstDayGrace,
@@ -1565,17 +1566,19 @@ export const useGame = create<GameState>()(
             }
           }
           const formal = success && p.formal ? formalBonus(stats.gravitas) : 0;
+          // Gains above the knee count for half (see diminishedGains).
+          const base = diminishedGains(meters, p.effects);
           const routeEffects: Effects = {};
           for (const key of ["confidence", "goodwill", "morale", "sanity"] as const) {
             const amount = route?.effects?.[key];
-            if (amount !== undefined) routeEffects[key] = (p.effects[key] ?? 0) + amount;
+            if (amount !== undefined) routeEffects[key] = (base[key] ?? 0) + amount;
           }
           const effects = success
             ? {
-                ...p.effects,
+                ...base,
                 ...routeEffects,
                 ...(formal
-                  ? { confidence: (routeEffects.confidence ?? p.effects.confidence ?? 0) + formal }
+                  ? { confidence: (routeEffects.confidence ?? base.confidence ?? 0) + formal }
                   : {}),
               }
             : translationError

@@ -160,7 +160,8 @@ describe("scheduled game rounds", () => {
     expect(useGame.getState().meters.confidence).toBe(55);
     useGame.getState().advance();
     // The unanswered Capital fax waits through the first-day grace period (see first-day.test.ts).
-    expect(useGame.getState().meters.confidence).toBe(61);
+    // Gains above the knee of 50 count for half (Q-06b): the reply adds 3, not 6.
+    expect(useGame.getState().meters.confidence).toBe(58);
     expect(useGame.getState().block).toBe(1);
     expect(useGame.getState().report.length).toBeGreaterThan(0);
   });
