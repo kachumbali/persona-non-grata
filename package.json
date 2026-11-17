@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "content:check": "bun scripts/content-check.ts",
-    "sim": "bun scripts/sim.ts"
+    "sim": "bun scripts/sim.ts",
+    "playthrough": "node scripts/playthrough.cjs"
   },
   "overrides": {
     "rolldown": "1.2.1"
