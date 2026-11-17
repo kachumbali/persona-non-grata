@@ -2,13 +2,22 @@ import { eligible, gateLabel, withInterpreter } from "../character";
 import { InterpreterSelect } from "./InterpreterSelect";
 import { computeStats } from "../rules";
 import { useEffect, useState } from "react";
-import { BellRing, Phone, Printer, UserRound } from "lucide-react";
+import { BellRing, DoorOpen, Mail, Phone, Printer, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { campaign, type StoryChoice, type StoryEvent } from "../rules";
 import { useGame } from "../store";
 import { capacityLedger, staffDuty } from "../economy";
+import { interruptionView, type InterruptionKind } from "../interruption";
 import { Portrait } from "./Portrait";
+
+const ICONS: Record<InterruptionKind, typeof Phone> = {
+  call: Phone,
+  message: Mail,
+  visit: DoorOpen,
+  door: UserRound,
+  fax: Printer,
+};
 
 const dpFor = (eventId: string, c: StoryChoice) =>
   c.replace || eventId === "rivalry"
@@ -40,14 +49,8 @@ export function Interruption() {
   )
     return null;
   const npc = campaign().characters.find((c) => c.id === event.npc);
-  const colleague = npc?.location === "embassy";
-  const fromCapital = npc?.role?.toLowerCase().includes("capital");
-  const how = colleague
-    ? { icon: UserRound, label: `${npc?.name ?? "A colleague"} appears at your door` }
-    : fromCapital
-      ? { icon: Printer, label: "The secure fax starts printing" }
-      : { icon: Phone, label: `Phone call · ${npc?.name ?? "Unknown caller"}` };
-  const Icon = how.icon;
+  const view = interruptionView(event, npc, g.location);
+  const Icon = ICONS[view.kind];
   const participants = [
     ...new Set(
       event.choices
@@ -114,7 +117,7 @@ export function Interruption() {
         <DialogContent className="retro-builder max-w-lg bg-card p-0 text-card-foreground">
           <DialogTitle className="retro-titlebar">
             <Icon className="size-5" />
-            {how.label}
+            {view.header}
           </DialogTitle>
           <div className="flex gap-4 p-4">
             {npc && (
@@ -125,7 +128,7 @@ export function Interruption() {
             <div className="min-w-0">
               <h3 className="text-xl text-destructive">{event.title}</h3>
               <DialogDescription className="my-2 text-sm text-foreground">
-                {event.text}
+                {view.text}
               </DialogDescription>
               {participants.length > 0 && (
                 <div className="mb-2 text-xs">
