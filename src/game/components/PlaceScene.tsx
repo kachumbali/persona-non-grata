@@ -22,6 +22,7 @@ import { Agenda } from "./Agenda";
 import { DemarcheBoard } from "./DemarcheBoard";
 import { Portrait } from "./Portrait";
 import { activeChapter } from "../chapters";
+import { PLACE_BLOCKS } from "../chapters/types";
 import { relationshipState } from "../relationships";
 import { badgeLabel, waitingItems } from "../inbox";
 import { useUi } from "../ui";
@@ -61,6 +62,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
   const representation = activeChapter().euRepresentation;
   const people = campaign().characters.filter((c) => c.location === g.location);
   const spot = SPOTS[g.location] ?? { x: 50, y: 50 };
+  const atmosphere = place?.atmosphere?.[PLACE_BLOCKS[g.block] ?? "morning"];
   return (
     <section className="embassy-window bg-card" aria-label={place?.name}>
       <div className="retro-titlebar justify-between">
@@ -287,6 +289,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
           ? "Click your PC, the fax, or a colleague."
           : "Click someone to talk, or follow a lead if one is available. Your BlockBerry keeps mail within reach (bottom right)."}
       </p>
+      {atmosphere && <p className="px-3 pb-2 text-sm italic text-muted-foreground">{atmosphere}</p>}
       <Conversation />
 
       <Dialog open={win === "pc"} onOpenChange={(o) => !o && setWin(null)}>

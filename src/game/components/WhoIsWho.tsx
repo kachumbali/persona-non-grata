@@ -29,6 +29,7 @@ export function WhoIsWho() {
                       <Portrait portrait={person.portrait} size={40} />
                       <div className="min-w-0">
                         <strong>{person.name}</strong>
+                        {person.bio && <p className="italic">{person.bio}</p>}
                         <p>
                           {person.role} · {relationshipState(g.colleagues[person.id]?.trust ?? 50)}
                         </p>

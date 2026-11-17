@@ -15,4 +15,12 @@ describe("Who is who", () => {
     expect(screen.getByText(/Wants: \?/)).toBeInTheDocument();
     expect(screen.queryByText("Pavel Oskarsen", { selector: "strong" })).not.toBeInTheDocument();
   });
+  it("shows the bio of a met person", () => {
+    useGame
+      .getState()
+      .start({ title: "Mx", name: "Tester", portrait: "diplomat-1", bio: "", traits: [] });
+    useGame.getState().selectNpc("anselm");
+    render(<WhoIsWho />);
+    expect(screen.getByText(/On his first posting, Anselm drafted/)).toBeInTheDocument();
+  });
 });
