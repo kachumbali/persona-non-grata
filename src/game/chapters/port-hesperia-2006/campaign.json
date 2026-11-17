@@ -675,7 +675,7 @@
       "npc": "eu",
       "location": "eu",
       "minDay": 1,
-      "text": "Celeste calls the local EU coordination meeting to order. Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework; your colleague has brought a stopwatch to claim 17.6% of the speaking time, biscuits and credit. Tanya of Malta says Cyprus and Luxembourg have authorised her to present their briefs at this meeting. France wants to reach the host ministry before it closes. Germany has already put the stopwatch in an annex.",
+      "text": "Celeste opens the EU coordination meeting. Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework; your colleague has brought a stopwatch to claim 17.6% of the speaking time, biscuits and credit. Tanya says Cyprus and Luxembourg have authorised her to present their briefs. France wants to reach the ministry before it closes. Klaus has put the stopwatch in an annex.",
       "choices": [
         {
           "id": "claim",
@@ -788,7 +788,7 @@
     {
       "id": "eu-budget-share-share-followup",
       "channel": "call",
-      "title": "Two briefs and a cup of coffee",
+      "title": "Three briefs and a coffee",
       "npc": "eu-malta",
       "minDay": 2,
       "requiresChoice": {
@@ -1604,7 +1604,7 @@
     {
       "id": "supplier",
       "channel": "visit",
-      "title": "The generous supplier · part I",
+      "title": "The generous supplier: part I",
       "npc": "sola",
       "text": "Sola is at your door. A caterer offers an unusually cheap reception, and she recognises the surname. Investigate or take the bargain?",
       "remoteText": "Sola's note: a caterer offers an unusually cheap reception. She recognises the surname. Please advise before someone else accepts it.",
@@ -1637,7 +1637,7 @@
     },
     {
       "id": "supplier-followup",
-      "title": "The generous supplier · part II",
+      "title": "The generous supplier: part II",
       "npc": "fixer",
       "location": "bar",
       "text": "Marcel slides Sola's findings across the table. The supplier belongs to a protocol official’s cousin. A correspondent is asking about the reception. 'I know a different caterer,' he adds. 'And, regrettably, the cousin.'",
@@ -1675,7 +1675,7 @@
     },
     {
       "id": "supplier-accepted-followup",
-      "title": "The generous supplier · invoice enclosed",
+      "title": "The generous supplier: invoice enclosed",
       "npc": "fixer",
       "location": "bar",
       "text": "The caterer's generous price was for plates. The invoice charges separately for food, chairs and the privilege of sitting on them. A protocol official's cousin owns the company.",
@@ -1749,7 +1749,7 @@
     },
     {
       "id": "seating-apology-followup",
-      "title": "The seating plan · a delicate compromise",
+      "title": "The seating plan: a delicate compromise",
       "npc": "protocol",
       "location": "ministry",
       "text": "Ndao lays out two cards and the disputed fern. A compromise would move the Deputy Minister forward, though Capital's delegation would lose its preferred photograph.",
@@ -1797,7 +1797,7 @@
     },
     {
       "id": "seating-capital-followup",
-      "title": "The seating plan · instructions versus chairs",
+      "title": "The seating plan: instructions versus chairs",
       "npc": "protocol",
       "location": "ministry",
       "text": "Ndao has compared Capital's seating instructions with the host's protocol rules. The documents disagree on precedence, furniture and the definition of a doorway.",
@@ -1875,7 +1875,7 @@
     },
     {
       "id": "development-beneficiaries-followup",
-      "title": "The project visit · whose voices?",
+      "title": "The project visit: whose voices?",
       "npc": "un",
       "location": "un",
       "text": "Amara has reserved a project visit with people who use its services. One partner wants to fill the discussion with speeches; the community asks for time to speak for itself.",
@@ -1913,7 +1913,7 @@
     },
     {
       "id": "development-photo-followup",
-      "title": "The project visit · a perfect photograph",
+      "title": "The project visit: a perfect photograph",
       "npc": "un",
       "location": "un",
       "text": "Amara shows you the proposed photo stop. The camera position is immaculate, but the project team has been given no time to explain what it actually does.",
@@ -1984,7 +1984,7 @@
     },
     {
       "id": "asteria-coffee-followup",
-      "title": "The coffee clause · a Danish proposal",
+      "title": "The coffee clause: a Danish proposal",
       "npc": "amb-asteria",
       "location": "eu",
       "text": "After your conversation over coffee, Ambassador Arden offers Bellaluxe a chance to shape the EU's joint statement. The draft is short; the footnotes are not.",
@@ -2022,7 +2022,7 @@
     },
     {
       "id": "asteria-coffee-delegated-followup",
-      "title": "The coffee clause · a colleague's introduction",
+      "title": "The coffee clause: a colleague's introduction",
       "npc": "amb-asteria",
       "location": "eu",
       "text": "The colleague you sent made a good impression. Ambassador Arden now offers Bellaluxe a chance to shape the EU's joint statement in person.",
@@ -2041,7 +2041,7 @@
             "goodwill": 1
           },
           "trust": 4,
-          "result": "Niko includes your amendment. The footnote shrinks by a historic three lines.",
+          "result": "Niko includes the amendment. Your colleague is credited in a footnote, which shrinks by a historic three lines.",
           "counts": ["team"]
         },
         {
@@ -2053,14 +2053,14 @@
             "goodwill": -1
           },
           "trust": -4,
-          "result": "Capital is pleased to see Bellaluxe's name. Niko quietly changes the order of the flags.",
+          "result": "Capital is pleased to see Bellaluxe's name. Your colleague learns of it from the minutes.",
           "counts": ["credit"]
         }
       ]
     },
     {
       "id": "press-honest-followup",
-      "title": "Off the record · a careful briefing",
+      "title": "Off the record: a careful briefing",
       "npc": "journalist",
       "location": "pressclub",
       "text": "Ruth kept your distinction between confirmed and pending arrangements. Now she wants background on the visit. 'You can say no,' she says, which makes you more suspicious.",
@@ -2097,10 +2097,10 @@
     },
     {
       "id": "press-promise-followup",
-      "title": "Off the record · the printed promise",
+      "title": "Off the record: the printed promise",
       "npc": "journalist",
       "location": "pressclub",
-      "text": "Ruth places your promise that everything is ready beside a list of arrangements that are not. The microphone is conspicuously switched on this time.",
+      "text": "Ruth places your promise that everything is ready beside a list of arrangements that are not. The recorder is conspicuously switched on this time.",
       "minDay": 2,
       "requiresChoice": {
         "eventId": "press",
@@ -2236,14 +2236,14 @@
       "title": "Bako calls in a favour",
       "npc": "golf",
       "callInFor": "golf",
-      "text": "Bako calls to ask you to attend a constituency briefing. The request has acquired the status of a reminder.",
+      "text": "Bako calls to ask you to attend a constituency briefing. He says it is a friendly reminder.",
       "minDay": 1,
       "choices": [
         {
           "id": "honour",
           "label": "Make time for the request",
           "replace": true,
-          "result": "You give the request the time it was said not to require.",
+          "result": "You play the ninth hole and are told the briefing was on the tenth.",
           "counts": ["formal"]
         },
         {
@@ -2251,7 +2251,7 @@
           "label": "Decline the request",
           "trust": -8,
           "flag": "refused-favour-golf",
-          "result": "The request is withdrawn. The memory is retained.",
+          "result": "The request is withdrawn. The grudge is retained.",
           "counts": ["formal"]
         }
       ]
@@ -2262,14 +2262,14 @@
       "title": "Marcel calls in a favour",
       "npc": "fixer",
       "callInFor": "fixer",
-      "text": "Marcel calls to ask you to sit through a supplier meeting. The request has acquired the status of a reminder.",
+      "text": "Marcel calls to ask you to sit through a supplier meeting. The request has been phrased as a favour.",
       "minDay": 1,
       "choices": [
         {
           "id": "honour",
           "label": "Make time for the request",
           "replace": true,
-          "result": "You give the request the time it was said not to require.",
+          "result": "You sit through the meeting. The chairs are billed separately.",
           "counts": ["formal"]
         },
         {
@@ -2277,7 +2277,7 @@
           "label": "Decline the request",
           "trust": -8,
           "flag": "refused-favour-fixer",
-          "result": "The request is withdrawn. The memory is retained.",
+          "result": "The request is withdrawn. The debt is retained.",
           "counts": ["formal"]
         }
       ]
@@ -2288,14 +2288,14 @@
       "title": "Celeste calls in a favour",
       "npc": "eu",
       "callInFor": "eu",
-      "text": "Celeste calls to ask you to review a joint announcement. The request has acquired the status of a reminder.",
+      "text": "Celeste calls to ask you to review a joint announcement. The request has been minuted in advance.",
       "minDay": 1,
       "choices": [
         {
           "id": "honour",
           "label": "Make time for the request",
           "replace": true,
-          "result": "You give the request the time it was said not to require.",
+          "result": "You review the announcement, which has already been announced.",
           "counts": ["formal"]
         },
         {
@@ -2303,7 +2303,7 @@
           "label": "Decline the request",
           "trust": -8,
           "flag": "refused-favour-eu",
-          "result": "The request is withdrawn. The memory is retained.",
+          "result": "The request is withdrawn. The minutes are retained.",
           "counts": ["formal"]
         }
       ]
@@ -2314,14 +2314,14 @@
       "title": "Bianca calls in a favour",
       "npc": "bianca",
       "callInFor": "bianca",
-      "text": "Bianca calls on the internal line to ask you to review an exercise plan. The request has acquired the status of a reminder.",
+      "text": "Bianca calls on the internal line to ask you to review an exercise plan. The request has been marked urgent, as is everything.",
       "minDay": 1,
       "choices": [
         {
           "id": "honour",
           "label": "Make time for the request",
           "replace": true,
-          "result": "You give the request the time it was said not to require.",
+          "result": "You review the plan, now in its third version.",
           "counts": ["formal"]
         },
         {
@@ -2329,7 +2329,7 @@
           "label": "Decline the request",
           "trust": -8,
           "flag": "refused-favour-bianca",
-          "result": "The request is withdrawn. The memory is retained.",
+          "result": "The request is withdrawn. The exercise goes ahead without you.",
           "counts": ["formal"]
         }
       ]
@@ -2837,7 +2837,7 @@
         "language": "ombrazian",
         "min": 2
       },
-      "garbled": "You heard that a meeting had been cancelled because the minutes requested leave."
+      "garbled": "You heard that Mira bought her protocol from Ndao, in instalments."
     },
     {
       "id": "office-cupboard",
@@ -2852,7 +2852,7 @@
         "language": "ombrazian",
         "min": 2
       },
-      "garbled": "You heard that a meeting had been cancelled because the minutes requested leave."
+      "garbled": "You heard that Pavel's cupboard has been registered as a medical asset. It is recovering."
     },
     {
       "id": "receipts",
@@ -2907,7 +2907,7 @@
         "language": "ombrazian",
         "min": 2
       },
-      "garbled": "You heard that a meeting had been cancelled because the minutes requested leave."
+      "garbled": "You heard that Anselm was beefing before the meeting, mostly with himself."
     }
   ]
 }

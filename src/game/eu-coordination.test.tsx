@@ -96,7 +96,7 @@ describe("EU coordination", () => {
     });
     render(<PlaceScene onLeave={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: /follow up: the 17.6% meeting/i }));
-    fireEvent.click(screen.getByRole("button", { name: /The coffee clause · a Danish proposal/i }));
+    fireEvent.click(screen.getByRole("button", { name: /The coffee clause: a Danish proposal/i }));
     expect(screen.getByText(/After your conversation over coffee/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /The 17.6% meeting/i })).toBeInTheDocument();
   });

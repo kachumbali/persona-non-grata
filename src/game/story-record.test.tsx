@@ -21,7 +21,7 @@ describe("side-story record", () => {
     expect(details).toHaveTextContent("A casual quote — No response");
     expect(details).toHaveTextContent("A project, not a photo opportunity — Responded");
     expect(details).toHaveTextContent(
-      "The generous supplier · part II — Left open at the end of the posting",
+      "The generous supplier: part II — Left open at the end of the posting",
     );
     expect(details).not.toHaveTextContent("A chair of national importance");
   });
