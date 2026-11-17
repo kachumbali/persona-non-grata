@@ -29,6 +29,25 @@ import { useUi } from "../ui";
 import { WaitingBadge } from "./WaitingBadge";
 
 type Win = null | "pc" | "fax" | "appointment";
+
+/** The waiting count, inside a device's hotspot label: "PC · 1", "Secure fax · 2". */
+function HotspotCount({
+  device,
+  waiting,
+}: {
+  device: "pc" | "fax";
+  waiting: ReturnType<typeof waitingItems>;
+}) {
+  const { urgent, unread } = waiting[device];
+  return (
+    <WaitingBadge
+      className="ml-1 align-middle"
+      urgent={urgent.length}
+      unread={unread.length}
+      label={badgeLabel(device, urgent.length, unread.length)}
+    />
+  );
+}
 const PC_TABS = [
   ["mail", "Courrielleur 98"],
   ["tasks", "Staff & diary"],
@@ -148,6 +167,7 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
             >
               <span className="map-label">
                 <Monitor className="inline size-4" /> PC
+                <HotspotCount device="pc" waiting={waiting} />
               </span>
             </button>
             <button
@@ -159,27 +179,9 @@ export function PlaceScene({ onLeave }: { onLeave: () => void }) {
             >
               <span className="map-label">
                 <Printer className="inline size-4" /> Secure fax
+                <HotspotCount device="fax" waiting={waiting} />
               </span>
             </button>
-            {(
-              [
-                ["pc", 15, 64],
-                ["fax", 79, 54],
-              ] as const
-            ).map(([device, x, y]) => (
-              <WaitingBadge
-                key={device}
-                className="scene-badge"
-                urgent={waiting[device].urgent.length}
-                unread={waiting[device].unread.length}
-                label={badgeLabel(
-                  device,
-                  waiting[device].urgent.length,
-                  waiting[device].unread.length,
-                )}
-                style={{ left: `${x}%`, top: `${y}%` }}
-              />
-            ))}
           </>
         )}
         {!atEmbassy && (
