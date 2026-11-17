@@ -168,10 +168,10 @@
       "id": "press",
       "name": "Lucien Falk",
       "role": "Digital & Public Diplomacy Officer",
-      "room": "rooftop",
+      "room": "generator",
       "face": 7,
-      "x": -1.4,
-      "z": 0.7
+      "x": -0.4,
+      "z": 0.9
     },
     {
       "id": "development",
