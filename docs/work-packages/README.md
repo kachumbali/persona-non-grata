@@ -1,14 +1,16 @@
 # Work package briefs: queue and workflow
 
+> **Feature freeze from 17 November 2026.** Work only on `docs/STABILIZATION_PLAN.md` until it is complete. The queue below is on hold. U-04 is folded into Q-06 of the stabilization plan.
+
 One brief per package. Take them in this order unless told otherwise.
 
-| Order | Brief                          | What it is                                                     |
-| ----- | ------------------------------ | -------------------------------------------------------------- |
-| 1     | `U-03-morning-briefing.md`     | The first briefing in three pages, and a report every morning  |
-| 2     | `U-04-polish-pass.md`          | Loose ends found while playing and in the balance report       |
-| 3     | `S-04-your-past-catches-up.md` | The character's background returns as story                    |
-| 4     | `S-15-world-file.md`           | Background events that make the press and the setting coherent |
-| 5     | `A-01-cultural-institute.md`   | A story arc: the institute and its very strange director       |
+| Order (on hold) | Brief                          | What it is                                                     |
+| --------------- | ------------------------------ | -------------------------------------------------------------- |
+| 1               | `U-03-morning-briefing.md`     | The first briefing in three pages, and a report every morning  |
+| 2               | `U-04-polish-pass.md`          | Loose ends found while playing and in the balance report       |
+| 3               | `S-04-your-past-catches-up.md` | The character's background returns as story                    |
+| 4               | `S-15-world-file.md`           | Background events that make the press and the setting coherent |
+| 5               | `A-01-cultural-institute.md`   | A story arc: the institute and its very strange director       |
 
 Done briefs stay in this folder as a record: B-02, S-02, S-03, S-05/S-08, S-06, U-01, U-02.
 

@@ -2,6 +2,10 @@
 
 Source of truth for work packages. Each coding tool takes one package, follows AGENTS.md, and ticks it in roadmap.md.
 
+## Feature freeze (17 November 2026)
+
+No new features until the stabilization plan in `docs/STABILIZATION_PLAN.md` is complete. All packages below that are not marked done are on hold. The stabilization packages are Q-01 to Q-08.
+
 ## Decisions
 
 - One career played in order: intern (around 2001), Port Hesperia (2006), a 2013 posting, a 2022 posting as ambassador. The 1980s prequel is played as a different character.

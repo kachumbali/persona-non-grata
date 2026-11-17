@@ -45,3 +45,5 @@
 - [x] S-03: languages, lessons, mistranslations and the examination.
 - [x] U-01: the agenda (what, where, who for every commitment; day view; coming up; end-of-block check).
 - [x] U-02: the first hour (unread badges, arrival notice, first-day grace, new briefing, checklist, newcomer bot).
+
+- [ ] Feature freeze: stabilization plan Q-01 to Q-08 (docs/STABILIZATION_PLAN.md).
