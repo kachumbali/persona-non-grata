@@ -54,7 +54,7 @@
     {
       "id": "fuel-5",
       "outlet": "herald",
-      "headline": "Minister finds no dispute",
+      "headline": "Deputy Minister finds no dispute",
       "body": "Deputy Foreign Minister Bako says there is no dispute at the fuel quay. The inspection remains routine. Asked why the gates were locked, he explained that openness is a policy, not a hinge.",
       "day": 5,
       "priority": 100,
@@ -467,7 +467,7 @@
       "id": "filler-7",
       "outlet": "wire",
       "headline": "Ferry timetable revised",
-      "body": "The harbour ferry has a revised timetable. Copies are available at the landing. Passengers are advised that the timetable expresses the ferry’s aspirations, not its commitments.",
+      "body": "The harbour ferry has a revised timetable. Copies are available at the landing. Passengers are advised that the ferry sails at the printed time, subject to the captain’s mood.",
       "minDay": 1,
       "maxDay": 15,
       "priority": 1

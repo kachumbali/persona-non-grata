@@ -146,7 +146,7 @@
           "id": "supplier-caution",
           "label": "Ask for the supplier receipts",
           "requiresFact": "gossip:supplier",
-          "result": "Mira asks the supplier for the receipts before counting the chairs."
+          "result": "Mira asks Marcel for the supplier receipts before counting the chairs."
         }
       ]
     },
@@ -211,7 +211,7 @@
           "id": "liver-toast",
           "label": "Toast both logos, in alphabetical order",
           "requiresTrait": "liver",
-          "result": "Both logos are toasted. The order of the toasts is minuted after the last guest has left."
+          "result": "Both logos are toasted. Each logo is minuted as having been toasted first."
         }
       ]
     },
@@ -283,7 +283,7 @@
           "id": "liver-toast",
           "label": "Offer a toast to the umbrellas",
           "requiresTrait": "liver",
-          "result": "The umbrellas are toasted and, per procedure, minuted after the last guest has left."
+          "result": "The umbrellas are toasted. The toast is held over them, in case of rain."
         }
       ],
       "issuedMinute": 720
@@ -542,7 +542,7 @@
           "id": "liver-toast",
           "label": "Toast the smooth running of the visit",
           "requiresTrait": "liver",
-          "result": "Everyone agrees with the toast. Capital provides no next step."
+          "result": "Everyone agrees with the toast. The minutes agree with everyone."
         }
       ]
     }

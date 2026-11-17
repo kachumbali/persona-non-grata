@@ -68,7 +68,7 @@
         "counts": ["capital"]
       },
       "reply": {
-        "text": "You politely request the attachment. They politely ignore you.",
+        "text": "You politely request the attachment. Capital notes your politeness, and not the attachment.",
         "effects": {
           "confidence": 3
         },
@@ -189,7 +189,7 @@
       "effects": {
         "confidence": -3
       },
-      "text": "The group is now co-chaired by a rival donor. They open a bridge."
+      "text": "The group is now co-chaired by a rival donor. Their first act is a welcome note."
     }
   },
   {
@@ -319,7 +319,7 @@
     "time": 540,
     "from": "Consular Section — Ines Thibault-Lund",
     "subject": "The queue",
-    "body": "The queue is now 400 people. My spreadsheet predicts a waiting time of 'yes'. Can I open the second window? It requires a signature from someone who has fled.",
+    "body": "The queue is now 400 people. My spreadsheet predicts a waiting time of 'yes'. Can I open the second window? It requires a signature from someone who is on consultations.",
     "options": {
       "reply": {
         "text": "You sign as Chargé d'Affaires. The queue moves. Locals applaud the efficiency.",
@@ -362,7 +362,7 @@
     "body": "Just to inform you I've chirped on Chirper that Bellaluxe 'stands shoulder to shoulder with the people of Ombrazia's volcano'. Checking it now.",
     "options": {
       "reply": {
-        "text": "You request deletion. Screenshots already exist. They always do.",
+        "text": "You request deletion. Screenshots already exist. They always do. Capital notes the request.",
         "effects": {
           "goodwill": -2,
           "confidence": 2
@@ -975,7 +975,7 @@
     "body": "The lounge requires the final headcount by noon. Please note that the headcount changes by the hour, and that the lounge counts chairs, not people.",
     "options": {
       "reply": {
-        "text": "You send forty-seven. The lounge counts twelve chairs and orders a larger lounge.",
+        "text": "You send forty-seven. The lounge rebooks itself into a larger room.",
         "effects": {
           "confidence": 2,
           "sanity": -2
@@ -1110,7 +1110,7 @@
         "counts": ["formal"]
       },
       "note": {
-        "text": "The request is noted. The Minister's aide supplies a programme of his own.",
+        "text": "The request is noted. The Minister's office supplies a programme of its own.",
         "effects": {
           "confidence": -3
         },
