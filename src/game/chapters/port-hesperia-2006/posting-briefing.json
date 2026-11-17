@@ -1,7 +1,7 @@
 {
   "from": "Personnel Directorate · Republic of Bellaluxe",
   "subject": "Welcome to your posting",
-  "intro": "The Ambassador is away. You are Deputy Head of Mission, now Acting Head of Mission in Port Hesperia. Capital assures you this is an opportunity. Capital is not here.",
+  "intro": "The Ambassador is away. You are Deputy Head of Mission, now Chargé d'Affaires a.i. in Port Hesperia. Capital assures you this is an opportunity. Capital is not here.",
   "sections": [
     {
       "title": "Where things arrive",
@@ -9,7 +9,7 @@
     },
     {
       "title": "Time and embassy funds",
-      "text": "You have 4 Diplo-Points (DP) per block, tiredness and drink permitted to reduce them; hospitality comes out of embassy funds. End the block to resolve your plans."
+      "text": "You have 4 Diplo-Points (DP) per block, tiredness and drink can reduce them; hospitality comes out of embassy funds. End the block to resolve your plans."
     },
     {
       "title": "The mission",

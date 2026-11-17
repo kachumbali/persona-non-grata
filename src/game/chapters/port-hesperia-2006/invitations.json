@@ -80,7 +80,7 @@
       },
       "decline": {
         "label": "Send diplomatic regrets",
-        "text": "Valdoria accepts your regrets and sends the programme anyway.",
+        "text": "Valdoria takes your regrets in good order and sends the programme anyway.",
         "effects": {
           "goodwill": -1
         },
@@ -242,7 +242,7 @@
       }
     },
     "onMiss": {
-      "text": "Mara finds an empty Bellaluxe place at the lunch and receives no reply to the invitation.",
+      "text": "Mara receives no reply to the invitation and serves the courses regardless.",
       "effects": {
         "goodwill": -2
       },
@@ -340,7 +340,7 @@
       }
     },
     "onMiss": {
-      "text": "The final UN coordination meeting goes ahead without a Bellaluxe representative or reply.",
+      "text": "The final UN coordination meeting goes ahead. Its seven annexes are sent to Bellaluxe afterwards.",
       "effects": {
         "goodwill": -1
       },
