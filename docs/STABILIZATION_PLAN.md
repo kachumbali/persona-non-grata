@@ -25,20 +25,22 @@ The freeze ends when all of these are true:
 
 ## Packages
 
+Done so far: Q-01, Q-02, Q-04, Q-05a, Q-05b, Q-05c (marked ✓). Findings are in `docs/audit/`.
+
 Each package is small and has one owner at a time. Packages in the same wave touch different files and can run in parallel.
 
-| Wave | Id    | Package                                               | Main files                                                           |
-| ---- | ----- | ----------------------------------------------------- | -------------------------------------------------------------------- |
-| 1    | Q-01  | Cast and places bible                                 | `docs/CAST.md`, `docs/PLACES.md` (new)                               |
-| 1    | Q-02  | Pop-ups that make sense where they appear             | `campaign.json` events, `Interruption.tsx`, `content-check.ts`       |
-| 1    | Q-03  | Scripted full playthroughs in a browser               | `scripts/`, a new test folder                                        |
-| 2    | Q-04  | Substance for places and people                       | `campaign.json` characters and locations, notebook and place screens |
-| 3    | Q-05a | Text audit: staff and contact dialogues               | `dialogues.json`                                                     |
-| 3    | Q-05b | Text audit: story events, gossip, relationship scenes | `campaign.json` events and gossip                                    |
-| 3    | Q-05c | Text audit: mail, démarches, invitations, press       | `emails.json`, `demarches.json`, `invitations.json`, `press.json`    |
-| 4    | Q-06  | Polish pass (was U-04)                                | various; see `docs/work-packages/U-04-polish-pass.md`                |
-| 5    | Q-07  | Saves and crashes                                     | `store.ts`, `saves.ts`, a new error boundary                         |
-| 6    | Q-08  | Hand playtest and release notes                       | `docs/RELEASE_NOTES.md`                                              |
+| Wave | Id      | Package                                               | Main files                                                           |
+| ---- | ------- | ----------------------------------------------------- | -------------------------------------------------------------------- |
+| 1    | Q-01    | Cast and places bible                                 | `docs/CAST.md`, `docs/PLACES.md` (new)                               |
+| 1    | Q-02    | Pop-ups that make sense where they appear             | `campaign.json` events, `Interruption.tsx`, `content-check.ts`       |
+| 1    | Q-03    | Scripted full playthroughs in a browser               | `scripts/`, a new test folder                                        |
+| 2    | Q-04    | Substance for places and people                       | `campaign.json` characters and locations, notebook and place screens |
+| 3    | Q-05a ✓ | Text audit: staff and contact dialogues               | `dialogues.json`                                                     |
+| 3    | Q-05b ✓ | Text audit: story events, gossip, relationship scenes | `campaign.json` events and gossip                                    |
+| 3    | Q-05c ✓ | Text audit: mail, démarches, invitations, press       | `emails.json`, `demarches.json`, `invitations.json`, `press.json`    |
+| 4    | Q-06    | Polish pass (was U-04)                                | various; see `docs/work-packages/U-04-polish-pass.md`                |
+| 5    | Q-07    | Saves and crashes                                     | `store.ts`, `saves.ts`, a new error boundary                         |
+| 6    | Q-08    | Hand playtest and release notes                       | `docs/RELEASE_NOTES.md`                                              |
 
 ### Q-01 Cast and places bible
 
