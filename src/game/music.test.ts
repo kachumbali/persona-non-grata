@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { TRACKS, trackFor, useMusicSettings, type MusicMoment } from "./music";
+import { PLAYLISTS, trackFor, useMusicSettings, type MusicMoment } from "./music";
 
 const day: MusicMoment = {
   screen: "play",
@@ -19,8 +19,12 @@ describe("soundtrack", () => {
     expect(trackFor({ ...day, ended: true })).toBe("evening");
   });
 
-  it("has a URL for every track", () => {
-    for (const url of Object.values(TRACKS)) expect(url).toMatch(/\.mp3$/);
+  it("uses all 13 tracks, each once, in playlists of at least two", () => {
+    const urls = Object.values(PLAYLISTS).flat();
+    expect(urls).toHaveLength(13);
+    expect(new Set(urls).size).toBe(13);
+    for (const url of urls) expect(url).toMatch(/\.mp3$/);
+    for (const list of Object.values(PLAYLISTS)) expect(list.length).toBeGreaterThanOrEqual(2);
   });
 
   it("remembers the music switch", () => {
