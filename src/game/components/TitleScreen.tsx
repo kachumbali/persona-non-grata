@@ -15,6 +15,7 @@ import {
 } from "../saves";
 import { activeChapter } from "../chapters";
 import { Portrait } from "./Portrait";
+import { MusicToggle } from "./MusicToggle";
 
 type Panel = { slot: SlotIndex; kind: "delete" | "replace" | "export" };
 
@@ -48,6 +49,7 @@ export function TitleScreen({ onNew, onLoad }: { onNew: () => void; onLoad: () =
 
   return (
     <main className="title-screen" style={{ backgroundImage: `url(${city})` }}>
+      <MusicToggle className="fixed right-3 top-3 z-10" />
       <div className="retro-builder mx-auto w-full max-w-lg p-0">
         <div className="retro-titlebar">Main Menu</div>
         <div className="p-4 text-center sm:p-6">
