@@ -23,6 +23,7 @@ import { PostingBriefing } from "./PostingBriefing";
 import { MissionSteps } from "./MissionSteps";
 import { ArrivalNotice, FirstDayChecklist } from "./FirstHour";
 import { useUi } from "../ui";
+import { player, trackFor } from "../music";
 import {
   Dialog,
   DialogContent,
@@ -47,6 +48,11 @@ export function GameScreen({ onMenu }: { onMenu?: () => void }) {
   useEffect(() => {
     if (g.block === 0) g.preparePress();
   }, [g.day, g.block, g.preparePress]);
+  const evening = g.block === blocks().length - 1;
+  const ended = g.ending !== null;
+  useEffect(() => {
+    player.want(trackFor({ screen: "play", ended, evening, view, location: g.location }));
+  }, [ended, evening, view, g.location]);
   const pressOpen =
     g.block === 0 &&
     g.pressDay === g.day &&

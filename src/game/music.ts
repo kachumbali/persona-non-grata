@@ -8,26 +8,30 @@ import afterTheLastCable from "@/assets/audio/after-the-last-cable.mp3.asset.jso
 /** The soundtrack. The MP3s are hosted Lovable assets; the .asset.json files hold their URLs. */
 export const TRACKS = {
   title: credentialsAtDawn.url,
-  early: inTriplicate.url,
-  middle: seventeenPointSix.url,
-  late: theQuietAmendment.url,
-  ending: afterTheLastCable.url,
+  office: inTriplicate.url,
+  city: seventeenPointSix.url,
+  outside: theQuietAmendment.url,
+  evening: afterTheLastCable.url,
 } as const;
 export type TrackId = keyof typeof TRACKS;
 
-/** Which track fits the moment: menu and character builder, the posting in thirds, the debrief. */
-export function trackFor(
-  screen: "title" | "play",
-  day: number,
-  lastDay: number,
-  ended: boolean,
-): TrackId {
-  if (screen === "title") return "title";
-  if (ended) return "ending";
-  const third = Math.max(1, lastDay) / 3;
-  if (day <= third) return "early";
-  if (day <= third * 2) return "middle";
-  return "late";
+export interface MusicMoment {
+  screen: "title" | "play";
+  ended: boolean;
+  evening: boolean;
+  view: "city" | "place";
+  location: string;
+}
+
+/**
+ * Which track fits the moment: the menu and character builder, the evening block and the debrief,
+ * the town map, the embassy office, and every other place.
+ */
+export function trackFor(m: MusicMoment): TrackId {
+  if (m.screen === "title") return "title";
+  if (m.ended || m.evening) return "evening";
+  if (m.view === "city") return "city";
+  return m.location === "embassy" ? "office" : "outside";
 }
 
 const VOLUME = 0.3;

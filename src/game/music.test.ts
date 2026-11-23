@@ -1,21 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { TRACKS, trackFor, useMusicSettings } from "./music";
+import { TRACKS, trackFor, useMusicSettings, type MusicMoment } from "./music";
+
+const day: MusicMoment = {
+  screen: "play",
+  ended: false,
+  evening: false,
+  view: "city",
+  location: "embassy",
+};
 
 describe("soundtrack", () => {
-  it("plays the title track on the menu and the debrief track after the ending", () => {
-    expect(trackFor("title", 7, 15, false)).toBe("title");
-    expect(trackFor("play", 15, 15, true)).toBe("ending");
-  });
-
-  it("splits a 15-day posting into thirds", () => {
-    expect([1, 5, 6, 10, 11, 15].map((d) => trackFor("play", d, 15, false))).toEqual([
-      "early",
-      "early",
-      "middle",
-      "middle",
-      "late",
-      "late",
-    ]);
+  it("picks the track for each moment", () => {
+    expect(trackFor({ ...day, screen: "title" })).toBe("title");
+    expect(trackFor(day)).toBe("city");
+    expect(trackFor({ ...day, view: "place" })).toBe("office");
+    expect(trackFor({ ...day, view: "place", location: "hotel" })).toBe("outside");
+    expect(trackFor({ ...day, view: "place", evening: true })).toBe("evening");
+    expect(trackFor({ ...day, ended: true })).toBe("evening");
   });
 
   it("has a URL for every track", () => {
