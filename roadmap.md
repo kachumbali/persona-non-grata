@@ -48,3 +48,5 @@
 
 - [ ] Feature freeze: stabilization plan Q-01 to Q-08 (docs/STABILIZATION_PLAN.md).
 - [x] Q-09: confirm routine-duty displacement in colleague pop-ups.
+
+- [x] X-01 (partial): offline music-loop generator and MP3 masters; the rest of the package remains open.

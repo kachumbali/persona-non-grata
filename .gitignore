@@ -34,3 +34,6 @@ dist-ssr
 # Q-03 playthrough screenshots and results
 playthrough-output/
 .claude/
+
+# Generated uncompressed audio masters (recreate with scripts/make-track.mjs)
+src/assets/audio/06-*.wav
