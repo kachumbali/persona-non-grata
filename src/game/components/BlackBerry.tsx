@@ -23,6 +23,7 @@ import { agendaItems } from "../agenda";
 import { badgeLabel, ignoredAtBlockEnd, waitingItems, countNoun, type Device } from "../inbox";
 import { useUi } from "../ui";
 import { WaitingBadge } from "./WaitingBadge";
+import { MusicToggle } from "./MusicToggle";
 import { activeChapter } from "../chapters";
 
 const DEVICE_NAMES: Record<Device, string> = {
@@ -320,6 +321,7 @@ export function BlackBerry({ onOpenPress }: { onOpenPress?: () => void }) {
             <WaitingBadge urgent={phoneUrgent} unread={phoneUnread} label={phoneLabel} />
             <span className="bb-led" data-on={g.report.length > 0 || !!g.planError || due} />
           </button>
+          <MusicToggle />
           <Button
             size="sm"
             className="retro-button"

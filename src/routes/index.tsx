@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CharacterBuilder } from "@/game/components/CharacterBuilder";
 import { TitleScreen } from "@/game/components/TitleScreen";
@@ -7,9 +7,14 @@ import { ErrorBoundary } from "@/game/components/ErrorBoundary";
 import { activeChapter } from "@/game/chapters";
 import { initSaves } from "@/game/saves";
 import { useGame } from "@/game/store";
+import { lastDay } from "@/game/rules";
+import { player, trackFor } from "@/game/music";
 
 // Load the save slots before the first render (the game reads browser storage, so client only).
-if (typeof window !== "undefined") initSaves();
+if (typeof window !== "undefined") {
+  initSaves();
+  player.install(); // music starts after the first click or key press (browser autoplay rules)
+}
 
 export const Route = createFileRoute("/")({
   ssr: false, // the game reads its save from the browser
@@ -33,6 +38,12 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [screen, setScreen] = useState<"title" | "play">("title");
   const toTitle = () => setScreen("title");
+  const day = useGame((s) => s.day);
+  const ended = useGame((s) => s.ending !== null);
+  const playing = useGame((s) => s.character !== null) && screen === "play";
+  useEffect(() => {
+    player.want(trackFor(playing ? "play" : "title", day, lastDay(), ended));
+  }, [playing, day, ended]);
   // A render error on either screen shows the apology; "Back to the title screen" leaves the save as it was.
   return (
     <ErrorBoundary onBackToTitle={toTitle}>
