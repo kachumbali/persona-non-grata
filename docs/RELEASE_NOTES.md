@@ -6,6 +6,8 @@ A feature freeze to make the existing game consistent and dependable. No new sys
 
 ### What changed for players
 
+- **Colleague pop-ups** ask for confirmation when an assignment displaces routine duties, including its fatigue and backlog consequences.
+
 - **Pop-ups make sense where they appear.** Every pop-up is now a phone call, a message or a visit at your door, and says so in its heading. A visit while you are away from the embassy arrives as a note. Scenes that only work in a room were rewritten or moved.
 - **People and places have more substance.** Everyone in "Who is who" has a short biography. Each place has a description, its regulars and a line on what it is like at each time of day.
 - **All text was read and corrected.** Dialogues, story events, gossip, mail, démarches, invitations and the press were checked against a cast and places reference. More than 100 fixes, including:
@@ -34,7 +36,6 @@ A feature freeze to make the existing game consistent and dependable. No new sys
 - **Attentive play is too safe.** Simulated careful players are promoted in 98–100% of games. Balance changes wait for more human playtests. See `docs/BALANCE_REPORT.md`.
 - **Goodwill meters reach 100 by mid-chapter** for careful players, so late gains do nothing. Same decision as above.
 - **The first "Personnel file amended" quirk can arrive on Day 1** for a character who makes formal choices from the start. It works as designed, but feels early. Review with the balance work.
-- **Some pop-ups need a colleague who has no free time** in that block. The option is greyed out with a checkbox to pull them off routine duties. Playtesters should say whether this is clear.
 - **Deliberate choices:**
   - Lucien's social-media words ("hashtag", "selfie") are a deliberate anachronism.
   - BlockBerry, Chirper and Chercheur are deliberate satirical brands.

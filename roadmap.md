@@ -47,3 +47,4 @@
 - [x] U-02: the first hour (unread badges, arrival notice, first-day grace, new briefing, checklist, newcomer bot).
 
 - [ ] Feature freeze: stabilization plan Q-01 to Q-08 (docs/STABILIZATION_PLAN.md).
+- [x] Q-09: confirm routine-duty displacement in colleague pop-ups.

@@ -49,12 +49,12 @@ export function Interruption() {
   const answered = !!event && g.pending.some((p) => p.eventId === event.id);
   const [open, setOpen] = useState(true);
   const [notice, setNotice] = useState("");
-  const [overload, setOverload] = useState(false);
+  const [confirmChoice, setConfirmChoice] = useState<string | null>(null);
   const [interpreter, setInterpreter] = useState("");
   useEffect(() => {
     setOpen(true);
     setNotice("");
-    setOverload(false);
+    setConfirmChoice(null);
   }, [event?.id, g.block, g.day]);
   if (
     !event ||
@@ -80,7 +80,7 @@ export function Interruption() {
   ];
   const ledger = capacityLedger(g.pending, g.block);
 
-  const decisionFor = (c: StoryChoice): PendingDecision => ({
+  const decisionFor = (c: StoryChoice, overload = false): PendingDecision => ({
     id: `event-${event.id}`,
     kind: "event",
     source: event.title,
@@ -123,13 +123,21 @@ export function Interruption() {
         withInterpreter(c, g.character?.languages, interpreter),
       ),
     )
-    .map((c) => ({
-      choice: c,
-      reason: displayReason(checkQueue(g, decisionFor(c), c.replace).error),
-    }));
+    .map((c) => {
+      const error = checkQueue(g, decisionFor(c), c.replace).error;
+      const allowed = error ? checkQueue(g, decisionFor(c, true), c.replace) : undefined;
+      const routineName = error?.match(/^(.+) has routine duties this block\./)?.[1];
+      return {
+        choice: c,
+        routineName: routineName && allowed && !allowed.error ? routineName : undefined,
+        reason: displayReason(
+          allowed?.error ?? (routineName && allowed && !allowed.error ? undefined : error),
+        ),
+      };
+    });
 
-  const choose = (c: StoryChoice) => {
-    const ok = useGame.getState().queue(decisionFor(c), c.replace);
+  const choose = (c: StoryChoice, overload = false) => {
+    const ok = useGame.getState().queue(decisionFor(c, overload), c.replace);
     if (ok) setOpen(false);
     else setNotice(useGame.getState().planError);
   };
@@ -142,7 +150,7 @@ export function Interruption() {
         </Button>
       )}
       <Dialog open={open && !answered} onOpenChange={setOpen}>
-        <DialogContent className="retro-builder max-w-lg bg-card p-0 text-card-foreground">
+        <DialogContent className="retro-builder max-h-[calc(100dvh-5rem)] max-w-lg overflow-y-auto bg-card p-0 text-card-foreground">
           <DialogTitle className="retro-titlebar">
             <Icon className="size-5" />
             {view.header}
@@ -171,29 +179,20 @@ export function Interruption() {
                       </p>
                     );
                   })}
-                  <label className="mt-1 flex gap-2">
-                    <input
-                      type="checkbox"
-                      className="mt-0.5 size-4 shrink-0"
-                      checked={overload}
-                      onChange={(e) => setOverload(e.target.checked)}
-                    />
-                    Allow displaced routine work (fatigue and backlog)
-                  </label>
                 </div>
               )}
               <div className="flex flex-col gap-2">
                 {event.choices.some((option) => option.requiresLanguage) && (
                   <InterpreterSelect value={interpreter} onChange={setInterpreter} />
                 )}
-                {options.map(({ choice: c, reason }) => (
+                {options.map(({ choice: c, reason, routineName }) => (
                   <div key={c.id} className="flex flex-col gap-1">
                     <Button
                       variant="outline"
                       disabled={!!reason}
                       aria-describedby={reason ? `option-reason-${c.id}` : undefined}
                       className="h-auto justify-start whitespace-normal py-2 text-left"
-                      onClick={() => choose(c)}
+                      onClick={() => (routineName ? setConfirmChoice(c.id) : choose(c))}
                     >
                       ▸ {gateLabel(c)}
                       {c.label} · {dpFor(event.id, c)} DP
@@ -203,6 +202,26 @@ export function Interruption() {
                         ? " · 2 colleague DP"
                         : ""}
                     </Button>
+                    {routineName && confirmChoice === c.id && (
+                      <div className="px-1 text-sm">
+                        <p>
+                          {routineName} has routine duties this block. Assign them anyway? This
+                          causes fatigue and backlog.
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <Button size="sm" onClick={() => choose(c, true)}>
+                            Yes, assign
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setConfirmChoice(null)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                     {reason && (
                       <p id={`option-reason-${c.id}`} className="px-1 text-xs text-destructive">
                         {reason}
