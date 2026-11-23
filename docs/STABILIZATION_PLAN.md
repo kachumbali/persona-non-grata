@@ -123,6 +123,13 @@ The brief `docs/work-packages/U-04-polish-pass.md`, items 1 to 7, plus every bug
 - A person plays Days 1 to 3 at desktop and phone width with a fresh career, and Days 1 to 15 once.
 - `docs/RELEASE_NOTES.md`: what changed during the stabilization, what is known and accepted, and how to report a problem.
 - The freeze ends when the criteria above are met.
+- Tester instructions: [Playtest guide](PLAYTEST_GUIDE.md); [feedback template](playtest/FEEDBACK_TEMPLATE.md).
+
+#### Playtest-Ergebnisse
+
+| Tester | Datum | Gerät | Befunde | blockierend ja/nein |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
 
 ## Working rules for this plan
 
