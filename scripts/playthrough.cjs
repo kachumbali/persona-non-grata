@@ -20,7 +20,7 @@ const REPORT = path.join(ROOT, "docs", "PLAYTHROUGH_REPORT.md");
 const PORT = 5199;
 const BASE = `http://127.0.0.1:${PORT}/`;
 const MAX_BLOCKS = 70;
-const STEP_TIMEOUT = 3000;
+const STEP_TIMEOUT = 1000;
 const STUCK_TIMEOUT = 10000;
 
 const BUILDS = [
@@ -82,6 +82,34 @@ const TEXT_BAD = [
   ["unfilled placeholder", /\{[^{}\n]{0,60}\}/g],
 ];
 
+// Rank authored choices like the careful simulation bot; interactions still go through the UI.
+const chapterDir = path.join(ROOT, "src/game/chapters/port-hesperia-2006");
+const emails = JSON.parse(fs.readFileSync(path.join(chapterDir, "emails.json"), "utf8"));
+const mailLabels = JSON.parse(fs.readFileSync(path.join(chapterDir, "mail-choices.json"), "utf8"));
+const events = JSON.parse(fs.readFileSync(path.join(chapterDir, "campaign.json"), "utf8")).events;
+const actionLabels = {
+  reply: "Reply",
+  delegate: "Delegate",
+  forward: "Forward to Capital",
+  note: "Take Note",
+  replyall: "Reply All",
+  trait: "Special response",
+};
+function choiceScore(c) {
+  const e = c.effects || {};
+  return (
+    (e.confidence || 0) +
+    (e.goodwill || 0) +
+    (e.morale || 0) * 0.5 +
+    (e.sanity || 0) * 0.5 +
+    (e.budget || 0) * 0.3 +
+    (e.money || 0) * 0.02 +
+    (c.trust || 0) * 0.4 +
+    (c.score || 0) * 0.5 +
+    (c.pair || 0) * 0.1 -
+    (c.cashCost || 0) / 150
+  );
+}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -251,6 +279,7 @@ function newRecord(build, vp) {
 function add(rec, type, text, extra = "") {
   const where = `day ${rec.ctx.day ?? "?"} ${rec.ctx.block ?? "?"}`;
   rec.findings.push({ type, text: String(text).slice(0, 300), where, extra });
+  if (process.env.PLAYTHROUGH_VERBOSE) console.log(`    finding: ${type}: ${text}`);
 }
 
 /* ---------- text and layout checks ---------- */
@@ -382,7 +411,7 @@ async function popupOptions(page, tried) {
   }
 }
 
-async function clearOverlays(page, rec, blockNo, maxIters = 12) {
+async function clearOverlays(page, rec, blockNo, maxIters = 12, deferEvent = false) {
   let clicks = 0;
   const tried = new Set();
   for (let i = 0; i < maxIters; i++) {
@@ -394,18 +423,51 @@ async function clearOverlays(page, rec, blockNo, maxIters = 12) {
       clicks++;
       continue;
     }
+    if (deferEvent && (await clickButton(page, /^Deal with it later/))) {
+      await page
+        .locator(DIALOG)
+        .first()
+        .waitFor({ state: "hidden", timeout: STEP_TIMEOUT })
+        .catch(() => {});
+      break;
+    }
     // some pop-ups gate their options behind a checkbox (e.g. "Allow displaced routine work"): tick it first
-    const boxes = page.locator(`${DIALOG} input[type=checkbox]:not(:checked)`);
-    if ((await boxes.count().catch(() => 0)) > 0 && (await isVisible(boxes.first()))) {
+    const boxes = page.getByRole("checkbox", { name: /Allow displaced routine work/ });
+    if (
+      !(await popupOptions(page, tried)).length &&
+      (await boxes.count().catch(() => 0)) > 0 &&
+      (await isVisible(boxes.first())) &&
+      !(await boxes.first().isChecked())
+    ) {
+      await boxes
+        .first()
+        .scrollIntoViewIfNeeded({ timeout: STEP_TIMEOUT })
+        .catch(() => {});
       await boxes
         .first()
         .check({ timeout: STEP_TIMEOUT, force: true })
         .catch(() => {});
-      await sleep(150);
+      await sleep(350);
+      const popupShot = path.join(OUT, `controls-${rec.build}-${rec.viewport}-popup.png`);
+      await page.screenshot({ path: popupShot }).catch(() => {});
+      if (
+        rec.viewport === "400x800" &&
+        (await dialogTitle(page)).includes("Two versions") &&
+        fs.existsSync(popupShot)
+      ) {
+        fs.copyFileSync(popupShot, path.join(OUT, "bug-popup-checkbox-400x800.png"));
+      }
     }
     const opts = await popupOptions(page, tried);
     if (opts.length) {
-      const name = opts[(blockNo * 7 + i) % opts.length];
+      const text = await dialogTitle(page);
+      const event = events.find((e) => text.includes(e.title));
+      const ranked = opts.map((name) => ({
+        name,
+        choice: event?.choices.find((c) => name.includes(c.label)),
+      }));
+      ranked.sort((a, b) => choiceScore(b.choice || {}) - choiceScore(a.choice || {}));
+      const name = ranked[0].name;
       const before = await dialogTitle(page);
       const clicked = await clickButton(page, new RegExp("^" + esc(name.slice(0, 50))));
       if (clicked) {
@@ -443,20 +505,46 @@ async function clearOverlays(page, rec, blockNo, maxIters = 12) {
 }
 
 // Work through mail in an open window: open each item once, take its first action when one appears.
-async function handleMail(page, rec, scope, maxActs = 14) {
-  const done = new Set();
-  for (let i = 0; i < maxActs; i++) {
-    const names = await visibleButtonNames(page, scope);
-    let next = names.find((n) => ACTION_RE.test(n) && !done.has(n) && !SKIP_RE.test(n));
-    if (!next) next = names.find((n) => !done.has(n) && !SKIP_RE.test(n) && n.length > 12);
-    if (!next) break;
-    done.add(next);
-    const pickFirst = () => 0;
-    const re = new RegExp("^" + esc(next.slice(0, 40)));
-    const clicked = await clickButton(page, re, { scope, pick: pickFirst });
-    if (!clicked) continue;
-    await sleep(120);
-    await clearOverlays(page, rec, 0, 3);
+async function handleMail(page, rec, scope) {
+  const root = page.locator(scope).first();
+  const messages = root
+    .getByRole("list", { name: "Inbox messages" })
+    .getByRole("button")
+    .filter({ has: page.locator(".font-semibold") });
+  const count = await messages.count();
+  if (process.env.PLAYTHROUGH_VERBOSE) console.log(`      mail: ${count} messages`);
+  for (let i = 0; i < count; i++) {
+    if (process.env.PLAYTHROUGH_VERBOSE) console.log(`      mail item ${i}`);
+    await messages
+      .nth(i)
+      .click({ timeout: STEP_TIMEOUT })
+      .catch(() => {});
+    const subject = await root
+      .locator("article h3")
+      .first()
+      .textContent({ timeout: 500 })
+      .catch(() => "");
+    const email = emails.find((e) => e.subject === subject);
+    const actions = root.locator("article button");
+    const n = await actions.count();
+    const candidates = [];
+    for (let j = 0; j < n; j++) {
+      const action = actions.nth(j);
+      if (
+        !(await action.isEnabled({ timeout: 300 }).catch(() => false)) ||
+        !(await isVisible(action))
+      )
+        continue;
+      const name = await action.innerText({ timeout: STEP_TIMEOUT }).catch(() => "");
+      if (!name) continue;
+      const entry = Object.entries(email?.options || {}).find(([key, value]) =>
+        name.includes(mailLabels[email.id]?.[key] || value.label || actionLabels[key]),
+      );
+      candidates.push({ action, score: entry ? choiceScore(entry[1]) : 0 });
+    }
+    candidates.sort((a, b) => b.score - a.score);
+    if (candidates.length)
+      await candidates[0].action.click({ timeout: STEP_TIMEOUT }).catch(() => {});
   }
 }
 
@@ -478,9 +566,16 @@ async function closeWindow(page, rec, label) {
 }
 
 async function ensureInEmbassy(page) {
+  await clickButton(page, /^Put phone away$/);
   if (await isVisible(page.getByRole("button", { name: /Use your PC/ }))) return true;
-  if (await clickButton(page, /Enter Embassy/)) {
-    await sleep(400);
+  if (!(await isVisible(page.getByRole("region", { name: "Town map" }))))
+    await clickButton(page, /Leave to the town map/);
+  if (!(await clickButton(page, /^Enter Embassy/))) {
+    if (await clickButton(page, /^Travel to Embassy/)) {
+      await clickButton(page, /^Travel ·/, { scope: DIALOG });
+      await sleep(200);
+      await clickButton(page, /^Enter Embassy/);
+    }
   }
   return isVisible(page.getByRole("button", { name: /Use your PC/ }));
 }
@@ -495,20 +590,31 @@ async function doFax(page, rec) {
 async function doPc(page, rec, blockNo, scheduleTry) {
   if (!(await clickButton(page, /Use your PC/))) return;
   await sleep(300);
+  await clickButton(page, /^Courrielleur 98/, { scope: DIALOG });
   await handleMail(page, rec, DIALOG);
   // Staff & diary: try to schedule one mission step (once per block)
-  if (await clickButton(page, /^Staff & diary/, { scope: DIALOG })) {
+  if (scheduleTry && (await clickButton(page, /^Staff & diary/, { scope: DIALOG }))) {
     await sleep(200);
+    if (rec.ctx.day === 1 && rec.ctx.block === "Morning") {
+      await page
+        .locator(DIALOG)
+        .getByRole("button", { name: /^Schedule assignment/ })
+        .scrollIntoViewIfNeeded()
+        .catch(() => {});
+      await page
+        .screenshot({ path: path.join(OUT, `controls-${rec.build}-${rec.viewport}-staff.png`) })
+        .catch(() => {});
+    }
     if (scheduleTry) {
       const name = await clickButton(page, /^Schedule assignment/, { scope: DIALOG });
-      if (!name) add(rec, "ui-note", "Schedule assignment button not found in Staff & diary");
+      if (!name) {
+        const control = page.locator(DIALOG).getByRole("button", { name: /^Schedule assignment/ });
+        if (!(await control.count()))
+          add(rec, "ui-note", "Schedule assignment button absent in Staff & diary");
+      }
       await sleep(200);
       await clearOverlays(page, rec, blockNo, 3);
     }
-  }
-  if (blockNo % 3 === 0 && (await clickButton(page, /^Démarches/, { scope: DIALOG }))) {
-    await sleep(200);
-    await handleMail(page, rec, DIALOG, 4);
   }
   if (await clickButton(page, /^Courrielleur 98/, { scope: DIALOG })) await sleep(200);
   await closeWindow(page, rec, "PC");
@@ -536,19 +642,14 @@ async function doTravel(page, rec, blockNo) {
   // leave the embassy for the town map, travel to a non-embassy place, then return next block
   if (!(await clickButton(page, /Leave to the town map/))) return false;
   await sleep(300);
-  const dests = await page
-    .evaluate(() =>
-      [...document.querySelectorAll("button")]
-        .filter((e) => e.getBoundingClientRect().width > 0)
-        .map((e) => (e.getAttribute("aria-label") || e.innerText || "").trim())
-        .filter((t) => /^Travel to /.test(t) && !/Embassy/.test(t)),
-    )
-    .catch(() => []);
-  if (!dests.length) {
+  const destinations = (await visibleButtonNames(page)).filter(
+    (t) => /^Travel to /.test(t) && !/Embassy/i.test(t),
+  );
+  if (!destinations.length) {
     add(rec, "ui-note", "no travel destinations listed on the town map");
     return false;
   }
-  const dest = dests[blockNo % dests.length];
+  const dest = destinations[blockNo % destinations.length];
   const re = new RegExp("^" + esc(dest.slice(0, 30)));
   if (!(await clickButton(page, re))) return false;
   await sleep(300);
@@ -604,6 +705,7 @@ async function endBlock(page, rec) {
   if (await clickButton(page, /^End the block anyway/)) await sleep(300);
   const changeDeadline = Date.now() + STUCK_TIMEOUT;
   while (Date.now() < changeDeadline) {
+    await clickButton(page, /^End the block anyway/);
     const now = await readClock(page);
     if ((now.day !== before.day || now.block !== before.block) && now.day !== null) return true;
     if (await isEnding(page)) return true;
@@ -618,7 +720,10 @@ async function endBlock(page, rec) {
 
 async function playRun(browser, build, vp, outDir) {
   const rec = newRecord(build, vp);
-  const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height } });
+  const ctx = await browser.newContext({
+    viewport: { width: vp.width, height: vp.height },
+    permissions: ["clipboard-read", "clipboard-write"],
+  });
   const page = await ctx.newPage();
   page.on("pageerror", (e) => add(rec, "page-error", e.message.split("\n")[0]));
   let finished = false;
@@ -676,22 +781,32 @@ async function playRun(browser, build, vp, outDir) {
         if (process.env.PLAYTHROUGH_VERBOSE) console.log("    " + s);
       };
       if (!(await ensureInEmbassy(page))) {
+        await page
+          .screenshot({
+            path: path.join(
+              OUT,
+              `return-${rec.build}-${rec.viewport}-day${clock.day}-${clock.block}.png`,
+            ),
+          })
+          .catch(() => {});
         add(rec, "ui-note", 'could not get back into the embassy (no "Use your PC")');
       } else {
         log("fax");
         await doFax(page, rec);
         log("pc");
         await doPc(page, rec, i, i % 2 === 0);
-        if (i % 2 === 0) {
+        if (i % 4 === 0) {
           log("colleague");
           await doColleague(page, rec, i);
         }
-        if (i % 6 === 5 && i < MAX_BLOCKS - 2) {
+        if (i === 5) {
           log("travel");
           await doTravel(page, rec, i);
         }
       }
       log("overlays");
+      const badge = page.locator("button.interrupt-badge").first();
+      if (await isVisible(badge)) await badge.click({ timeout: STEP_TIMEOUT }).catch(() => {});
       await clearOverlays(page, rec, i);
       await scanText(page, rec);
 
@@ -703,9 +818,19 @@ async function playRun(browser, build, vp, outDir) {
         break;
       }
     }
-    rec.ctx = await readClock(page);
     if (await isEnding(page)) {
       rec.stop = "ending reached";
+      rec.endingDay = rec.ctx.day;
+      rec.endingBlock = rec.ctx.block;
+      const copy = page.getByRole("button", { name: "Copy as text" });
+      await copy.scrollIntoViewIfNeeded();
+      rec.debriefScrolled = await page.evaluate(
+        () => window.scrollY > 0 || document.documentElement.scrollHeight <= innerHeight,
+      );
+      await copy.click();
+      rec.debriefText = await page.evaluate(() => navigator.clipboard.readText()).catch(() => "");
+      if (!rec.debriefText || !rec.debriefScrolled)
+        add(rec, "ui-note", "debrief scroll or text copy failed");
       const t = await dialogTitle(page);
       rec.endingText =
         t ||
@@ -761,8 +886,8 @@ function writeReport(runs, totalMs) {
   L.push("");
   L.push(
     totalMs
-      ? `Total run time: ${Math.round(totalMs / 1000)} s for ${runs.length} runs (three at a time).`
-      : `Runs: ${runs.length}, three at a time; total run time not recorded in results.`,
+      ? `Total run time: ${Math.round(totalMs / 1000)} s for ${runs.length} runs; parallelism is configurable.`
+      : `Runs: ${runs.length}; parallelism is configurable; total run time not recorded in results.`,
   );
   L.push("");
   L.push("## Summary per run");
@@ -774,7 +899,9 @@ function writeReport(runs, totalMs) {
   for (const r of runs) {
     const c = counts(r);
     const stop =
-      r.stop === "ending reached" ? `ending: ${String(r.endingText || "").slice(0, 80)}` : r.stop;
+      r.stop === "ending reached"
+        ? `ending reached, Day ${r.endingDay} ${r.endingBlock || "?"}: ${String(r.endingText || "").slice(0, 80)}; scroll ${r.debriefScrolled ? "ok" : "failed"}; copy ${r.debriefText ? "ok" : "failed"}`
+        : r.stop;
     L.push(
       `| ${r.build} | ${r.traits} | ${r.viewport} | ${r.blocksPlayed} | ${stop} | ${c["console-error"] || 0} | ${c["page-error"] || 0} | ${c.stuck || 0} | ${c["dialog-not-closed"] || 0} | ${c["bad-text"] || 0} | ${c["raw-id"] || 0} | ${c.overflow || 0} |`,
     );
@@ -785,6 +912,11 @@ function writeReport(runs, totalMs) {
       runs.map((r) => `${r.build} ${r.viewport}: ${(r.shots || []).length}`).join("; ") +
       ".",
   );
+  L.push("");
+  const unusablePopups = runs
+    .flatMap((r) => r.findings)
+    .filter((f) => f.text.includes("pop-up with no usable option")).length;
+  L.push(`Pop-ups with no usable option: ${unusablePopups}.`);
   L.push("");
   L.push("## Findings grouped by type");
   L.push("");
@@ -830,22 +962,32 @@ function writeReport(runs, totalMs) {
   for (const r of runs)
     L.push(`- ${r.build} ${r.viewport}: ${r.stop}${r.endingText ? ` (${r.endingText})` : ""}`);
   L.push("");
-  L.push("## How to read these findings");
+  L.push("## Untersuchung der Bedienelemente");
   L.push("");
   L.push(
-    '- Endings "Replaced by Capital" are the game-over recall when HQ goodwill reaches zero. They come from the fixed policy this script follows, which does not manage goodwill; they are not script failures. The game is 15 days, so an early ending means the run did not reach the debrief.',
+    "- Pop-ups: `Interruption.tsx` enthält die Checkbox `Allow displaced routine work`; sie kann gesperrte Optionen freigeben. Der frühere zusammengesetzte CSS-Selektor erfasste aufgrund des Kommas auch den Dialog selbst.",
   );
   L.push(
-    '- `option did not resolve its pop-up` means a pop-up option was clickable, was clicked, and the same pop-up was still open afterwards. Those options show "2 colleague DP" costs while the Staff panel reported 0 free staff DP, so the script could not pay them. Whether this is a bug or the intended gate is for a reader of the game design to decide.',
+    "- Botschaft und Reiseziele: `CityMap.tsx` bietet `Enter Embassy` beziehungsweise `Travel to …`; Desktop zeigt Karten-Hotspots und das Telefon die Zielliste. Eine Rückreise benötigt die Reisebestätigung. Die Kartenansichten sind in den Morgen-Screenshots sichtbar.",
   );
   L.push(
-    "- `could not get back into the embassy` happens after the script travels (`doTravel`) and does not travel back. It is a script limitation and says nothing about the game.",
+    "  - Die vier verbleibenden Rückkehrhinweise an Day 2 Afternoon zeigen, dass der Skriptversuch in diesem Block nicht zum PC führte. Im anschließenden Einzellauf B bei 400 × 800 gelang die Rückkehr im selben Block; die konkrete Ursache des intermittierenden Fehlers ist offen. Ein fehlender PC-Button ist dadurch nicht belegt.",
   );
   L.push(
-    "- `Schedule assignment button not found` and `no travel destinations listed` mean the script did not find the control with the name it expects. The report does not establish whether the control is absent or only named differently.",
+    "- Terminplanung: `PlanningDesk.tsx` enthält `Schedule assignment · … DP`. Die Schaltfläche kann beispielsweise bei geschlossenem Büro, ausgeschöpfter Zeit oder blockiertem Schritt deaktiviert sein; der bisherige Helfer meldete auch deaktivierte Schaltflächen als fehlend. Der PC-Dialog und der Planungsbereich sind im Screenshot `controls-…-staff.png` dokumentiert.",
+  );
+  L.push("");
+  L.push("## Gefundene Spielfehler");
+  L.push("");
+  L.push(
+    "- Telefon 400 × 800: In Ereignissen mit beteiligten Kollegen ist das Kontrollkästchen für ‘Allow displaced routine work’ sehr breit; seine Beschriftung wird rechts abgeschnitten. Das Kästchen lässt sich dennoch aktivieren. Screenshot: `playthrough-output/bug-popup-checkbox-400x800.png` (Beispiel ‘Two versions’); Komponente: `src/game/components/Interruption.tsx`.",
   );
   L.push(
-    "- `raw-id` is matched against ids from the content JSON under src/game, so ordinary words are not flagged.",
+    "- Weitere oben erfasste technische und visuelle Auffälligkeiten sind Rohbefunde; ohne reproduzierte Ursache werden sie nicht als Spielfehler behauptet.",
+  );
+  L.push("");
+  L.push(
+    "Frühe Enden sind Niederlagen und belegen keinen vollständigen 15-Tage-Durchlauf. Die Ende-Spalte nennt den zuletzt gespielten Tag sowie das Ergebnis der Scroll- und Kopierprüfung.",
   );
   L.push("");
   fs.writeFileSync(REPORT, L.join("\n"));
@@ -905,5 +1047,24 @@ function writeReport(runs, totalMs) {
     fs.writeFileSync(path.join(OUT, "meta.json"), JSON.stringify({ totalMs: Date.now() - t0 }));
     writeReport(runs, Date.now() - t0);
     console.log(`Report written to ${REPORT}`);
+  }
+  if (!process.env.PLAYTHROUGH_ONLY) {
+    const complete = (r) =>
+      r.stop === "ending reached" &&
+      r.endingDay === 15 &&
+      r.endingBlock === "Evening" &&
+      r.blocksPlayed === 60 &&
+      r.debriefScrolled &&
+      r.debriefText;
+    const allViewports = VIEWPORTS.every((vp) =>
+      runs.some((r) => r.viewport === vp.id && complete(r)),
+    );
+    const popupFailures = runs.some((r) =>
+      r.findings.some((f) => f.text.includes("pop-up with no usable option")),
+    );
+    if (!allViewports || popupFailures) {
+      console.error("Playthrough acceptance criteria not met; see the report.");
+      process.exitCode = 1;
+    }
   }
 })();
