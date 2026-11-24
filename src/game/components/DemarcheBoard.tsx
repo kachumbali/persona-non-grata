@@ -1,3 +1,4 @@
+import { textVariant } from "../text-variants";
 import { useState } from "react";
 import { InterpreterSelect } from "./InterpreterSelect";
 import { Button } from "@/components/ui/button";
@@ -96,7 +97,14 @@ export function DemarcheBoard() {
           {chosen && (
             <div className="min-w-0 space-y-2">
               <h3 className="font-bold">{chosen.subject}</h3>
-              <p>{chosen.instruction}</p>
+              <p>
+                {textVariant(
+                  chosen.instruction,
+                  chosen.instructionVariants,
+                  g.seed,
+                  `email:demarche-fax-${chosen.id}:body`,
+                )}
+              </p>
               <p>
                 Deadline: Day {chosen.deadlineDay} ·{" "}
                 {activeChapter().manifest.blocks[chosen.deadlineBlock]?.name}

@@ -19,7 +19,9 @@ export const missionTasks = (): Record<MissionTask, string> =>
 export type Effects = Partial<Meters> & { budget?: number };
 export interface Outcome extends ChoiceGate {
   text: string;
+  textVariants?: string[];
   label?: string;
+  labelVariants?: string[];
   effects: Effects;
   /** Confirms one step of a mission task, written "task.step". */
   confirmsStep?: string;
@@ -65,6 +67,7 @@ export interface Email {
   from: string;
   subject: string;
   body: string;
+  bodyVariants?: string[];
   options: Partial<Record<Action, Outcome>>;
   ignore: Outcome;
   demarcheId?: string;
@@ -90,6 +93,14 @@ export const emails = (): Email[] => [
     from: "Capital · Directorate of Instructions",
     subject: d.subject,
     body: `${d.instruction}\n\nDeadline: Day ${d.deadlineDay}, ${activeChapter().manifest.blocks[d.deadlineBlock]?.name ?? "office hours"}. The démarche board holds the talking points.`,
+    ...(d.instructionVariants
+      ? {
+          bodyVariants: d.instructionVariants.map(
+            (instruction) =>
+              `${instruction}\n\nDeadline: Day ${d.deadlineDay}, ${activeChapter().manifest.blocks[d.deadlineBlock]?.name ?? "office hours"}. The démarche board holds the talking points.`,
+          ),
+        }
+      : {}),
     options: { note: { text: "The instruction remains on the démarche board.", effects: {} } },
     ignore: { text: "The instruction remains on the démarche board.", effects: {} },
   })),
@@ -316,9 +327,11 @@ export interface PendingDecision {
 export interface StoryChoice extends ChoiceGate {
   id: string;
   label: string;
+  labelVariants?: string[];
   next?: string;
   effects?: Effects;
   result?: string;
+  resultVariants?: string[];
   trust?: number;
   pair?: number;
   pairTarget?: string;
@@ -343,6 +356,8 @@ export type StoryEvent = {
   npc: string;
   callInFor?: string;
   text: string;
+  variants?: string[];
+  remoteTextVariants?: string[];
   minDay: number;
   expiresDay?: number;
   location?: string;
@@ -356,7 +371,13 @@ export type StoryEvent = {
   requiresFlag?: string;
   requiresChoice?: { eventId: string; choiceId: string };
   relationshipGate?: { a: string; b: string; states?: RelationshipState[]; tag?: string };
-  onMiss?: { text: string; effects: Effects; pair?: number; pairTarget?: string };
+  onMiss?: {
+    text: string;
+    textVariants?: string[];
+    effects: Effects;
+    pair?: number;
+    pairTarget?: string;
+  };
   choices: StoryChoice[];
 };
 export type StoryChannel = "call" | "message" | "visit";

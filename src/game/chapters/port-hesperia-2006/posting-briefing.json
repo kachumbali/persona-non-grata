@@ -5,39 +5,89 @@
   "sections": [
     {
       "title": "Where things arrive",
-      "text": "Capital writes by secure fax, at the embassy only; ordinary mail goes to your office PC; the BlockBerry carries your diary and round reports. Whatever is still unanswered when the block ends is recorded as ignored, and Capital keeps a note."
+      "text": "Capital writes by secure fax, at the embassy only; ordinary mail goes to your office PC; the BlockBerry carries your diary and round reports. Whatever is still unanswered when the block ends is recorded as ignored, and Capital keeps a note.",
+      "variants": [
+        "Capital uses the secure fax, available only at the embassy. Ordinary mail lands on your office PC. The BlockBerry carries your diary and round reports. At block end, unanswered items are recorded as ignored. Capital keeps the record.",
+        "Secure fax from Capital can be read only at the embassy. Ordinary mail goes to the office PC and the BlockBerry holds your diary and round reports. At the end of the block, unanswered items go down as ignored. Capital makes a note.",
+        "Capital sends secure faxes to the embassy only. Ordinary mail reaches your office PC, while your diary and round reports live on the BlockBerry. Anything unanswered at the end of the block is logged as ignored. Capital is diligent about the log."
+      ]
     },
     {
       "title": "Time and embassy funds",
-      "text": "You have 4 Diplo-Points (DP) per block, tiredness and drink can reduce them; hospitality comes out of embassy funds. End the block to resolve your plans."
+      "text": "You have 4 Diplo-Points (DP) per block, tiredness and drink can reduce them; hospitality comes out of embassy funds. End the block to resolve your plans.",
+      "variants": [
+        "Each block gives you 4 Diplo-Points (DP), subject to deductions for tiredness and drink. The embassy pays for hospitality. End the block to see your plans resolved.",
+        "You start with 4 Diplo-Points (DP) per block. Tiredness and drink can trim the allowance. Hospitality is charged to embassy funds. End the block to resolve your plans.",
+        "Allow 4 Diplo-Points (DP) per block, potentially fewer due to tiredness or drink. Hospitality is on the embassy’s account. Your plans resolve when you end the block."
+      ]
     },
     {
       "title": "The mission",
-      "text": "The ministerial visit is four arrangements, each a chain of steps shown in the “Ministerial visit” panel and in Mission Watch on the PC. Some steps open only later, and Capital and the host will change some of them on the way."
+      "text": "The ministerial visit is four arrangements, each a chain of steps shown in the “Ministerial visit” panel and in Mission Watch on the PC. Some steps open only later, and Capital and the host will change some of them on the way.",
+      "variants": [
+        "The ministerial visit takes four arrangements, each with a chain of steps in the “Ministerial visit” panel and Mission Watch on the PC. Some steps open later. Capital and the host will revise some of them along the way.",
+        "The “Ministerial visit” panel and Mission Watch on the PC show the four visit arrangements as chains of steps. Some steps become available only later. Capital and the host will see to it that some steps change along the way.",
+        "There are four arrangements for the ministerial visit. Each has a sequence of steps in the “Ministerial visit” panel and in Mission Watch on the PC. Some open only later. Capital and the host will alter some steps as you go."
+      ]
     },
     {
       "title": "People",
-      "text": "Colleagues and contacts trade favours; the “Who is who” notebook records who said what; gossip is welcome in the building, and may be false."
+      "text": "Colleagues and contacts trade favours; the “Who is who” notebook records who said what; gossip is welcome in the building, and may be false.",
+      "variants": [
+        "Colleagues and contacts exchange favours. The “Who is who” notebook notes who said what. Gossip is welcome on the premises. Accuracy is optional.",
+        "Your colleagues and contacts trade favours. “Who is who” is the notebook that tracks who said what. Gossip is welcome here and may have no basis in fact.",
+        "Colleagues and contacts deal in favours. Consult the “Who is who” notebook for who said what. The building welcomes gossip, including the possibly false kind."
+      ]
     },
     {
       "title": "Démarches",
-      "text": "Capital’s démarches wait on the board on the PC, and the choice of messenger matters more than the message."
+      "text": "Capital’s démarches wait on the board on the PC, and the choice of messenger matters more than the message.",
+      "variants": [
+        "Capital’s démarches are on the PC board. In this office, who carries the message matters more than its contents.",
+        "Check the board on the PC for Capital’s démarches. The messenger matters more than whatever they are sent to say.",
+        "Capital’s démarches await you on the PC board. The choice of messenger carries more weight than the message itself."
+      ]
     },
     {
       "title": "Languages",
-      "text": "Ombrazian is learned by lessons and by attempts, and the Ministry will examine you on Day 13."
+      "text": "Ombrazian is learned by lessons and by attempts, and the Ministry will examine you on Day 13.",
+      "variants": [
+        "Learn Ombrazian in lessons and by trying it out. The Ministry will examine you on Day 13.",
+        "Ombrazian takes lessons and attempts. The Ministry has an examination for you on Day 13.",
+        "Learn Ombrazian by taking lessons and trying to use it. The Ministry will examine you on Day 13."
+      ]
     },
     {
       "title": "Your personnel file",
-      "text": "It changes with what you do, and it is kept whether or not you read it."
+      "text": "It changes with what you do, and it is kept whether or not you read it.",
+      "variants": [
+        "Your actions change the file. It is kept whether you consult it or leave it unread.",
+        "The file changes as you act. It is kept with or without your readership.",
+        "What you do changes the file. Reading it is optional. Keeping it proceeds either way."
+      ]
     },
     {
       "title": "Morning press review",
-      "text": "Every morning Lucien Falk compiles the local press, or Maxim the intern does, with a horoscope in the translations. Reading costs 0 DP, you may forward one clipping to Capital a day, and the newspapers tend to know things before we do."
+      "text": "Every morning Lucien Falk compiles the local press, or Maxim the intern does, with a horoscope in the translations. Reading costs 0 DP, you may forward one clipping to Capital a day, and the newspapers tend to know things before we do.",
+      "variants": [
+        "Every morning Lucien Falk or Maxim the intern puts together the local press review, complete with a horoscope in the translations. Reading takes 0 DP. You may send Capital one clipping per day. The papers tend to hear things first.",
+        "Lucien Falk compiles the local press each morning, or Maxim the intern does. The translations include a horoscope. Reading costs 0 DP, and you can forward one clipping to Capital a day. The newspapers tend to be ahead of us.",
+        "Each morning the local press is compiled by Lucien Falk or Maxim the intern, with a horoscope among the translations. Read it for 0 DP and forward up to one clipping a day to Capital. The papers usually know things before we do."
+      ]
     },
     {
       "title": "Keep the posting",
-      "text": "Complete all four ministerial visit arrangements before arrival. Exhaust HQ goodwill and you are replaced; exhaust host-country goodwill and you are declared persona non grata. A cancelled visit is not considered an innovative scheduling solution."
+      "text": "Complete all four ministerial visit arrangements before arrival. Exhaust HQ goodwill and you are replaced; exhaust host-country goodwill and you are declared persona non grata. A cancelled visit is not considered an innovative scheduling solution.",
+      "variants": [
+        "Finish all four ministerial visit arrangements before arrival. Run out of HQ goodwill and you are replaced. Run out of host-country goodwill and you are declared persona non grata. Cancelling the visit earns no credit for creative scheduling.",
+        "All four arrangements for the ministerial visit must be complete before arrival. Lose all HQ goodwill and you will be replaced. Lose all host-country goodwill and you will be declared persona non grata. A cancelled visit will not be filed under innovative scheduling.",
+        "Complete the four ministerial visit arrangements ahead of arrival. With HQ goodwill exhausted, you are replaced. With host-country goodwill exhausted, you are declared persona non grata. Cancelling the visit does not count as imaginative scheduling."
+      ]
     }
+  ],
+  "introVariants": [
+    "With the Ambassador away, you are Deputy Head of Mission and now Chargé d’Affaires a.i. in Port Hesperia. Capital assures you it’s an opportunity. Capital is elsewhere.",
+    "The Ambassador is absent. As Deputy Head of Mission, you are now Chargé d’Affaires a.i. in Port Hesperia. Capital assures you of the opportunity from a comfortable distance.",
+    "With the Ambassador away, you remain Deputy Head of Mission and serve as Chargé d’Affaires a.i. in Port Hesperia. Capital assures you it is an opportunity. Capital is elsewhere."
   ]
 }

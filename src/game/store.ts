@@ -1,3 +1,4 @@
+import { textVariant } from "./text-variants";
 import { drawExam, languageRoll, learnLanguage, lessonReport, mistranslates } from "./languages";
 import { pressReview, clippings } from "./press";
 import {
@@ -946,7 +947,9 @@ export const useGame = create<GameState>()(
           id: `email-${id}`,
           kind: "email",
           source: e.subject,
-          text: accident ? `${actual.text} (Reply-All Reflex: accidental reply all.)` : actual.text,
+          text: accident
+            ? `${textVariant(actual.text, actual.textVariants, s.seed, `email:${id}:${e.options.replyall ? "replyall" : action}:result`)} (Reply-All Reflex: accidental reply all.)`
+            : textVariant(actual.text, actual.textVariants, s.seed, `email:${id}:${action}:result`),
           effects: actual.effects,
           task: confirmed?.task,
           step: confirmed?.step,
@@ -1910,7 +1913,7 @@ export const useGame = create<GameState>()(
             }
             record(
               event.title,
-              `${event.onMiss?.text ?? `Unresolved: ${event.title}. ${event.id === "invitation" ? "Protocol records that nobody attended." : "The problem carries a cost even when ignored."}`}${stats.deniability !== 3 ? ` (Plausible Deniability: missed penalties ${(3 - stats.deniability) * 10 > 0 ? "+" : ""}${(3 - stats.deniability) * 10}%)` : ""}`,
+              `${(event.onMiss ? textVariant(event.onMiss.text, event.onMiss.textVariants, s.seed, `event:${event.id}:onMiss`) : undefined) ?? `Unresolved: ${event.title}. ${event.id === "invitation" ? "Protocol records that nobody attended." : "The problem carries a cost even when ignored."}`}${stats.deniability !== 3 ? ` (Plausible Deniability: missed penalties ${(3 - stats.deniability) * 10 > 0 ? "+" : ""}${(3 - stats.deniability) * 10}%)` : ""}`,
               missedEffects(
                 event.onMiss?.effects ??
                   (event.id === "invitation" ? { goodwill: -4 } : { morale: -1 }),
@@ -1991,7 +1994,7 @@ export const useGame = create<GameState>()(
             economy.funds += (missed.budget ?? 0) * 100;
             record(
               e.subject,
-              `${e.ignore.text}${jammed}${stats.deniability !== 3 ? ` (Plausible Deniability: missed penalties ${(3 - stats.deniability) * 10 > 0 ? "+" : ""}${(3 - stats.deniability) * 10}%)` : ""}`,
+              `${textVariant(e.ignore.text, e.ignore.textVariants, s.seed, `email:${e.id}:ignore:result`)}${jammed}${stats.deniability !== 3 ? ` (Plausible Deniability: missed penalties ${(3 - stats.deniability) * 10 > 0 ? "+" : ""}${(3 - stats.deniability) * 10}%)` : ""}`,
               missed,
               "Missed instruction",
             );
@@ -2105,7 +2108,7 @@ export const useGame = create<GameState>()(
             }
             record(
               event.title,
-              `${event.onMiss?.text ?? `The opportunity passed: ${event.title}.`}${stats.deniability !== 3 ? ` (Plausible Deniability: missed penalties ${(3 - stats.deniability) * 10 > 0 ? "+" : ""}${(3 - stats.deniability) * 10}%)` : ""}`,
+              `${(event.onMiss ? textVariant(event.onMiss.text, event.onMiss.textVariants, s.seed, `event:${event.id}:onMiss`) : undefined) ?? `The opportunity passed: ${event.title}.`}${stats.deniability !== 3 ? ` (Plausible Deniability: missed penalties ${(3 - stats.deniability) * 10 > 0 ? "+" : ""}${(3 - stats.deniability) * 10}%)` : ""}`,
               missedEffects(event.onMiss?.effects ?? {}, stats.deniability),
             );
           }

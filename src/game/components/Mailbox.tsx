@@ -8,6 +8,7 @@ import { ACTION_LABELS, formatClock, isFax, type Action } from "../rules";
 import { inboxFor, useGame } from "../store";
 import { decisionCash, money } from "../economy";
 import { activeChapter } from "../chapters";
+import { textVariant } from "../text-variants";
 import {
   findStep,
   inPersonBlock,
@@ -37,6 +38,7 @@ export function Mailbox({
   );
   const open =
     inbox.find((e) => e.id === openId) ?? (singlePane ? undefined : inbox.find((e) => !e.status));
+  const bodyVariants = open && "bodyVariants" in open ? (open.bodyVariants ?? []) : [];
   const scheduled = (id: string) => g.pending.some((p) => p.emailId === id);
   return (
     <div
@@ -95,7 +97,9 @@ export function Mailbox({
                 From: {open.from} · Day {open.day}, {formatClock(open.time)}
               </p>
               <h3 className="mt-2 text-2xl font-bold">{open.subject}</h3>
-              <pre className="mt-3 whitespace-pre-wrap font-mono text-sm">{open.body}</pre>
+              <pre className="mt-3 whitespace-pre-wrap font-mono text-sm">
+                {textVariant(open.body, bodyVariants, g.seed, `email:${open.id}:body`)}
+              </pre>
               <div className="mt-4 border-t border-dashed border-border pt-3">
                 {open.status ? (
                   <span className="stamp animate-stamp">
@@ -161,7 +165,13 @@ export function Mailbox({
                           }}
                         >
                           {gateLabel(outcome)}
-                          {label} · 1 DP{cost > 0 ? ` · ${money(cost)}` : ""}
+                          {textVariant(
+                            label,
+                            outcome.labelVariants,
+                            g.seed,
+                            `email:${open.id}:${a}:label`,
+                          )}{" "}
+                          · 1 DP{cost > 0 ? ` · ${money(cost)}` : ""}
                           {blocked && ref && step
                             ? ` · ${stepLabel(step, ref.task, g.setbacksApplied)}: ${blocked}`
                             : ""}

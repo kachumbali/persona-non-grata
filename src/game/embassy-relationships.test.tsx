@@ -1,3 +1,4 @@
+import { eventChoiceName } from "./event-choice-test-helper";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { PlaceScene } from "./components/PlaceScene";
@@ -121,12 +122,14 @@ describe("embassy relationships", () => {
     { label: /Pause the proposal/, id: "pause", follow: "staff-sola-pause-followup", pair: 37 },
   ])(
     "records the $id approach and offers only its corresponding later scene",
-    ({ label, id, follow, pair }) => {
+    ({ id, follow, pair }) => {
       render(<PlaceScene onLeave={() => {}} />);
       fireEvent.click(screen.getByRole("button", { name: /Follow up: Whose project is it/ }));
       expect(screen.getByText(/Registry, local coordination/)).toBeInTheDocument();
       fireEvent.click(screen.getByLabelText(/Allow displaced routine work/));
-      fireEvent.click(screen.getByRole("button", { name: label }));
+      fireEvent.click(
+        screen.getByRole("button", { name: eventChoiceName("staff-sola-elise", id) }),
+      );
       expect(useGame.getState().storyOutcomes["staff-sola-elise"]).toBeUndefined();
       act(() => {
         useGame.getState().advance();
@@ -174,7 +177,11 @@ describe("embassy relationships", () => {
     render(<PlaceScene onLeave={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: /Follow up: The translation comes back/ }));
     fireEvent.click(screen.getByLabelText(/Allow displaced routine work/));
-    fireEvent.click(screen.getByRole("button", { name: /Acknowledge the mistake/ }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: eventChoiceName("staff-sola-instruct-followup", "repair"),
+      }),
+    );
     act(() => {
       useGame.getState().advance();
     });

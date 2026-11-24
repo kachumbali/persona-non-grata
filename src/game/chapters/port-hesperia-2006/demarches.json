@@ -4,6 +4,11 @@
       "id": "fuel-quay-note",
       "subject": "Fuel inspection",
       "instruction": "Request an inspection timetable and ask that fuel for diplomatic premises remain available.",
+      "instructionVariants": [
+        "Ask for an inspection timetable and request that fuel remain available for diplomatic premises.",
+        "Request the inspection timetable and ask that fuel remain available for diplomatic premises.",
+        "Ask for an inspection timetable and for fuel to remain available to diplomatic premises."
+      ],
       "issuedDay": 2,
       "issuedBlock": 0,
       "deadlineDay": 4,

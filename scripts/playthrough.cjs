@@ -464,7 +464,9 @@ async function clearOverlays(page, rec, blockNo, maxIters = 12, deferEvent = fal
       const event = events.find((e) => text.includes(e.title));
       const ranked = opts.map((name) => ({
         name,
-        choice: event?.choices.find((c) => name.includes(c.label)),
+        choice: event?.choices.find((c) =>
+          [c.label, ...(c.labelVariants || [])].some((label) => name.includes(label)),
+        ),
       }));
       ranked.sort((a, b) => choiceScore(b.choice || {}) - choiceScore(a.choice || {}));
       const name = ranked[0].name;
@@ -538,7 +540,10 @@ async function handleMail(page, rec, scope) {
       const name = await action.innerText({ timeout: STEP_TIMEOUT }).catch(() => "");
       if (!name) continue;
       const entry = Object.entries(email?.options || {}).find(([key, value]) =>
-        name.includes(mailLabels[email.id]?.[key] || value.label || actionLabels[key]),
+        [
+          mailLabels[email.id]?.[key] || value.label || actionLabels[key],
+          ...(value.labelVariants || []),
+        ].some((label) => name.includes(label)),
       );
       candidates.push({ action, score: entry ? choiceScore(entry[1]) : 0 });
     }

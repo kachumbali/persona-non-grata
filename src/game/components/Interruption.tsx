@@ -10,6 +10,7 @@ import { checkQueue, useGame } from "../store";
 import { capacityLedger, staffDuty } from "../economy";
 import { interruptionView, type InterruptionKind } from "../interruption";
 import { Portrait } from "./Portrait";
+import { textVariant } from "../text-variants";
 
 const ICONS: Record<InterruptionKind, typeof Phone> = {
   call: Phone,
@@ -63,7 +64,24 @@ export function Interruption() {
   )
     return null;
   const npc = campaign().characters.find((c) => c.id === event.npc);
-  const view = interruptionView(event, npc, g.location);
+  const view = interruptionView(
+    {
+      ...event,
+      text: textVariant(event.text, event.variants, g.seed, `event:${event.id}:text`),
+      ...(event.remoteText === undefined
+        ? {}
+        : {
+            remoteText: textVariant(
+              event.remoteText,
+              event.remoteTextVariants,
+              g.seed,
+              `event:${event.id}:remoteText`,
+            ),
+          }),
+    },
+    npc,
+    g.location,
+  );
   const Icon = ICONS[view.kind];
   const participants = [
     ...new Set(
@@ -84,7 +102,15 @@ export function Interruption() {
     id: `event-${event.id}`,
     kind: "event",
     source: event.title,
-    text: c.result ?? "Event resolved.",
+    text:
+      c.result === undefined
+        ? "Event resolved."
+        : textVariant(
+            c.result,
+            c.resultVariants,
+            g.seed,
+            `event:${event.id}:choice:${c.id}:result`,
+          ),
     effects: c.effects ?? {},
     eventId: event.id,
     eventChoice: c.id,
@@ -195,7 +221,13 @@ export function Interruption() {
                       onClick={() => (routineName ? setConfirmChoice(c.id) : choose(c))}
                     >
                       ▸ {gateLabel(c)}
-                      {c.label} · {dpFor(event.id, c)} DP
+                      {textVariant(
+                        c.label,
+                        c.labelVariants,
+                        g.seed,
+                        `event:${event.id}:choice:${c.id}:label`,
+                      )}{" "}
+                      · {dpFor(event.id, c)} DP
                       {participants.includes(
                         c.worker ?? (event.id === "invitation" ? "" : event.npc),
                       )

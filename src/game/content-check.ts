@@ -152,9 +152,11 @@ function buildSchemas(strict: boolean) {
   const storyChoice = obj({
     id: str,
     label: str,
+    labelVariants: opt(z.array(str).length(3)),
     next: opt(str),
     effects: opt(effects),
     result: opt(str),
+    resultVariants: opt(z.array(str).length(3)),
     trust: opt(num),
     pair: opt(num),
     pairTarget: opt(str),
@@ -177,6 +179,8 @@ function buildSchemas(strict: boolean) {
     title: str,
     npc: str,
     text: str,
+    variants: opt(z.array(str).length(3)),
+    remoteTextVariants: opt(z.array(str).length(3)),
     minDay: day,
     expiresDay: opt(day),
     location: opt(str),
@@ -193,7 +197,15 @@ function buildSchemas(strict: boolean) {
         tag: opt(str),
       }),
     ),
-    onMiss: opt(obj({ text: str, effects, pair: opt(num), pairTarget: opt(str) })),
+    onMiss: opt(
+      obj({
+        text: str,
+        textVariants: opt(z.array(str).length(3)),
+        effects,
+        pair: opt(num),
+        pairTarget: opt(str),
+      }),
+    ),
     choices: z.array(storyChoice),
   });
   const campaign = obj({
@@ -237,7 +249,10 @@ function buildSchemas(strict: boolean) {
         cost: num,
       }),
     ),
-    dialogue: z.record(str, obj({ text: str, choices: z.array(storyChoice) })),
+    dialogue: z.record(
+      str,
+      obj({ text: str, variants: opt(z.array(str).length(3)), choices: z.array(storyChoice) }),
+    ),
     events: z.array(event),
     gossip: opt(
       z.array(
@@ -258,8 +273,10 @@ function buildSchemas(strict: boolean) {
   });
   const talkChoice = obj({
     label: str,
+    labelVariants: opt(z.array(str).length(3)),
     next: opt(str),
     result: opt(str),
+    resultVariants: opt(z.array(str).length(3)),
     trust: opt(num),
     pair: opt(num),
     pairTarget: opt(str),
@@ -277,14 +294,19 @@ function buildSchemas(strict: boolean) {
       obj({
         id: str,
         start: str,
-        nodes: z.record(str, obj({ text: str, choices: z.array(talkChoice) })),
+        nodes: z.record(
+          str,
+          obj({ text: str, variants: opt(z.array(str).length(3)), choices: z.array(talkChoice) }),
+        ),
       }),
     ),
   );
   const outcome = obj({
     ...learning,
     text: str,
+    textVariants: opt(z.array(str).length(3)),
     label: opt(str),
+    labelVariants: opt(z.array(str).length(3)),
     effects,
     confirmsStep: opt(str),
     formal: opt(z.boolean()),
@@ -299,6 +321,7 @@ function buildSchemas(strict: boolean) {
       from: str,
       subject: str,
       body: str,
+      bodyVariants: opt(z.array(str).length(3)),
       options: z.record(z.enum(ACTIONS), outcome),
       ignore: outcome,
     }),
@@ -565,7 +588,8 @@ function buildSchemas(strict: boolean) {
       from: str,
       subject: str,
       intro: str,
-      sections: z.array(obj({ title: str, text: str })),
+      introVariants: opt(z.array(str).length(3)),
+      sections: z.array(obj({ title: str, text: str, variants: opt(z.array(str).length(3)) })),
     }),
     conversationPayoffs: z.array(obj({ source: str, flag: str, text: str, effects })),
     staffDuties: z.record(str, str),
@@ -592,6 +616,7 @@ function buildSchemas(strict: boolean) {
           id: str,
           subject: str,
           instruction: str,
+          instructionVariants: opt(z.array(str).length(3)),
           issuedDay: day,
           issuedBlock: int.min(0).max(3),
           issuedMinute: opt(int.min(0).max(1439)),

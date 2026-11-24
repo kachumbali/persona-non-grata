@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { capacityLedger, decisionCash, money, staffDuty } from "../economy";
 import { campaign, locationStories, type StoryChoice } from "../rules";
 import { useGame } from "../store";
+import { textVariant } from "../text-variants";
 
 /** An active lead is encountered at its location and resolves with the block. */
 export function LocationLead() {
@@ -45,7 +46,15 @@ export function LocationLead() {
       id: `event-${event.id}`,
       kind: "event",
       source: event.title,
-      text: choice.result ?? "The matter is settled.",
+      text:
+        choice.result === undefined
+          ? "The matter is settled."
+          : textVariant(
+              choice.result,
+              choice.resultVariants,
+              g.seed,
+              `event:${event.id}:choice:${choice.id}:result`,
+            ),
       effects: choice.effects ?? {},
       eventId: event.id,
       eventChoice: choice.id,
@@ -140,7 +149,9 @@ export function LocationLead() {
                 ))}
               </div>
             )}
-            <DialogDescription className="mb-3 text-foreground">{event.text}</DialogDescription>
+            <DialogDescription className="mb-3 text-foreground">
+              {textVariant(event.text, event.variants, g.seed, `event:${event.id}:text`)}
+            </DialogDescription>
             {staffIds.length > 0 && (
               <div className="mb-3 text-xs">
                 {staffIds.map((id) => {
@@ -197,7 +208,13 @@ export function LocationLead() {
                         onClick={() => choose(choice)}
                       >
                         ▸ {gateLabel(choice)}
-                        {choice.label} · 1 DP
+                        {textVariant(
+                          choice.label,
+                          choice.labelVariants,
+                          g.seed,
+                          `event:${event.id}:choice:${choice.id}:label`,
+                        )}{" "}
+                        · 1 DP
                         {[
                           ...new Set([
                             ...(staffIds.includes(event.npc) ? [event.npc] : []),

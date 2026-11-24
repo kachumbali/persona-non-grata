@@ -82,6 +82,7 @@ export interface Demarche {
   id: string;
   subject: string;
   instruction: string;
+  instructionVariants?: string[];
   issuedDay: number;
   issuedBlock: number;
   issuedMinute?: number;
@@ -302,7 +303,7 @@ export interface Campaign {
   characters: CampaignCharacter[];
   venues: CampaignVenue[];
   locations: CampaignLocation[];
-  dialogue: Record<string, { text: string; choices: StoryChoice[] }>;
+  dialogue: Record<string, { text: string; variants?: string[]; choices: StoryChoice[] }>;
   events: StoryEvent[];
   gossip?: GossipItem[];
 }
@@ -327,7 +328,8 @@ export interface PostingBriefingData {
   from: string;
   subject: string;
   intro: string;
-  sections: { title: string; text: string }[];
+  introVariants?: string[];
+  sections: { title: string; text: string; variants?: string[] }[];
 }
 export interface ConversationPayoff {
   source: string;

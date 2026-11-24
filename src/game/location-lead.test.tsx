@@ -1,3 +1,4 @@
+import { eventChoiceName } from "./event-choice-test-helper";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { LocationLead } from "./components/LocationLead";
@@ -24,33 +25,38 @@ describe("supplier location lead", () => {
       prior: "press",
       initial: "honest",
       title: /off the record/i,
-      option: /offer context without naming sources/i,
+      eventId: "press-honest-followup",
+      choiceId: "background",
     },
     {
       location: "un",
       prior: "elise",
       initial: "useful",
       title: /whose voices/i,
-      option: /protect time for the community/i,
+      eventId: "development-beneficiaries-followup",
+      choiceId: "voices",
     },
-  ])("offers and queues the $location follow-up", ({ location, prior, initial, title, option }) => {
-    useGame.setState({
-      day: 4,
-      location,
-      completedEvents: [prior],
-      storyOutcomes: { [prior]: { status: "chosen", choice: initial } },
-    });
-    render(<LocationLead />);
-    fireEvent.click(screen.getByRole("button", { name: title }));
-    fireEvent.click(screen.getByRole("button", { name: option }));
-    expect(useGame.getState().pending[0]?.location).toBe(location);
-    expect(screen.getByRole("status")).toHaveTextContent("end of this block");
-  });
+  ])(
+    "offers and queues the $location follow-up",
+    ({ location, prior, initial, title, eventId, choiceId }) => {
+      useGame.setState({
+        day: 4,
+        location,
+        completedEvents: [prior],
+        storyOutcomes: { [prior]: { status: "chosen", choice: initial } },
+      });
+      render(<LocationLead />);
+      fireEvent.click(screen.getByRole("button", { name: title }));
+      fireEvent.click(screen.getByRole("button", { name: eventChoiceName(eventId, choiceId) }));
+      expect(useGame.getState().pending[0]?.location).toBe(location);
+      expect(screen.getByRole("status")).toHaveTextContent("end of this block");
+    },
+  );
   it("offers the correct lead at the bar and queues its decision until block end", () => {
     render(<LocationLead />);
     fireEvent.click(screen.getByRole("button", { name: /follow up: the generous supplier/i }));
     fireEvent.click(
-      screen.getByRole("button", { name: /disclose the connection and change supplier/i }),
+      screen.getByRole("button", { name: eventChoiceName("supplier-followup", "transparent") }),
     );
     const pending = useGame.getState().pending[0];
     expect(pending?.eventChoice).toBe("transparent");

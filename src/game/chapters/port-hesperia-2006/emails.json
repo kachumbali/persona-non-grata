@@ -6,48 +6,98 @@
     "from": "Capital — Political Directorate",
     "subject": "URGENT: Political situation",
     "body": "Please report on the political situation by close of business. Also, why is it quiet? Quiet is never good. Neither is noise.",
+    "bodyVariants": [
+      "Please send a report on the political situation by close of business. And why is it quiet? Quiet is never good. Nor is noise.",
+      "By close of business, please report on the political situation. Why is it quiet, incidentally? Quiet is never good. Neither is noise.",
+      "Please report on the political situation by close of business. One more thing: why is it quiet? Quiet is never good. Noise isn't either."
+    ],
     "options": {
       "reply": {
         "text": "Cable sent: 'Situation fluid. Monitoring closely.'",
+        "textVariants": [
+          "Cable sent: “Situation fluid. Monitoring closely.”",
+          "Cable dispatched: “Situation fluid. Monitoring closely.”",
+          "Sent by cable: “Situation fluid. Monitoring closely.”"
+        ],
         "effects": {
           "confidence": 6,
           "sanity": -3
         },
         "formal": true,
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Send the report personally",
+          "Send the report yourself now",
+          "Submit the report yourself"
+        ]
       },
       "delegate": {
         "text": "Anselm drafts it. A copy somehow reaches the Capital first, signed by him.",
+        "textVariants": [
+          "Anselm drafts it. Somehow a copy signed by him reaches the Capital first.",
+          "Anselm drafts it. A copy bearing his signature somehow reaches the Capital first.",
+          "Anselm drafts it. His signed copy somehow gets to the Capital first."
+        ],
         "effects": {
           "confidence": -4,
           "morale": 2
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Have Anselm draft the report",
+          "Ask Anselm to write the report",
+          "Have Anselm prepare the report"
+        ]
       },
       "note": {
         "text": "Noted. The Capital notes that you noted.",
+        "textVariants": [
+          "Noted. The Capital takes note that you noted.",
+          "Noted. The Capital notes your having noted.",
+          "Noted. The Capital notes that you took note."
+        ],
         "effects": {
           "confidence": -6
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "File the request without a report",
+          "File the request without reporting back",
+          "File the request; do not report"
+        ]
       },
       "trait": {
         "label": "Mention your contacts in Capital",
         "requiresTrait": "namedrop",
         "text": "You cite a former minister. Capital asks whether the former minister recalls the conversation.",
+        "textVariants": [
+          "You cite a former minister. Capital asks if the former minister remembers the conversation.",
+          "You cite a former minister. Capital asks whether that former minister recalls the conversation.",
+          "You cite a former minister. Capital wants to know whether the former minister recalls the conversation."
+        ],
         "effects": {
           "confidence": 2,
           "sanity": -1
         },
         "formal": true,
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Mention your Capital contacts",
+          "Mention your contacts at Capital",
+          "Refer to your contacts in Capital"
+        ]
       }
     },
     "ignore": {
       "effects": {
         "confidence": -12
       },
-      "text": "The Capital calls. Then calls again. Then calls the Minister."
+      "text": "The Capital calls. Then calls again. Then calls the Minister.",
+      "textVariants": [
+        "The Capital calls, then calls again, then calls the Minister.",
+        "The Capital calls. It calls again. Then it calls the Minister.",
+        "The Capital calls. It calls again. Then the Minister gets a call."
+      ]
     }
   },
   {
@@ -57,48 +107,98 @@
     "from": "Capital — Instructions Unit",
     "subject": "URGENT-URGENT: Ignore previous instruction",
     "body": "Ignore our previous instruction. See attached instruction.\n\n[attachment missing]",
+    "bodyVariants": [
+      "Please ignore our previous instruction. Consult the attached instruction.\n\n[attachment missing]",
+      "Disregard our previous instruction. See the attached instruction.\n\n[attachment missing]",
+      "Ignore our previous instruction. Consult the attached instruction.\n\n[attachment missing]"
+    ],
     "options": {
       "forward": {
         "text": "You forward it back. They forward it back. A loop is formed.",
+        "textVariants": [
+          "You send it back. They send it back. A loop is formed.",
+          "You forward it back. They return it. A loop is formed.",
+          "You forward it back; they forward it back. A loop forms."
+        ],
         "effects": {
           "sanity": -6,
           "confidence": 2
         },
         "formal": true,
-        "counts": ["capital"]
+        "counts": ["capital"],
+        "labelVariants": [
+          "Send the instruction to Capital again",
+          "Return the instruction to Capital",
+          "Send the instruction back to Capital again"
+        ]
       },
       "reply": {
         "text": "You politely request the attachment. Capital notes your politeness, and not the attachment.",
+        "textVariants": [
+          "You politely ask for the attachment. Capital notes your politeness, not the attachment.",
+          "You request the attachment politely. Capital notes your politeness, and not the attachment.",
+          "You politely request the attachment. Capital notes the politeness, not the attachment."
+        ],
         "effects": {
           "confidence": 3
         },
         "formal": true,
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Ask for the missing attachment",
+          "Request the absent attachment",
+          "Ask them for the missing attachment"
+        ]
       },
       "note": {
         "text": "You take note of nothing, which is technically compliant.",
+        "textVariants": [
+          "You note nothing, which is technically compliant.",
+          "Taking note of nothing is technically compliant.",
+          "You take note of nothing. Technically, this is compliant."
+        ],
         "effects": {
           "sanity": 2
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "File the instruction as it arrived",
+          "File the instruction as received now",
+          "File the received instruction"
+        ]
       },
       "trait": {
         "label": "Copy the full instructions unit",
         "requiresTrait": "replyall",
         "text": "Every desk searches for the attachment; two invent versions of it.",
+        "textVariants": [
+          "Every desk looks for the attachment; two invent versions of it.",
+          "Every desk searches for the attachment. Two invent versions of it.",
+          "Every desk searches for the attachment; two desks invent versions of it."
+        ],
         "effects": {
           "confidence": 2,
           "sanity": -2
         },
         "formal": true,
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Copy the entire instructions unit",
+          "Copy the whole instructions unit",
+          "Include the full instructions unit"
+        ]
       }
     },
     "ignore": {
       "effects": {
         "confidence": -5
       },
-      "text": "The missing instruction was apparently very important."
+      "text": "The missing instruction was apparently very important.",
+      "textVariants": [
+        "Apparently the missing instruction was very important.",
+        "The instruction that is missing was apparently very important.",
+        "The missing instruction was, apparently, very important."
+      ]
     }
   },
   {
@@ -108,30 +208,65 @@
     "from": "Admin — Pavel Oskarsen",
     "subject": "Generator",
     "body": "The generator is out of diesel. The diesel is out of budget. I am out of ideas. I still have the keys.",
+    "bodyVariants": [
+      "The generator has no diesel. There is no budget for diesel. I have no ideas. I do still have the keys.",
+      "The generator is out of diesel, and diesel is out of budget. I'm out of ideas, but I still have the keys.",
+      "No diesel for the generator. No budget for diesel. No ideas from me. The keys, however, are still with me."
+    ],
     "options": {
       "reply": {
         "text": "Approved from the representation allowance. Canapés will be smaller.",
+        "textVariants": [
+          "Approved from the representation allowance. The canapés will be smaller.",
+          "It is approved from the representation allowance. Canapés will be smaller.",
+          "The representation allowance covers it. Canapés will be smaller."
+        ],
         "effects": {
           "budget": -12,
           "morale": 4
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Use the allowance to pay for diesel",
+          "Pay for diesel using the allowance",
+          "Fund diesel from the allowance"
+        ]
       },
       "forward": {
         "text": "The Capital opens a tender for diesel. Expected completion: Q3.",
+        "textVariants": [
+          "The Capital opens a diesel tender. Expected completion: Q3.",
+          "The Capital opens a tender for diesel. Completion expected: Q3.",
+          "A diesel tender is opened by the Capital. Expected completion: Q3."
+        ],
         "effects": {
           "goodwill": -2,
           "morale": -6
         },
-        "counts": ["capital"]
+        "counts": ["capital"],
+        "labelVariants": [
+          "Ask Capital to buy diesel",
+          "Ask Capital to buy the diesel",
+          "Ask Capital to purchase diesel"
+        ]
       },
       "delegate": {
         "text": "Sola Dewrin quietly arranges diesel from a cousin of a supplier. Cheaper, faster.",
+        "textVariants": [
+          "Sola Dewrin quietly arranges diesel through a supplier's cousin. Cheaper, faster.",
+          "Sola Dewrin quietly gets diesel from a supplier's cousin. Cheaper, faster.",
+          "Sola Dewrin quietly arranges diesel from a supplier's cousin. Faster, cheaper."
+        ],
         "effects": {
           "budget": -5,
           "morale": 3
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Have Sola arrange diesel",
+          "Ask Sola to organise diesel",
+          "Have Sola arrange the diesel"
+        ]
       }
     },
     "ignore": {
@@ -139,7 +274,12 @@
         "morale": -10,
         "sanity": -5
       },
-      "text": "Scheduled power cut. Nobody knew the schedule. The servers sulk."
+      "text": "Scheduled power cut. Nobody knew the schedule. The servers sulk.",
+      "textVariants": [
+        "Scheduled power cut. No one knew the schedule. The servers sulk.",
+        "A scheduled power cut. Nobody knew the schedule. The servers sulk.",
+        "The power cut was scheduled. Nobody knew the schedule. The servers sulk."
+      ]
     }
   },
   {
@@ -149,47 +289,93 @@
     "from": "Donor Coordination Platform",
     "subject": "Co-chairing proposal",
     "body": "We would like to co-chair the coordination of the coordination group. Bellaluxe's leadership would be welcome, provided it costs nothing.",
+    "bodyVariants": [
+      "We would like to co-chair coordination of the coordination group. Bellaluxe's leadership would be welcome, as long as it costs nothing.",
+      "We would welcome Bellaluxe's leadership, provided it costs nothing. We would like to co-chair the coordination of the coordination group.",
+      "We propose to co-chair the coordination of the coordination group. Bellaluxe's leadership would be welcome, provided there is no cost."
+    ],
     "options": {
       "reply": {
         "text": "Bellaluxe agrees to co-chair. You now own four extra meetings a week.",
+        "textVariants": [
+          "Bellaluxe agrees to co-chair. You now have four extra meetings a week.",
+          "Bellaluxe agrees to co-chair. Four extra weekly meetings are now yours.",
+          "Bellaluxe agrees to co-chair. You acquire four extra meetings a week."
+        ],
         "effects": {
           "confidence": 5,
           "sanity": -8
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": ["Agree to be co-chair", "Accept co-chairing", "Agree to co-lead"]
       },
       "replyall": {
         "text": "Your reply-all triggers 37 replies-all about reply-all etiquette.",
+        "textVariants": [
+          "Your reply-all prompts 37 replies-all about reply-all etiquette.",
+          "Your reply-all produces 37 replies-all on reply-all etiquette.",
+          "Your reply-all triggers 37 replies-all on reply-all etiquette."
+        ],
         "effects": {
           "sanity": -10,
           "goodwill": 2
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Reply to the whole group",
+          "Answer the whole group",
+          "Respond to the entire group"
+        ]
       },
       "note": {
         "text": "Bellaluxe 'takes note with interest' — the strongest form of no.",
+        "textVariants": [
+          "Bellaluxe “takes note with interest” — the strongest form of no.",
+          "Bellaluxe “takes note with interest”: the strongest form of no.",
+          "Bellaluxe “takes note with interest”. It is the strongest form of no."
+        ],
         "effects": {
           "goodwill": -1
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Decline without refusing directly",
+          "Decline without saying no directly",
+          "Turn it down without a direct refusal"
+        ]
       },
       "trait": {
         "label": "Offer to discuss coordination over drinks",
         "requiresTrait": "liver",
         "text": "The co-chairs agree to meet. The meeting acquires an unusually generous refreshments line.",
+        "textVariants": [
+          "The co-chairs agree to meet. The meeting gains an unusually generous refreshments line.",
+          "The co-chairs agree to a meeting. It acquires an unusually generous refreshments line.",
+          "The co-chairs agree to meet. Their meeting acquires an unusually generous refreshments line."
+        ],
         "effects": {
           "goodwill": 2,
           "sanity": -1
         },
         "formal": false,
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Suggest discussing coordination over drinks",
+          "Offer to talk coordination over drinks",
+          "Offer to discuss coordination with drinks"
+        ]
       }
     },
     "ignore": {
       "effects": {
         "confidence": -3
       },
-      "text": "The group is now co-chaired by a rival donor. Their first act is a welcome note."
+      "text": "The group is now co-chaired by a rival donor. Their first act is a welcome note.",
+      "textVariants": [
+        "A rival donor now co-chairs the group. Their first act is a welcome note.",
+        "The group is now co-chaired by a rival donor, whose first act is a welcome note.",
+        "A rival donor is now the group's co-chair. Their first act is a welcome note."
+      ]
     }
   },
   {
@@ -199,40 +385,80 @@
     "from": "Ministry of Foreign Affairs of Ombrazia",
     "subject": "Note Verbale No. 0/0/OM",
     "body": "The Ministry presents its compliments and requests that the Embassy resubmit its request in Format 7-C. (Format 7-C has been discontinued since the Format Reform of last Tuesday.)",
+    "bodyVariants": [
+      "The Ministry presents its compliments and asks the Embassy to resubmit its request in Format 7-C. (Format 7-C was discontinued in the Format Reform of last Tuesday.)",
+      "The Ministry presents its compliments and requests resubmission of the Embassy's request in Format 7-C. (Format 7-C has been discontinued since last Tuesday's Format Reform.)",
+      "The Ministry presents its compliments and asks that the Embassy resubmit its request using Format 7-C. (Format 7-C was discontinued in last Tuesday's Format Reform.)"
+    ],
     "options": {
       "reply": {
         "text": "You invent Format 7-C. The Ministry is impressed and adopts it.",
+        "textVariants": [
+          "You invent Format 7-C. The Ministry is impressed, and adopts it.",
+          "You invent Format 7-C. Impressed, the Ministry adopts it.",
+          "You invent Format 7-C. The impressed Ministry adopts it."
+        ],
         "effects": {
           "goodwill": 8,
           "sanity": -3
         },
         "formal": true,
         "confirmsStep": "clearance.note-verbale",
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Invent the discontinued format, then resubmit",
+          "Recreate the discontinued format and resubmit",
+          "Make up the discontinued format and resubmit"
+        ]
       },
       "delegate": {
         "text": "Sola Dewrin knows the stamp order. It works. Nobody asks how.",
+        "textVariants": [
+          "Sola Dewrin knows the stamp order. It works. No one asks how.",
+          "Sola Dewrin knows the order of the stamps. It works. Nobody asks how.",
+          "Sola Dewrin knows the stamp order. It works. No one asks how it works."
+        ],
         "effects": {
           "goodwill": 6,
           "morale": 2
         },
         "confirmsStep": "clearance.note-verbale",
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Have Sola handle the paperwork",
+          "Ask Sola to deal with the paperwork",
+          "Have Sola take care of the paperwork"
+        ]
       },
       "forward": {
         "text": "The Capital replies in Format 7-B. Diplomatic silence follows.",
+        "textVariants": [
+          "The Capital replies using Format 7-B. Diplomatic silence follows.",
+          "The Capital responds in Format 7-B. Diplomatic silence follows.",
+          "The Capital's reply is in Format 7-B. Diplomatic silence follows."
+        ],
         "effects": {
           "goodwill": -6
         },
         "formal": true,
-        "counts": ["capital"]
+        "counts": ["capital"],
+        "labelVariants": [
+          "Ask Capital to send the form",
+          "Request that Capital submit the form",
+          "Have Capital submit the form"
+        ]
       }
     },
     "ignore": {
       "effects": {
         "goodwill": -10
       },
-      "text": "Your request is filed under 'Day of the Founding Mango'. Indefinitely."
+      "text": "Your request is filed under 'Day of the Founding Mango'. Indefinitely.",
+      "textVariants": [
+        "Your request is filed under “Day of the Founding Mango”. Indefinitely.",
+        "Your request is filed indefinitely under “Day of the Founding Mango”.",
+        "Under “Day of the Founding Mango”, your request is filed. Indefinitely."
+      ]
     }
   },
   {
@@ -242,37 +468,77 @@
     "from": "Ambassador of Valdoria",
     "subject": "Light lunch?",
     "body": "Dear colleague, a light lunch tomorrow? Just a few courses and some informal exchange of views. 12:30 until we lose consciousness.",
+    "bodyVariants": [
+      "Dear colleague, shall we exchange views over lunch tomorrow? I know a good place for a few courses. From 12:30 until we lose consciousness.",
+      "Dear colleague, lunch tomorrow? A few courses might help the informal exchange of views along. Let us start at 12:30 and stop when we lose consciousness.",
+      "Dear colleague, let us meet tomorrow for an informal exchange of views and a few courses. 12:30 until consciousness departs."
+    ],
     "options": {
       "reply": {
         "text": "Six hours. Eleven courses. One genuinely useful rumour.",
+        "textVariants": [
+          "Six hours. Eleven courses. One useful rumour, genuinely.",
+          "Six hours. Eleven courses. One rumour that is genuinely useful.",
+          "Six hours, eleven courses and one genuinely useful rumour."
+        ],
         "effects": {
           "goodwill": 4,
           "confidence": 4,
           "sanity": -6
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Accept the invitation to lunch",
+          "Say yes to the lunch invitation",
+          "Accept the invitation for lunch"
+        ]
       },
       "delegate": {
         "text": "Colonel Montefiore attends with a tank model. Valdoria is confused.",
+        "textVariants": [
+          "Colonel Montefiore attends with a model tank. Valdoria is confused.",
+          "Colonel Montefiore brings a tank model. Valdoria is confused.",
+          "Colonel Montefiore attends, tank model in hand. Valdoria is confused."
+        ],
         "effects": {
           "goodwill": -2,
           "morale": 3
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Send Colonel Montefiore in",
+          "Let Colonel Montefiore go",
+          "Send Colonel Montefiore off"
+        ]
       },
       "note": {
         "text": "You decline graciously. Valdoria seats you near the coat rack forever.",
+        "textVariants": [
+          "You graciously decline. Valdoria seats you near the coat rack forever.",
+          "You decline graciously. Forever after, Valdoria seats you near the coat rack.",
+          "You decline graciously. Valdoria seats you by the coat rack forever."
+        ],
         "effects": {
           "goodwill": -3
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Turn down the invitation",
+          "Decline that invitation",
+          "Refuse the invitation"
+        ]
       }
     },
     "ignore": {
       "effects": {
         "goodwill": -5
       },
-      "text": "Valdoria tells everyone you are 'very busy'. It is not a compliment."
+      "text": "Valdoria tells everyone you are 'very busy'. It is not a compliment.",
+      "textVariants": [
+        "Valdoria tells everyone you are “very busy”. This is not a compliment.",
+        "Valdoria tells everyone you are “very busy”. That is not a compliment.",
+        "You are “very busy”, Valdoria tells everyone. It is not a compliment."
+      ]
     }
   },
   {
@@ -282,35 +548,75 @@
     "from": "Staff Committee",
     "subject": "Re: Re: Re: The cheese",
     "body": "Colleagues have opinions about the cheese in the kitchen fridge. Some say it is a strategic asset. Some say it is alive. Please advise.",
+    "bodyVariants": [
+      "Colleagues have views on the cheese in the kitchen fridge. Some call it a strategic asset. Others say it is alive. Please advise.",
+      "Colleagues have opinions on the cheese in the kitchen fridge. Some say it is alive. Others call it a strategic asset. Please advise.",
+      "Regarding the cheese in the kitchen fridge, colleagues have opinions. Some say it is a strategic asset, others that it is alive. Please advise."
+    ],
     "options": {
       "reply": {
         "text": "You declare it part of the Strategic Cheese Reserve. Morale is oddly lifted.",
+        "textVariants": [
+          "You declare it part of the Strategic Cheese Reserve. Morale lifts oddly.",
+          "You declare it part of the Strategic Cheese Reserve. Morale is oddly improved.",
+          "You declare it part of the Strategic Cheese Reserve. Morale rises, oddly."
+        ],
         "effects": {
           "morale": 8
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Make an executive decision on the cheese",
+          "Take an executive decision about the cheese",
+          "Decide about the cheese as an executive"
+        ]
       },
       "replyall": {
         "text": "Your reply-all becomes a 90-message thread titled 'Cheesegate'.",
+        "textVariants": [
+          "Your reply-all becomes a 90-message thread named “Cheesegate”.",
+          "Your reply-all turns into a 90-message thread titled “Cheesegate”.",
+          "Your reply-all becomes a 90-message thread called “Cheesegate”."
+        ],
         "effects": {
           "morale": -4,
           "sanity": -6
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Reply to the whole staff thread",
+          "Answer the entire staff thread",
+          "Respond to the entire staff thread"
+        ]
       },
       "note": {
         "text": "Noted. The cheese continues its independent existence.",
+        "textVariants": [
+          "Noted. The cheese carries on its independent existence.",
+          "Noted. The cheese continues to exist independently.",
+          "Noted. The cheese continues its existence independently."
+        ],
         "effects": {
           "morale": -2
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Leave the question of cheese unresolved",
+          "Leave the cheese issue unresolved",
+          "Let the cheese question remain unresolved"
+        ]
       }
     },
     "ignore": {
       "effects": {
         "morale": -6
       },
-      "text": "Someone throws the cheese away. A strike is called."
+      "text": "Someone throws the cheese away. A strike is called.",
+      "textVariants": [
+        "Someone discards the cheese. A strike is called.",
+        "The cheese is thrown away. A strike is called.",
+        "Someone throws out the cheese. A strike is called."
+      ]
     }
   },
   {
@@ -320,37 +626,77 @@
     "from": "Consular Section — Ines Thibault-Lund",
     "subject": "The queue",
     "body": "The queue is now 400 people. My spreadsheet predicts a waiting time of 'yes'. Can I open the second window? It requires a signature from someone who is on consultations.",
+    "bodyVariants": [
+      "The queue has reached 400 people. My spreadsheet predicts a wait of “yes”. May I open the second window? It needs a signature from someone who is on consultations.",
+      "There are now 400 people in the queue. My spreadsheet predicts a waiting time of “yes”. Can I open the second window? It requires the signature of someone on consultations.",
+      "The queue is now 400 people long. My spreadsheet predicts “yes” for the waiting time. Can I open the second window? A signature is required from someone on consultations."
+    ],
     "options": {
       "reply": {
         "text": "You sign as Chargé d'Affaires. The queue moves. Locals applaud the efficiency.",
+        "textVariants": [
+          "You sign as Chargé d'Affaires. The queue moves. Locals applaud your efficiency.",
+          "You sign as Chargé d'Affaires. The queue moves, and locals applaud the efficiency.",
+          "Signing as Chargé d'Affaires moves the queue. Locals applaud the efficiency."
+        ],
         "effects": {
           "goodwill": 6,
           "budget": -4
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Sign to open window number two",
+          "Sign for the second window to open",
+          "Sign so the second window can open"
+        ]
       },
       "forward": {
         "text": "The Capital asks for a study on window demand.",
+        "textVariants": [
+          "The Capital requests a study on window demand.",
+          "The Capital asks for a study of window demand.",
+          "The Capital asks for a window-demand study."
+        ],
         "effects": {
           "goodwill": -6,
           "morale": -4
         },
-        "counts": ["capital"]
+        "counts": ["capital"],
+        "labelVariants": [
+          "Seek Capital’s guidance",
+          "Ask for Capital’s advice",
+          "Seek guidance from Capital"
+        ]
       },
       "delegate": {
         "text": "Intern Maxim reads the manual aloud to the queue. It does not help.",
+        "textVariants": [
+          "Intern Maxim reads the manual to the queue aloud. It does not help.",
+          "Intern Maxim reads the manual aloud to those in the queue. It does not help.",
+          "Intern Maxim reads the queue the manual aloud. It does not help."
+        ],
         "effects": {
           "goodwill": -2,
           "morale": 2
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Have Maxim handle the queue",
+          "Ask Maxim to manage the queue",
+          "Have Maxim take care of the queue"
+        ]
       }
     },
     "ignore": {
       "effects": {
         "goodwill": -8
       },
-      "text": "The queue forms its own National Dialogue."
+      "text": "The queue forms its own National Dialogue.",
+      "textVariants": [
+        "The queue forms a National Dialogue of its own.",
+        "The queue forms its own National Dialogue instead.",
+        "The queue sets up its own National Dialogue."
+      ]
     }
   },
   {
@@ -360,37 +706,77 @@
     "from": "Press Office",
     "subject": "Chirp (already posted)",
     "body": "Just to inform you I've chirped on Chirper that Bellaluxe 'stands shoulder to shoulder with the people of Ombrazia's volcano'. Checking it now.",
+    "bodyVariants": [
+      "Just to inform you, I've chirped on Chirper that Bellaluxe “stands shoulder to shoulder with the people of Ombrazia's volcano”. Checking it now.",
+      "Just so you know, I've chirped on Chirper that Bellaluxe “stands shoulder to shoulder with the people of Ombrazia's volcano”. Checking it now.",
+      "I've just chirped on Chirper that Bellaluxe “stands shoulder to shoulder with the people of Ombrazia's volcano”, to keep you informed. Checking it now."
+    ],
     "options": {
       "reply": {
         "text": "You request deletion. Screenshots already exist. They always do. Capital notes the request.",
+        "textVariants": [
+          "You request deletion. Screenshots already exist. They always do. Capital notes your request.",
+          "You request deletion. Screenshots already exist, as always. Capital notes the request.",
+          "You request deletion. There are already screenshots. There always are. Capital notes the request."
+        ],
         "effects": {
           "goodwill": -2,
           "confidence": 2
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Request deletion of the post",
+          "Ask for the post to be deleted",
+          "Request the deletion of the post"
+        ]
       },
       "note": {
         "text": "You let it stand. The volcano's fan account rechirps it.",
+        "textVariants": [
+          "You leave it standing. The volcano's fan account rechirps it.",
+          "You let it stand. The fan account for the volcano rechirps it.",
+          "You let it stand. The volcano's fan account sends a rechirp."
+        ],
         "effects": {
           "goodwill": 3,
           "confidence": -3
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Keep the post in place",
+          "Keep the post as it is",
+          "Leave the post where it is"
+        ]
       },
       "forward": {
         "text": "The Capital drafts a clarification of the clarification.",
+        "textVariants": [
+          "The Capital drafts a clarification to the clarification.",
+          "The Capital drafts a clarification of its clarification.",
+          "The Capital drafts a clarification of the clarification itself."
+        ],
         "effects": {
           "confidence": -2,
           "sanity": -4
         },
-        "counts": ["capital"]
+        "counts": ["capital"],
+        "labelVariants": [
+          "Seek a Capital clarification",
+          "Request a clarification from Capital",
+          "Ask Capital to issue a clarification"
+        ]
       }
     },
     "ignore": {
       "effects": {
         "goodwill": -4
       },
-      "text": "The chirp trends. For the wrong reasons."
+      "text": "The chirp trends. For the wrong reasons.",
+      "textVariants": [
+        "The chirp is trending. For the wrong reasons.",
+        "The chirp trends, for all the wrong reasons.",
+        "The chirp trends, and for the wrong reasons."
+      ]
     }
   },
   {
@@ -400,36 +786,72 @@
     "from": "Capital — Protocol",
     "subject": "Ministerial Visit (Day 15)",
     "body": "The Minister arrives on Day 15. Please confirm the Ambassador will greet her personally. You will confirm this. The Ambassador is where, exactly?",
+    "bodyVariants": [
+      "The Minister arrives on Day 15. Please confirm that the Ambassador will greet her personally. You will confirm this. Where, exactly, is the Ambassador?",
+      "On Day 15 the Minister arrives. Please confirm the Ambassador will greet her personally. You will confirm this. Where exactly is the Ambassador?",
+      "The Minister arrives on Day 15. Please confirm the Ambassador will personally greet her. You will confirm this. Where is the Ambassador, exactly?"
+    ],
     "options": {
       "reply": {
         "text": "'The Ambassador is on consultations.' Technically true. Deniability holds.",
+        "textVariants": [
+          "“The Ambassador is on consultations.” Technically true. Deniability holds.",
+          "“The Ambassador is on consultations.” True technically. Deniability holds.",
+          "“The Ambassador is on consultations.” Technically true. The deniability holds."
+        ],
         "effects": {
           "confidence": 4,
           "sanity": -4
         },
         "formal": true,
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "Explain why the Ambassador is absent",
+          "Explain the absence of the Ambassador",
+          "Explain the Ambassador’s absence"
+        ]
       },
       "delegate": {
         "text": "Anselm replies. He mentions you 'are coping, considering'.",
+        "textVariants": [
+          "Anselm replies, mentioning you “are coping, considering”.",
+          "Anselm replies, mentioning that you “are coping, considering”.",
+          "Anselm replies. He says you “are coping, considering”."
+        ],
         "effects": {
           "confidence": -8
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": ["Have Anselm reply", "Ask Anselm to respond", "Have Anselm answer"]
       },
       "note": {
         "text": "You take note. The Capital takes notice.",
+        "textVariants": [
+          "You take note. The Capital notices.",
+          "You take note. The Capital takes due notice.",
+          "You take note; the Capital takes notice."
+        ],
         "effects": {
           "confidence": -5
         },
-        "counts": ["formal"]
+        "counts": ["formal"],
+        "labelVariants": [
+          "File the request without a reply",
+          "File the request without responding",
+          "File the request, unanswered"
+        ]
       }
     },
     "ignore": {
       "effects": {
         "confidence": -14
       },
-      "text": "The Capital assumes the worst. Correctly."
+      "text": "The Capital assumes the worst. Correctly.",
+      "textVariants": [
+        "The Capital assumes the worst. It is correct.",
+        "The Capital assumes the worst. It is right.",
+        "The Capital assumes the worst. Quite correctly."
+      ]
     }
   },
   {

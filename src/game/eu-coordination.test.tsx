@@ -1,3 +1,4 @@
+import { eventChoiceName } from "./event-choice-test-helper";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { PlaceScene } from "./components/PlaceScene";
@@ -53,11 +54,13 @@ describe("EU coordination", () => {
     },
   ])(
     "resolves the $choice choice and schedules its next-day follow-up",
-    ({ label, choice, contact, trust, followup }) => {
+    ({ choice, contact, trust, followup }) => {
       render(<PlaceScene onLeave={() => {}} />);
       fireEvent.click(screen.getByRole("button", { name: /follow up: the 17.6% meeting/i }));
       expect(screen.getByText(/Multiannual Financial Framework/)).toHaveTextContent("17.6%");
-      fireEvent.click(screen.getByRole("button", { name: label }));
+      fireEvent.click(
+        screen.getByRole("button", { name: eventChoiceName("eu-budget-share-meeting", choice) }),
+      );
       expect(useGame.getState().storyOutcomes["eu-budget-share-meeting"]).toBeUndefined();
       expect(
         useGame.getState().pending.find((item) => item.eventId === "eu-budget-share-meeting")

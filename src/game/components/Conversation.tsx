@@ -2,13 +2,14 @@ import { eligible, gateLabel, needsInterpreter, withInterpreter } from "../chara
 import { computeStats } from "../rules";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { campaign, type StoryChoice } from "../rules";
+import { campaign } from "../rules";
 import { moodOpener, pickTopic, splitEffects, type TalkChoice } from "../dialogues";
 import { useGame } from "../store";
 import { capacityLedger, staffDuty, STAFF_DP } from "../economy";
 import { Portrait } from "./Portrait";
 import { REPUTATIONS } from "../personnel";
 import { relationshipState } from "../relationships";
+import { textVariant } from "../text-variants";
 
 /** Adventure-style dialogue box; each character raises their own topics. */
 export function Conversation() {
@@ -31,7 +32,7 @@ export function Conversation() {
     ...g.pending.flatMap((p) => (p.dialogueTopic ? [p.dialogueTopic] : [])),
   ];
   const topic = pickTopic(npc.id, g.day, g.block, done);
-  const generic = campaign().dialogue as Record<string, { text: string; choices: StoryChoice[] }>;
+  const generic = campaign().dialogue;
   const current = topic ? topic.nodes[node || topic.start] : generic[node || "opening"];
   if (!current) return null;
   const trust = g.colleagues[npc.id]?.trust ?? 50;
@@ -51,8 +52,19 @@ export function Conversation() {
     .find(Boolean);
   const text =
     (isStart ? (greeting ?? reputationGreeting ?? moodOpener(trust, npc.traits)) : "") +
-    current.text.replace("{line}", npc.line);
+    textVariant(
+      current.text,
+      current.variants,
+      g.seed,
+      `dialogue:${npc.id}:${topic?.id ?? "general"}:${node || topic?.start || "opening"}`,
+    ).replace("{line}", npc.line);
+  const choiceKey = (choice: TalkChoice) =>
+    `dialogue:${npc.id}:${topic?.id ?? "general"}:${node || topic?.start || "opening"}:choice:${current.choices.indexOf(choice as never)}`;
   const choose = (choice: TalkChoice) => {
+    const result =
+      choice.result === undefined
+        ? undefined
+        : textVariant(choice.result, choice.resultVariants, g.seed, `${choiceKey(choice)}:result`);
     if (choice.next) {
       setNode(choice.next);
       return;
@@ -64,7 +76,7 @@ export function Conversation() {
       timeCost: 1,
       cashCost: cash || undefined,
       source: `Conversation with ${npc.name}`,
-      text: choice.result ?? "Conversation completed.",
+      text: result ?? "Conversation completed.",
       effects: meters,
       worker: npc.id,
       overload,
@@ -91,7 +103,7 @@ export function Conversation() {
     });
     setNotice(
       ok
-        ? `${choice.result ?? "Agreed."} (Takes effect at the end of this block.)`
+        ? `${result ?? "Agreed."} (Takes effect at the end of this block.)`
         : useGame.getState().planError,
     );
   };
@@ -282,7 +294,7 @@ export function Conversation() {
                   onClick={() => choose(c as TalkChoice)}
                 >
                   ▸ {gateLabel(c)}
-                  {c.label}
+                  {textVariant(c.label, c.labelVariants, g.seed, `${choiceKey(c)}:label`)}
                   {c.requiresLanguage &&
                   !interpreter &&
                   (g.character?.languages?.[c.requiresLanguage.language] ?? 0) <

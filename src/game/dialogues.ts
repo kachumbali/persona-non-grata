@@ -4,8 +4,10 @@ import { relationshipState } from "./relationships";
 
 export interface TalkChoice extends ChoiceGate {
   label: string;
+  labelVariants?: string[];
   next?: string;
   result?: string;
+  resultVariants?: string[];
   trust?: number;
   pair?: number;
   pairTarget?: string;
@@ -20,6 +22,7 @@ export interface TalkChoice extends ChoiceGate {
 }
 export interface TalkNode {
   text: string;
+  variants?: string[];
   choices: TalkChoice[];
 }
 export interface Topic {

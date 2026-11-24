@@ -1,5 +1,7 @@
 # Embassy view
 
+- [ ] Day 1–3 pilot: complete and review deterministic variants across all dialogue and decision text (dialogue nodes, early story texts and mail are covered).
+
 - [x] Make morning press clippings funnier while preserving story clues and gameplay consequences.
 - [x] Explain the implemented morning press review in the posting briefing; show it as an email popup and retain it in BlockBerry Mail at every location and day.
 - [x] Chapter 1 / WP1b: enforce per-person time costs, baseline duties and atomic plan changes.

@@ -1,3 +1,4 @@
+import { eventChoiceName } from "./event-choice-test-helper";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { PlaceScene } from "./components/PlaceScene";
@@ -31,14 +32,16 @@ describe("clean-port coordination", () => {
     { choice: "decline", label: /Decline the contribution/, cost: 0, trust: 50 },
   ])(
     "commits real resources and unlocks only the matching host response for $choice",
-    ({ choice, label, cost, trust }) => {
+    ({ choice, cost, trust }) => {
       render(<PlaceScene onLeave={() => {}} />);
       openPort();
       expect(
         screen.getByText(/Development programme and partner coordination/),
       ).toBeInTheDocument();
       if (cost) fireEvent.click(screen.getByLabelText(/Allow displaced routine work/));
-      fireEvent.click(screen.getByRole("button", { name: label }));
+      fireEvent.click(
+        screen.getByRole("button", { name: eventChoiceName("eu-clean-port", choice) }),
+      );
       const pending = useGame.getState().pending.find((item) => item.eventId === "eu-clean-port");
       expect(pending).toMatchObject({
         eventChoice: choice,
@@ -62,7 +65,9 @@ describe("clean-port coordination", () => {
   it("requires authorisation for displaced work and keeps an existing plan when funds are insufficient", () => {
     render(<PlaceScene onLeave={() => {}} />);
     openPort();
-    fireEvent.click(screen.getByRole("button", { name: /Negotiate shared credit/ }));
+    fireEvent.click(
+      screen.getByRole("button", { name: eventChoiceName("eu-clean-port", "shared") }),
+    );
     expect(screen.getByText(/Allow displaced routine work’ to take/)).toBeInTheDocument();
     expect(useGame.getState().pending).toHaveLength(0);
     fireEvent.click(screen.getByLabelText(/Allow displaced routine work/));
@@ -79,7 +84,9 @@ describe("clean-port coordination", () => {
         economy: { ...useGame.getState().economy, funds: useGame.getState().economy.ringFence },
       });
     });
-    fireEvent.click(screen.getByRole("button", { name: /Negotiate shared credit/ }));
+    fireEvent.click(
+      screen.getByRole("button", { name: eventChoiceName("eu-clean-port", "shared") }),
+    );
     expect(screen.getByText(/Insufficient discretionary funds/)).toBeInTheDocument();
     expect(useGame.getState().pending.map((item) => item.id)).toEqual(["prior"]);
   });

@@ -574,26 +574,51 @@
   "dialogue": {
     "opening": {
       "text": "{line} What do you want to discuss?",
+      "variants": [
+        "{line} What would you like to discuss?",
+        "{line} What do you wish to discuss?",
+        "{line} What shall we discuss?"
+      ],
       "choices": [
         {
           "id": "listen",
           "label": "How are things going, really?",
-          "next": "listen"
+          "next": "listen",
+          "labelVariants": [
+            "How’s everything really going?",
+            "How are things, honestly?",
+            "How are things actually going?"
+          ]
         },
         {
           "id": "support",
           "label": "What would help you do your job?",
-          "next": "support"
+          "next": "support",
+          "labelVariants": [
+            "What would make your job easier?",
+            "What do you need to do your job?",
+            "How can I help you do your job?"
+          ]
         },
         {
           "id": "pressure",
           "label": "Capital expects results. No excuses.",
-          "next": "pressure"
+          "next": "pressure",
+          "labelVariants": [
+            "Capital wants results. No excuses.",
+            "Capital expects results, without excuses.",
+            "No excuses. Capital expects results."
+          ]
         }
       ]
     },
     "listen": {
       "text": "People will work with you if you notice what it costs them. Public credit would be a start.",
+      "variants": [
+        "People will work with you if you recognise what it costs them. Public credit would be a start.",
+        "Notice what work costs people and they will work with you. Public credit would be a start.",
+        "People will work with you if you acknowledge what it costs them. Start with public credit."
+      ],
       "choices": [
         {
           "id": "credit",
@@ -603,7 +628,17 @@
           },
           "trust": 6,
           "score": 2,
-          "result": "Your promise of public credit makes the team more willing to share information."
+          "result": "Your promise of public credit makes the team more willing to share information.",
+          "labelVariants": [
+            "The credit is yours. I’ll say so publicly.",
+            "I’ll back you in public and make sure you get credit.",
+            "You’ll get the credit. I’ll support you publicly."
+          ],
+          "resultVariants": [
+            "With public credit promised, the team is more inclined to share information.",
+            "Promising public credit makes the team readier to share what it knows.",
+            "The team is more willing to share information after you promise public credit."
+          ]
         },
         {
           "id": "dismiss",
@@ -613,12 +648,27 @@
           },
           "trust": -5,
           "score": 0,
-          "result": "The conversation ends politely. Cooperation becomes rather less enthusiastic."
+          "result": "The conversation ends politely. Cooperation becomes rather less enthusiastic.",
+          "labelVariants": [
+            "Let’s leave personal feelings out of it.",
+            "We can do this without getting personal.",
+            "Keep personal feelings out of the discussion."
+          ],
+          "resultVariants": [
+            "The conversation closes politely. People are a little less eager to cooperate.",
+            "You part on polite terms. The appetite for cooperation rather diminishes.",
+            "The conversation ends on a polite note. Cooperation loses some of its enthusiasm."
+          ]
         }
       ]
     },
     "support": {
       "text": "A clear brief, realistic time and no surprise overtime. Can you manage that?",
+      "variants": [
+        "A clear brief, realistic time and no surprise overtime. Is that manageable?",
+        "A clear brief, realistic time, no surprise overtime. Can you manage that?",
+        "We need a clear brief, realistic time and no surprise overtime. Can you manage that?"
+      ],
       "choices": [
         {
           "id": "protect",
@@ -628,7 +678,17 @@
           },
           "trust": 7,
           "score": 2,
-          "result": "Clear boundaries earn trust and reduce friction with the rest of the team."
+          "result": "Clear boundaries earn trust and reduce friction with the rest of the team.",
+          "labelVariants": [
+            "Agreed. Your time is protected.",
+            "All right. We’ll protect your time.",
+            "Done. We’ll safeguard your time."
+          ],
+          "resultVariants": [
+            "Firm boundaries build trust and smooth things over with the rest of the team.",
+            "With clear boundaries, you gain trust and ease friction with the rest of the team.",
+            "Clear boundaries win trust and ease tensions with the rest of the team."
+          ]
         },
         {
           "id": "deal",
@@ -638,12 +698,27 @@
           },
           "trust": 3,
           "score": 1,
-          "result": "A favour is accepted. It will not be forgotten."
+          "result": "A favour is accepted. It will not be forgotten.",
+          "labelVariants": [
+            "Help me now and I’ll owe you one.",
+            "Help me now. I owe you a favour.",
+            "Help now and I’ll owe you a favour."
+          ],
+          "resultVariants": [
+            "The favour is accepted. It won’t be forgotten.",
+            "They accept the favour and will remember it.",
+            "The favour is taken and duly remembered."
+          ]
         }
       ]
     },
     "pressure": {
       "text": "You can order compliance. You cannot order enthusiasm. Is that what you want?",
+      "variants": [
+        "You can order compliance, but not enthusiasm. Is that what you want?",
+        "You can order compliance. Enthusiasm cannot be ordered. Is that what you want?",
+        "Compliance can be ordered. Enthusiasm cannot. Is that what you want?"
+      ],
       "choices": [
         {
           "id": "apologise",
@@ -653,7 +728,17 @@
           },
           "trust": 2,
           "score": 1,
-          "result": "You step back from the threat and agree workable priorities."
+          "result": "You step back from the threat and agree workable priorities.",
+          "labelVariants": [
+            "Point taken. Let’s set priorities.",
+            "Fair enough. Let’s agree what comes first.",
+            "You’re right. Let’s agree priorities."
+          ],
+          "resultVariants": [
+            "You withdraw the threat and settle on workable priorities.",
+            "You ease off the threat and agree on priorities you can work with.",
+            "You drop the threat. Together you agree workable priorities."
+          ]
         },
         {
           "id": "insist",
@@ -663,7 +748,17 @@
           },
           "trust": -9,
           "score": 0,
-          "result": "The instruction is accepted. Trust and cooperation suffer."
+          "result": "The instruction is accepted. Trust and cooperation suffer.",
+          "labelVariants": [
+            "Yes. Get it ready or you’ll answer to HQ.",
+            "Yes. Have it ready or account for it to HQ.",
+            "Yes. Get it ready or explain yourself at HQ."
+          ],
+          "resultVariants": [
+            "They agree to the instruction. Trust and cooperation decline.",
+            "The instruction is accepted, with damage to trust and cooperation.",
+            "They accept the instruction. Trust and cooperation take a hit."
+          ]
         }
       ]
     }
@@ -676,6 +771,11 @@
       "location": "eu",
       "minDay": 1,
       "text": "Celeste opens the EU coordination meeting. Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework; your colleague has brought a stopwatch to claim 17.6% of the speaking time, biscuits and credit. Tanya says Cyprus and Luxembourg have authorised her to present their briefs. France wants to reach the ministry before it closes. Klaus has put the stopwatch in an annex.",
+      "variants": [
+        "Celeste opens the EU coordination meeting. Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework; your colleague brought a stopwatch to claim 17.6% of speaking time, biscuits and credit. Tanya says Cyprus and Luxembourg authorised her to present their briefs. France wants to reach the ministry before it closes. Klaus put the stopwatch in an annex.",
+        "The EU coordination meeting opens with Celeste. Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework; your colleague brought a stopwatch to claim 17.6% of the speaking time, biscuits and credit. Tanya says Cyprus and Luxembourg authorised her to present their briefs. France wants to reach the ministry before closing. Klaus has put the stopwatch in an annex.",
+        "Celeste opens the EU coordination meeting. Your colleague has a stopwatch to claim 17.6% of speaking time, biscuits and credit, matching Bellaluxe's 17.6% contribution to the EU's Multiannual Financial Framework. Tanya says Cyprus and Luxembourg authorised her to present their briefs. France wants to reach the ministry before it closes. Klaus has put the stopwatch in an annex."
+      ],
       "choices": [
         {
           "id": "claim",
@@ -687,7 +787,17 @@
           "contact": "eu-malta",
           "contactTrust": -3,
           "result": "Your colleague starts the stopwatch. Tanya's Cyprus and Luxembourg briefs are postponed until after the biscuits. Capital appreciates the visible arithmetic.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Claim Bellaluxe’s 17.6% share of floor time and biscuits",
+            "Demand 17.6% of the speaking time and biscuits for Bellaluxe",
+            "Reserve 17.6% of the floor time and biscuits for Bellaluxe"
+          ],
+          "resultVariants": [
+            "Your colleague starts the clock. Tanya’s Cyprus and Luxembourg briefs will have to wait until after the biscuits. Capital is pleased to see the arithmetic at work.",
+            "The stopwatch starts in your colleague’s hands. Tanya’s briefs for Cyprus and Luxembourg move to after the biscuits. Capital approves of the conspicuous arithmetic.",
+            "Your colleague sets the stopwatch running. The biscuits go ahead of Tanya’s Cyprus and Luxembourg briefs. Capital welcomes a calculation it can see."
+          ]
         },
         {
           "id": "share",
@@ -699,7 +809,17 @@
           "contact": "eu-malta",
           "contactTrust": 4,
           "result": "Tanya presents all three briefs. Celeste calls it Team Europe; the stopwatch records 17.6% of a very patient silence.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Give Tanya the floor for Malta’s, Cyprus’s and Luxembourg’s views",
+            "Set aside time for Tanya to voice Malta’s, Cyprus’s and Luxembourg’s views",
+            "Let Tanya present the views of Malta, Cyprus and Luxembourg"
+          ],
+          "resultVariants": [
+            "Tanya delivers all three briefs. Celeste calls it Team Europe, and the stopwatch duly logs 17.6% of a remarkably patient silence.",
+            "All three briefs get an airing from Tanya. Celeste says Team Europe. The stopwatch gives the very patient silence a figure of 17.6%.",
+            "Tanya gives all three briefs. Celeste calls it Team Europe. The stopwatch measures 17.6% of an impressively patient silence."
+          ]
         },
         {
           "id": "reform",
@@ -711,7 +831,17 @@
           "contact": "eu-germany",
           "contactTrust": 2,
           "result": "Klaus agrees to an equal first round, subject to a one-page annex. Henri gets to the ministry before it closes.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Suggest equal speaking time to start, with the budget to follow",
+            "Offer everyone the same opening slot before discussing the budget",
+            "Put equal speaking time first and the budget discussion second"
+          ],
+          "resultVariants": [
+            "Klaus accepts equal time in the opening round, provided there is a one-page annex. Henri reaches the ministry before closing.",
+            "An equal first round is fine by Klaus, given a one-page annex. Henri makes it to the ministry while it is still open.",
+            "Klaus signs off on an equal opening round on condition of a one-page annex. Henri arrives at the ministry before it shuts."
+          ]
         },
         {
           "id": "trait-liver",
@@ -723,7 +853,17 @@
             "sanity": -1
           },
           "trust": 1,
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Suggest toasting the budget share",
+            "Call for a toast to the budget share",
+            "Raise the idea of a budget-share toast"
+          ],
+          "resultVariants": [
+            "Celeste agrees to the toast. For the moment, the stopwatch serves as a coaster.",
+            "Celeste approves the toast, and the stopwatch spends the occasion acting as a coaster.",
+            "Celeste is happy to toast. The stopwatch does a brief stint as a coaster."
+          ]
         },
         {
           "label": "Cite The Biscuit Hawk",
@@ -736,7 +876,17 @@
           "result": "The Biscuit Hawk is entered in the margin of the decision.",
           "counts": ["team"],
           "id": "reputation-biscuit-hawk",
-          "requiresReputation": "biscuit-hawk"
+          "requiresReputation": "biscuit-hawk",
+          "labelVariants": [
+            "Invoke The Biscuit Hawk",
+            "Mention The Biscuit Hawk",
+            "Name The Biscuit Hawk"
+          ],
+          "resultVariants": [
+            "The margin of the decision now records The Biscuit Hawk.",
+            "The decision gains a marginal entry for The Biscuit Hawk.",
+            "The Biscuit Hawk goes into the decision’s margin."
+          ]
         }
       ]
     },
@@ -751,6 +901,11 @@
         "choiceId": "claim"
       },
       "text": "Cyprus's authorised position was left out after Bellaluxe's stopwatch expired, she says. The statement is still a draft, but the biscuits are not.",
+      "variants": [
+        "She says Cyprus's authorised position was omitted after Bellaluxe's stopwatch expired. The statement is still a draft, but the biscuits are not.",
+        "After Bellaluxe's stopwatch expired, Cyprus's authorised position was left out, she says. The statement is still a draft; the biscuits are not.",
+        "Cyprus's authorised position, she says, was left out when Bellaluxe's stopwatch expired. The statement remains a draft, but the biscuits do not."
+      ],
       "choices": [
         {
           "id": "amend",
@@ -760,7 +915,17 @@
           },
           "trust": 3,
           "result": "Tanya supplies the authorised paragraph and Celeste amends the draft. Capital asks whether the correction used any of its speaking time.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Have Celeste insert the Cyprus paragraph",
+            "Ask Celeste to put in the Cyprus paragraph",
+            "Request that Celeste add the Cyprus paragraph"
+          ],
+          "resultVariants": [
+            "Tanya hands over the authorised paragraph and Celeste inserts it in the draft. Capital asks if any of its speaking time went on the correction.",
+            "Celeste revises the draft with Tanya’s authorised paragraph. Capital wants to know whether the correction came out of its speaking time.",
+            "Tanya provides the authorised paragraph and Celeste updates the draft. Capital enquires whether any of its speaking time was spent on the correction."
+          ]
         },
         {
           "id": "leave",
@@ -770,7 +935,17 @@
           },
           "trust": -2,
           "result": "The draft goes forward without Cyprus's paragraph. Tanya promises to bring a larger stopwatch.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Keep the draft as it stands",
+            "Let the draft stand as is",
+            "Leave the draft untouched"
+          ],
+          "resultVariants": [
+            "The draft moves ahead with the Cyprus paragraph still missing. Tanya promises to bring a bigger stopwatch.",
+            "The draft proceeds without the paragraph for Cyprus. Tanya promises she will bring a larger stopwatch.",
+            "Cyprus’s paragraph stays out of the draft as it goes forward. Tanya promises to turn up with a bigger stopwatch."
+          ]
         },
         {
           "label": "Cite Celeste’s Favourite",
@@ -781,7 +956,17 @@
           "result": "Celeste’s Favourite is entered in the margin of the decision.",
           "counts": ["credit"],
           "id": "reputation-team-europe",
-          "requiresReputation": "team-europe"
+          "requiresReputation": "team-europe",
+          "labelVariants": [
+            "Invoke Celeste’s Favourite",
+            "Mention Celeste’s Favourite",
+            "Name Celeste’s Favourite"
+          ],
+          "resultVariants": [
+            "The margin of the decision now records Celeste’s Favourite.",
+            "The decision gains a marginal entry for Celeste’s Favourite.",
+            "Celeste’s Favourite goes into the decision’s margin."
+          ]
         }
       ]
     },
@@ -796,6 +981,11 @@
         "choiceId": "share"
       },
       "text": "Tanya thanks you for giving Malta, Cyprus and Luxembourg time to speak. Cyprus has now authorised a concise amendment; the host's protocol desk says it can accept it before lunch.",
+      "variants": [
+        "Tanya thanks you for giving Malta, Cyprus and Luxembourg speaking time. Cyprus has authorised a concise amendment; the host's protocol desk can accept it before lunch.",
+        "Tanya thanks you for letting Malta, Cyprus and Luxembourg speak. Cyprus has now authorised a concise amendment; the host's protocol desk says it can accept it before lunch.",
+        "For giving Malta, Cyprus and Luxembourg time to speak, Tanya thanks you. Cyprus has authorised a concise amendment; the host's protocol desk says it can accept it before lunch."
+      ],
       "choices": [
         {
           "id": "support",
@@ -805,7 +995,17 @@
           },
           "trust": 3,
           "result": "The amendment reaches the host desk. Both missions receive credit; Celeste asks whether the cover page can say Team Europe.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Back the authorised amendment",
+            "Stand by the authorised amendment",
+            "Get behind the authorised amendment"
+          ],
+          "resultVariants": [
+            "The host desk gets the amendment and both missions get credit. Celeste asks if Team Europe can go on the cover page.",
+            "The amendment lands on the host desk with credit for both missions. Celeste would like to know if the cover page can say Team Europe.",
+            "The host desk receives the amendment. Both missions get a share of the credit. Celeste asks about putting Team Europe on the cover page."
+          ]
         },
         {
           "id": "defer",
@@ -815,7 +1015,17 @@
           },
           "trust": -1,
           "result": "Capital receives the amendment for review. Tanya points out that lunch was the deadline, not a suggestion.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Wait until Bellaluxe has consulted Capital",
+            "Put it off until Bellaluxe can check with Capital",
+            "Hold it pending Bellaluxe’s check with Capital"
+          ],
+          "resultVariants": [
+            "The amendment goes to Capital for review. Tanya observes that lunch was a deadline, however casually it was received.",
+            "Capital gets the amendment to review. Tanya reminds you that lunch was a deadline and should have been treated as one.",
+            "Capital is sent the amendment for review. Tanya points out that the lunch deadline was meant to be taken literally."
+          ]
         },
         {
           "label": "Cite Known to Fax",
@@ -826,7 +1036,13 @@
           "result": "Known to Fax is entered in the margin of the decision.",
           "counts": ["team"],
           "id": "reputation-known-to-fax",
-          "requiresReputation": "known-to-fax"
+          "requiresReputation": "known-to-fax",
+          "labelVariants": ["Invoke Known to Fax", "Mention Known to Fax", "Name Known to Fax"],
+          "resultVariants": [
+            "The margin of the decision now records Known to Fax.",
+            "The decision gains a marginal entry for Known to Fax.",
+            "Known to Fax goes into the decision’s margin."
+          ]
         }
       ]
     },
@@ -841,6 +1057,11 @@
         "choiceId": "reform"
       },
       "text": "Circulated by Klaus: the equal-time proposal is reduced to one page, plus an annex defining a page. Celeste asks whether Bellaluxe will endorse the rule before the next meeting.",
+      "variants": [
+        "Klaus circulates the equal-time proposal, reduced to one page plus an annex defining a page. Celeste asks if Bellaluxe will endorse the rule before the next meeting.",
+        "Circulated by Klaus: one page for the equal-time proposal, plus an annex defining a page. Celeste asks whether Bellaluxe will endorse the rule before the next meeting.",
+        "Klaus circulates the equal-time proposal: one page, with an annex defining a page. Celeste asks if Bellaluxe will endorse the rule before the next meeting."
+      ],
       "choices": [
         {
           "id": "endorse",
@@ -850,7 +1071,17 @@
           },
           "trust": 3,
           "result": "Klaus circulates the rule. Everyone gets a turn to object to the annex.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Back the equal opening round",
+            "Approve an equal first round",
+            "Support the equal first round"
+          ],
+          "resultVariants": [
+            "Klaus sends the rule around. Each person gets a turn to object to the annex.",
+            "The rule goes round from Klaus. Everyone has an opportunity to object to the annex.",
+            "Klaus circulates the rule, giving everyone a turn at objecting to the annex."
+          ]
         },
         {
           "id": "exception",
@@ -860,7 +1091,17 @@
           },
           "trust": -2,
           "result": "Klaus adds a second annex titled 'exception to equal time'. Capital asks for a copy.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Ask for Bellaluxe to get a 17.6% exception",
+            "Seek a 17.6% carve-out for Bellaluxe",
+            "Propose a 17.6% Bellaluxe exception"
+          ],
+          "resultVariants": [
+            "Klaus appends a second annex called “exception to equal time”. Capital requests a copy.",
+            "A second annex from Klaus bears the title “exception to equal time”. Capital asks for a copy.",
+            "Klaus adds “exception to equal time” as a second annex. Capital would like a copy."
+          ]
         },
         {
           "label": "Cite First Among Signatories",
@@ -871,7 +1112,17 @@
           "result": "First Among Signatories is entered in the margin of the decision.",
           "counts": ["credit"],
           "id": "reputation-credit-taker",
-          "requiresReputation": "credit-taker"
+          "requiresReputation": "credit-taker",
+          "labelVariants": [
+            "Invoke First Among Signatories",
+            "Mention First Among Signatories",
+            "Name First Among Signatories"
+          ],
+          "resultVariants": [
+            "The margin of the decision now records First Among Signatories.",
+            "The decision gains a marginal entry for First Among Signatories.",
+            "First Among Signatories goes into the decision’s margin."
+          ]
         }
       ]
     },
@@ -882,6 +1133,11 @@
       "location": "eu",
       "minDay": 2,
       "text": "Celeste proposes a Team Europe clean-port initiative: member states supply money and staff, while her draft announcement credits the EU Delegation. Ombrazia's port environment officer Mira Sene says collection routes and local crews matter more than a launch photograph. Germany's Klaus has offered safety advice; Bellaluxe must decide whether to contribute.",
+      "variants": [
+        "Celeste proposes a Team Europe clean-port initiative: member states provide money and staff, while her draft announcement credits the EU Delegation. Ombrazia's port environment officer Mira Sene says collection routes and local crews matter more than a launch photograph. Germany's Klaus offered safety advice; Bellaluxe must decide whether to contribute.",
+        "For a Team Europe clean-port initiative, Celeste proposes member states supply money and staff while her draft announcement credits the EU Delegation. Ombrazia's port environment officer Mira Sene says collection routes and local crews matter more than a launch photograph. Klaus of Germany offered safety advice; Bellaluxe must decide whether to contribute.",
+        "Celeste proposes a Team Europe clean-port initiative. Member states supply money and staff; her draft announcement credits the EU Delegation. Ombrazia's port environment officer Mira Sene values collection routes and local crews over a launch photograph. Germany's Klaus has offered safety advice; Bellaluxe must decide whether to contribute."
+      ],
       "choices": [
         {
           "id": "accept",
@@ -900,7 +1156,17 @@
             "goodwill": 1
           },
           "result": "Elise and local crews plan collection; Bellaluxe pays ƒ200. Celeste announces the Delegation initiative. Capital asks where Bellaluxe appears.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Accept the Delegation-led announcement and pay to plan collection",
+            "Back a Delegation-led announcement and fund the collection planning",
+            "Let the Delegation lead the announcement and fund planning for collection"
+          ],
+          "resultVariants": [
+            "Elise plans collection with the local crews, at a cost of ƒ200 to Bellaluxe. Celeste announces the Delegation initiative. Capital asks where Bellaluxe is named.",
+            "The local crews and Elise plan collection, with Bellaluxe paying ƒ200. Celeste announces the Delegation initiative. Capital enquires where Bellaluxe appears.",
+            "Bellaluxe pays ƒ200 for Elise and the local crews to plan collection. Celeste announces it as a Delegation initiative. Capital asks where Bellaluxe appears."
+          ]
         },
         {
           "id": "national",
@@ -914,7 +1180,17 @@
             "confidence": 2
           },
           "result": "Elise prepares a ƒ100 Bellaluxe proposal. Celeste delays the joint announcement; Mira must wait for agreement before scheduling crews.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Make Bellaluxe branding a condition of contributing",
+            "Require Bellaluxe branding before making a contribution",
+            "Hold out for Bellaluxe branding before contributing"
+          ],
+          "resultVariants": [
+            "Elise draws up a ƒ100 Bellaluxe proposal. Celeste puts off the joint announcement, and Mira has to wait for agreement before she can schedule the crews.",
+            "A ƒ100 Bellaluxe proposal comes from Elise. Celeste postpones the joint announcement. Mira can schedule the crews once there is agreement.",
+            "Elise gets a ƒ100 Bellaluxe proposal ready. Celeste holds back the joint announcement, leaving Mira to wait for agreement before scheduling crews."
+          ]
         },
         {
           "id": "shared",
@@ -932,7 +1208,17 @@
             "goodwill": 2
           },
           "result": "Elise commits ƒ150 and agrees routes with Mira. The announcement names both Bellaluxe and the Delegation; Celeste wanted the larger logo and Capital wanted the first line.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Work out shared credit and a workable plan",
+            "Negotiate a work plan and credit for both sides",
+            "Negotiate shared credit and practical arrangements"
+          ],
+          "resultVariants": [
+            "Elise puts up ƒ150 and settles the routes with Mira. Bellaluxe and the Delegation both appear in the announcement. Celeste wanted the larger logo, and Capital wanted the first line.",
+            "Elise commits ƒ150 and agrees on routes with Mira. The announcement names the Delegation alongside Bellaluxe. The larger logo was Celeste’s aim, and the first line was Capital’s.",
+            "Mira and Elise agree on routes, and Elise commits ƒ150. The announcement gives credit to both the Delegation and Bellaluxe. Celeste had wanted the bigger logo and Capital the opening line."
+          ]
         },
         {
           "id": "decline",
@@ -940,7 +1226,17 @@
           "trust": -1,
           "effects": {},
           "result": "Bellaluxe keeps its funds and staff time. Celeste seeks another partner, and Mira has no Bellaluxe commitment to schedule.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Pass on the contribution and leave embassy resources free",
+            "Keep embassy resources available by declining the contribution",
+            "Turn down the contribution to keep embassy resources free"
+          ],
+          "resultVariants": [
+            "Bellaluxe retains its money and its staff time. Celeste looks for another partner, and Mira has no Bellaluxe commitment to put on the schedule.",
+            "Bellaluxe holds on to its funds and staff time. Celeste tries to find another partner. Mira has nothing from Bellaluxe to schedule.",
+            "The funds and staff time stay with Bellaluxe. Celeste seeks a different partner, and Mira has no pledge from Bellaluxe to schedule."
+          ]
         },
         {
           "favour": {
@@ -960,7 +1256,17 @@
           "result": "Capital’s Reliable Correspondent is entered in the margin of the decision.",
           "counts": ["capital"],
           "id": "reputation-capital-pleaser",
-          "requiresReputation": "capital-pleaser"
+          "requiresReputation": "capital-pleaser",
+          "labelVariants": [
+            "Invoke Capital’s Reliable Correspondent",
+            "Mention Capital’s Reliable Correspondent",
+            "Name Capital’s Reliable Correspondent"
+          ],
+          "resultVariants": [
+            "The margin of the decision now records Capital’s Reliable Correspondent.",
+            "The decision gains a marginal entry for Capital’s Reliable Correspondent.",
+            "Capital’s Reliable Correspondent goes into the decision’s margin."
+          ]
         }
       ]
     },
@@ -975,6 +1281,11 @@
         "choiceId": "accept"
       },
       "text": "Mira says the collection routes are ready, but the Delegation announcement does not name Bellaluxe. Local crews know Elise did the work; Capital knows only what appeared in the fax.",
+      "variants": [
+        "Mira says collection routes are ready, but the Delegation announcement omits Bellaluxe. Local crews know Elise did the work; Capital knows only what appeared in the fax.",
+        "The collection routes are ready, Mira says, but the Delegation announcement does not name Bellaluxe. Local crews know Elise did the work; Capital knows only what appeared in the fax.",
+        "Mira says the routes are ready for collection, but Bellaluxe is absent from the Delegation announcement. Local crews know Elise did the work; Capital knows only what appeared in the fax."
+      ],
       "choices": [
         {
           "id": "correct",
@@ -985,7 +1296,17 @@
           },
           "result": "Mira sends a corrected list of contributors. Celeste says a list can still have a Team Europe heading.",
           "formal": true,
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Ask for a factual correction that names every contributor",
+            "Request a correction listing every contributor accurately",
+            "Ask to correct the record by naming all contributors"
+          ],
+          "resultVariants": [
+            "Mira sends an amended list of contributors. Celeste points out that Team Europe can still go above it.",
+            "A corrected list of contributors arrives from Mira. Celeste says there is still room for a Team Europe heading.",
+            "Mira sends the corrected contributor list. Celeste observes that the heading can still read Team Europe."
+          ]
         },
         {
           "id": "deliver",
@@ -1000,7 +1321,17 @@
           },
           "result": "The crews start work without revising the announcement. Capital files a small but very legible complaint.",
           "formal": true,
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Start collection with the announcement as is",
+            "Keep the announcement and begin collection",
+            "Begin collection under the existing announcement"
+          ],
+          "resultVariants": [
+            "The crews get to work with the announcement unchanged. Capital files a modest complaint in exceptionally legible terms.",
+            "Work begins without any change to the announcement. Capital files a complaint of modest size and remarkable legibility.",
+            "The crews start without an amended announcement. Capital files a brief complaint that is very easy to read."
+          ]
         },
         {
           "label": "Cite The Annex Wrangler",
@@ -1012,7 +1343,17 @@
           "formal": true,
           "counts": ["formal"],
           "id": "reputation-rule-bender",
-          "requiresReputation": "rule-bender"
+          "requiresReputation": "rule-bender",
+          "labelVariants": [
+            "Invoke The Annex Wrangler",
+            "Mention The Annex Wrangler",
+            "Name The Annex Wrangler"
+          ],
+          "resultVariants": [
+            "The margin of the decision now records The Annex Wrangler.",
+            "The decision gains a marginal entry for The Annex Wrangler.",
+            "The Annex Wrangler goes into the decision’s margin."
+          ]
         }
       ]
     },
@@ -1027,6 +1368,11 @@
         "choiceId": "national"
       },
       "text": "Mira has a Bellaluxe proposal but no agreed joint collection timetable. The Delegation wants the logo question settled; the port wants the rubbish removed.",
+      "variants": [
+        "Mira has a proposal from Bellaluxe but no agreed joint collection timetable. The Delegation wants the logo question settled; the port wants the rubbish removed.",
+        "Mira has a Bellaluxe proposal, but no agreed joint timetable for collection. The Delegation wants the logo settled; the port wants the rubbish removed.",
+        "A Bellaluxe proposal has reached Mira, but there is no agreed joint collection timetable. The Delegation wants a logo decision; the port wants the rubbish removed."
+      ],
       "choices": [
         {
           "id": "release",
@@ -1041,7 +1387,17 @@
           },
           "result": "Mira puts the plan to work while the logos remain under discussion. Bellaluxe keeps a named role.",
           "formal": true,
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Make the plan available to the local crews",
+            "Give the local crews the plan to work from",
+            "Let the local crews work from the plan"
+          ],
+          "resultVariants": [
+            "Mira starts using the plan while discussion of the logos continues. Bellaluxe keeps its named role.",
+            "While the logos are still being discussed, Mira puts the plan into use. Bellaluxe stays named in its role.",
+            "Mira puts the plan into practice during the logo discussions. Bellaluxe keeps its role by name."
+          ]
         },
         {
           "id": "hold",
@@ -1052,7 +1408,17 @@
           },
           "result": "Capital welcomes the firm position. Mira postpones the crews and asks who will pay for another week of storage.",
           "formal": true,
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Keep the plan on hold until branding is agreed",
+            "Wait for a branding agreement to release the plan",
+            "Hold back the plan until the branding is settled"
+          ],
+          "resultVariants": [
+            "Capital approves of the firm stance. Mira puts off the crews and asks who is covering a further week of storage.",
+            "Capital welcomes the firmness. Mira reschedules the crews for later and asks who will pick up the bill for another week of storage.",
+            "The firm line goes down well in Capital. Mira delays the crews and enquires who is paying for one more week of storage."
+          ]
         },
         {
           "favour": {
@@ -1068,7 +1434,17 @@
           "formal": true,
           "counts": ["formal"],
           "id": "reputation-absent",
-          "requiresReputation": "absent"
+          "requiresReputation": "absent",
+          "labelVariants": [
+            "Invoke The Unread Diplomat",
+            "Mention The Unread Diplomat",
+            "Name The Unread Diplomat"
+          ],
+          "resultVariants": [
+            "The margin of the decision now records The Unread Diplomat.",
+            "The decision gains a marginal entry for The Unread Diplomat.",
+            "The Unread Diplomat goes into the decision’s margin."
+          ]
         }
       ]
     },
@@ -1083,6 +1459,11 @@
         "choiceId": "shared"
       },
       "text": "Mira has scheduled the local crews using Elise’s shared plan. Both Bellaluxe and the Delegation are named, but the announcement leaves out the port workers.",
+      "variants": [
+        "Using Elise’s shared plan, Mira has scheduled the local crews. Bellaluxe and the Delegation are named, but the port workers are left out of the announcement.",
+        "Mira has used Elise’s shared plan to schedule the local crews. The announcement names Bellaluxe and the Delegation, but leaves out the port workers.",
+        "Mira scheduled local crews using Elise’s shared plan. Bellaluxe and the Delegation are both named; the announcement leaves the port workers out."
+      ],
       "choices": [
         {
           "id": "include",
@@ -1097,7 +1478,17 @@
           },
           "result": "Mira adds the crews and the collection begins. The revised credit line is longer than the route description.",
           "formal": true,
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Credit the port crews publicly as well",
+            "Name the port crews in the public credit",
+            "Include the port crews in the public credit"
+          ],
+          "resultVariants": [
+            "Mira puts the crews on the list and collection starts. The updated credit line now runs longer than the route description.",
+            "Mira adds the crews and collection gets underway. The new credit line takes up more space than the route description.",
+            "Collection starts once Mira adds the crews. The amended credit line is now longer than the description of the route."
+          ]
         },
         {
           "id": "publish",
@@ -1108,7 +1499,17 @@
           },
           "result": "The announcement appears on schedule. The crews start work, but Mira notes whose names were omitted.",
           "formal": true,
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Release the agreed version on schedule",
+            "Put out the agreed version on time",
+            "Publish the agreed text as scheduled"
+          ],
+          "resultVariants": [
+            "The announcement goes out on time and the crews get to work. Mira takes note of whose names were left out.",
+            "The announcement is published on schedule. The crews start, and Mira makes note of which names are missing.",
+            "The announcement comes out as scheduled. The crews begin work. Mira notes who was left off the list."
+          ]
         },
         {
           "favour": {
@@ -1124,7 +1525,17 @@
           "formal": true,
           "counts": ["team"],
           "id": "reputation-debtor",
-          "requiresReputation": "debtor"
+          "requiresReputation": "debtor",
+          "labelVariants": [
+            "Invoke Owes Half the Corps",
+            "Mention Owes Half the Corps",
+            "Name Owes Half the Corps"
+          ],
+          "resultVariants": [
+            "The margin of the decision now records Owes Half the Corps.",
+            "The decision gains a marginal entry for Owes Half the Corps.",
+            "Owes Half the Corps goes into the decision’s margin."
+          ]
         }
       ]
     },
@@ -1139,6 +1550,11 @@
         "choiceId": "decline"
       },
       "text": "Mira says Celeste is looking for another contributor. Without a Bellaluxe commitment, the port is adjusting the schedule rather than counting on work that was never promised.",
+      "variants": [
+        "Mira says Celeste is seeking another contributor. Without a Bellaluxe commitment, the port adjusts the schedule instead of counting on work never promised.",
+        "Celeste is looking for another contributor, Mira says. With no Bellaluxe commitment, the port is adjusting the schedule rather than relying on work never promised.",
+        "Mira says Celeste is looking for another contributor. As Bellaluxe made no commitment, the port is adjusting the schedule rather than counting on work never promised."
+      ],
       "choices": [
         {
           "id": "contacts",
@@ -1149,7 +1565,17 @@
           },
           "result": "Mira receives a useful contact; the port still needs a funded partner before expanding collection.",
           "formal": true,
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Offer Mira an introduction without pledging funds or staff",
+            "Offer to introduce Mira without committing funds or personnel",
+            "Make an introduction for Mira with no pledge of staff or funds"
+          ],
+          "resultVariants": [
+            "Mira gains a useful contact. The port still requires a partner with funding before it can expand collection.",
+            "Mira gets a useful contact, and the port still needs a funded partner before collection can expand.",
+            "A useful contact reaches Mira. Expanding collection at the port still depends on finding a funded partner."
+          ]
         },
         {
           "id": "wait",
@@ -1158,7 +1584,17 @@
           "effects": {},
           "result": "Mira adjusts the port timetable. Bellaluxe makes no further commitment.",
           "formal": true,
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Give the Delegation time to find a partner",
+            "Wait until the Delegation finds a partner",
+            "Let the Delegation find a partner first"
+          ],
+          "resultVariants": [
+            "Mira revises the port timetable. Bellaluxe offers no further commitment.",
+            "Mira updates the port’s schedule, and Bellaluxe makes no additional commitment.",
+            "Mira adjusts the port timetable. Bellaluxe makes no new commitment."
+          ]
         },
         {
           "label": "Cite The Discreet Source",
@@ -1170,7 +1606,17 @@
           "formal": true,
           "counts": ["formal"],
           "id": "reputation-gossip",
-          "requiresReputation": "gossip"
+          "requiresReputation": "gossip",
+          "labelVariants": [
+            "Invoke The Discreet Source",
+            "Mention The Discreet Source",
+            "Name The Discreet Source"
+          ],
+          "resultVariants": [
+            "The margin of the decision now records The Discreet Source.",
+            "The decision gains a marginal entry for The Discreet Source.",
+            "The Discreet Source goes into the decision’s margin."
+          ]
         }
       ]
     },
@@ -1181,6 +1627,11 @@
       "location": "embassy",
       "minDay": 2,
       "text": "Sola has been asked to translate Elise's finished project proposal for local partners. Elise is proud of her work; Sola says the partners should have been asked what they need before the proposal was written. The visit team wants a decision today.",
+      "variants": [
+        "Sola was asked to translate Elise's finished project proposal for local partners. Elise is proud of her work; Sola says the partners' needs should have been asked before writing it. The visit team wants a decision today.",
+        "Asked to translate Elise's finished project proposal for local partners, Sola says their needs should have been asked before it was written. Elise is proud of her work. The visit team wants a decision today.",
+        "Sola has been asked to translate Elise's finished proposal for local partners. Elise is proud of it; Sola says the partners should have been asked what they need before it was written. The visit team wants a decision today."
+      ],
       "choices": [
         {
           "id": "consult",
@@ -1194,7 +1645,17 @@
             "goodwill": 1
           },
           "result": "Sola contacts the partners before the proposal is finalised. Elise agrees to revise it, although her timetable is now rather less beautiful.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Have Sola and the partners help Elise shape the proposal",
+            "Ask Elise to shape the proposal with Sola and the partners",
+            "Bring Sola and the partners in to shape Elise’s proposal together"
+          ],
+          "resultVariants": [
+            "Sola speaks to the partners before the proposal is final. Elise agrees to revise it, and the timetable loses some of its former elegance.",
+            "Before the proposal is settled, Sola calls the partners. Elise agrees to make revisions, which her formerly handsome timetable must now accommodate.",
+            "Sola consults the partners while the proposal is still in draft. Elise agrees to revise it. The schedule is a little less fit for display."
+          ]
         },
         {
           "id": "instruct",
@@ -1212,7 +1673,17 @@
           "statDrift": {
             "stat": "charm",
             "delta": -1
-          }
+          },
+          "labelVariants": [
+            "Have Sola translate Elise’s draft without changes",
+            "Instruct Sola to translate Elise’s proposal verbatim",
+            "Ask Sola for a straight translation of Elise’s proposal"
+          ],
+          "resultVariants": [
+            "Sola translates the proposal and Elise makes her deadline. The partners are still waiting to be asked what they need.",
+            "Elise meets her deadline with Sola’s translation. Nobody has yet asked the partners what they need.",
+            "Sola provides the translation. Elise’s deadline is met. Asking what the partners need remains on the list."
+          ]
         },
         {
           "id": "pause",
@@ -1222,7 +1693,17 @@
           "pairTarget": "development",
           "effects": {},
           "result": "Sola and Elise agree to discuss the process. The proposal waits; neither has promised an immediate answer.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Put the proposal on hold until both colleagues agree how to proceed",
+            "Hold the proposal until the two colleagues settle on a process",
+            "Wait for both colleagues to agree a process before proceeding"
+          ],
+          "resultVariants": [
+            "Sola and Elise agree to talk through the process. The proposal goes on hold, with no immediate answer promised by either.",
+            "The proposal waits while Sola and Elise agree to discuss how to proceed. Neither offers an answer straight away.",
+            "Sola and Elise will discuss the process. For now the proposal sits, with neither colleague promising a prompt answer."
+          ]
         },
         {
           "label": "Cite The Walking Note",
@@ -1237,7 +1718,17 @@
           "result": "The Walking Note is entered in the margin of the decision.",
           "counts": ["formal"],
           "id": "reputation-envoy",
-          "requiresReputation": "envoy"
+          "requiresReputation": "envoy",
+          "labelVariants": [
+            "Refer to The Walking Note",
+            "Invoke The Walking Note",
+            "Use The Walking Note"
+          ],
+          "resultVariants": [
+            "The decision gets a reference to The Walking Note in its margin.",
+            "The Walking Note takes its place in the decision’s margin.",
+            "The margin of the decision now cites The Walking Note."
+          ]
         }
       ]
     },
@@ -1252,6 +1743,11 @@
         "choiceId": "consult"
       },
       "text": "Elise brings back Sola's notes from the partners. Their priorities differ from her draft, and changing it will mean telling Capital the original proposal was incomplete.",
+      "variants": [
+        "Elise brings Sola's notes back from the partners. Their priorities differ from her draft; changing it means telling Capital the original proposal was incomplete.",
+        "Elise returns with Sola's notes from the partners. Their priorities differ from her draft, and changing it means telling Capital the original proposal was incomplete.",
+        "Elise brings back Sola's partner notes. Their priorities differ from her draft; a change will mean telling Capital the original proposal was incomplete."
+      ],
       "choices": [
         {
           "id": "revise",
@@ -1264,7 +1760,17 @@
             "confidence": -1
           },
           "result": "Elise and Sola name the partners as contributors. Capital receives a revised proposal and a less flattering timeline.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Support the partners’ changes and explain them to Capital",
+            "Endorse the partners’ edits and brief Capital on them",
+            "Stand behind the partners’ revisions and explain them to Capital"
+          ],
+          "resultVariants": [
+            "Elise and Sola credit the partners as contributors. Capital gets the revised proposal, complete with a less presentable schedule.",
+            "Capital gets a revised proposal and a timeline with less to recommend it. Elise and Sola list the partners as contributors.",
+            "Elise and Sola give the partners contributor credit. The revised proposal reaches Capital with a rather less fetching timetable."
+          ]
         },
         {
           "id": "credit",
@@ -1277,7 +1783,17 @@
             "goodwill": -1
           },
           "result": "The draft leaves on time. Sola points out that acknowledgement is not the same as using the partners’ advice.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Retain the first draft and acknowledge the consultation",
+            "Acknowledge the consultation and send the draft unchanged",
+            "Keep the original draft and give the consultation a mention"
+          ],
+          "resultVariants": [
+            "The draft goes out on schedule. Sola observes that a mention and making use of the partners’ advice are separate things.",
+            "The original draft leaves on time. Sola notes how much easier it is to acknowledge the partners’ advice than to take it.",
+            "The draft goes out on time. Sola observes that the partners’ advice earned a mention and stayed unused."
+          ]
         },
         {
           "label": "Cite The Expedited Official",
@@ -1291,7 +1807,17 @@
           "result": "The Expedited Official is entered in the margin of the decision.",
           "counts": ["team"],
           "id": "reputation-expediter",
-          "requiresReputation": "expediter"
+          "requiresReputation": "expediter",
+          "labelVariants": [
+            "Refer to The Expedited Official",
+            "Invoke The Expedited Official",
+            "Cite The Expedited Official here"
+          ],
+          "resultVariants": [
+            "The margin of the decision now cites The Expedited Official.",
+            "The Expedited Official takes its place in the decision’s margin.",
+            "The decision gets a reference to The Expedited Official in its margin."
+          ]
         }
       ]
     },
@@ -1306,6 +1832,11 @@
         "choiceId": "instruct"
       },
       "text": "The local partners have returned the translated proposal with practical objections. Sola says she would have raised these earlier if anyone had asked. Elise wants a chance to put them right.",
+      "variants": [
+        "Local partners returned the translated proposal with practical objections. Sola says she would have raised them earlier if asked. Elise wants a chance to put them right.",
+        "The translated proposal is back from local partners with practical objections. Sola says she would have raised them earlier if asked. Elise wants a chance to put them right.",
+        "The local partners returned the translated proposal with practical objections. Sola would have raised them earlier if asked. Elise wants a chance to put them right."
+      ],
       "choices": [
         {
           "id": "repair",
@@ -1318,7 +1849,17 @@
             "confidence": -1
           },
           "result": "Sola accepts the apology and arranges a revision with Elise. The delay is real; so is the improvement.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Admit the error and ask Sola and Elise to revise the proposal",
+            "Own the mistake and ask Sola and Elise to revise the draft",
+            "Acknowledge the error and ask Elise and Sola for a revision"
+          ],
+          "resultVariants": [
+            "Sola takes the apology and sets up a revision with Elise. It will take longer and the proposal will be better.",
+            "Sola accepts the apology and arranges to revise the proposal with Elise. Both the delay and the improvement are real.",
+            "Sola accepts your apology and sets up a revision with Elise. The proposal gains in quality and loses in punctuality."
+          ]
         },
         {
           "id": "send",
@@ -1331,7 +1872,17 @@
             "goodwill": -2
           },
           "result": "Capital gets the proposal on time. Sola sends the partners a separate explanation of why their comments were not included.",
-          "counts": ["rules"]
+          "counts": ["rules"],
+          "labelVariants": [
+            "Stick with the original proposal and record the objections separately",
+            "Send the proposal unchanged and put the objections in a separate note",
+            "Forward the original proposal and log the objections separately"
+          ],
+          "resultVariants": [
+            "The proposal reaches Capital on schedule. Sola writes separately to explain to the partners why their comments were left out.",
+            "Capital gets its proposal by the deadline. In a separate message Sola tells the partners why their comments did not make it in.",
+            "The original reaches Capital on time. Sola separately explains to the partners why their comments were omitted."
+          ]
         },
         {
           "label": "Cite The Distribution List",
@@ -1345,7 +1896,17 @@
           "result": "The Distribution List is entered in the margin of the decision.",
           "counts": ["rules"],
           "id": "reputation-reply-all",
-          "requiresReputation": "reply-all"
+          "requiresReputation": "reply-all",
+          "labelVariants": [
+            "Refer to The Distribution List",
+            "Invoke The Distribution List",
+            "Cite The Distribution List here"
+          ],
+          "resultVariants": [
+            "The decision gets a reference to The Distribution List in its margin.",
+            "The Distribution List takes its place in the decision’s margin.",
+            "The margin of the decision now cites The Distribution List."
+          ]
         }
       ]
     },
@@ -1360,6 +1921,11 @@
         "choiceId": "pause"
       },
       "text": "Elise and Sola have agreed to ask the partners for comments, but neither wants to own the delayed deadline. Capital has noticed the blank in the timetable.",
+      "variants": [
+        "Elise and Sola agreed to ask the partners for comments, but neither wants to own the delayed deadline. Capital noticed the blank in the timetable.",
+        "Elise and Sola have agreed to seek comments from the partners, but neither wants ownership of the delayed deadline. Capital has noticed the timetable's blank.",
+        "The partners will be asked for comments, Elise and Sola agree, but neither wants to own the delayed deadline. Capital has noticed the blank in the timetable."
+      ],
       "choices": [
         {
           "id": "own",
@@ -1372,7 +1938,17 @@
             "morale": 1
           },
           "result": "You take the call from Capital. Sola and Elise agree who will consult the partners and when.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Own the delay and settle on a new deadline together",
+            "Accept responsibility for the delay and agree a new deadline",
+            "Take the delay on yourself and agree a revised deadline"
+          ],
+          "resultVariants": [
+            "You field Capital’s call. Sola and Elise settle which of them will speak to the partners and when.",
+            "Capital calls and you answer. Elise and Sola agree who will consult the partners and at what point.",
+            "You handle the call from Capital while Sola and Elise settle who will consult the partners and when."
+          ]
         },
         {
           "id": "blame",
@@ -1385,7 +1961,17 @@
             "morale": -2
           },
           "result": "Capital gets two names. Elise and Sola get a reason to be wary of their next joint brief.",
-          "counts": ["capital"]
+          "counts": ["capital"],
+          "labelVariants": [
+            "Put the responsibility on both colleagues with Capital",
+            "Name the two colleagues to Capital as responsible",
+            "Tell Capital it was the two colleagues’ doing"
+          ],
+          "resultVariants": [
+            "Capital receives two names. Elise and Sola will approach the next joint brief with more caution.",
+            "You give Capital two names. Sola and Elise acquire a reason to be cautious about their next joint brief.",
+            "Capital gets two names, and Elise and Sola gain a reason to eye the next joint brief warily."
+          ]
         },
         {
           "label": "Cite The Protocol Exception",
@@ -1399,7 +1985,17 @@
           "result": "The Protocol Exception is entered in the margin of the decision.",
           "counts": ["formal"],
           "id": "reputation-protocol",
-          "requiresReputation": "protocol"
+          "requiresReputation": "protocol",
+          "labelVariants": [
+            "Refer to The Protocol Exception",
+            "Invoke The Protocol Exception",
+            "Cite The Protocol Exception here"
+          ],
+          "resultVariants": [
+            "The margin of the decision now cites The Protocol Exception.",
+            "The Protocol Exception takes its place in the decision’s margin.",
+            "The decision gets a reference to The Protocol Exception in its margin."
+          ]
         }
       ]
     },
@@ -1414,6 +2010,11 @@
         "choiceId": "mediate"
       },
       "text": "Anselm has incorporated Pavel’s corrections and asks whether his contribution will be named, as you promised when mediating their dispute. Pavel wants the facts checked before the briefing goes to Capital.",
+      "variants": [
+        "Anselm has added Pavel’s corrections and asks whether his contribution will be named, as you promised while mediating their dispute. Pavel wants the facts checked before the briefing goes to Capital.",
+        "Having incorporated Pavel’s corrections, Anselm asks whether his contribution will be named, as you promised when mediating their dispute. Pavel wants the facts checked before the briefing goes to Capital.",
+        "Anselm incorporated Pavel’s corrections and asks if his contribution will be named, as you promised during their dispute's mediation. Pavel wants facts checked before the briefing goes to Capital."
+      ],
       "choices": [
         {
           "id": "credit",
@@ -1425,7 +2026,17 @@
             "morale": 2
           },
           "result": "The briefing names both authors. Pavel checks the figures; Anselm discovers that an edit is not an accusation.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Verify the facts and credit both writers",
+            "Check the facts and name both authors",
+            "Confirm the facts and give both authors credit"
+          ],
+          "resultVariants": [
+            "Both authors are named in the briefing. Pavel checks the numbers. Anselm learns that an edit needn’t be an accusation.",
+            "The briefing credits both authors. Pavel verifies the figures, and Anselm finds that an edit can be just an edit.",
+            "Pavel checks the figures in a briefing that credits both authors. Anselm discovers that an edit can come without a charge sheet."
+          ]
         },
         {
           "id": "anonymous",
@@ -1438,7 +2049,17 @@
             "morale": -1
           },
           "result": "Capital gets the briefing. Anselm and Pavel compare notes about your interpretation of shared credit.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Use your own name on the briefing to save time",
+            "Save time by sending it under your name",
+            "Send the briefing in your own name to save time"
+          ],
+          "resultVariants": [
+            "The briefing reaches Capital. Anselm and Pavel compare notes on what you appear to mean by shared credit.",
+            "Capital receives the briefing, leaving Anselm and Pavel to compare notes on your reading of shared credit.",
+            "Capital has the briefing. Anselm and Pavel discuss the finer points of your interpretation of shared credit."
+          ]
         },
         {
           "label": "Cite The Last Toast",
@@ -1451,7 +2072,17 @@
           "result": "The Last Toast is entered in the margin of the decision.",
           "counts": ["team"],
           "id": "reputation-host",
-          "requiresReputation": "host"
+          "requiresReputation": "host",
+          "labelVariants": [
+            "Use The Last Toast",
+            "Invoke The Last Toast",
+            "Mention The Last Toast"
+          ],
+          "resultVariants": [
+            "The decision gets a reference to The Last Toast in its margin.",
+            "The Last Toast takes its place in the decision’s margin.",
+            "The margin of the decision now cites The Last Toast."
+          ]
         }
       ]
     },
@@ -1466,6 +2097,11 @@
         "choiceId": "order"
       },
       "text": "Pavel has sent the combined briefing you ordered. Anselm has written a separate correction and neither will speak to the other. Capital wants one reliable version.",
+      "variants": [
+        "Pavel sent the combined briefing you ordered. Anselm wrote a separate correction; neither will speak to the other. Capital wants one reliable version.",
+        "The combined briefing you ordered has been sent by Pavel. Anselm wrote a separate correction, and they are not speaking. Capital wants one reliable version.",
+        "Pavel has sent your ordered combined briefing. Anselm wrote a separate correction and neither will speak to the other. Capital wants one reliable version."
+      ],
       "choices": [
         {
           "id": "mediate",
@@ -1478,7 +2114,17 @@
             "confidence": -1
           },
           "result": "Pavel and Anselm agree on a fact check. The repair takes time, and neither calls it a friendship.",
-          "counts": ["team"]
+          "counts": ["team"],
+          "labelVariants": [
+            "Listen to both colleagues and settle who verifies the facts",
+            "Hear both sides and agree on who will check the facts",
+            "Hear out both colleagues and agree who does the fact check"
+          ],
+          "resultVariants": [
+            "Pavel and Anselm settle on a fact check. It takes time to patch things up, and neither would call it friendship.",
+            "Anselm and Pavel agree to a fact check. The repair is gradual, and neither refers to it as friendship.",
+            "Pavel and Anselm agree on checking the facts. That takes time to mend things, and neither calls it friendship."
+          ]
         },
         {
           "id": "override",
@@ -1493,7 +2139,17 @@
             "morale": -2
           },
           "result": "Pavel’s version goes to Capital. Anselm files his correction and starts keeping a careful record of whose name is on which draft.",
-          "counts": ["rules"]
+          "counts": ["rules"],
+          "labelVariants": [
+            "Forward Pavel’s version and tell Anselm to let it go",
+            "Use Pavel’s version and tell Anselm to drop the matter",
+            "Send Pavel’s draft and tell Anselm to leave it there"
+          ],
+          "resultVariants": [
+            "Capital receives Pavel’s version. Anselm files his correction and begins a meticulous log of the names attached to each draft.",
+            "Pavel’s version reaches Capital. Anselm puts his correction on file and starts to track, with some care, whose name appears on every draft.",
+            "Capital gets Pavel’s draft. Anselm files his correction and begins to keep a careful tally of the names that appear on each version."
+          ]
         }
       ]
     },
@@ -1503,46 +2159,91 @@
       "title": "Your presence is requested immediately",
       "npc": "protocol",
       "text": "The host ministry unveils a plaque in twenty minutes. Your absence would be noticed. Your schedule is not their concern.",
+      "variants": [
+        "The host ministry unveils a plaque in twenty minutes. Your absence would be noticed; your schedule is not their concern.",
+        "In twenty minutes the host ministry unveils a plaque. They would notice your absence, though not your schedule.",
+        "The host ministry's plaque unveiling is in twenty minutes. Your absence would be noticed. Your schedule is no concern of theirs."
+      ],
       "minDay": 1,
       "choices": [
         {
           "id": "attend",
           "label": "Attend personally — replace your planned activity",
+          "labelVariants": [
+            "Attend yourself — replace your planned activity",
+            "Go personally — replace your planned activity",
+            "Attend in person — replace your planned activity"
+          ],
           "replace": true,
           "effects": {
             "goodwill": 5
           },
           "result": "You attend the ceremony. Your planned work must wait.",
+          "resultVariants": [
+            "You attend the ceremony. The planned work must wait.",
+            "You attend the ceremony; your planned work must wait.",
+            "You attend the ceremony. Your planned work will wait."
+          ],
           "formal": true,
           "counts": ["formal"]
         },
         {
           "id": "delegate",
           "label": "Send Anselm with a strict brief",
+          "labelVariants": [
+            "Send Anselm with strict instructions",
+            "Send Anselm with a strict briefing",
+            "Send Anselm with strict briefing"
+          ],
           "worker": "anselm",
           "effects": {
             "goodwill": 2
           },
           "trust": 2,
           "result": "Anselm represents the mission. The strict brief limits his promises.",
+          "resultVariants": [
+            "Anselm represents the mission. The strict brief limits what he promises.",
+            "Anselm represents the mission; the strict brief limits his promises.",
+            "Anselm represents the mission. His promises are limited by the strict brief."
+          ],
           "formal": true,
           "counts": ["formal"]
         },
         {
           "id": "decline",
           "label": "Decline diplomatically",
+          "labelVariants": [
+            "Decline with diplomacy",
+            "Offer a diplomatic refusal",
+            "Refuse diplomatically"
+          ],
           "effects": {
             "goodwill": -4
           },
           "result": "Protocol records your absence with considerable courtesy.",
+          "resultVariants": [
+            "Protocol records your absence with great courtesy.",
+            "Protocol records the absence with considerable courtesy.",
+            "Your absence is recorded by Protocol with considerable courtesy."
+          ],
           "formal": true,
           "counts": ["formal"]
         },
         {
           "id": "trait-replyall",
           "label": "Reply to the entire guest list",
+          "labelVariants": [
+            "Answer the entire guest list",
+            "Reply to the whole guest list",
+            "Reply to the full guest list"
+          ],
           "requiresTrait": "replyall",
           "result": "Protocol gets your answer, along with every guest and a confused caterer.",
+          "resultVariants": [
+            "Protocol gets your answer, as does every guest and a confused caterer.",
+            "Protocol receives your answer, as do every guest and a confused caterer.",
+            "Protocol gets your answer, alongside every guest and a confused caterer."
+          ],
           "effects": {
             "goodwill": 1,
             "sanity": -1
@@ -1558,7 +2259,17 @@
       "title": "Two briefings, no shared facts",
       "npc": "pavel",
       "text": "Pavel is at your door with his briefing. Anselm wrote one too, and neither will combine them. The Minister cannot hold two contradictory positions.",
+      "variants": [
+        "Pavel is at your door with his briefing. Anselm wrote another, and neither will combine them. The Minister cannot hold two contradictory positions.",
+        "Pavel arrives at your door with his briefing. Anselm has written one too, but neither will combine them. The Minister cannot hold two contradictory positions.",
+        "At your door, Pavel has his briefing. Anselm wrote one as well, and neither will combine them. The Minister cannot hold two contradictory positions."
+      ],
       "remoteText": "Pavel's note: his briefing and Anselm's contradict each other, and neither will combine them. The Minister cannot hold both positions. Please advise.",
+      "remoteTextVariants": [
+        "Pavel's note: his briefing contradicts Anselm's, and neither will combine them. The Minister cannot hold both positions. Please advise.",
+        "Pavel's note: Anselm's briefing and his contradict each other; neither will combine them. The Minister cannot hold both positions. Please advise.",
+        "Pavel's note: his briefing and Anselm's contradict each other. Neither will combine them. The Minister cannot hold both positions. Please advise."
+      ],
       "minDay": 1,
       "choices": [
         {
@@ -1574,7 +2285,17 @@
           "statDrift": {
             "stat": "charm",
             "delta": 1
-          }
+          },
+          "labelVariants": [
+            "Put Pavel in charge and make Anselm’s credit clear",
+            "Have Pavel lead and give Anselm visible credit",
+            "Name Pavel as lead and credit Anselm openly"
+          ],
+          "resultVariants": [
+            "A named lead and credit for both begin to mend the Pavel–Anselm feud.",
+            "Clear leadership and shared credit start to ease Pavel and Anselm’s feud.",
+            "A clear lead and credit for both start to ease Pavel and Anselm’s feud."
+          ]
         },
         {
           "id": "order",
@@ -1585,7 +2306,17 @@
             "morale": -3
           },
           "result": "One document appears. They stop speaking to each other.",
-          "counts": ["rules"]
+          "counts": ["rules"],
+          "labelVariants": [
+            "Instruct them to cooperate",
+            "Tell them to work together",
+            "Require their cooperation"
+          ],
+          "resultVariants": [
+            "A single document materialises. Conversation between them ceases.",
+            "One document is produced. The two cease speaking to one another.",
+            "The document comes in. Neither is speaking to the other."
+          ]
         },
         {
           "id": "trait-namedrop",
@@ -1597,7 +2328,17 @@
             "sanity": -1
           },
           "trust": 1,
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Settle authorship by invoking a former minister",
+            "Cite a former minister to decide authorship",
+            "Bring up a former minister to settle authorship"
+          ],
+          "resultVariants": [
+            "Anselm and Pavel accept the former minister as a rather unlikely authority on their briefing.",
+            "Pavel and Anselm both accept the former minister’s unlikely authority over their briefing.",
+            "Pavel and Anselm defer to the former minister, an unlikely authority on a briefing of theirs."
+          ]
         }
       ]
     },
@@ -1607,7 +2348,17 @@
       "title": "The generous supplier: part I",
       "npc": "sola",
       "text": "Sola is at your door. A caterer offers an unusually cheap reception, and she recognises the surname. Investigate or take the bargain?",
+      "variants": [
+        "Sola is at your door: a caterer offers an unusually cheap reception, and she recognises the surname. Investigate or accept the bargain?",
+        "At your door, Sola reports an unusually cheap reception from a caterer whose surname she recognises. Investigate or take the bargain?",
+        "Sola is at your door. A caterer has offered an unusually cheap reception; she recognises the surname. Investigate or take the bargain?"
+      ],
       "remoteText": "Sola's note: a caterer offers an unusually cheap reception. She recognises the surname. Please advise before someone else accepts it.",
+      "remoteTextVariants": [
+        "Sola's note: a caterer offers an unusually cheap reception and she recognises the surname. Please advise before someone else accepts it.",
+        "Sola's note: an unusually cheap reception is offered by a caterer whose surname she recognises. Please advise before someone else accepts it.",
+        "Sola's note: a caterer offers an unusually cheap reception. She recognises the surname. Please advise before another person accepts it."
+      ],
       "minDay": 1,
       "choices": [
         {
@@ -1621,7 +2372,17 @@
           "statDrift": {
             "stat": "gravitas",
             "delta": 1
-          }
+          },
+          "labelVariants": [
+            "Have Sola check who owns it",
+            "Ask Sola to look into the ownership",
+            "Ask Sola to check who owns it"
+          ],
+          "resultVariants": [
+            "Sola traces the supplier. From Day 2, Marcel can explain the connection at the Quiet Amendment.",
+            "Sola traces the supplier. Marcel, at the Quiet Amendment, can fill in the connection from Day 2.",
+            "Sola follows the supplier’s trail. From Day 2, Marcel at the Quiet Amendment can explain the link."
+          ]
         },
         {
           "id": "accept",
@@ -1631,7 +2392,17 @@
             "budget": 3
           },
           "result": "The bargain is accepted. Marcel at the Quiet Amendment has questions about its strings starting Day 2.",
-          "counts": ["rules"]
+          "counts": ["rules"],
+          "labelVariants": [
+            "Take the offer without asking questions",
+            "Agree to the offer without questions",
+            "Accept the deal without querying it"
+          ],
+          "resultVariants": [
+            "The deal goes through. From Day 2, Marcel at the Quiet Amendment has questions about the strings attached.",
+            "You take the bargain. Starting Day 2, Marcel at the Quiet Amendment has questions about what comes attached.",
+            "The bargain is agreed. Marcel at the Quiet Amendment has questions of his own about the strings from Day 2."
+          ]
         }
       ]
     },
@@ -1641,6 +2412,11 @@
       "npc": "fixer",
       "location": "bar",
       "text": "Marcel slides Sola's findings across the table. The supplier belongs to a protocol official’s cousin. A correspondent is asking about the reception. 'I know a different caterer,' he adds. 'And, regrettably, the cousin.'",
+      "variants": [
+        "Marcel slides Sola's findings across the table. The supplier belongs to a protocol official’s cousin. A correspondent is asking about the reception. “I know another caterer,” he adds. “And, regrettably, the cousin.”",
+        "Across the table Marcel slides Sola's findings: the supplier belongs to a protocol official’s cousin. A correspondent is asking about the reception. “I know a different caterer,” he adds. “And, regrettably, the cousin.”",
+        "Marcel slides Sola's findings across the table: a protocol official’s cousin owns the supplier. A correspondent is asking about the reception. “I know a different caterer,” he adds. “And, regrettably, the cousin.”"
+      ],
       "minDay": 2,
       "requires": "supplier",
       "requiresChoice": {
@@ -1658,7 +2434,17 @@
           },
           "score": 4,
           "result": "Transparent procurement costs more but prevents a scandal.",
-          "counts": ["rules"]
+          "counts": ["rules"],
+          "labelVariants": [
+            "Declare the connection and switch suppliers",
+            "Reveal the link and move to a different supplier",
+            "Disclose the link and go with another supplier"
+          ],
+          "resultVariants": [
+            "Open procurement raises the bill and keeps a scandal at bay.",
+            "Disclosing the link and switching costs more, but averts a scandal.",
+            "Open procurement costs extra and heads off a scandal."
+          ]
         },
         {
           "id": "bury",
@@ -1669,7 +2455,17 @@
             "goodwill": 2
           },
           "result": "The cousin is delighted. Capital is less amused by the eventual questions.",
-          "counts": ["rules"]
+          "counts": ["rules"],
+          "labelVariants": [
+            "Keep quiet on the deal",
+            "Keep the deal secret",
+            "Keep mum on the deal"
+          ],
+          "resultVariants": [
+            "The cousin is thrilled. Capital takes rather less pleasure in the questions that follow.",
+            "The cousin is delighted. Capital gives the later questions a cooler reception.",
+            "The cousin is delighted. Capital finds the later questions less entertaining."
+          ]
         }
       ]
     },
@@ -1679,6 +2475,11 @@
       "npc": "fixer",
       "location": "bar",
       "text": "The caterer's generous price was for plates. The invoice charges separately for food, chairs and the privilege of sitting on them. A protocol official's cousin owns the company.",
+      "variants": [
+        "The caterer's generous price covered plates. Food, chairs and the privilege of sitting on them are charged separately on the invoice. A protocol official's cousin owns the company.",
+        "The generous catering price was for plates. The invoice separately charges for food, chairs and the privilege of sitting on them. A protocol official's cousin owns the company.",
+        "The caterer's generous price bought plates. The invoice charges separately for food, chairs and the privilege of sitting on them. The company belongs to a protocol official's cousin."
+      ],
       "minDay": 2,
       "requiresChoice": {
         "eventId": "supplier",
@@ -1695,7 +2496,17 @@
           },
           "trust": 2,
           "result": "Capital admires your transparency after asking why the chairs cost extra.",
-          "counts": ["capital"]
+          "counts": ["capital"],
+          "labelVariants": [
+            "Inform Capital and renegotiate publicly",
+            "Brief Capital and renegotiate in public",
+            "Tell Capital and renegotiate openly"
+          ],
+          "resultVariants": [
+            "Capital asks why the chairs cost more, then commends your transparency.",
+            "After asking about the extra cost of the chairs, Capital admires your openness.",
+            "Capital queries the dearer chairs before praising your candour."
+          ]
         },
         {
           "id": "pay",
@@ -1706,7 +2517,17 @@
             "confidence": -3
           },
           "result": "The chairs arrive. So does an invoice for sitting on them twice.",
-          "counts": ["hospitality"]
+          "counts": ["hospitality"],
+          "labelVariants": [
+            "Pay discreetly and keep the reception",
+            "Settle quietly and keep the reception",
+            "Pay discreetly and retain the reception"
+          ],
+          "resultVariants": [
+            "The chairs come in, accompanied by an invoice for sitting on them twice.",
+            "The chairs come with a bill for sitting on them twice.",
+            "The chairs turn up. The invoice has you sitting on them twice."
+          ]
         }
       ]
     },
@@ -1716,6 +2537,11 @@
       "title": "A chair of national importance",
       "npc": "protocol",
       "text": "Director Ndao calls: the draft visit plan seats Ombrazia's Deputy Minister behind a decorative fern. The fern is not accredited. How will you respond?",
+      "variants": [
+        "Director Ndao calls: the draft visit plan puts Ombrazia's Deputy Minister behind a decorative fern. The fern is not accredited. How will you respond?",
+        "Director Ndao calls about the draft visit plan: Ombrazia's Deputy Minister is seated behind a decorative fern. The fern is not accredited. How will you respond?",
+        "Director Ndao calls: Ombrazia's Deputy Minister sits behind a decorative fern in the draft visit plan. The fern is not accredited. How will you respond?"
+      ],
       "minDay": 3,
       "choices": [
         {
@@ -1727,7 +2553,17 @@
           "trust": 2,
           "result": "Ndao accepts the apology and invites you to review the seating plan at the Foreign Ministry from Day 4.",
           "formal": true,
-          "counts": ["hospitality"]
+          "counts": ["hospitality"],
+          "labelVariants": [
+            "Offer an apology and ask Protocol to help redo the plan",
+            "Apologise and seek Protocol’s help with the seating plan",
+            "Say sorry and ask Protocol to help revise the plan"
+          ],
+          "resultVariants": [
+            "Ndao accepts your apology. From Day 4, he invites you to go over the seating plan at the Foreign Ministry.",
+            "Ndao accepts the apology. The seating plan is up for review with him at the Foreign Ministry from Day 4.",
+            "Apology accepted. Ndao invites you to the Foreign Ministry from Day 4 to go over the seating plan."
+          ]
         },
         {
           "id": "capital",
@@ -1743,7 +2579,17 @@
           "statDrift": {
             "stat": "charm",
             "delta": -1
-          }
+          },
+          "labelVariants": [
+            "Stand by Capital’s seating instructions",
+            "Defend the seating instructions from Capital",
+            "Back Capital’s instructions on seating"
+          ],
+          "resultVariants": [
+            "Ndao asks you to come to the Foreign Ministry from Day 4. Bring the seating plan and a larger fern.",
+            "From Day 4, Ndao asks you to come to the Foreign Ministry with the seating plan and a larger fern.",
+            "Ndao requests a visit to the Foreign Ministry from Day 4. The seating plan is required. So is a larger fern."
+          ]
         }
       ]
     },
@@ -1845,7 +2691,17 @@
       "title": "A project, not a photo opportunity",
       "npc": "development",
       "text": "Elise is at your door. She wants the Minister to meet project beneficiaries, not merely unveil a donor plaque. UN partners demand their own speaking slots.",
+      "variants": [
+        "Elise is at your door. She wants the Minister to meet project beneficiaries, rather than just unveil a donor plaque. UN partners demand speaking slots of their own.",
+        "Elise is at your door: the Minister should meet project beneficiaries, not merely unveil a donor plaque. UN partners demand their own speaking slots.",
+        "At your door, Elise wants the Minister to meet project beneficiaries, not simply unveil a donor plaque. UN partners demand their own speaking slots."
+      ],
       "remoteText": "Elise's note: the Minister should meet project beneficiaries, not merely unveil a donor plaque. The UN partners want their own speaking slots. Please call.",
+      "remoteTextVariants": [
+        "Elise's note: the Minister should meet project beneficiaries, rather than simply unveil a donor plaque. The UN partners want their own speaking slots. Please call.",
+        "Elise's note: the Minister should meet project beneficiaries, not just unveil a donor plaque. UN partners want their own speaking slots. Please call.",
+        "Elise's note: the Minister should meet project beneficiaries instead of merely unveiling a donor plaque. The UN partners want their own speaking slots. Please call."
+      ],
       "minDay": 2,
       "choices": [
         {
@@ -1858,7 +2714,17 @@
           "trust": 5,
           "score": 4,
           "result": "Elise asks the UN partners to reserve time for beneficiaries. From Day 3, Amara can discuss the programme at UN House.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Keep time free for beneficiaries",
+            "Reserve time for the beneficiaries",
+            "Set aside time for beneficiaries"
+          ],
+          "resultVariants": [
+            "Elise asks the UN partners to make time for beneficiaries. From Day 3, Amara can go over the programme at UN House.",
+            "Elise requests time for beneficiaries from the UN partners. Amara can discuss the programme at UN House from Day 3.",
+            "The UN partners get a request from Elise to set aside time for beneficiaries. From Day 3, Amara can review the programme at UN House."
+          ]
         },
         {
           "id": "photo",
@@ -1869,7 +2735,17 @@
           },
           "trust": -6,
           "result": "The photograph is secured provisionally. From Day 3, Amara wants to discuss what the visit will actually include at UN House.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Put the Minister’s photograph first",
+            "Make the Minister’s photo the priority",
+            "Give priority to the Minister’s photo"
+          ],
+          "resultVariants": [
+            "The photograph is provisionally secured. From Day 3, Amara wants to discuss the actual content of the visit at UN House.",
+            "There’s a provisional agreement on the photograph. From Day 3, Amara wants to talk at UN House about what the visit will actually cover.",
+            "The photograph is tentatively in place. From Day 3, Amara wants to go over what’s really on the programme at UN House."
+          ]
         }
       ]
     },
@@ -1879,6 +2755,11 @@
       "npc": "un",
       "location": "un",
       "text": "Amara has reserved a project visit with people who use its services. One partner wants to fill the discussion with speeches; the community asks for time to speak for itself.",
+      "variants": [
+        "Amara has reserved a project visit with people who use its services. A partner wants speeches to fill the discussion; the community asks for time to speak for itself.",
+        "Amara reserved a project visit with people who use its services. One partner wants the discussion filled with speeches; the community asks for time to speak for itself.",
+        "Amara has reserved a project visit with people using its services. One partner wants speeches to fill the discussion; the community asks for time to speak for itself."
+      ],
       "minDay": 3,
       "requiresChoice": {
         "eventId": "elise",
@@ -1895,7 +2776,17 @@
           },
           "trust": 3,
           "result": "Amara revises the programme so the community can speak. The speeches are shortened under protest.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Keep time free for questions from the community",
+            "Set aside time for the community’s questions",
+            "Make sure the community has time for questions"
+          ],
+          "resultVariants": [
+            "Amara changes the programme to let the community speak. The speeches get shorter despite protests.",
+            "Amara adjusts the programme so the community gets to speak. The speeches are cut back amid objections.",
+            "Amara gives the community a voice in the revised programme. The speeches lose minutes amid protests."
+          ]
         },
         {
           "id": "speeches",
@@ -1907,7 +2798,17 @@
           },
           "trust": -2,
           "result": "Every partner receives a speaking slot. The community is allotted a photograph.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Keep the speaking slots for the partners",
+            "Allocate speaking slots to the partners",
+            "Give the partners their time at the lectern"
+          ],
+          "resultVariants": [
+            "Each partner gets a turn at the microphone. The community gets a photograph.",
+            "All the partners get to speak. The community is assigned a photograph.",
+            "Speaking time goes to every partner. A photograph goes to the community."
+          ]
         }
       ]
     },
@@ -1917,6 +2818,11 @@
       "npc": "un",
       "location": "un",
       "text": "Amara shows you the proposed photo stop. The camera position is immaculate, but the project team has been given no time to explain what it actually does.",
+      "variants": [
+        "Amara shows you the proposed photo stop. The camera position is immaculate; the project team has no time to explain what it actually does.",
+        "Amara shows the proposed photo stop. The camera position is immaculate, but the project team has been given no time to explain what it actually does.",
+        "The proposed photo stop Amara shows you has an immaculate camera position, but no time for the project team to explain what it actually does."
+      ],
       "minDay": 3,
       "requiresChoice": {
         "eventId": "elise",
@@ -1933,7 +2839,17 @@
           },
           "trust": 3,
           "result": "Amara makes space for a real discussion. Capital asks if the camera can listen as well.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Make time for the project team and community",
+            "Give the project team and community more time",
+            "Add a slot for the project team and community"
+          ],
+          "resultVariants": [
+            "Amara sets aside time for a proper discussion. Capital enquires whether the camera can listen too.",
+            "Amara makes room for an actual discussion. Capital wants to know if the camera can listen too.",
+            "Amara carves out time for a real discussion. Capital asks whether the camera can join in as a listener."
+          ]
         },
         {
           "id": "speeches",
@@ -1945,7 +2861,17 @@
           },
           "trust": -2,
           "result": "The photograph is perfectly framed. The project team waits politely just outside it.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Retain the photo and the official speeches",
+            "Stick with the photo and official speeches",
+            "Leave the photo and official speeches in place"
+          ],
+          "resultVariants": [
+            "The framing is impeccable. The project team waits courteously just beyond the edge.",
+            "The photograph is framed to perfection. Just out of shot, the project team waits politely.",
+            "The picture is perfectly composed. The project team waits politely a step outside the frame."
+          ]
         }
       ]
     },
@@ -1955,6 +2881,11 @@
       "title": "The 17.6% entitlement",
       "npc": "eu",
       "text": "Celeste calls ahead of the coordination meeting. 'Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework,' she says. 'That is not 17.6% of the biscuits, the speaking time or the minutes. I mention it now so you can be disappointed in private.'",
+      "variants": [
+        "Celeste calls before the coordination meeting. “Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework,” she says. “That is not 17.6% of the biscuits, speaking time or minutes. I mention it now so you can be disappointed in private.”",
+        "Ahead of the coordination meeting, Celeste calls. “Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework,” she says. “That is not 17.6% of the biscuits, speaking time or minutes. I mention it now so you can be disappointed in private.”",
+        "Celeste calls ahead of the coordination meeting. “Bellaluxe contributes 17.6% of the EU's Multiannual Financial Framework,” she says. “Not 17.6% of the biscuits, speaking time or minutes. I mention it now so you can be disappointed in private.”"
+      ],
       "minDay": 1,
       "choices": [
         {
@@ -1967,7 +2898,17 @@
           "trust": 2,
           "score": 1,
           "result": "Celeste sighs audibly down the line. Your self-deprecation briefly softens the coalition.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "“Of course. Plus 17.6% of the speaking time, coffee and credit.”",
+            "“Quite. And 17.6% of the floor time, coffee and credit.”",
+            "“Certainly. Along with 17.6% of the talking time, coffee and credit.”"
+          ],
+          "resultVariants": [
+            "Celeste’s sigh is audible over the phone. A joke at your own expense briefly warms the coalition.",
+            "Celeste lets out an audible sigh on the line. Poking fun at yourself softens the coalition for a moment.",
+            "You hear Celeste sigh down the line. The coalition thaws briefly at a joke at your own expense."
+          ]
         },
         {
           "id": "serious",
@@ -1978,7 +2919,17 @@
           "trust": 1,
           "score": 2,
           "result": "The clause is agreed by phone. The joke is saved for the meeting, where it will be minuted.",
-          "counts": ["hospitality"]
+          "counts": ["hospitality"],
+          "labelVariants": [
+            "Hold the joke and talk through the clause",
+            "Keep the joke for later. Discuss the clause",
+            "Discuss the clause and hold the joke"
+          ],
+          "resultVariants": [
+            "The clause is settled over the phone. The joke can wait for the meeting and its minutes.",
+            "Agreement on the clause comes by phone. The joke is kept for the meeting, where it will go in the minutes.",
+            "You agree the clause over the phone. The joke waits for the meeting, where it will enter the minutes."
+          ]
         }
       ]
     },
@@ -2064,6 +3015,11 @@
       "npc": "journalist",
       "location": "pressclub",
       "text": "Ruth kept your distinction between confirmed and pending arrangements. Now she wants background on the visit. 'You can say no,' she says, which makes you more suspicious.",
+      "variants": [
+        "Ruth kept your distinction between confirmed and pending arrangements. She now wants background on the visit. “You can say no,” she says, making you more suspicious.",
+        "Ruth preserved your distinction between confirmed and pending arrangements. Now she wants background on the visit. “You can say no,” she says, making you more suspicious.",
+        "Ruth kept the distinction you made between confirmed and pending arrangements. Now she wants background on the visit. “You can say no,” she says. You grow more suspicious."
+      ],
       "minDay": 2,
       "requiresChoice": {
         "eventId": "press",
@@ -2080,7 +3036,17 @@
           },
           "trust": 4,
           "result": "Ruth checks her notes. The background may make a better story than the rumour.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Give the background without naming sources",
+            "Explain the context, naming no sources",
+            "Share context and leave the sources unnamed"
+          ],
+          "resultVariants": [
+            "Ruth goes over her notes. The background might make a better story than the rumour.",
+            "Ruth checks her notes. The context may give her a better story than the rumour.",
+            "Ruth reviews her notes. The background may give her a better story than the rumour."
+          ]
         },
         {
           "id": "reserved",
@@ -2091,7 +3057,17 @@
           },
           "trust": -1,
           "result": "Ruth writes down your public line and draws a small question mark beside it.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Keep to the public line",
+            "Repeat the public line",
+            "Hold to the public line"
+          ],
+          "resultVariants": [
+            "Ruth notes down your public line and adds a little question mark alongside it.",
+            "Ruth records your public line, then puts a small question mark next to it.",
+            "Ruth writes out the public line. A tiny question mark takes its place beside it."
+          ]
         }
       ]
     },
@@ -2101,6 +3077,11 @@
       "npc": "journalist",
       "location": "pressclub",
       "text": "Ruth places your promise that everything is ready beside a list of arrangements that are not. The recorder is conspicuously switched on this time.",
+      "variants": [
+        "Ruth puts your promise that everything is ready beside a list of arrangements that are not. This time the recorder is conspicuously switched on.",
+        "Ruth sets your promise that everything is ready beside a list of arrangements that are not. This time the recorder is conspicuously switched on.",
+        "Beside your promise that everything is ready, Ruth places a list of arrangements that are not. The recorder is conspicuously switched on this time."
+      ],
       "minDay": 2,
       "requiresChoice": {
         "eventId": "press",
@@ -2117,7 +3098,17 @@
           },
           "trust": 3,
           "result": "The correction is less glamorous than the promise. It is also considerably more accurate.",
-          "counts": ["credit"]
+          "counts": ["credit"],
+          "labelVariants": [
+            "Set the claim straight and explain what’s left",
+            "Correct the claim and set out the work ahead",
+            "Correct the record and explain the work ahead"
+          ],
+          "resultVariants": [
+            "The correction lacks the promise’s glamour. It makes up for that with considerably greater accuracy.",
+            "The correction makes a less glamorous impression than the promise. It’s considerably more accurate.",
+            "The correction has less shine than the promise and a considerably closer relationship with the facts."
+          ]
         },
         {
           "id": "double-down",
@@ -2129,7 +3120,17 @@
           },
           "trust": -3,
           "result": "Ruth underlines 'entirely'. The second underline is audible.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Insist everything is entirely under control",
+            "Maintain that the arrangements are fully under control",
+            "Insist the arrangements are all under control"
+          ],
+          "resultVariants": [
+            "Ruth underlines “entirely” twice. You can hear the second stroke.",
+            "Ruth gives “entirely” two underlines. The second can be heard.",
+            "Ruth marks “entirely” with two lines. The second is audible."
+          ]
         }
       ]
     },
@@ -2139,6 +3140,11 @@
       "title": "A casual quote",
       "npc": "journalist",
       "text": "Ruth asks, in the tone of someone not recording, whether the Minister's visit is really confirmed. She is recording.",
+      "variants": [
+        "Ruth asks whether the Minister's visit is really confirmed, in the tone of someone not recording. She is recording.",
+        "In the tone of someone not recording, Ruth asks whether the Minister's visit is really confirmed. She is recording.",
+        "Ruth asks if the Minister's visit is really confirmed. She sounds like someone not recording. She is recording."
+      ],
       "minDay": 1,
       "choices": [
         {
@@ -2150,7 +3156,17 @@
           "trust": 3,
           "score": 2,
           "result": "Your careful distinction survives the headline. From Day 2, Ruth offers a longer conversation at the Press Correspondents Club.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Clarify what’s confirmed and what’s still pending",
+            "Spell out what’s confirmed and what’s still pending",
+            "Set out what’s settled and what’s still pending"
+          ],
+          "resultVariants": [
+            "The headline preserves your careful distinction. From Day 2, Ruth offers a longer talk at the Press Correspondents Club.",
+            "Your careful distinction makes it into the headline intact. From Day 2, Ruth offers a fuller conversation at the Press Correspondents Club.",
+            "The headline keeps your careful distinction. From Day 2, Ruth suggests a longer chat at the Press Correspondents Club."
+          ]
         },
         {
           "id": "promise",
@@ -2161,7 +3177,17 @@
           },
           "trust": -3,
           "result": "The claim is printed. From Day 2, Ruth wants an explanation at the Press Correspondents Club.",
-          "counts": ["formal"]
+          "counts": ["formal"],
+          "labelVariants": [
+            "Everything is completely ready",
+            "All of it is entirely ready",
+            "Everything is fully prepared"
+          ],
+          "resultVariants": [
+            "The claim makes it into print. From Day 2, Ruth wants you to explain it at the Press Correspondents Club.",
+            "Your claim appears in print. From Day 2, Ruth wants an explanation at the Press Correspondents Club.",
+            "The claim goes to print. From Day 2, Ruth wants you to account for it at the Press Correspondents Club."
+          ]
         }
       ]
     },
@@ -2211,21 +3237,42 @@
       "npc": "protocol",
       "callInFor": "protocol",
       "text": "Ndao calls to ask you to review a seating chart. The request has acquired the status of a reminder.",
+      "variants": [
+        "Ndao calls and asks you to review a seating chart. The request has become a reminder.",
+        "Ndao calls to request your review of a seating chart. The request now has the status of a reminder.",
+        "Ndao calls about reviewing a seating chart. The request has acquired the status of a reminder."
+      ],
       "minDay": 1,
       "choices": [
         {
           "id": "honour",
           "label": "Make time for the request",
+          "labelVariants": [
+            "Find time for the request",
+            "Set aside time for the request",
+            "Give the request your time"
+          ],
           "replace": true,
           "result": "You give the request the time it was said not to require.",
+          "resultVariants": [
+            "You give the request the time it supposedly did not require.",
+            "You give the request the time it was said not to need.",
+            "You give the request the time it allegedly did not require."
+          ],
           "counts": ["formal"]
         },
         {
           "id": "refuse",
           "label": "Decline the request",
+          "labelVariants": ["Turn down the request", "Decline this request", "Refuse the request"],
           "trust": -8,
           "flag": "refused-favour-protocol",
           "result": "The request is withdrawn. The memory is retained.",
+          "resultVariants": [
+            "The request is withdrawn. The memory remains.",
+            "The request is withdrawn; the memory is retained.",
+            "The request goes away. The memory is retained."
+          ],
           "counts": ["formal"]
         }
       ]
@@ -2237,6 +3284,11 @@
       "npc": "golf",
       "callInFor": "golf",
       "text": "Bako calls to ask you to attend a constituency briefing. He says it is a friendly reminder.",
+      "variants": [
+        "Bako calls and asks you to attend a constituency briefing. He calls it a friendly reminder.",
+        "Bako calls: he asks you to attend a constituency briefing and says this is a friendly reminder.",
+        "Bako calls to request your attendance at a constituency briefing. He says it is a friendly reminder."
+      ],
       "minDay": 1,
       "choices": [
         {
@@ -2244,7 +3296,17 @@
           "label": "Make time for the request",
           "replace": true,
           "result": "You play the ninth hole and are told the briefing was on the tenth.",
-          "counts": ["formal"]
+          "resultVariants": [
+            "You play the ninth hole, then hear the briefing was on the tenth.",
+            "You play the ninth hole and learn the briefing was on the tenth.",
+            "You play the ninth hole. The briefing, you are told, was on the tenth."
+          ],
+          "counts": ["formal"],
+          "labelVariants": [
+            "Find time for the request",
+            "Free up time for the request",
+            "Set time aside for the request"
+          ]
         },
         {
           "id": "refuse",
@@ -2252,7 +3314,13 @@
           "trust": -8,
           "flag": "refused-favour-golf",
           "result": "The request is withdrawn. The grudge is retained.",
-          "counts": ["formal"]
+          "resultVariants": [
+            "The request is withdrawn. The grudge remains.",
+            "The request is withdrawn; the grudge is retained.",
+            "The request goes away. The grudge is retained."
+          ],
+          "counts": ["formal"],
+          "labelVariants": ["Turn down the request", "Refuse the request", "Say no to the request"]
         }
       ]
     },
@@ -2263,6 +3331,11 @@
       "npc": "fixer",
       "callInFor": "fixer",
       "text": "Marcel calls to ask you to sit through a supplier meeting. The request has been phrased as a favour.",
+      "variants": [
+        "Marcel calls and asks you to sit through a supplier meeting. The request is phrased as a favour.",
+        "Marcel calls to request that you sit through a supplier meeting. He has phrased it as a favour.",
+        "Marcel calls about sitting through a supplier meeting. The request comes phrased as a favour."
+      ],
       "minDay": 1,
       "choices": [
         {
@@ -2270,7 +3343,17 @@
           "label": "Make time for the request",
           "replace": true,
           "result": "You sit through the meeting. The chairs are billed separately.",
-          "counts": ["formal"]
+          "resultVariants": [
+            "You endure the meeting. The chairs are billed separately.",
+            "You sit through the meeting; the chairs are billed separately.",
+            "You sit through the meeting. The chairs come billed separately."
+          ],
+          "counts": ["formal"],
+          "labelVariants": [
+            "Put the request in your diary",
+            "Find a slot for the request",
+            "Give the request a slot"
+          ]
         },
         {
           "id": "refuse",
@@ -2278,7 +3361,13 @@
           "trust": -8,
           "flag": "refused-favour-fixer",
           "result": "The request is withdrawn. The debt is retained.",
-          "counts": ["formal"]
+          "resultVariants": [
+            "The request is withdrawn. The debt remains.",
+            "The request is withdrawn; the debt is retained.",
+            "The request goes away. The debt is retained."
+          ],
+          "counts": ["formal"],
+          "labelVariants": ["Refuse the request", "Turn the request down", "Decline the favour"]
         }
       ]
     },
@@ -2289,6 +3378,11 @@
       "npc": "eu",
       "callInFor": "eu",
       "text": "Celeste calls to ask you to review a joint announcement. The request has been minuted in advance.",
+      "variants": [
+        "Celeste calls and asks you to review a joint announcement. The request was minuted in advance.",
+        "Celeste calls to request your review of a joint announcement. The request was minuted in advance.",
+        "Celeste calls about reviewing a joint announcement. The request has been minuted in advance."
+      ],
       "minDay": 1,
       "choices": [
         {
@@ -2296,7 +3390,17 @@
           "label": "Make time for the request",
           "replace": true,
           "result": "You review the announcement, which has already been announced.",
-          "counts": ["formal"]
+          "resultVariants": [
+            "You review the announcement. It has already been announced.",
+            "You review an announcement that has already been announced.",
+            "You review the announcement, which was already announced."
+          ],
+          "counts": ["formal"],
+          "labelVariants": [
+            "Allocate time for the request",
+            "Fit the request into the diary",
+            "Set aside time for the request"
+          ]
         },
         {
           "id": "refuse",
@@ -2304,7 +3408,13 @@
           "trust": -8,
           "flag": "refused-favour-eu",
           "result": "The request is withdrawn. The minutes are retained.",
-          "counts": ["formal"]
+          "resultVariants": [
+            "The request is withdrawn. The minutes remain.",
+            "The request is withdrawn; the minutes are retained.",
+            "The request goes away. The minutes are retained."
+          ],
+          "counts": ["formal"],
+          "labelVariants": ["Say no to the request", "Refuse the request", "Turn down the request"]
         }
       ]
     },
@@ -2315,6 +3425,11 @@
       "npc": "bianca",
       "callInFor": "bianca",
       "text": "Bianca calls on the internal line to ask you to review an exercise plan. The request has been marked urgent, as is everything.",
+      "variants": [
+        "Bianca calls on the internal line to ask for your review of an exercise plan. The request is marked urgent, as is everything.",
+        "On the internal line, Bianca asks you to review an exercise plan. The request is marked urgent, like everything else.",
+        "Bianca calls on the internal line: please review an exercise plan. The request is marked urgent, as is everything."
+      ],
       "minDay": 1,
       "choices": [
         {
@@ -2322,7 +3437,17 @@
           "label": "Make time for the request",
           "replace": true,
           "result": "You review the plan, now in its third version.",
-          "counts": ["formal"]
+          "resultVariants": [
+            "You review the plan, which is now in its third version.",
+            "You review the plan. It is now on its third version.",
+            "You review the plan, already in its third version."
+          ],
+          "counts": ["formal"],
+          "labelVariants": [
+            "Make time to do as requested",
+            "Make room for the request",
+            "Slot in time for the request"
+          ]
         },
         {
           "id": "refuse",
@@ -2330,7 +3455,17 @@
           "trust": -8,
           "flag": "refused-favour-bianca",
           "result": "The request is withdrawn. The exercise goes ahead without you.",
-          "counts": ["formal"]
+          "resultVariants": [
+            "The request is withdrawn. The exercise proceeds without you.",
+            "The request is withdrawn; the exercise goes ahead without you.",
+            "The request goes away. The exercise goes ahead without you."
+          ],
+          "counts": ["formal"],
+          "labelVariants": [
+            "Decline this request",
+            "Turn the request down",
+            "Say no to the request"
+          ]
         }
       ]
     },
@@ -2340,7 +3475,17 @@
       "title": "A joint assignment",
       "npc": "anselm",
       "text": "Anselm is at your door. He and Pavel must prepare one joint briefing, and each has already drafted a credit line.",
+      "variants": [
+        "Anselm is at your door. He and Pavel have to prepare one joint briefing, and each has already drafted a credit line.",
+        "At your door, Anselm says he and Pavel must prepare one joint briefing. Each has already drafted a credit line.",
+        "Anselm is at your door: he and Pavel must prepare one joint briefing, and both have already drafted a credit line."
+      ],
       "remoteText": "Anselm's note: he and Pavel must prepare one joint briefing. Each has already drafted a credit line. Please advise.",
+      "remoteTextVariants": [
+        "Anselm's note: he and Pavel need to prepare one joint briefing. Each has already drafted a credit line. Please advise.",
+        "Anselm's note: he and Pavel must prepare a joint briefing. Both have already drafted a credit line. Please advise.",
+        "Anselm's note: he and Pavel must prepare one joint briefing, and each has already drafted a credit line. Please advise."
+      ],
       "minDay": 2,
       "expiresDay": 2,
       "relationshipGate": {
@@ -2352,9 +3497,15 @@
         {
           "id": "repair",
           "label": "Announce both names",
+          "labelVariants": ["Name both authors", "Announce the two names", "Name the two people"],
           "pair": 18,
           "pairTarget": "pavel",
           "result": "Both names fit on the cover. Pavel keeps the receipt for the ink.",
+          "resultVariants": [
+            "Both names fit on the cover. Pavel keeps the ink receipt.",
+            "The cover fits both names. Pavel keeps the receipt for the ink.",
+            "Both names fit on the cover. Pavel keeps the receipt for ink."
+          ],
           "effects": {
             "confidence": 1
           },
@@ -2363,9 +3514,19 @@
         {
           "id": "side",
           "label": "Put the receipts first",
+          "labelVariants": [
+            "Put receipts first",
+            "Place the receipts first",
+            "Start with the receipts"
+          ],
           "pair": -10,
           "pairTarget": "pavel",
           "result": "Anselm sends Pavel a copy marked for information only.",
+          "resultVariants": [
+            "Anselm sends Pavel a copy marked as being for information only.",
+            "Pavel receives a copy from Anselm marked for information only.",
+            "Anselm sends a copy to Pavel marked for information only."
+          ],
           "effects": {},
           "counts": ["team"]
         }
@@ -2374,7 +3535,12 @@
         "text": "The briefing arrives with two covers and no pages.",
         "effects": {},
         "pair": -8,
-        "pairTarget": "pavel"
+        "pairTarget": "pavel",
+        "textVariants": [
+          "The briefing arrives with no pages and two covers.",
+          "The briefing comes with two covers and no pages.",
+          "Two covers arrive on the briefing, but no pages."
+        ]
       }
     },
     {
@@ -2383,6 +3549,11 @@
       "title": "The shared office",
       "npc": "pavel",
       "text": "Pavel's note: Lucien has described the shared cupboard as a communications platform.",
+      "variants": [
+        "Pavel's note: Lucien has called the shared cupboard a communications platform.",
+        "Pavel's note: Lucien has described the shared cupboard as a platform for communications.",
+        "Pavel's note: the shared cupboard has been described by Lucien as a communications platform."
+      ],
       "minDay": 3,
       "expiresDay": 3,
       "relationshipGate": {
@@ -2395,9 +3566,15 @@
         {
           "id": "repair",
           "label": "Mark it as shared",
+          "labelVariants": ["Label it as shared", "Mark it shared", "Mark as shared"],
           "pair": 18,
           "pairTarget": "press",
           "result": "The cupboard has two labels and one key.",
+          "resultVariants": [
+            "The cupboard now has two labels and one key.",
+            "The cupboard has one key and two labels.",
+            "One key, two labels on the cupboard."
+          ],
           "effects": {
             "confidence": 1
           },
@@ -2406,9 +3583,15 @@
         {
           "id": "side",
           "label": "Call it an asset",
+          "labelVariants": ["Mark it an asset", "Name it an asset", "Make it an asset"],
           "pair": -10,
           "pairTarget": "press",
           "result": "Pavel files an objection to the asset register.",
+          "resultVariants": [
+            "Pavel files an objection against the asset register.",
+            "Pavel lodges an objection to the asset register.",
+            "Pavel files his objection to the asset register."
+          ],
           "effects": {},
           "counts": ["formal"]
         }
@@ -2417,7 +3600,12 @@
         "text": "The office acquires a queue for the cupboard.",
         "effects": {},
         "pair": -8,
-        "pairTarget": "press"
+        "pairTarget": "press",
+        "textVariants": [
+          "A queue for the cupboard develops in the office.",
+          "The office develops a queue for the cupboard.",
+          "The office acquires a cupboard queue."
+        ]
       }
     },
     {

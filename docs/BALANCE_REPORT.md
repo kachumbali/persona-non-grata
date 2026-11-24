@@ -728,3 +728,16 @@ newcomer     after         51                62.9        13.80        2.00      
 first-timer  before        51                34.7        15.31        4.00            0%           0%  promoted 3, ambassador 47, replaced 1
 first-timer  after         51                40.9        15.31        4.00            0%           0%  promoted 6, ambassador 45
 ```
+
+## Dialogue variants pilot
+
+The text-only pilot was checked against the full simulation matrix (306 runs: six bots, 17 builds, three seeds). The simulator uses the real store; wording is chosen in the presentation layer and does not change decisions or balance values. The current ending counts are:
+
+| Bot          | Promoted | Ambassador | Replaced | Persona non grata | Cancelled |
+| ------------ | -------: | ---------: | -------: | ----------------: | --------: |
+| careful      |       50 |          0 |        0 |                 0 |         1 |
+| socialiser   |        1 |         43 |        7 |                 0 |         0 |
+| reckless     |        0 |          0 |       21 |                30 |         0 |
+| ignorer      |        0 |          0 |       51 |                 0 |         0 |
+| press-reader |       51 |          0 |        0 |                 0 |         0 |
+| newcomer     |       51 |          0 |        0 |                 0 |         0 |
